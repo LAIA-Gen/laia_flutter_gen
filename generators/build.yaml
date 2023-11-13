@@ -9,7 +9,16 @@ builders:
     target: ":generators"
     import: "package:generators/generators.dart"
     builder_factories: ["generateJsonClass"] #Builder name(BuilderOptions)
-    build_extensions: { ".dart": [".g.part"] }
+    build_extensions: { ".dart": [".json_generator.g.part"] }
+    auto_apply: dependents
+    build_to: cache
+    applies_builders: ["source_gen|combining_builder"]
+
+  element_generators:  # New builder
+    target: ":generators"  # Assuming it targets the same package
+    import: "package:generators/generators.dart"  # Adjust if needed
+    builder_factories: ["generateElementWidget"]  # Same factory as before
+    build_extensions: { ".dart": [".element.g.part"] }  # New file extension
     auto_apply: dependents
     build_to: cache
     applies_builders: ["source_gen|combining_builder"]

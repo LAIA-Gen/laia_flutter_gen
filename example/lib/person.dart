@@ -3,6 +3,7 @@ import 'package:annotations/annotations.dart';
 part 'person.g.dart';
 
 @jsonGen
+@elementWidgetGen
 class Person {
   String name; 
   String lastName;
