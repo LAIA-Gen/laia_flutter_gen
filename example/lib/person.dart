@@ -1,4 +1,5 @@
 import 'package:annotations/annotations.dart';
+import 'package:flutter/cupertino.dart';
 
 part 'person.g.dart';
 

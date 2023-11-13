@@ -6,7 +6,37 @@ part of 'person.dart';
 // ElementWidgetGenerator
 // **************************************************************************
 
-//HELLO THERE, THIS IS A WIDGET
+class PersonWidget extends StatelessWidget {
+  final Person element;
+  const PersonWidget(this.element, {super.key});
+  Widget get nameWidget {
+    return Text("name: ${element.name}");
+  }
+
+  Widget get lastNameWidget {
+    return Text("lastName: ${element.lastName}");
+  }
+
+  Widget get isAdultWidget {
+    return Text("isAdult: ${element.isAdult}");
+  }
+
+  Widget get ageWidget {
+    return Text("age: ${element.age}");
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        nameWidget,
+        lastNameWidget,
+        isAdultWidget,
+        ageWidget,
+      ],
+    );
+  }
+}
 
 // **************************************************************************
 // JsonGenerator

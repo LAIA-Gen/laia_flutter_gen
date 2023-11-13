@@ -3,6 +3,7 @@
 import 'package:analyzer/dart/element/element.dart';
 import 'package:annotations/annotations.dart';
 import 'package:build/src/builder/build_step.dart';
+import 'package:generators/src/model_visitor.dart';
 import 'package:source_gen/source_gen.dart';
 
 class ElementWidgetGenerator extends GeneratorForAnnotation<ElementWidgetGenAnnotation> {
@@ -12,10 +13,33 @@ class ElementWidgetGenerator extends GeneratorForAnnotation<ElementWidgetGenAnno
     ConstantReader annotation, 
     BuildStep buildStep
   ) {
-
     final buffer = StringBuffer();
-    buffer.writeln('//HELLO THERE, THIS IS A WIDGET');
+    final visitor = ModelVisitor();
+    element.visitChildren(visitor);
+
+    buffer.writeln('class ${visitor.className}Widget extends StatelessWidget {');
+    buffer.writeln('final ${visitor.className} element;');
+
+    buffer.writeln('const ${visitor.className}Widget(this.element, {super.key});');
+
+    for (var fieldName in visitor.fields.keys) {
+      buffer.writeln('Widget get ${fieldName}Widget {');
+      buffer.writeln('return Text("${fieldName}: \${element.${fieldName}}");');
+      buffer.writeln('}');
+    }
+
+    buffer.writeln('@override');
+    buffer.writeln('Widget build(BuildContext context) {');
+    buffer.writeln('return Column(');
+    buffer.writeln('children: [');
+    for (var fieldName in visitor.fields.keys) {
+      buffer.writeln('${fieldName}Widget,');
+    }
+    buffer.writeln('],');
+    buffer.writeln(');');
+    buffer.writeln('}');
+    buffer.writeln('}');
+
     return buffer.toString();
   }
-
 }
