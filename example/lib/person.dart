@@ -1,10 +1,11 @@
 import 'package:annotations/annotations.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 part 'person.g.dart';
 
 @jsonGen
 @elementWidgetGen
+
 class Person {
   String name; 
   String lastName;

@@ -1,0 +1,15 @@
+targets:
+  $default:
+    builders:
+      widget_generator|annotations:
+        enabled: true
+
+builders:
+  widget_generator:
+    target: ":widget_generator"
+    import: "package:widget_generator/widget_generator.dart"
+    builder_factories: ["generateElementWidget"]
+    build_extensions: { ".dart": [".widgets.g.part"] }
+    auto_apply: dependents
+    build_to: cache
+    applies_builders: ["source_gen|combining_builder"]

@@ -10,19 +10,96 @@ class PersonWidget extends StatelessWidget {
   final Person element;
   const PersonWidget(this.element, {super.key});
   Widget get nameWidget {
-    return Text("name: ${element.name}");
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+      margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.grey, width: 1.0),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "name:",
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          SizedBox(width: 8.0),
+          Text(element.name.toString()),
+        ],
+      ),
+    );
   }
 
   Widget get lastNameWidget {
-    return Text("lastName: ${element.lastName}");
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+      margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.grey, width: 1.0),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "lastName:",
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          SizedBox(width: 8.0),
+          Text(element.lastName.toString()),
+        ],
+      ),
+    );
   }
 
   Widget get isAdultWidget {
-    return Text("isAdult: ${element.isAdult}");
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+      margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.grey, width: 1.0),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "isAdult:",
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          SizedBox(width: 8.0),
+          Container(
+            padding: const EdgeInsets.all(8.0),
+            decoration: BoxDecoration(
+              color: element.isAdult ? Colors.green : Colors.red,
+            ),
+            child: Text(
+              element.isAdult ? "Active" : "Inactive",
+              style: const TextStyle(color: Colors.white),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   Widget get ageWidget {
-    return Text("age: ${element.age}");
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+      margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.grey, width: 1.0),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "age:",
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          SizedBox(width: 8.0),
+          Text(element.age.toString()),
+        ],
+      ),
+    );
   }
 
   @override

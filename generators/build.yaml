@@ -8,7 +8,7 @@ builders:
   generators:
     target: ":generators"
     import: "package:generators/generators.dart"
-    builder_factories: ["generateJsonClass", "generateElementWidget"]
+    builder_factories: ["generateJsonClass"]
     build_extensions: { ".dart": [".g.part"] }
     auto_apply: dependents
     build_to: cache
