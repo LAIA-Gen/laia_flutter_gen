@@ -51,6 +51,9 @@ class ElementWidgetGenerator extends GeneratorForAnnotation<ElementWidgetGenAnno
         case 'List<String>?':
           buffer.writeln('stringListWidget("$fieldName", $fieldAccessor),');
           break;
+        default:
+          buffer.writeln('defaultWidget("$fieldName", $fieldAccessor),');
+          break;
       }
     }
     buffer.writeln('],');

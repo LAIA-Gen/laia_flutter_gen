@@ -27,6 +27,27 @@ Widget intWidget(String fieldName, int? value) {
   );
 }
 
+Widget defaultWidget(String fieldName, DateTime value) {
+  return Container(
+    padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+    margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+    decoration: BoxDecoration(
+      border: Border.all(color: Colors.grey, width: 1.0),
+    ),
+    child: Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "$fieldName:",
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(width: 8.0),
+        Text(value.toString()),
+      ],
+    ),
+  );
+}
+
 Widget doubleWidget(String fieldName, double? value) {
   return Container(
     padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),

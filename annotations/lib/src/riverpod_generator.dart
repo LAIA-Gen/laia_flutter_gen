@@ -1,5 +1,5 @@
 class RiverpodGenAnnotation {
-  const RiverpodGenAnnotation();
-}
+  final String baseURL;
 
-const riverpodGen = RiverpodGenAnnotation();
+  const RiverpodGenAnnotation(this.baseURL);
+}

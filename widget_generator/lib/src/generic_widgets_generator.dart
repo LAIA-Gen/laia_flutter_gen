@@ -40,6 +40,29 @@ class GenericWidgetsGenerator extends GeneratorForAnnotation<GenericWidgetsGenAn
         }
         ''');
 
+    buffer.writeln("Widget defaultWidget(String fieldName, DateTime value) {");
+    buffer.writeln('''
+          return Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+            margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.grey, width: 1.0),
+            ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "\$fieldName:",
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(width: 8.0),
+                Text(value.toString()),
+              ],
+            ),
+          );
+        }
+        ''');
+
     buffer.writeln("Widget doubleWidget(String fieldName, double? value) {");
     buffer.writeln('''
           return Container(

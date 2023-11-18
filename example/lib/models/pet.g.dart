@@ -17,6 +17,7 @@ class PetWidget extends StatelessWidget {
         stringWidget("name", element.name),
         stringWidget("animalType", element.animalType),
         doubleWidget("weight", element.weight),
+        defaultWidget("date", element.date),
         intWidget("ownerId", element.ownerId),
       ],
     );
@@ -69,3 +70,48 @@ Map<String, dynamic> _$PetToJson(Pet instance) => <String, dynamic>{
       'date': instance.date.toIso8601String(),
       'ownerId': instance.ownerId,
     };
+
+// **************************************************************************
+// RiverpodCustomGenerator
+// **************************************************************************
+
+final getPetProvider =
+    FutureProvider.autoDispose.family<Pet, int>((ref, petId) async {
+  final json = await http.get(Uri.parse('http://localhost:8000/pets/$petId'));
+  final jsonData = jsonDecode(json.body);
+  return Pet.fromJson(jsonData);
+});
+
+final createPetProvider =
+    FutureProvider.autoDispose.family<void, Pet>((ref, petInstance) async {
+  final response = await http.post(
+    Uri.parse('http://localhost:8000/pets'),
+    headers: {'Content-Type': 'application/json'},
+    body: jsonEncode(petInstance.toJson()),
+  );
+  if (response.statusCode != 201) {
+    throw Exception('Failed to create Pet');
+  }
+});
+
+final updatePetProvider =
+    FutureProvider.autoDispose.family<void, Pet>((ref, petInstance) async {
+  final response = await http.put(
+    Uri.parse('http://localhost:8000/pets/${petInstance.id}'),
+    headers: {'Content-Type': 'application/json'},
+    body: jsonEncode(petInstance.toJson()),
+  );
+  if (response.statusCode != 200) {
+    throw Exception('Failed to update Pet');
+  }
+});
+
+final deletePetProvider =
+    FutureProvider.autoDispose.family<void, int>((ref, petId) async {
+  final response = await http.delete(
+    Uri.parse('http://localhost:8000/pets/$petId'),
+  );
+  if (response.statusCode != 204) {
+    throw Exception('Failed to delete Pet');
+  }
+});

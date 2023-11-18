@@ -1,13 +1,13 @@
 targets:
   $default:
     builders:
-      riverpod_generator|annotations:
+      riverpod_custom_generator|annotations:
         enabled: true
 
 builders:
-  riverpod_generator:
-    target: ":riverpod_generator"
-    import: "package:riverpod_generator/generators.dart"
+  riverpod_custom_generator:
+    target: ":riverpod_custom_generator"
+    import: "package:riverpod_custom_generator/generators.dart"
     builder_factories: ["generateRiverpod"]
     build_extensions: { ".dart": [".g.part"] }
     auto_apply: dependents

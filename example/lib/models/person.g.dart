@@ -17,6 +17,7 @@ class PersonWidget extends StatelessWidget {
         stringWidget("name", element.name),
         stringWidget("surname", element.surname),
         stringWidget("address", element.address),
+        defaultWidget("date", element.date),
       ],
     );
   }
@@ -66,3 +67,49 @@ Map<String, dynamic> _$PersonToJson(Person instance) => <String, dynamic>{
       'address': instance.address,
       'date': instance.date.toIso8601String(),
     };
+
+// **************************************************************************
+// RiverpodCustomGenerator
+// **************************************************************************
+
+final getPersonProvider =
+    FutureProvider.autoDispose.family<Person, int>((ref, personId) async {
+  final json =
+      await http.get(Uri.parse('http://localhost:8000/persons/$personId'));
+  final jsonData = jsonDecode(json.body);
+  return Person.fromJson(jsonData);
+});
+
+final createPersonProvider = FutureProvider.autoDispose
+    .family<void, Person>((ref, personInstance) async {
+  final response = await http.post(
+    Uri.parse('http://localhost:8000/persons'),
+    headers: {'Content-Type': 'application/json'},
+    body: jsonEncode(personInstance.toJson()),
+  );
+  if (response.statusCode != 201) {
+    throw Exception('Failed to create Person');
+  }
+});
+
+final updatePersonProvider = FutureProvider.autoDispose
+    .family<void, Person>((ref, personInstance) async {
+  final response = await http.put(
+    Uri.parse('http://localhost:8000/persons/${personInstance.id}'),
+    headers: {'Content-Type': 'application/json'},
+    body: jsonEncode(personInstance.toJson()),
+  );
+  if (response.statusCode != 200) {
+    throw Exception('Failed to update Person');
+  }
+});
+
+final deletePersonProvider =
+    FutureProvider.autoDispose.family<void, int>((ref, personId) async {
+  final response = await http.delete(
+    Uri.parse('http://localhost:8000/persons/$personId'),
+  );
+  if (response.statusCode != 204) {
+    throw Exception('Failed to delete Person');
+  }
+});

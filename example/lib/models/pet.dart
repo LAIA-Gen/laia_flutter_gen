@@ -1,12 +1,16 @@
 import 'package:annotations/annotations.dart';
+import 'package:example/config/api.dart';
 import 'package:flutter/material.dart';
 import 'package:example/generic/generic_widgets.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 part 'pet.g.dart';
 
 @JsonSerializable()
-@riverpodGen
+@RiverpodGenAnnotation(baseURL)
 @elementWidgetGen
 @homeWidgetElement
 class Pet {
