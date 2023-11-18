@@ -3,7 +3,7 @@
 import 'package:analyzer/dart/element/element.dart';
 import 'package:annotations/annotations.dart';
 import 'package:build/src/builder/build_step.dart';
-import 'package:generators/src/model_visitor.dart';
+import 'package:json_api_generator/src/model_visitor.dart';
 import 'package:source_gen/source_gen.dart';
 
 class JsonGenerator extends GeneratorForAnnotation<JSONGenAnnotation> {

@@ -1,4 +1,4 @@
-import 'package:example/person.dart';
+import 'package:example/screens/home.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -16,11 +16,11 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const Home(),
     );
   }
 }
-
+/* 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
   final String title;
@@ -79,3 +79,4 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
+*/

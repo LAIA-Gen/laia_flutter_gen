@@ -1,13 +1,13 @@
 targets:
   $default:
     builders:
-      generators|annotations:
+      json_api_generator|annotations:
         enabled: true
 
 builders:
-  generators:
-    target: ":generators"
-    import: "package:generators/generators.dart"
+  json_api_generator:
+    target: ":json_api_generator"
+    import: "package:json_api_generator/generators.dart"
     builder_factories: ["generateJsonClass"]
     build_extensions: { ".dart": [".g.part"] }
     auto_apply: dependents
