@@ -6,7 +6,7 @@ part of 'generic_widgets.dart';
 // GenericWidgetsGenerator
 // **************************************************************************
 
-Widget intWidget(String fieldName, int value) {
+Widget intWidget(String fieldName, int? value) {
   return Container(
     padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
     margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
@@ -27,7 +27,7 @@ Widget intWidget(String fieldName, int value) {
   );
 }
 
-Widget doubleWidget(String fieldName, double value) {
+Widget doubleWidget(String fieldName, double? value) {
   return Container(
     padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
     margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
@@ -48,7 +48,7 @@ Widget doubleWidget(String fieldName, double value) {
   );
 }
 
-Widget stringWidget(String fieldName, String value) {
+Widget stringWidget(String fieldName, String? value) {
   return Container(
     padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
     margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
@@ -63,7 +63,7 @@ Widget stringWidget(String fieldName, String value) {
           style: const TextStyle(fontWeight: FontWeight.bold),
         ),
         const SizedBox(width: 8.0),
-        Text(value),
+        Text(value!),
       ],
     ),
   );

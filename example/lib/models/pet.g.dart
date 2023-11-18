@@ -1,22 +1,23 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'person.dart';
+part of 'pet.dart';
 
 // **************************************************************************
 // ElementWidgetGenerator
 // **************************************************************************
 
-class PersonWidget extends StatelessWidget {
-  final Person element;
-  const PersonWidget(this.element, {super.key});
+class PetWidget extends StatelessWidget {
+  final Pet element;
+  const PetWidget(this.element, {super.key});
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         intWidget("id", element.id),
         stringWidget("name", element.name),
-        stringWidget("surname", element.surname),
-        stringWidget("address", element.address),
+        stringWidget("animalType", element.animalType),
+        doubleWidget("weight", element.weight),
+        intWidget("ownerId", element.ownerId),
       ],
     );
   }
@@ -26,8 +27,8 @@ class PersonWidget extends StatelessWidget {
 // HomeWidgetElementGenerator
 // **************************************************************************
 
-class PersonHomeWidget extends StatelessWidget {
-  const PersonHomeWidget({super.key});
+class PetHomeWidget extends StatelessWidget {
+  const PetHomeWidget({super.key});
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -36,7 +37,7 @@ class PersonHomeWidget extends StatelessWidget {
       color: Colors.blue, // You can choose any color you like
       child: const Center(
         child: Text(
-          "Person",
+          "Pet",
           style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
@@ -51,18 +52,20 @@ class PersonHomeWidget extends StatelessWidget {
 // JsonSerializableGenerator
 // **************************************************************************
 
-Person _$PersonFromJson(Map<String, dynamic> json) => Person(
+Pet _$PetFromJson(Map<String, dynamic> json) => Pet(
       id: json['id'] as int,
       name: json['name'] as String,
-      surname: json['surname'] as String,
-      address: json['address'] as String,
+      animalType: json['animalType'] as String,
+      weight: (json['weight'] as num).toDouble(),
       date: DateTime.parse(json['date'] as String),
+      ownerId: json['ownerId'] as int?,
     );
 
-Map<String, dynamic> _$PersonToJson(Person instance) => <String, dynamic>{
+Map<String, dynamic> _$PetToJson(Pet instance) => <String, dynamic>{
       'id': instance.id,
       'name': instance.name,
-      'surname': instance.surname,
-      'address': instance.address,
+      'animalType': instance.animalType,
+      'weight': instance.weight,
       'date': instance.date.toIso8601String(),
+      'ownerId': instance.ownerId,
     };

@@ -1,16 +1,24 @@
 import 'package:annotations/annotations.dart';
 import 'package:flutter/material.dart';
 import 'package:example/generic/generic_widgets.dart';
+import 'package:json_annotation/json_annotation.dart';
 
 part 'person.g.dart';
 
-@jsonGen
+@JsonSerializable()
+@riverpodGen
 @elementWidgetGen
+@homeWidgetElement
 class Person {
-  String name; 
-  String lastName;
-  bool isAdult;
-  int age;
+  final int id;
+  final String name; 
+  final String surname;
+  final String address;
+  final DateTime date;
 
-  Person(this.name, this.lastName, this.isAdult, this.age);
+  Person({required this.id, required this.name, required this.surname, required this.address, required this.date});
+
+  factory Person.fromJson(Map<String, dynamic> json) => _$PersonFromJson(json);
+
+  Map<String, dynamic> toJson() => _$PersonToJson(this);
 }

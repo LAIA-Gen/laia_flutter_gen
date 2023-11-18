@@ -12,16 +12,16 @@ dependencies:
     sdk: flutter
   annotations:
     path: ../annotations/
-
-
   cupertino_icons: ^1.0.2
+  json_annotation: ^4.8.1
+  json_serializable: ^6.7.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   build_runner: ^2.4.6
-  json_api_generator:
-    path: ../json_api_generator/
+  riverpod_generator:
+    path: ../riverpod_generator/
   widget_generator:
     path: ../widget_generator/
 

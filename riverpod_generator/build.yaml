@@ -1,14 +1,14 @@
 targets:
   $default:
     builders:
-      json_api_generator|annotations:
+      riverpod_generator|annotations:
         enabled: true
 
 builders:
-  json_api_generator:
-    target: ":json_api_generator"
-    import: "package:json_api_generator/generators.dart"
-    builder_factories: ["generateJsonClass"]
+  riverpod_generator:
+    target: ":riverpod_generator"
+    import: "package:riverpod_generator/generators.dart"
+    builder_factories: ["generateRiverpod"]
     build_extensions: { ".dart": [".g.part"] }
     auto_apply: dependents
     build_to: cache

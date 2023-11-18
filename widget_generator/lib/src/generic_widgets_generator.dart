@@ -5,7 +5,6 @@ import 'package:annotations/annotations.dart';
 import 'package:build/src/builder/build_step.dart';
 import 'package:widget_generator/src/model_visitor.dart';
 import 'package:source_gen/source_gen.dart';
-import 'dart:io';
 
 class GenericWidgetsGenerator extends GeneratorForAnnotation<GenericWidgetsGenAnnotation> {
   @override
@@ -18,12 +17,7 @@ class GenericWidgetsGenerator extends GeneratorForAnnotation<GenericWidgetsGenAn
     final visitor = ModelVisitor();
     element.visitChildren(visitor);
 
-    //String filePath = '${Directory.current.path}/lib/generic/example.dart';
-    //File file = File(filePath);
-    //file.writeAsStringSync('Hello, Dart!');
-
-
-    buffer.writeln("Widget intWidget(String fieldName, int value) {");
+    buffer.writeln("Widget intWidget(String fieldName, int? value) {");
     buffer.writeln('''
           return Container(
             padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
@@ -46,7 +40,7 @@ class GenericWidgetsGenerator extends GeneratorForAnnotation<GenericWidgetsGenAn
         }
         ''');
 
-    buffer.writeln("Widget doubleWidget(String fieldName, double value) {");
+    buffer.writeln("Widget doubleWidget(String fieldName, double? value) {");
     buffer.writeln('''
           return Container(
             padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
@@ -69,7 +63,7 @@ class GenericWidgetsGenerator extends GeneratorForAnnotation<GenericWidgetsGenAn
         }
         ''');
 
-    buffer.writeln("Widget stringWidget(String fieldName, String value) {");
+    buffer.writeln("Widget stringWidget(String fieldName, String? value) {");
     buffer.writeln('''
           return Container(
             padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
@@ -85,7 +79,7 @@ class GenericWidgetsGenerator extends GeneratorForAnnotation<GenericWidgetsGenAn
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(width: 8.0),
-                Text(value),
+                Text(value!),
               ],
             ),
           );

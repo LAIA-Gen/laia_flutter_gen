@@ -32,18 +32,23 @@ class ElementWidgetGenerator extends GeneratorForAnnotation<ElementWidgetGenAnno
 
       switch (fieldType) {
         case 'int':
+        case 'int?':
           buffer.writeln('intWidget("$fieldName", $fieldAccessor),');
           break;
         case 'double':
+        case 'double?':
           buffer.writeln('doubleWidget("$fieldName", $fieldAccessor),');
           break;
         case 'String':
+        case 'String?':
           buffer.writeln('stringWidget("$fieldName", $fieldAccessor),');
           break;
         case 'bool':
+        case 'bool?':
           buffer.writeln('boolWidget("$fieldName", $fieldAccessor),');
           break;
         case 'List<String>':
+        case 'List<String>?':
           buffer.writeln('stringListWidget("$fieldName", $fieldAccessor),');
           break;
       }
