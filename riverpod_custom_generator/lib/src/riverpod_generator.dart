@@ -16,7 +16,8 @@ class RiverpodCustomGenerator extends GeneratorForAnnotation<RiverpodGenAnnotati
     final visitor = ModelVisitor();
     element.visitChildren(visitor);
 
-    final baseURL = annotation.read('baseURL').stringValue;
+    // TODO - go to openapi from baseURL and define the routes
+    // final baseURL = annotation.read('baseURL').stringValue;
     var className = visitor.className;
     var classNameLowercase = className.toLowerCase();
     var classNamePlural = '${classNameLowercase}s';
@@ -24,14 +25,14 @@ class RiverpodCustomGenerator extends GeneratorForAnnotation<RiverpodGenAnnotati
     final buffer = StringBuffer();
     buffer.writeln('''
       final get${className}Provider = FutureProvider.autoDispose.family<$className, int>((ref, ${classNameLowercase}Id) async {
-        final json = await http.get(Uri.parse('$baseURL/$classNamePlural/\$${classNameLowercase}Id'));
+        final json = await http.get(Uri.parse('\$baseURL/$classNamePlural/\$${classNameLowercase}Id'));
         final jsonData = jsonDecode(json.body);
         return $className.fromJson(jsonData);
       });
 
       final create${className}Provider = FutureProvider.autoDispose.family<void, $className>((ref, ${classNameLowercase}Instance) async {
         final response = await http.post(
-          Uri.parse('$baseURL/$classNamePlural'),
+          Uri.parse('\$baseURL/$classNamePlural'),
           headers: {'Content-Type': 'application/json'},
           body: jsonEncode(${classNameLowercase}Instance.toJson()),
         );
@@ -42,7 +43,7 @@ class RiverpodCustomGenerator extends GeneratorForAnnotation<RiverpodGenAnnotati
 
       final update${className}Provider = FutureProvider.autoDispose.family<void, $className>((ref, ${classNameLowercase}Instance) async {
         final response = await http.put(
-          Uri.parse('$baseURL/$classNamePlural/\${${classNameLowercase}Instance.id}'),
+          Uri.parse('\$baseURL/$classNamePlural/\${${classNameLowercase}Instance.id}'),
           headers: {'Content-Type': 'application/json'},
           body: jsonEncode(${classNameLowercase}Instance.toJson()),
         );
@@ -53,11 +54,17 @@ class RiverpodCustomGenerator extends GeneratorForAnnotation<RiverpodGenAnnotati
 
       final delete${className}Provider = FutureProvider.autoDispose.family<void, int>((ref, ${classNameLowercase}Id) async {
         final response = await http.delete(
-          Uri.parse('$baseURL/$classNamePlural/\$${classNameLowercase}Id'),
+          Uri.parse('\$baseURL/$classNamePlural/\$${classNameLowercase}Id'),
         );
         if (response.statusCode != 204) {
           throw Exception('Failed to delete $className');
         }
+      });
+
+      final getAllPersonProvider = FutureProvider.autoDispose.family<List<Person>, dynamic>((ref, params) async {
+        final json = await http.get(Uri.parse('\$baseURL/persons?skip=\${params['skip'] ?? 0}&limit=\${params['limit'] ?? 10}'));
+        final jsonData = jsonDecode(json.body) as List;
+        return jsonData.map((data) => Person.fromJson(data)).toList();
       });
 ''');
 

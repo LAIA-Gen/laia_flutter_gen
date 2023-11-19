@@ -6,10 +6,16 @@ import 'package:widget_generator/src/element_widget_generator.dart';
 import 'package:widget_generator/src/generic_widgets_generator.dart';
 import 'package:widget_generator/src/home_widget_element_generator.dart';
 import 'package:widget_generator/src/home_widget_generator.dart';
+import 'package:widget_generator/src/list_widget_generator.dart';
 
 Builder generateHomeWidgetElement(BuilderOptions options) => SharedPartBuilder(
     [HomeWidgetElementGenerator()], 
     'home_widget_element_generator',
+  );
+
+Builder generateListWidget(BuilderOptions options) => SharedPartBuilder(
+    [ListWidgetGenerator()], 
+    'list_widget_generator',
   );
 
 Builder generateHomeWidget(BuilderOptions options) => SharedPartBuilder(

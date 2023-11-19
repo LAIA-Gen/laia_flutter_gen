@@ -31,17 +31,35 @@ class PersonHomeWidget extends StatelessWidget {
   const PersonHomeWidget({super.key});
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 100.0,
-      height: 100.0,
-      color: Colors.blue, // You can choose any color you like
-      child: const Center(
-        child: Text(
-          "Person",
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-          ),
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => PersonListView()),
+        );
+      },
+      child: Container(
+        width: 100.0,
+        height: 100.0,
+        color: Colors.blue, // You can choose any color you like
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset(
+              'assets/person.png',
+              width: 40.0,
+              height: 40.0,
+              color: Colors.white,
+            ),
+            const SizedBox(height: 8.0),
+            const Text(
+              "Person",
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -69,13 +87,49 @@ Map<String, dynamic> _$PersonToJson(Person instance) => <String, dynamic>{
     };
 
 // **************************************************************************
+// ListWidgetGenerator
+// **************************************************************************
+
+class PersonListView extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Person List'),
+      ),
+      body: FutureBuilder(
+        future: getAllPersonProvider(0,
+            limit: 10), // Example: Fetch the first 10 items
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return CircularProgressIndicator();
+          } else if (snapshot.hasError) {
+            return Text('Error: ${snapshot.error}');
+          } else {
+            List<Person> personList = snapshot.data;
+            return ListView.builder(
+              itemCount: personList.length,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  title: Text(
+                      'Person ${index + 1}: ${personList[index].toString()}'),
+                );
+              },
+            );
+          }
+        },
+      ),
+    );
+  }
+}
+
+// **************************************************************************
 // RiverpodCustomGenerator
 // **************************************************************************
 
 final getPersonProvider =
     FutureProvider.autoDispose.family<Person, int>((ref, personId) async {
-  final json =
-      await http.get(Uri.parse('http://localhost:8000/persons/$personId'));
+  final json = await http.get(Uri.parse('$baseURL/persons/$personId'));
   final jsonData = jsonDecode(json.body);
   return Person.fromJson(jsonData);
 });
@@ -83,7 +137,7 @@ final getPersonProvider =
 final createPersonProvider = FutureProvider.autoDispose
     .family<void, Person>((ref, personInstance) async {
   final response = await http.post(
-    Uri.parse('http://localhost:8000/persons'),
+    Uri.parse('$baseURL/persons'),
     headers: {'Content-Type': 'application/json'},
     body: jsonEncode(personInstance.toJson()),
   );
@@ -95,7 +149,7 @@ final createPersonProvider = FutureProvider.autoDispose
 final updatePersonProvider = FutureProvider.autoDispose
     .family<void, Person>((ref, personInstance) async {
   final response = await http.put(
-    Uri.parse('http://localhost:8000/persons/${personInstance.id}'),
+    Uri.parse('$baseURL/persons/${personInstance.id}'),
     headers: {'Content-Type': 'application/json'},
     body: jsonEncode(personInstance.toJson()),
   );
@@ -107,9 +161,17 @@ final updatePersonProvider = FutureProvider.autoDispose
 final deletePersonProvider =
     FutureProvider.autoDispose.family<void, int>((ref, personId) async {
   final response = await http.delete(
-    Uri.parse('http://localhost:8000/persons/$personId'),
+    Uri.parse('$baseURL/persons/$personId'),
   );
   if (response.statusCode != 204) {
     throw Exception('Failed to delete Person');
   }
+});
+
+final getAllPersonProvider = FutureProvider.autoDispose
+    .family<List<Person>, dynamic>((ref, params) async {
+  final json = await http.get(Uri.parse(
+      '$baseURL/persons?skip=${params['skip'] ?? 0}&limit=${params['limit'] ?? 10}'));
+  final jsonData = jsonDecode(json.body) as List;
+  return jsonData.map((data) => Person.fromJson(data)).toList();
 });

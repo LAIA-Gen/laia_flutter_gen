@@ -11,8 +11,9 @@ part 'person.g.dart';
 
 @JsonSerializable()
 @RiverpodGenAnnotation(baseURL)
+@HomeWidgetElementGenAnnotation('assets/person.png')
 @elementWidgetGen
-@homeWidgetElement
+@listWidgetGen
 class Person {
   final int id;
   final String name; 

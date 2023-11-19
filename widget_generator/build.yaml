@@ -8,7 +8,7 @@ builders:
   widget_generator:
     target: ":widget_generator"
     import: "package:widget_generator/widget_generator.dart"
-    builder_factories: ["generateHomeWidgetElement", "generateElementWidget", "generateGenericWidgets", "generateHomeWidget"]
+    builder_factories: ["generateHomeWidgetElement", "generateElementWidget", "generateGenericWidgets", "generateHomeWidget", "generateListWidget"]
     build_extensions: { ".dart": [".g.part"] }
     auto_apply: dependents
     build_to: cache

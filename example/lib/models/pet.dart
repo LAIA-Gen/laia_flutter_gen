@@ -11,8 +11,9 @@ part 'pet.g.dart';
 
 @JsonSerializable()
 @RiverpodGenAnnotation(baseURL)
+@HomeWidgetElementGenAnnotation('assets/pet.png')
 @elementWidgetGen
-@homeWidgetElement
+@listWidgetGen
 class Pet {
   final int id;
   final String name; 

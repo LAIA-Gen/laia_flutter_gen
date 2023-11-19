@@ -12,7 +12,7 @@ class Home extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final AsyncValue<Person> personAsyncValue = ref.watch(getPersonProvider(1));
+    // final AsyncValue<Person> personAsyncValue = ref.watch(getPersonProvider(1));
 
     return MaterialApp(
       title: 'Flutter Demo',
@@ -30,11 +30,12 @@ class Home extends ConsumerWidget {
           children: [
             const Text('This is the Home!'),
             dashboardWidget(),
+            /*
             personAsyncValue.when(
               loading: () => const CircularProgressIndicator(), 
               data: (Person data) => PersonWidget(data), 
               error: (Object error, StackTrace stackTrace) => Text('Error loading person: $error'),
-            ),
+            ),*/
           ],
         ),
       ),
