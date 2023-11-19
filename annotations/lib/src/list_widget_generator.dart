@@ -1,5 +1,7 @@
 class ListWidgetGenAnnotation {
-  const ListWidgetGenAnnotation();
-}
+  final int pageSize;
+  final List<String> defaultFields;
+  final String widget; 
 
-const listWidgetGen = ListWidgetGenAnnotation();
+  const ListWidgetGenAnnotation({this.pageSize = 10, this.defaultFields = const [], this.widget = ''});
+}

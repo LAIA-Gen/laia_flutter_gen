@@ -6,24 +6,71 @@ part of 'generic_widgets.dart';
 // GenericWidgetsGenerator
 // **************************************************************************
 
-Widget intWidget(String fieldName, int? value) {
-  return Container(
+Widget intWidget(String fieldName, String fieldDescription, bool editable, String placeholder, int? value) {
+  bool isValueChanged = false; // Track whether the value has been changed
+
+  return Stack(
+    children: [
+      Container(
     padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
     margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
     decoration: BoxDecoration(
       border: Border.all(color: Colors.grey, width: 1.0),
     ),
-    child: Row(
+    child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          "$fieldName:",
-          style: const TextStyle(fontWeight: FontWeight.bold),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "$fieldName:",
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(width: 8.0),
+            Text(
+              fieldDescription,
+              style: const TextStyle(color: Colors.grey),
+            ),
+          ],
         ),
-        const SizedBox(width: 8.0),
-        Text(value.toString()),
+        const SizedBox(height: 8.0),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            editable
+                ? Expanded(
+                    child: TextFormField(
+                      decoration: InputDecoration(
+                        hintText: placeholder,
+                      ),
+                      initialValue: value?.toString(),
+                      keyboardType: TextInputType.number,
+                      onChanged: (newValue) {
+                        isValueChanged = true;
+                      },
+                    ),
+                  )
+                : Text(value?.toString() ?? placeholder),
+            ],
+        ),
       ],
     ),
+  ),
+  if (isValueChanged)
+        Positioned(
+          top: 0,
+          left: 0,
+          child: Container(
+            width: 20,
+            height: 20,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.orange,
+            ),
+          ),
+        ),
+    ]
   );
 }
 

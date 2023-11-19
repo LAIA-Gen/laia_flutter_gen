@@ -11,15 +11,20 @@ class PetWidget extends StatelessWidget {
   const PetWidget(this.element, {super.key});
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        intWidget("id", element.id),
-        stringWidget("name", element.name),
-        stringWidget("animalType", element.animalType),
-        doubleWidget("weight", element.weight),
-        defaultWidget("date", element.date),
-        intWidget("ownerId", element.ownerId),
-      ],
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Pet'),
+      ),
+      body: Column(
+        children: [
+          intWidget("id", "This is a description", true, "This is a placeholder", element.id),
+          stringWidget("name", element.name),
+          stringWidget("animalType", element.animalType),
+          doubleWidget("weight", element.weight),
+          defaultWidget("date", element.date),
+          intWidget("id", "This is a description", true, "This is a placeholder", element.ownerId),
+        ],
+      ),
     );
   }
 }
@@ -93,37 +98,161 @@ Map<String, dynamic> _$PetToJson(Pet instance) => <String, dynamic>{
 // ListWidgetGenerator
 // **************************************************************************
 
-class PetListView extends StatelessWidget {
+class PetListView extends ConsumerWidget {
+  const PetListView({super.key});
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final paginationState = ref.watch(petPaginationProvider);
+    final petsAsyncValue = ref.watch(getAllPetProvider(paginationState));
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Pet List'),
       ),
-      body: FutureBuilder(
-        future: getAllPetProvider(0,
-            limit: 10), // Example: Fetch the first 10 items
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return CircularProgressIndicator();
-          } else if (snapshot.hasError) {
-            return Text('Error: ${snapshot.error}');
-          } else {
-            List<Pet> petList = snapshot.data;
-            return ListView.builder(
-              itemCount: petList.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  title: Text('Pet ${index + 1}: ${petList[index].toString()}'),
-                );
-              },
-            );
-          }
+      body: petsAsyncValue.when(
+        loading: () => const CircularProgressIndicator(),
+        error: (error, stackTrace) => Text('Error: $error'),
+        data: (List<Pet> pets) {
+          return SingleChildScrollView(
+              scrollDirection: Axis.vertical,
+              child: SizedBox(
+                  width: double.infinity,
+                  child: DataTable(
+                      columns: const [
+                        DataColumn(
+                          label: Expanded(
+                              child: Text(
+                            'id',
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Color.fromARGB(255, 94, 54, 54)),
+                            textAlign: TextAlign.center,
+                          )),
+                        ),
+                        DataColumn(
+                          label: Expanded(
+                              child: Text(
+                            'name',
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Color.fromARGB(255, 94, 54, 54)),
+                            textAlign: TextAlign.center,
+                          )),
+                        ),
+                        DataColumn(
+                          label: Expanded(
+                              child: Text(
+                            'animalType',
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Color.fromARGB(255, 94, 54, 54)),
+                            textAlign: TextAlign.center,
+                          )),
+                        ),
+                        DataColumn(
+                          label: Expanded(
+                              child: Text(
+                            'weight',
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Color.fromARGB(255, 94, 54, 54)),
+                            textAlign: TextAlign.center,
+                          )),
+                        ),
+                        DataColumn(
+                          label: Expanded(
+                              child: Text(
+                            'date',
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Color.fromARGB(255, 94, 54, 54)),
+                            textAlign: TextAlign.center,
+                          )),
+                        ),
+                        DataColumn(
+                          label: Expanded(
+                              child: Text(
+                            'ownerId',
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Color.fromARGB(255, 94, 54, 54)),
+                            textAlign: TextAlign.center,
+                          )),
+                        ),
+                      ],
+                      rows: pets.map((pet) {
+                        return DataRow(
+                          cells: [
+                            DataCell(Center(child: Text(pet.id.toString()))),
+                            DataCell(Center(child: Text(pet.name.toString()))),
+                            DataCell(
+                                Center(child: Text(pet.animalType.toString()))),
+                            DataCell(
+                                Center(child: Text(pet.weight.toString()))),
+                            DataCell(Center(child: Text(pet.date.toString()))),
+                            DataCell(
+                                Center(child: Text(pet.ownerId.toString()))),
+                          ],
+                          onSelectChanged: (selected) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => PetWidget(pet)),
+                            );
+                          },
+                        );
+                      }).toList(),
+                      showCheckboxColumn: false)));
         },
+      ),
+      floatingActionButton: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          ElevatedButton(
+            onPressed: () =>
+                ref.read(petPaginationProvider.notifier).decrementPage(),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color.fromARGB(255, 224, 221, 221),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(4.0),
+              ),
+            ),
+            child: const Icon(Icons.arrow_back),
+          ),
+          const SizedBox(width: 16),
+          ElevatedButton(
+            onPressed: () =>
+                ref.read(petPaginationProvider.notifier).incrementPage(),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color.fromARGB(255, 224, 221, 221),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(4.0),
+              ),
+            ),
+            child: const Icon(Icons.arrow_forward),
+          ),
+        ],
       ),
     );
   }
 }
+
+class PetPaginationNotifier extends StateNotifier<Tuple2<int, int>> {
+  PetPaginationNotifier() : super(const Tuple2<int, int>(0, 10));
+
+  void incrementPage() => state = Tuple2(state.item1 + 10, state.item2);
+  void decrementPage() {
+    if (state.item1 != 0) {
+      state = Tuple2(state.item1 - 10, state.item2);
+    }
+  }
+}
+
+final petPaginationProvider =
+    StateNotifierProvider<PetPaginationNotifier, Tuple2<int, int>>(
+  (ref) => PetPaginationNotifier(),
+);
 
 // **************************************************************************
 // RiverpodCustomGenerator
@@ -170,10 +299,10 @@ final deletePetProvider =
   }
 });
 
-final getAllPersonProvider = FutureProvider.autoDispose
-    .family<List<Person>, dynamic>((ref, params) async {
-  final json = await http.get(Uri.parse(
-      '$baseURL/persons?skip=${params['skip'] ?? 0}&limit=${params['limit'] ?? 10}'));
+final getAllPetProvider = FutureProvider.autoDispose
+    .family<List<Pet>, Tuple2<int, int>>((ref, tuple) async {
+  final json = await http
+      .get(Uri.parse('$baseURL/pets?skip=${tuple.item1}&limit=${tuple.item2}'));
   final jsonData = jsonDecode(json.body) as List;
-  return jsonData.map((data) => Person.fromJson(data)).toList();
+  return jsonData.map((data) => Pet.fromJson(data)).toList();
 });

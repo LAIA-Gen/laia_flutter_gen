@@ -24,7 +24,12 @@ class ElementWidgetGenerator extends GeneratorForAnnotation<ElementWidgetGenAnno
 
     buffer.writeln('@override');
     buffer.writeln('Widget build(BuildContext context) {');
-    buffer.writeln('return Column(');
+    buffer.writeln('''
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('${visitor.className}'),
+      ),
+      body: Column(''');
     buffer.writeln('children: [');
     for (var fieldName in visitor.fields.keys) {
       String fieldType = visitor.fields[fieldName];
@@ -57,6 +62,7 @@ class ElementWidgetGenerator extends GeneratorForAnnotation<ElementWidgetGenAnno
       }
     }
     buffer.writeln('],');
+    buffer.writeln('),');
     buffer.writeln(');');
     buffer.writeln('}');
     buffer.writeln('}');

@@ -61,10 +61,10 @@ class RiverpodCustomGenerator extends GeneratorForAnnotation<RiverpodGenAnnotati
         }
       });
 
-      final getAllPersonProvider = FutureProvider.autoDispose.family<List<Person>, dynamic>((ref, params) async {
-        final json = await http.get(Uri.parse('\$baseURL/persons?skip=\${params['skip'] ?? 0}&limit=\${params['limit'] ?? 10}'));
+      final getAll${className}Provider = FutureProvider.autoDispose.family<List<$className>, Tuple2<int, int>>((ref, tuple) async {
+        final json = await http.get(Uri.parse('\$baseURL/$classNamePlural?skip=\${tuple.item1}&limit=\${tuple.item2}'));
         final jsonData = jsonDecode(json.body) as List;
-        return jsonData.map((data) => Person.fromJson(data)).toList();
+        return jsonData.map((data) => $className.fromJson(data)).toList();
       });
 ''');
 

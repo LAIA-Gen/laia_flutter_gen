@@ -11,14 +11,19 @@ class PersonWidget extends StatelessWidget {
   const PersonWidget(this.element, {super.key});
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        intWidget("id", element.id),
-        stringWidget("name", element.name),
-        stringWidget("surname", element.surname),
-        stringWidget("address", element.address),
-        defaultWidget("date", element.date),
-      ],
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Person'),
+      ),
+      body: Column(
+        children: [
+          intWidget("id", "This is a description", true, "This is a placeholder", element.id),
+          stringWidget("name", element.name),
+          stringWidget("surname", element.surname),
+          stringWidget("address", element.address),
+          defaultWidget("date", element.date),
+        ],
+      ),
     );
   }
 }
@@ -90,38 +95,116 @@ Map<String, dynamic> _$PersonToJson(Person instance) => <String, dynamic>{
 // ListWidgetGenerator
 // **************************************************************************
 
-class PersonListView extends StatelessWidget {
+class PersonListView extends ConsumerWidget {
+  const PersonListView({super.key});
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final paginationState = ref.watch(personPaginationProvider);
+    final personsAsyncValue = ref.watch(getAllPersonProvider(paginationState));
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Person List'),
       ),
-      body: FutureBuilder(
-        future: getAllPersonProvider(0,
-            limit: 10), // Example: Fetch the first 10 items
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return CircularProgressIndicator();
-          } else if (snapshot.hasError) {
-            return Text('Error: ${snapshot.error}');
-          } else {
-            List<Person> personList = snapshot.data;
-            return ListView.builder(
-              itemCount: personList.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  title: Text(
-                      'Person ${index + 1}: ${personList[index].toString()}'),
-                );
-              },
-            );
-          }
+      body: personsAsyncValue.when(
+        loading: () => const CircularProgressIndicator(),
+        error: (error, stackTrace) => Text('Error: $error'),
+        data: (List<Person> persons) {
+          return SingleChildScrollView(
+              scrollDirection: Axis.vertical,
+              child: SizedBox(
+                  width: double.infinity,
+                  child: DataTable(
+                      columns: const [
+                        DataColumn(
+                          label: Expanded(
+                              child: Text(
+                            'name',
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Color.fromARGB(255, 94, 54, 54)),
+                            textAlign: TextAlign.center,
+                          )),
+                        ),
+                        DataColumn(
+                          label: Expanded(
+                              child: Text(
+                            'surname',
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Color.fromARGB(255, 94, 54, 54)),
+                            textAlign: TextAlign.center,
+                          )),
+                        ),
+                      ],
+                      rows: persons.map((person) {
+                        return DataRow(
+                          cells: [
+                            DataCell(
+                                Center(child: Text(person.name.toString()))),
+                            DataCell(
+                                Center(child: Text(person.surname.toString()))),
+                          ],
+                          onSelectChanged: (selected) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => PersonWidget(person)),
+                            );
+                          },
+                        );
+                      }).toList(),
+                      showCheckboxColumn: false)));
         },
+      ),
+      floatingActionButton: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          ElevatedButton(
+            onPressed: () =>
+                ref.read(personPaginationProvider.notifier).decrementPage(),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color.fromARGB(255, 224, 221, 221),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(4.0),
+              ),
+            ),
+            child: const Icon(Icons.arrow_back),
+          ),
+          const SizedBox(width: 16),
+          ElevatedButton(
+            onPressed: () =>
+                ref.read(personPaginationProvider.notifier).incrementPage(),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color.fromARGB(255, 224, 221, 221),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(4.0),
+              ),
+            ),
+            child: const Icon(Icons.arrow_forward),
+          ),
+        ],
       ),
     );
   }
 }
+
+class PersonPaginationNotifier extends StateNotifier<Tuple2<int, int>> {
+  PersonPaginationNotifier() : super(const Tuple2<int, int>(0, 10));
+
+  void incrementPage() => state = Tuple2(state.item1 + 10, state.item2);
+  void decrementPage() {
+    if (state.item1 != 0) {
+      state = Tuple2(state.item1 - 10, state.item2);
+    }
+  }
+}
+
+final personPaginationProvider =
+    StateNotifierProvider<PersonPaginationNotifier, Tuple2<int, int>>(
+  (ref) => PersonPaginationNotifier(),
+);
 
 // **************************************************************************
 // RiverpodCustomGenerator
@@ -169,9 +252,9 @@ final deletePersonProvider =
 });
 
 final getAllPersonProvider = FutureProvider.autoDispose
-    .family<List<Person>, dynamic>((ref, params) async {
-  final json = await http.get(Uri.parse(
-      '$baseURL/persons?skip=${params['skip'] ?? 0}&limit=${params['limit'] ?? 10}'));
+    .family<List<Person>, Tuple2<int, int>>((ref, tuple) async {
+  final json = await http.get(
+      Uri.parse('$baseURL/persons?skip=${tuple.item1}&limit=${tuple.item2}'));
   final jsonData = jsonDecode(json.body) as List;
   return jsonData.map((data) => Person.fromJson(data)).toList();
 });

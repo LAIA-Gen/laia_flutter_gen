@@ -6,14 +6,15 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:tuple/tuple.dart';
 
 part 'pet.g.dart';
 
 @JsonSerializable()
 @RiverpodGenAnnotation(baseURL)
 @HomeWidgetElementGenAnnotation('assets/pet.png')
+@ListWidgetGenAnnotation()
 @elementWidgetGen
-@listWidgetGen
 class Pet {
   final int id;
   final String name; 

@@ -17,41 +17,126 @@ class ListWidgetGenerator extends GeneratorForAnnotation<ListWidgetGenAnnotation
     final visitor = ModelVisitor();
     element.visitChildren(visitor);
 
+    final pageSize = annotation.read('pageSize').intValue;
+    final List<String> defaultFields = annotation.read('defaultFields').listValue.map((element) => element.toStringValue() ?? '').toList();
+    // final widget = annotation.read('widget').stringValue;
+
     var className = visitor.className;
     var classNameLowercase = className.toLowerCase();
+    var classNamePlural = '${classNameLowercase}s';
 
     buffer.writeln('''
-class ${className}ListView extends StatelessWidget {
+class ${className}ListView extends ConsumerWidget {
+  const ${className}ListView({super.key});
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final paginationState = ref.watch(${classNameLowercase}PaginationProvider);
+    final ${classNamePlural}AsyncValue =
+        ref.watch(getAll${className}Provider(paginationState));
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('$className List'),
       ),
-      body: FutureBuilder(
-        future: getAll${className}Provider(0, limit: 10), // Example: Fetch the first 10 items
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return CircularProgressIndicator();
-          } else if (snapshot.hasError) {
-            return Text('Error: \${snapshot.error}');
-          } else {
-            List<$className> ${classNameLowercase}List = snapshot.data;
-            return ListView.builder(
-              itemCount: ${classNameLowercase}List.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  title: Text('$className \${index + 1}: \${${classNameLowercase}List[index].toString()}'),
-                );
-              },
-            );
-          }
+      body: ${classNamePlural}AsyncValue.when(
+        loading: () => const CircularProgressIndicator(),
+        error: (error, stackTrace) => Text('Error: \$error'),
+        data: (List<$className> $classNamePlural) {
+          return SingleChildScrollView(
+            scrollDirection: Axis.vertical,
+            child: SizedBox(
+              width: double.infinity,
+              child: DataTable(
+                columns: const [''');
+
+    for (var field in defaultFields.isEmpty ? visitor.fields.keys : defaultFields) {
+      buffer.writeln('''
+        DataColumn(
+          label: Expanded(
+            child: Text('$field', style: TextStyle(fontWeight: FontWeight.bold, color: Color.fromARGB(255, 94, 54, 54)), textAlign: TextAlign.center,)
+          ), 
+        ),
+      ''');
+    }
+
+    buffer.writeln('''
+        ],
+        rows: $classNamePlural.map(($classNameLowercase) {
+          return DataRow(
+            cells: [
+''');
+
+    for (var field in defaultFields.isEmpty ? visitor.fields.keys : defaultFields) {
+      buffer.writeln('''
+        DataCell(Center(child: Text($classNameLowercase.$field.toString()))),
+      ''');
+    }
+
+    buffer.writeln('''
+                ],
+                    onSelectChanged: (selected) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => ${className}Widget($classNameLowercase)),
+                      );
+                    },
+                  );
+                }).toList(),
+                showCheckboxColumn: false
+              )
+            )
+          );
         },
+      ),
+      floatingActionButton: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          ElevatedButton(
+            onPressed: () =>
+                ref.read(${classNameLowercase}PaginationProvider.notifier).decrementPage(),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color.fromARGB(255, 224, 221, 221),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(4.0),
+              ),
+            ),
+            child: const Icon(Icons.arrow_back),
+          ),
+          const SizedBox(width: 16),
+          ElevatedButton(
+            onPressed: () =>
+                ref.read(${classNameLowercase}PaginationProvider.notifier).incrementPage(),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color.fromARGB(255, 224, 221, 221),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(4.0),
+              ),
+            ),
+            child: const Icon(Icons.arrow_forward),
+          ),
+        ],
       ),
     );
   }
 }
+class ${className}PaginationNotifier extends StateNotifier<Tuple2<int, int>> {
+  ${className}PaginationNotifier() : super(const Tuple2<int, int>(0, $pageSize));
+
+  void incrementPage() => state = Tuple2(state.item1 + $pageSize, state.item2);
+  void decrementPage() {
+    if (state.item1 != 0) {
+      state = Tuple2(state.item1 - $pageSize, state.item2);
+    }
+  }
+}
+
+final ${classNameLowercase}PaginationProvider =
+    StateNotifierProvider<${className}PaginationNotifier, Tuple2<int, int>>(
+  (ref) => ${className}PaginationNotifier(),
+);
 ''');
+
 
     return buffer.toString();
   }
