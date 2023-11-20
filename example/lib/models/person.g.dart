@@ -3,12 +3,118 @@
 part of 'person.dart';
 
 // **************************************************************************
+// CopyWithGenerator
+// **************************************************************************
+
+abstract class _$PersonCWProxy {
+  Person address(String address);
+
+  Person date(DateTime date);
+
+  Person id(int id);
+
+  Person name(String name);
+
+  Person surname(String surname);
+
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Person(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  ///
+  /// Usage
+  /// ```dart
+  /// Person(...).copyWith(id: 12, name: "My name")
+  /// ````
+  Person call({
+    String? address,
+    DateTime? date,
+    int? id,
+    String? name,
+    String? surname,
+  });
+}
+
+/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfPerson.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfPerson.copyWith.fieldName(...)`
+class _$PersonCWProxyImpl implements _$PersonCWProxy {
+  final Person _value;
+
+  const _$PersonCWProxyImpl(this._value);
+
+  @override
+  Person address(String address) => this(address: address);
+
+  @override
+  Person date(DateTime date) => this(date: date);
+
+  @override
+  Person id(int id) => this(id: id);
+
+  @override
+  Person name(String name) => this(name: name);
+
+  @override
+  Person surname(String surname) => this(surname: surname);
+
+  @override
+
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Person(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  ///
+  /// Usage
+  /// ```dart
+  /// Person(...).copyWith(id: 12, name: "My name")
+  /// ````
+  Person call({
+    Object? address = const $CopyWithPlaceholder(),
+    Object? date = const $CopyWithPlaceholder(),
+    Object? id = const $CopyWithPlaceholder(),
+    Object? name = const $CopyWithPlaceholder(),
+    Object? surname = const $CopyWithPlaceholder(),
+  }) {
+    return Person(
+      address: address == const $CopyWithPlaceholder() || address == null
+          ? _value.address
+          // ignore: cast_nullable_to_non_nullable
+          : address as String,
+      date: date == const $CopyWithPlaceholder() || date == null
+          ? _value.date
+          // ignore: cast_nullable_to_non_nullable
+          : date as DateTime,
+      id: id == const $CopyWithPlaceholder() || id == null
+          ? _value.id
+          // ignore: cast_nullable_to_non_nullable
+          : id as int,
+      name: name == const $CopyWithPlaceholder() || name == null
+          ? _value.name
+          // ignore: cast_nullable_to_non_nullable
+          : name as String,
+      surname: surname == const $CopyWithPlaceholder() || surname == null
+          ? _value.surname
+          // ignore: cast_nullable_to_non_nullable
+          : surname as String,
+    );
+  }
+}
+
+extension $PersonCopyWith on Person {
+  /// Returns a callable class that can be used as follows: `instanceOfPerson.copyWith(...)` or like so:`instanceOfPerson.copyWith.fieldName(...)`.
+  // ignore: library_private_types_in_public_api
+  _$PersonCWProxy get copyWith => _$PersonCWProxyImpl(this);
+}
+
+// **************************************************************************
 // ElementWidgetGenerator
 // **************************************************************************
 
-class PersonWidget extends StatelessWidget {
+class PersonWidget extends StatefulWidget {
   final Person element;
-  const PersonWidget(this.element, {super.key});
+
+  const PersonWidget(this.element, {Key? key}) : super(key: key);
+
+  @override
+  _PersonWidgetState createState() => _PersonWidgetState();
+}
+
+class _PersonWidgetState extends State<PersonWidget> {
+  final GlobalKey<IntWidgetState> idWidgetKey = GlobalKey<IntWidgetState>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,12 +123,34 @@ class PersonWidget extends StatelessWidget {
       ),
       body: Column(
         children: [
-          intWidget("id", "This is a description", true, "This is a placeholder", element.id),
-          stringWidget("name", element.name),
-          stringWidget("surname", element.surname),
-          stringWidget("address", element.address),
-          defaultWidget("date", element.date),
+          IntWidget(
+            key: idWidgetKey,
+            fieldName: "id",
+            fieldDescription: "This is a description",
+            editable: true,
+            placeholder: "This is a placeholder",
+            value: widget.element.id,
+          ),
+          stringWidget("name", widget.element.name),
+          stringWidget("surname", widget.element.surname),
+          stringWidget("address", widget.element.address),
+          defaultWidget("date", widget.element.date),
         ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          int? updatedid = idWidgetKey.currentState?.getUpdatedValue();
+
+          Person updatedPerson = widget.element.copyWith(id: updatedid);
+          var container = ProviderContainer();
+          try {
+            await container.read(updatePersonProvider(updatedPerson));
+            print('Person updated successfully');
+          } catch (error) {
+            print('Failed to update Person: $error');
+          }
+        },
+        child: Icon(Icons.save),
       ),
     );
   }

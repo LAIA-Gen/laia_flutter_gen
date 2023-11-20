@@ -3,12 +3,132 @@
 part of 'pet.dart';
 
 // **************************************************************************
+// CopyWithGenerator
+// **************************************************************************
+
+abstract class _$PetCWProxy {
+  Pet animalType(String animalType);
+
+  Pet date(DateTime date);
+
+  Pet id(int id);
+
+  Pet name(String name);
+
+  Pet ownerId(int? ownerId);
+
+  Pet weight(double weight);
+
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Pet(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  ///
+  /// Usage
+  /// ```dart
+  /// Pet(...).copyWith(id: 12, name: "My name")
+  /// ````
+  Pet call({
+    String? animalType,
+    DateTime? date,
+    int? id,
+    String? name,
+    int? ownerId,
+    double? weight,
+  });
+}
+
+/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfPet.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfPet.copyWith.fieldName(...)`
+class _$PetCWProxyImpl implements _$PetCWProxy {
+  final Pet _value;
+
+  const _$PetCWProxyImpl(this._value);
+
+  @override
+  Pet animalType(String animalType) => this(animalType: animalType);
+
+  @override
+  Pet date(DateTime date) => this(date: date);
+
+  @override
+  Pet id(int id) => this(id: id);
+
+  @override
+  Pet name(String name) => this(name: name);
+
+  @override
+  Pet ownerId(int? ownerId) => this(ownerId: ownerId);
+
+  @override
+  Pet weight(double weight) => this(weight: weight);
+
+  @override
+
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Pet(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  ///
+  /// Usage
+  /// ```dart
+  /// Pet(...).copyWith(id: 12, name: "My name")
+  /// ````
+  Pet call({
+    Object? animalType = const $CopyWithPlaceholder(),
+    Object? date = const $CopyWithPlaceholder(),
+    Object? id = const $CopyWithPlaceholder(),
+    Object? name = const $CopyWithPlaceholder(),
+    Object? ownerId = const $CopyWithPlaceholder(),
+    Object? weight = const $CopyWithPlaceholder(),
+  }) {
+    return Pet(
+      animalType:
+          animalType == const $CopyWithPlaceholder() || animalType == null
+              ? _value.animalType
+              // ignore: cast_nullable_to_non_nullable
+              : animalType as String,
+      date: date == const $CopyWithPlaceholder() || date == null
+          ? _value.date
+          // ignore: cast_nullable_to_non_nullable
+          : date as DateTime,
+      id: id == const $CopyWithPlaceholder() || id == null
+          ? _value.id
+          // ignore: cast_nullable_to_non_nullable
+          : id as int,
+      name: name == const $CopyWithPlaceholder() || name == null
+          ? _value.name
+          // ignore: cast_nullable_to_non_nullable
+          : name as String,
+      ownerId: ownerId == const $CopyWithPlaceholder()
+          ? _value.ownerId
+          // ignore: cast_nullable_to_non_nullable
+          : ownerId as int?,
+      weight: weight == const $CopyWithPlaceholder() || weight == null
+          ? _value.weight
+          // ignore: cast_nullable_to_non_nullable
+          : weight as double,
+    );
+  }
+}
+
+extension $PetCopyWith on Pet {
+  /// Returns a callable class that can be used as follows: `instanceOfPet.copyWith(...)` or like so:`instanceOfPet.copyWith.fieldName(...)`.
+  // ignore: library_private_types_in_public_api
+  _$PetCWProxy get copyWith => _$PetCWProxyImpl(this);
+}
+
+// **************************************************************************
 // ElementWidgetGenerator
 // **************************************************************************
 
-class PetWidget extends StatelessWidget {
+class PetWidget extends StatefulWidget {
   final Pet element;
-  const PetWidget(this.element, {super.key});
+
+  const PetWidget(this.element, {Key? key}) : super(key: key);
+
+  @override
+  _PetWidgetState createState() => _PetWidgetState();
+}
+
+class _PetWidgetState extends State<PetWidget> {
+  final GlobalKey<IntWidgetState> idWidgetKey = GlobalKey<IntWidgetState>();
+  final GlobalKey<IntWidgetState> ownerIdWidgetKey =
+      GlobalKey<IntWidgetState>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,13 +137,46 @@ class PetWidget extends StatelessWidget {
       ),
       body: Column(
         children: [
-          intWidget("id", "This is a description", true, "This is a placeholder", element.id),
-          stringWidget("name", element.name),
-          stringWidget("animalType", element.animalType),
-          doubleWidget("weight", element.weight),
-          defaultWidget("date", element.date),
-          intWidget("id", "This is a description", true, "This is a placeholder", element.ownerId),
+          IntWidget(
+            key: idWidgetKey,
+            fieldName: "id",
+            fieldDescription: "This is a description",
+            editable: true,
+            placeholder: "This is a placeholder",
+            value: widget.element.id,
+          ),
+          stringWidget("name", widget.element.name),
+          stringWidget("animalType", widget.element.animalType),
+          doubleWidget("weight", widget.element.weight),
+          defaultWidget("date", widget.element.date),
+          IntWidget(
+            key: ownerIdWidgetKey,
+            fieldName: "ownerId",
+            fieldDescription: "This is a description",
+            editable: true,
+            placeholder: "This is a placeholder",
+            value: widget.element.ownerId,
+          ),
         ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          int? updatedid = idWidgetKey.currentState?.getUpdatedValue();
+
+          int? updatedownerId =
+              ownerIdWidgetKey.currentState?.getUpdatedValue();
+
+          Pet updatedPet =
+              widget.element.copyWith(id: updatedid, ownerId: updatedownerId);
+          var container = ProviderContainer();
+          try {
+            await container.read(updatePetProvider(updatedPet));
+            print('Pet updated successfully');
+          } catch (error) {
+            print('Failed to update Pet: $error');
+          }
+        },
+        child: Icon(Icons.save),
       ),
     );
   }

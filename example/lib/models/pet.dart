@@ -3,6 +3,7 @@ import 'package:example/config/api.dart';
 import 'package:flutter/material.dart';
 import 'package:example/generic/generic_widgets.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:copy_with_extension/copy_with_extension.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -15,6 +16,7 @@ part 'pet.g.dart';
 @HomeWidgetElementGenAnnotation('assets/pet.png')
 @ListWidgetGenAnnotation()
 @elementWidgetGen
+@CopyWith()
 class Pet {
   final int id;
   final String name; 

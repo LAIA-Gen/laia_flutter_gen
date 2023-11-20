@@ -17,28 +17,55 @@ class ElementWidgetGenerator extends GeneratorForAnnotation<ElementWidgetGenAnno
     final visitor = ModelVisitor();
     element.visitChildren(visitor);
 
-    buffer.writeln('class ${visitor.className}Widget extends StatelessWidget {');
-    buffer.writeln('final ${visitor.className} element;');
-
-    buffer.writeln('const ${visitor.className}Widget(this.element, {super.key});');
-
-    buffer.writeln('@override');
-    buffer.writeln('Widget build(BuildContext context) {');
     buffer.writeln('''
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('${visitor.className}'),
-      ),
-      body: Column(''');
-    buffer.writeln('children: [');
+class ${visitor.className}Widget extends StatefulWidget {
+  final ${visitor.className} element;
+
+  const ${visitor.className}Widget(this.element, {Key? key}) : super(key: key);
+
+  @override
+  _${visitor.className}WidgetState createState() => _${visitor.className}WidgetState();
+}
+
+class _${visitor.className}WidgetState extends State<${visitor.className}Widget> {''');
     for (var fieldName in visitor.fields.keys) {
       String fieldType = visitor.fields[fieldName];
-      String fieldAccessor = 'element.$fieldName';
 
       switch (fieldType) {
         case 'int':
         case 'int?':
-          buffer.writeln('intWidget("$fieldName", $fieldAccessor),');
+          buffer.writeln("final GlobalKey<IntWidgetState> ${fieldName}WidgetKey = GlobalKey<IntWidgetState>();");
+          break;
+      }
+    }
+    buffer.writeln('''
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('${visitor.className}'),
+      ),
+      body: Column(
+        children: [
+''');
+    for (var fieldName in visitor.fields.keys) {
+      String fieldType = visitor.fields[fieldName];
+      String fieldAccessor = 'widget.element.$fieldName';
+
+      switch (fieldType) {
+        case 'int':
+        case 'int?':
+          buffer.writeln('''
+          IntWidget(
+            key: ${fieldName}WidgetKey,
+            fieldName: "$fieldName",
+            fieldDescription: "This is a description",
+            editable: true,
+            placeholder: "This is a placeholder",
+            value: $fieldAccessor,
+          ),
+''');
           break;
         case 'double':
         case 'double?':
@@ -63,6 +90,39 @@ class ElementWidgetGenerator extends GeneratorForAnnotation<ElementWidgetGenAnno
     }
     buffer.writeln('],');
     buffer.writeln('),');
+    buffer.writeln('''
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          ''');
+        final List<String> updatedFields = [];
+        for (var fieldName in visitor.fields.keys) {
+          String fieldType = visitor.fields[fieldName];
+
+          switch (fieldType) {
+            case 'int':
+            case 'int?':
+              buffer.writeln('''
+          int? updated$fieldName = ${fieldName}WidgetKey.currentState?.getUpdatedValue();
+''');         updatedFields.add('$fieldName: updated$fieldName');
+              break;
+          }
+        }
+    
+    buffer.writeln('''
+          ${visitor.className} updated${visitor.className} = widget.element.copyWith(
+            ${updatedFields.join(',\n  ')}
+          );
+          var container = ProviderContainer();
+          try {
+            await container.read(update${visitor.className}Provider(updated${visitor.className}));
+            print('${visitor.className} updated successfully');
+          } catch (error) {
+            print('Failed to update ${visitor.className}: \$error');
+          }
+        },
+        child: Icon(Icons.save),
+      ),
+''');
     buffer.writeln(');');
     buffer.writeln('}');
     buffer.writeln('}');
