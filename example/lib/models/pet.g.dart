@@ -126,6 +126,10 @@ class PetWidget extends StatefulWidget {
 
 class _PetWidgetState extends State<PetWidget> {
   final GlobalKey<IntWidgetState> idWidgetKey = GlobalKey<IntWidgetState>();
+  final GlobalKey<StringWidgetState> nameWidgetKey =
+      GlobalKey<StringWidgetState>();
+  final GlobalKey<StringWidgetState> animalTypeWidgetKey =
+      GlobalKey<StringWidgetState>();
   final GlobalKey<IntWidgetState> ownerIdWidgetKey =
       GlobalKey<IntWidgetState>();
 
@@ -145,8 +149,22 @@ class _PetWidgetState extends State<PetWidget> {
             placeholder: "This is a placeholder",
             value: widget.element.id,
           ),
-          stringWidget("name", widget.element.name),
-          stringWidget("animalType", widget.element.animalType),
+          StringWidget(
+            key: nameWidgetKey,
+            fieldName: "name",
+            fieldDescription: "This is a description",
+            editable: true,
+            placeholder: "This is a placeholder",
+            value: widget.element.name,
+          ),
+          StringWidget(
+            key: animalTypeWidgetKey,
+            fieldName: "animalType",
+            fieldDescription: "This is a description",
+            editable: true,
+            placeholder: "This is a placeholder",
+            value: widget.element.animalType,
+          ),
           doubleWidget("weight", widget.element.weight),
           defaultWidget("date", widget.element.date),
           IntWidget(
@@ -163,11 +181,19 @@ class _PetWidgetState extends State<PetWidget> {
         onPressed: () async {
           int? updatedid = idWidgetKey.currentState?.getUpdatedValue();
 
+          String? updatedname = nameWidgetKey.currentState?.getUpdatedValue();
+
+          String? updatedanimalType =
+              animalTypeWidgetKey.currentState?.getUpdatedValue();
+
           int? updatedownerId =
               ownerIdWidgetKey.currentState?.getUpdatedValue();
 
-          Pet updatedPet =
-              widget.element.copyWith(id: updatedid, ownerId: updatedownerId);
+          Pet updatedPet = widget.element.copyWith(
+              id: updatedid,
+              name: updatedname,
+              animalType: updatedanimalType,
+              ownerId: updatedownerId);
           var container = ProviderContainer();
           try {
             await container.read(updatePetProvider(updatedPet));

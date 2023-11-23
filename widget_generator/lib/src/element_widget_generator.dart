@@ -36,6 +36,10 @@ class _${visitor.className}WidgetState extends State<${visitor.className}Widget>
         case 'int?':
           buffer.writeln("final GlobalKey<IntWidgetState> ${fieldName}WidgetKey = GlobalKey<IntWidgetState>();");
           break;
+        case 'String':
+        case 'String?':
+          buffer.writeln("final GlobalKey<StringWidgetState> ${fieldName}WidgetKey = GlobalKey<StringWidgetState>();");
+          break;
       }
     }
     buffer.writeln('''
@@ -73,7 +77,16 @@ class _${visitor.className}WidgetState extends State<${visitor.className}Widget>
           break;
         case 'String':
         case 'String?':
-          buffer.writeln('stringWidget("$fieldName", $fieldAccessor),');
+          buffer.writeln('''
+          StringWidget(
+            key: ${fieldName}WidgetKey,
+            fieldName: "$fieldName",
+            fieldDescription: "This is a description",
+            editable: true,
+            placeholder: "This is a placeholder",
+            value: $fieldAccessor,
+          ),
+''');
           break;
         case 'bool':
         case 'bool?':
@@ -103,6 +116,12 @@ class _${visitor.className}WidgetState extends State<${visitor.className}Widget>
             case 'int?':
               buffer.writeln('''
           int? updated$fieldName = ${fieldName}WidgetKey.currentState?.getUpdatedValue();
+''');         updatedFields.add('$fieldName: updated$fieldName');
+              break;
+            case 'String':
+            case 'String?':
+              buffer.writeln('''
+          String? updated$fieldName = ${fieldName}WidgetKey.currentState?.getUpdatedValue();
 ''');         updatedFields.add('$fieldName: updated$fieldName');
               break;
           }

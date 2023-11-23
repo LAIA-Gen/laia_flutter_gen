@@ -114,6 +114,12 @@ class PersonWidget extends StatefulWidget {
 
 class _PersonWidgetState extends State<PersonWidget> {
   final GlobalKey<IntWidgetState> idWidgetKey = GlobalKey<IntWidgetState>();
+  final GlobalKey<StringWidgetState> nameWidgetKey =
+      GlobalKey<StringWidgetState>();
+  final GlobalKey<StringWidgetState> surnameWidgetKey =
+      GlobalKey<StringWidgetState>();
+  final GlobalKey<StringWidgetState> addressWidgetKey =
+      GlobalKey<StringWidgetState>();
 
   @override
   Widget build(BuildContext context) {
@@ -131,9 +137,30 @@ class _PersonWidgetState extends State<PersonWidget> {
             placeholder: "This is a placeholder",
             value: widget.element.id,
           ),
-          stringWidget("name", widget.element.name),
-          stringWidget("surname", widget.element.surname),
-          stringWidget("address", widget.element.address),
+          StringWidget(
+            key: nameWidgetKey,
+            fieldName: "name",
+            fieldDescription: "This is a description",
+            editable: true,
+            placeholder: "This is a placeholder",
+            value: widget.element.name,
+          ),
+          StringWidget(
+            key: surnameWidgetKey,
+            fieldName: "surname",
+            fieldDescription: "This is a description",
+            editable: true,
+            placeholder: "This is a placeholder",
+            value: widget.element.surname,
+          ),
+          StringWidget(
+            key: addressWidgetKey,
+            fieldName: "address",
+            fieldDescription: "This is a description",
+            editable: true,
+            placeholder: "This is a placeholder",
+            value: widget.element.address,
+          ),
           defaultWidget("date", widget.element.date),
         ],
       ),
@@ -141,7 +168,20 @@ class _PersonWidgetState extends State<PersonWidget> {
         onPressed: () async {
           int? updatedid = idWidgetKey.currentState?.getUpdatedValue();
 
-          Person updatedPerson = widget.element.copyWith(id: updatedid);
+          String? updatedname = nameWidgetKey.currentState?.getUpdatedValue();
+
+          String? updatedsurname =
+              surnameWidgetKey.currentState?.getUpdatedValue();
+
+          String? updatedaddress =
+              addressWidgetKey.currentState?.getUpdatedValue();
+
+          Person updatedPerson = widget.element.copyWith(
+              id: updatedid,
+              name: updatedname,
+              surname: updatedsurname,
+              address: updatedaddress);
+          print(updatedPerson.date);
           var container = ProviderContainer();
           try {
             await container.read(updatePersonProvider(updatedPerson));
