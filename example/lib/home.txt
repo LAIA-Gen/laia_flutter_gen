@@ -1,2 +1,4 @@
-PetHomeWidget
-PersonHomeWidget
+WaypointHomeWidget
+UserHomeWidget
+DroneHomeWidget
+FlightPlanHomeWidget

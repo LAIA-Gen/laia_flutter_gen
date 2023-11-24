@@ -15,8 +15,10 @@ Widget dashboardWidget() {
     ),
     child: const Column(
       children: [
-        PetHomeWidget(),
-        PersonHomeWidget(),
+        WaypointHomeWidget(),
+        UserHomeWidget(),
+        DroneHomeWidget(),
+        FlightPlanHomeWidget(),
       ],
     ),
   );

@@ -1,6 +1,8 @@
 import 'package:annotations/annotations.dart';
-import 'package:example/models/person.dart';
-import 'package:example/models/pet.dart';
+import 'package:example/models/drone.dart';
+import 'package:example/models/flight_plan.dart';
+import 'package:example/models/user.dart';
+import 'package:example/models/waypoint.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -14,13 +16,7 @@ class Home extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     // final AsyncValue<Person> personAsyncValue = ref.watch(getPersonProvider(1));
 
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: Scaffold(
+    return Scaffold(
         appBar: AppBar(
           title: const Text('This is your APP :)'),
         ),
@@ -38,7 +34,6 @@ class Home extends ConsumerWidget {
             ),*/
           ],
         ),
-      ),
     );
   }
 }

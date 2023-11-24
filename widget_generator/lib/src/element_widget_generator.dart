@@ -76,11 +76,13 @@ class _${visitor.className}WidgetState extends State<${visitor.className}Widget>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('${visitor.className}'),
-      ),
-      body: Column(
-        children: [
+        appBar: AppBar(
+          title: const Text('${visitor.className}'),
+        ),
+        body: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child: Column(
+          children: [
 ''');
     for (var field in classElement.fields) {
       String fieldName = field.name;
@@ -166,6 +168,7 @@ class _${visitor.className}WidgetState extends State<${visitor.className}Widget>
       ''');
     }
     buffer.writeln('],');
+    buffer.writeln('),');
     buffer.writeln('),');
     buffer.writeln('''
       floatingActionButton: FloatingActionButton(
