@@ -50,7 +50,8 @@ class IntWidgetState extends State<IntWidget> {
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
           margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
           decoration: BoxDecoration(
-            border: Border.all(color: Colors.grey, width: 1.0),
+            color: Styles.primaryColor,
+            borderRadius: BorderRadius.circular(10.0),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

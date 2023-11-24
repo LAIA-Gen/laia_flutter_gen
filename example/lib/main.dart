@@ -22,6 +22,10 @@ class MyApp extends StatelessWidget {
         ), 
         colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.brown),
         scaffoldBackgroundColor: const Color.fromARGB(244, 245, 245, 239),
+        textTheme: const TextTheme(
+          bodyLarge: TextStyle(color: Colors.black),
+          bodyMedium: TextStyle(color: Colors.black),
+        ),
       ),
       home: const Home(),
     );

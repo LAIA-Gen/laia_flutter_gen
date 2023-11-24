@@ -36,7 +36,7 @@ class HomeWidgetElementGenerator extends GeneratorForAnnotation<HomeWidgetElemen
       child: Container(
         width: 100.0,
         height: 100.0,
-        color: Colors.blue, // You can choose any color you like
+        color: Styles.primaryColor, // You can choose any color you like
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

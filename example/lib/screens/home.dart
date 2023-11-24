@@ -24,7 +24,6 @@ class Home extends ConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const Text('This is the Home!'),
             dashboardWidget(),
             /*
             personAsyncValue.when(

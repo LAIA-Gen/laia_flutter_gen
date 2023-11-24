@@ -7,6 +7,7 @@ import 'package:tuple/tuple.dart';
 import 'package:example/config/api.dart';
 import 'package:example/generic/generic_widgets.dart';
 import 'package:http/http.dart' as http;
+import 'package:example/config/styles.dart';
 import 'dart:convert';
 
 part 'waypoint.g.dart';
