@@ -130,6 +130,10 @@ class _PetWidgetState extends State<PetWidget> {
       GlobalKey<StringWidgetState>();
   final GlobalKey<StringWidgetState> animalTypeWidgetKey =
       GlobalKey<StringWidgetState>();
+  final GlobalKey<DoubleWidgetState> weightWidgetKey =
+      GlobalKey<DoubleWidgetState>();
+  final GlobalKey<DateTimeWidgetState> dateWidgetKey =
+      GlobalKey<DateTimeWidgetState>();
   final GlobalKey<IntWidgetState> ownerIdWidgetKey =
       GlobalKey<IntWidgetState>();
 
@@ -144,35 +148,49 @@ class _PetWidgetState extends State<PetWidget> {
           IntWidget(
             key: idWidgetKey,
             fieldName: "id",
-            fieldDescription: "This is a description",
+            fieldDescription: "This is the id",
             editable: true,
-            placeholder: "This is a placeholder",
+            placeholder: "Type the id",
             value: widget.element.id,
           ),
           StringWidget(
             key: nameWidgetKey,
             fieldName: "name",
-            fieldDescription: "This is a description",
+            fieldDescription: "This is the name",
             editable: true,
-            placeholder: "This is a placeholder",
+            placeholder: "Type the name",
             value: widget.element.name,
           ),
           StringWidget(
             key: animalTypeWidgetKey,
             fieldName: "animalType",
-            fieldDescription: "This is a description",
+            fieldDescription: "This is the animalType",
             editable: true,
-            placeholder: "This is a placeholder",
+            placeholder: "Type the animalType",
             value: widget.element.animalType,
           ),
-          doubleWidget("weight", widget.element.weight),
-          defaultWidget("date", widget.element.date),
+          DoubleWidget(
+            key: weightWidgetKey,
+            fieldName: "weight",
+            fieldDescription: "This is the weight",
+            editable: true,
+            placeholder: "Type the weight",
+            value: widget.element.weight,
+          ),
+          DateTimeWidget(
+            key: dateWidgetKey,
+            fieldName: "date",
+            fieldDescription: "This is the date",
+            editable: true,
+            placeholder: "Type the date",
+            value: widget.element.date,
+          ),
           IntWidget(
             key: ownerIdWidgetKey,
             fieldName: "ownerId",
-            fieldDescription: "This is a description",
+            fieldDescription: "This is the ownerId",
             editable: true,
-            placeholder: "This is a placeholder",
+            placeholder: "Type the ownerId",
             value: widget.element.ownerId,
           ),
         ],
@@ -186,6 +204,8 @@ class _PetWidgetState extends State<PetWidget> {
           String? updatedanimalType =
               animalTypeWidgetKey.currentState?.getUpdatedValue();
 
+          DateTime? updateddate = dateWidgetKey.currentState?.getUpdatedValue();
+
           int? updatedownerId =
               ownerIdWidgetKey.currentState?.getUpdatedValue();
 
@@ -193,6 +213,7 @@ class _PetWidgetState extends State<PetWidget> {
               id: updatedid,
               name: updatedname,
               animalType: updatedanimalType,
+              date: updateddate,
               ownerId: updatedownerId);
           var container = ProviderContainer();
           try {

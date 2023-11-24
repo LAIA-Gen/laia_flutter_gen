@@ -6,6 +6,8 @@ import 'package:build/src/builder/build_step.dart';
 import 'package:widget_generator/src/model_visitor.dart';
 import 'package:source_gen/source_gen.dart';
 
+const _fieldChecker = TypeChecker.fromRuntime(Field);
+
 class ElementWidgetGenerator extends GeneratorForAnnotation<ElementWidgetGenAnnotation> {
   @override
   String generateForAnnotatedElement(
@@ -16,6 +18,7 @@ class ElementWidgetGenerator extends GeneratorForAnnotation<ElementWidgetGenAnno
     final buffer = StringBuffer();
     final visitor = ModelVisitor();
     element.visitChildren(visitor);
+    ClassElement classElement = element as ClassElement;
 
     buffer.writeln('''
 class ${visitor.className}Widget extends StatefulWidget {
@@ -28,19 +31,45 @@ class ${visitor.className}Widget extends StatefulWidget {
 }
 
 class _${visitor.className}WidgetState extends State<${visitor.className}Widget> {''');
-    for (var fieldName in visitor.fields.keys) {
-      String fieldType = visitor.fields[fieldName];
+    for (var field in classElement.fields) {
+      String fieldName = field.name;
+      String fieldType = field.type.toString();
 
+      String widget = 'DefaultWidgetState';
+    
       switch (fieldType) {
         case 'int':
         case 'int?':
-          buffer.writeln("final GlobalKey<IntWidgetState> ${fieldName}WidgetKey = GlobalKey<IntWidgetState>();");
+          widget = 'IntWidget';
           break;
         case 'String':
         case 'String?':
-          buffer.writeln("final GlobalKey<StringWidgetState> ${fieldName}WidgetKey = GlobalKey<StringWidgetState>();");
+          widget = 'StringWidget';
+          break;
+        case 'double':
+        case 'double?':
+          widget = 'DoubleWidget';
+          break;
+        case 'DateTime':
+        case 'DateTime?':
+          widget = 'DateTimeWidget';
+          break;
+        default: 
+          widget = 'DefaultWidget';
           break;
       }
+
+      if (_fieldChecker.hasAnnotationOfExact(field)) {
+        String widgetValue = _fieldChecker
+              .firstAnnotationOfExact(field)
+              ?.getField('widget')
+              ?.toStringValue() ?? '';
+        if (widgetValue.isNotEmpty) {
+          widget = widgetValue;
+        }
+      }
+
+      buffer.writeln("final GlobalKey<${widget}State> ${fieldName}WidgetKey = GlobalKey<${widget}State>();");
     }
     buffer.writeln('''
 
@@ -53,53 +82,88 @@ class _${visitor.className}WidgetState extends State<${visitor.className}Widget>
       body: Column(
         children: [
 ''');
-    for (var fieldName in visitor.fields.keys) {
-      String fieldType = visitor.fields[fieldName];
+    for (var field in classElement.fields) {
+      String fieldName = field.name;
+      String fieldDisplayName = fieldName;
+      String fieldType = field.type.toString();
       String fieldAccessor = 'widget.element.$fieldName';
+      String widget = 'defaultWidget';
+      String fieldDescription = "This is the $fieldName";
+      String placeholder = 'Type the $fieldName';
+      bool editable = true;
+
+      if (_fieldChecker.hasAnnotationOfExact(field)) {
+        String fieldDisplayNameValue = _fieldChecker
+              .firstAnnotationOfExact(field)
+              ?.getField('fieldName')
+              ?.toStringValue() ?? '';
+        if (fieldDisplayNameValue.isNotEmpty) {
+          fieldDisplayName = fieldDisplayNameValue;
+        }
+        String fieldDescriptionValue = _fieldChecker
+              .firstAnnotationOfExact(field)
+              ?.getField('fieldDescription')
+              ?.toStringValue() ?? fieldDescription;
+        if (fieldDescriptionValue.isNotEmpty) {
+          fieldDescription = fieldDescriptionValue;
+        }
+        editable = _fieldChecker
+              .firstAnnotationOfExact(field)
+              ?.getField('editable')
+              ?.toBoolValue() ?? editable;
+        String placeholderValue = _fieldChecker
+              .firstAnnotationOfExact(field)
+              ?.getField('placeholder')
+              ?.toStringValue() ?? placeholder; 
+        if (placeholderValue.isNotEmpty) {
+          placeholder = placeholderValue;
+        }
+      }
 
       switch (fieldType) {
         case 'int':
         case 'int?':
-          buffer.writeln('''
-          IntWidget(
-            key: ${fieldName}WidgetKey,
-            fieldName: "$fieldName",
-            fieldDescription: "This is a description",
-            editable: true,
-            placeholder: "This is a placeholder",
-            value: $fieldAccessor,
-          ),
-''');
+          widget = 'IntWidget';
           break;
         case 'double':
         case 'double?':
-          buffer.writeln('doubleWidget("$fieldName", $fieldAccessor),');
+          widget = 'DoubleWidget';
           break;
         case 'String':
         case 'String?':
-          buffer.writeln('''
-          StringWidget(
-            key: ${fieldName}WidgetKey,
-            fieldName: "$fieldName",
-            fieldDescription: "This is a description",
-            editable: true,
-            placeholder: "This is a placeholder",
-            value: $fieldAccessor,
-          ),
-''');
+          widget = 'StringWidget';
+          break;
+        case 'DateTime':
+        case 'DateTime?':
+          widget = 'DateTimeWidget';
           break;
         case 'bool':
         case 'bool?':
-          buffer.writeln('boolWidget("$fieldName", $fieldAccessor),');
-          break;
-        case 'List<String>':
-        case 'List<String>?':
-          buffer.writeln('stringListWidget("$fieldName", $fieldAccessor),');
+          widget = 'BoolWidget';
           break;
         default:
-          buffer.writeln('defaultWidget("$fieldName", $fieldAccessor),');
+          widget = 'DefaultWidget';
           break;
       }
+
+      String widgetValue = _fieldChecker
+            .firstAnnotationOfExact(field)
+            ?.getField('widget')
+            ?.toStringValue() ?? '';
+      if (widgetValue.isNotEmpty) {
+        widget = widgetValue;
+      }
+
+      buffer.writeln('''
+          $widget(
+            key: ${fieldName}WidgetKey,
+            fieldName: "$fieldDisplayName",
+            fieldDescription: "$fieldDescription",
+            editable: $editable,
+            placeholder: "$placeholder",
+            value: $fieldAccessor,
+          ),
+      ''');
     }
     buffer.writeln('],');
     buffer.writeln('),');
@@ -122,6 +186,12 @@ class _${visitor.className}WidgetState extends State<${visitor.className}Widget>
             case 'String?':
               buffer.writeln('''
           String? updated$fieldName = ${fieldName}WidgetKey.currentState?.getUpdatedValue();
+''');         updatedFields.add('$fieldName: updated$fieldName');
+              break;
+            case 'DateTime':
+            case 'DateTime?':
+              buffer.writeln('''
+          DateTime? updated$fieldName = ${fieldName}WidgetKey.currentState?.getUpdatedValue();
 ''');         updatedFields.add('$fieldName: updated$fieldName');
               break;
           }

@@ -120,6 +120,8 @@ class _PersonWidgetState extends State<PersonWidget> {
       GlobalKey<StringWidgetState>();
   final GlobalKey<StringWidgetState> addressWidgetKey =
       GlobalKey<StringWidgetState>();
+  final GlobalKey<DateTimeWidgetState> dateWidgetKey =
+      GlobalKey<DateTimeWidgetState>();
 
   @override
   Widget build(BuildContext context) {
@@ -132,36 +134,43 @@ class _PersonWidgetState extends State<PersonWidget> {
           IntWidget(
             key: idWidgetKey,
             fieldName: "id",
-            fieldDescription: "This is a description",
-            editable: true,
-            placeholder: "This is a placeholder",
+            fieldDescription: "This is another description lel",
+            editable: false,
+            placeholder: "Type the id",
             value: widget.element.id,
           ),
           StringWidget(
             key: nameWidgetKey,
             fieldName: "name",
-            fieldDescription: "This is a description",
+            fieldDescription: "This is the name",
             editable: true,
-            placeholder: "This is a placeholder",
+            placeholder: "Type the name",
             value: widget.element.name,
           ),
           StringWidget(
             key: surnameWidgetKey,
             fieldName: "surname",
-            fieldDescription: "This is a description",
+            fieldDescription: "This is the surname",
             editable: true,
-            placeholder: "This is a placeholder",
+            placeholder: "Type the surname",
             value: widget.element.surname,
           ),
           StringWidget(
             key: addressWidgetKey,
             fieldName: "address",
-            fieldDescription: "This is a description",
+            fieldDescription: "This is the address",
             editable: true,
-            placeholder: "This is a placeholder",
+            placeholder: "this is a diferent placeholder yey",
             value: widget.element.address,
           ),
-          defaultWidget("date", widget.element.date),
+          DateTimeWidget(
+            key: dateWidgetKey,
+            fieldName: "date",
+            fieldDescription: "hey yo",
+            editable: true,
+            placeholder: "Type the date",
+            value: widget.element.date,
+          ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
@@ -176,12 +185,14 @@ class _PersonWidgetState extends State<PersonWidget> {
           String? updatedaddress =
               addressWidgetKey.currentState?.getUpdatedValue();
 
+          DateTime? updateddate = dateWidgetKey.currentState?.getUpdatedValue();
+
           Person updatedPerson = widget.element.copyWith(
               id: updatedid,
               name: updatedname,
               surname: updatedsurname,
-              address: updatedaddress);
-          print(updatedPerson.date);
+              address: updatedaddress,
+              date: updateddate);
           var container = ProviderContainer();
           try {
             await container.read(updatePersonProvider(updatedPerson));

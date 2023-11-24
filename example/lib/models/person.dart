@@ -18,10 +18,13 @@ part 'person.g.dart';
 @elementWidgetGen
 @CopyWith()
 class Person {
+  @Field(editable: false, fieldDescription: 'This is another description lel')
   final int id;
   final String name; 
   final String surname;
+  @Field(placeholder: 'this is a diferent placeholder yey')
   final String address;
+  @Field(fieldDescription: 'hey yo')
   final DateTime date;
 
   Person({required this.id, required this.name, required this.surname, required this.address, required this.date});
