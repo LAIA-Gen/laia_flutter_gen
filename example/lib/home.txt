@@ -2,3 +2,4 @@ WaypointHomeWidget
 UserHomeWidget
 DroneHomeWidget
 FlightPlanHomeWidget
+FlightPlanRouteHomeWidget

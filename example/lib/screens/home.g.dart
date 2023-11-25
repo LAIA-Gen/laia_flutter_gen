@@ -22,6 +22,7 @@ Widget dashboardWidget() {
       UserHomeWidget(),
       DroneHomeWidget(),
       FlightPlanHomeWidget(),
+      FlightPlanRouteHomeWidget(),
     ],
   );
 }

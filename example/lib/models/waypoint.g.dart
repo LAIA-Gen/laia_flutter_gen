@@ -111,8 +111,8 @@ class _WaypointWidgetState extends State<WaypointWidget> {
       GlobalKey<StringWidgetState>();
   final GlobalKey<StringWidgetState> descriptionWidgetKey =
       GlobalKey<StringWidgetState>();
-  final GlobalKey<DefaultWidgetState> coordinatesWidgetKey =
-      GlobalKey<DefaultWidgetState>();
+  final GlobalKey<MapWidgetState> coordinatesWidgetKey =
+      GlobalKey<MapWidgetState>();
 
   @override
   Widget build(BuildContext context) {
@@ -148,7 +148,7 @@ class _WaypointWidgetState extends State<WaypointWidget> {
               placeholder: "Type the description",
               value: widget.element.description,
             ),
-            DefaultWidget(
+            MapWidget(
               key: coordinatesWidgetKey,
               fieldName: "Coordinates",
               fieldDescription: "This is the coordinates",
@@ -168,10 +168,14 @@ class _WaypointWidgetState extends State<WaypointWidget> {
           String? updateddescription =
               descriptionWidgetKey.currentState?.getUpdatedValue();
 
+          dynamic updatedcoordinates =
+              coordinatesWidgetKey.currentState?.getUpdatedValue();
+
           Waypoint updatedWaypoint = widget.element.copyWith(
               id: updatedid,
               name: updatedname,
-              description: updateddescription);
+              description: updateddescription,
+              coordinates: updatedcoordinates);
           var container = ProviderContainer();
           try {
             await container.read(updateWaypointProvider(updatedWaypoint));

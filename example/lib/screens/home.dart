@@ -3,6 +3,7 @@ import 'package:example/models/drone.dart';
 import 'package:example/models/flightplan.dart';
 import 'package:example/models/user.dart';
 import 'package:example/models/waypoint.dart';
+import 'package:example/models/flightplanroute.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

@@ -54,6 +54,12 @@ class _${visitor.className}WidgetState extends State<${visitor.className}Widget>
         case 'DateTime?':
           widget = 'DateTimeWidget';
           break;
+        case 'Map<String, dynamic>':
+        case 'Map<String, dynamic>?':
+        case 'List<Map<String, dynamic>>':
+        case 'List<Map<String, dynamic>>?':
+          widget = 'MapWidget';
+          break;
         default: 
           widget = 'DefaultWidget';
           break;
@@ -143,6 +149,12 @@ class _${visitor.className}WidgetState extends State<${visitor.className}Widget>
         case 'bool?':
           widget = 'BoolWidget';
           break;
+        case 'Map<String, dynamic>':
+        case 'Map<String, dynamic>?':
+        case 'List<Map<String, dynamic>>':
+        case 'List<Map<String, dynamic>>?':
+          widget = 'MapWidget';
+          break;
         default:
           widget = 'DefaultWidget';
           break;
@@ -195,6 +207,14 @@ class _${visitor.className}WidgetState extends State<${visitor.className}Widget>
             case 'DateTime?':
               buffer.writeln('''
           DateTime? updated$fieldName = ${fieldName}WidgetKey.currentState?.getUpdatedValue();
+''');         updatedFields.add('$fieldName: updated$fieldName');
+              break;
+            case 'Map<String, dynamic>':
+            case 'Map<String, dynamic>?':
+            case 'List<Map<String, dynamic>>':
+            case 'List<Map<String, dynamic>>?':
+              buffer.writeln('''
+          dynamic updated$fieldName = ${fieldName}WidgetKey.currentState?.getUpdatedValue();
 ''');         updatedFields.add('$fieldName: updated$fieldName');
               break;
           }
