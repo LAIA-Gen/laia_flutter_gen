@@ -10,6 +10,7 @@ class Field {
   final String fieldDescription;
   final bool editable;
   final String placeholder;
+  final String relation;
 
-  const Field({this.widget = '', this.fieldName = '', this.fieldDescription = '', this.editable = true, this.placeholder = ''});
+  const Field({this.widget = '', this.fieldName = '', this.fieldDescription = '', this.editable = true, this.placeholder = '', this.relation = ''});
 }

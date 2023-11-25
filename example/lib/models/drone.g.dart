@@ -164,6 +164,24 @@ class _DroneWidgetState extends State<DroneWidget> {
               placeholder: "Type the user_id",
               value: widget.element.user_id,
             ),
+            TextButton(
+              onPressed: () async {
+                var container = ProviderContainer();
+                try {
+                  User user = await container
+                      .read(getUserProvider(widget.element.user_id).future);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => UserWidget(user),
+                    ),
+                  );
+                } catch (error) {
+                  print('Failed to fetch user: $error');
+                }
+              },
+              child: const Text('View User'),
+            ),
             StringWidget(
               key: modelWidgetKey,
               fieldName: "Model",
@@ -445,7 +463,7 @@ final dronePaginationProvider =
 // **************************************************************************
 
 final getDroneProvider =
-    FutureProvider.autoDispose.family<Drone, int>((ref, droneId) async {
+    FutureProvider.autoDispose.family<Drone, String>((ref, droneId) async {
   final json = await http.get(Uri.parse('$baseURL/drones/$droneId'));
   final jsonData = jsonDecode(json.body);
   return Drone.fromJson(jsonData);

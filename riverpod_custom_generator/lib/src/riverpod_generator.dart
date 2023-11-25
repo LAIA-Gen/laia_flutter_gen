@@ -24,7 +24,7 @@ class RiverpodCustomGenerator extends GeneratorForAnnotation<RiverpodGenAnnotati
 
     final buffer = StringBuffer();
     buffer.writeln('''
-      final get${className}Provider = FutureProvider.autoDispose.family<$className, int>((ref, ${classNameLowercase}Id) async {
+      final get${className}Provider = FutureProvider.autoDispose.family<$className, String>((ref, ${classNameLowercase}Id) async {
         final json = await http.get(Uri.parse('\$baseURL/$classNamePlural/\$${classNameLowercase}Id'));
         final jsonData = jsonDecode(json.body);
         return $className.fromJson(jsonData);

@@ -9,6 +9,8 @@ import 'package:example/generic/generic_widgets.dart';
 import 'package:http/http.dart' as http;
 import 'package:example/config/styles.dart';
 import 'dart:convert';
+import 'package:example/models/user.dart';
+import 'package:example/models/drone.dart';
 
 part 'flightplan.g.dart';
 
@@ -21,9 +23,9 @@ part 'flightplan.g.dart';
 class FlightPlan {
   @Field(editable: false, fieldName: 'Id')
   final String id;
-  @Field(fieldName: 'Drone')
+  @Field(fieldName: 'Drone', relation: 'Drone')
   final String drone_id;
-  @Field(fieldName: 'User')
+  @Field(fieldName: 'User', relation: 'User')
   final String user_id;
   @Field(fieldName: 'Departure time')
   final DateTime start_time;

@@ -384,8 +384,8 @@ final waypointPaginationProvider =
 // RiverpodCustomGenerator
 // **************************************************************************
 
-final getWaypointProvider =
-    FutureProvider.autoDispose.family<Waypoint, int>((ref, waypointId) async {
+final getWaypointProvider = FutureProvider.autoDispose
+    .family<Waypoint, String>((ref, waypointId) async {
   final json = await http.get(Uri.parse('$baseURL/waypoints/$waypointId'));
   final jsonData = jsonDecode(json.body);
   return Waypoint.fromJson(jsonData);

@@ -164,6 +164,24 @@ class _FlightPlanWidgetState extends State<FlightPlanWidget> {
               placeholder: "Type the drone_id",
               value: widget.element.drone_id,
             ),
+            TextButton(
+              onPressed: () async {
+                var container = ProviderContainer();
+                try {
+                  Drone drone = await container
+                      .read(getDroneProvider(widget.element.drone_id).future);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => DroneWidget(drone),
+                    ),
+                  );
+                } catch (error) {
+                  print('Failed to fetch drone: $error');
+                }
+              },
+              child: const Text('View Drone'),
+            ),
             StringWidget(
               key: user_idWidgetKey,
               fieldName: "User",
@@ -171,6 +189,24 @@ class _FlightPlanWidgetState extends State<FlightPlanWidget> {
               editable: true,
               placeholder: "Type the user_id",
               value: widget.element.user_id,
+            ),
+            TextButton(
+              onPressed: () async {
+                var container = ProviderContainer();
+                try {
+                  User user = await container
+                      .read(getUserProvider(widget.element.user_id).future);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => UserWidget(user),
+                    ),
+                  );
+                } catch (error) {
+                  print('Failed to fetch user: $error');
+                }
+              },
+              child: const Text('View User'),
             ),
             DateTimeWidget(
               key: start_timeWidgetKey,
@@ -459,7 +495,7 @@ final flightplanPaginationProvider =
 // **************************************************************************
 
 final getFlightPlanProvider = FutureProvider.autoDispose
-    .family<FlightPlan, int>((ref, flightplanId) async {
+    .family<FlightPlan, String>((ref, flightplanId) async {
   final json = await http.get(Uri.parse('$baseURL/flightplans/$flightplanId'));
   final jsonData = jsonDecode(json.body);
   return FlightPlan.fromJson(jsonData);

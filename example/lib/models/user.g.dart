@@ -337,7 +337,7 @@ final userPaginationProvider =
 // **************************************************************************
 
 final getUserProvider =
-    FutureProvider.autoDispose.family<User, int>((ref, userId) async {
+    FutureProvider.autoDispose.family<User, String>((ref, userId) async {
   final json = await http.get(Uri.parse('$baseURL/users/$userId'));
   final jsonData = jsonDecode(json.body);
   return User.fromJson(jsonData);

@@ -473,7 +473,7 @@ final flightplanroutePaginationProvider =
 // **************************************************************************
 
 final getFlightPlanRouteProvider = FutureProvider.autoDispose
-    .family<FlightPlanRoute, int>((ref, flightplanrouteId) async {
+    .family<FlightPlanRoute, String>((ref, flightplanrouteId) async {
   final json =
       await http.get(Uri.parse('$baseURL/flightplanroutes/$flightplanrouteId'));
   final jsonData = jsonDecode(json.body);

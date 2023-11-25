@@ -99,6 +99,7 @@ class _${visitor.className}WidgetState extends State<${visitor.className}Widget>
       String fieldDescription = "This is the $fieldName";
       String placeholder = 'Type the $fieldName';
       bool editable = true;
+      String relation = '';
 
       if (_fieldChecker.hasAnnotationOfExact(field)) {
         String fieldDisplayNameValue = _fieldChecker
@@ -126,6 +127,10 @@ class _${visitor.className}WidgetState extends State<${visitor.className}Widget>
         if (placeholderValue.isNotEmpty) {
           placeholder = placeholderValue;
         }
+        relation = _fieldChecker
+              .firstAnnotationOfExact(field)
+              ?.getField('relation')
+              ?.toStringValue() ?? relation;
       }
 
       switch (fieldType) {
@@ -178,6 +183,28 @@ class _${visitor.className}WidgetState extends State<${visitor.className}Widget>
             value: $fieldAccessor,
           ),
       ''');
+
+      if (relation != '') {
+        buffer.writeln('''
+          TextButton(
+              onPressed: () async {
+                var container = ProviderContainer();
+                try {
+                  $relation ${relation.toLowerCase()} = await container.read(get${relation}Provider(widget.element.$fieldName).future);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ${relation}Widget(${relation.toLowerCase()}),
+                    ),
+                  );
+                } catch (error) {
+                  print('Failed to fetch ${relation.toLowerCase()}: \$error');
+                }
+              },
+              child: const Text('View $fieldDisplayName'),
+            ),
+      ''');
+      }
     }
     buffer.writeln('],');
     buffer.writeln('),');

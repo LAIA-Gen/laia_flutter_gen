@@ -9,6 +9,7 @@ import 'package:example/generic/generic_widgets.dart';
 import 'package:http/http.dart' as http;
 import 'package:example/config/styles.dart';
 import 'dart:convert';
+import 'package:example/models/user.dart';
 
 part 'drone.g.dart';
 
@@ -21,7 +22,7 @@ part 'drone.g.dart';
 class Drone {
   @Field(editable: false, fieldName: 'Id')
   final String id;
-  @Field(fieldName: 'User')
+  @Field(fieldName: 'User', relation: 'User')
   final String user_id;
   @Field(fieldName: 'Model')
   final String model;
