@@ -19,7 +19,10 @@ class HomeWidgetElementGenerator extends GeneratorForAnnotation<HomeWidgetElemen
     final visitor = ModelVisitor();
     element.visitChildren(visitor);
 
-    final iconPath = annotation.read('icon').stringValue;
+    var iconPath = annotation.read('icon').stringValue;
+    if (iconPath == "") {
+      iconPath = 'assets/${visitor.className.toLowerCase()}.png';
+    }
 
     buffer.writeln('class ${visitor.className}HomeWidget extends StatelessWidget {');
 

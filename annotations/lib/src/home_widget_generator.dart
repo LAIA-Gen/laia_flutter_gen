@@ -7,5 +7,5 @@ const homeWidget = HomeWidgetGenAnnotation();
 class HomeWidgetElementGenAnnotation {
   final String icon;
 
-  const HomeWidgetElementGenAnnotation(this.icon);
+  const HomeWidgetElementGenAnnotation({this.icon = ""});
 }

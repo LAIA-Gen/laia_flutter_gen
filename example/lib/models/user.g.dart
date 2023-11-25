@@ -110,7 +110,7 @@ class _UserWidgetState extends State<UserWidget> {
           children: [
             StringWidget(
               key: idWidgetKey,
-              fieldName: "id",
+              fieldName: "Id",
               fieldDescription: "This is the id",
               editable: false,
               placeholder: "Type the id",
@@ -118,7 +118,7 @@ class _UserWidgetState extends State<UserWidget> {
             ),
             StringWidget(
               key: nameWidgetKey,
-              fieldName: "name",
+              fieldName: "Name",
               fieldDescription: "This is the name",
               editable: true,
               placeholder: "Type the name",
@@ -126,7 +126,7 @@ class _UserWidgetState extends State<UserWidget> {
             ),
             StringWidget(
               key: emailWidgetKey,
-              fieldName: "email",
+              fieldName: "Email",
               fieldDescription: "This is the email",
               editable: true,
               placeholder: "Type the email",
@@ -247,7 +247,7 @@ class UserListView extends ConsumerWidget {
                         DataColumn(
                           label: Expanded(
                               child: Text(
-                            'name',
+                            'Name',
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: Color.fromARGB(255, 94, 54, 54)),
@@ -257,7 +257,7 @@ class UserListView extends ConsumerWidget {
                         DataColumn(
                           label: Expanded(
                               child: Text(
-                            'email',
+                            'Email',
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: Color.fromARGB(255, 94, 54, 54)),

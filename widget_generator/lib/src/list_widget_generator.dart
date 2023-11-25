@@ -6,6 +6,8 @@ import 'package:build/src/builder/build_step.dart';
 import 'package:widget_generator/src/model_visitor.dart';
 import 'package:source_gen/source_gen.dart';
 
+const _fieldChecker = TypeChecker.fromRuntime(Field);
+
 class ListWidgetGenerator extends GeneratorForAnnotation<ListWidgetGenAnnotation> {
   @override
   String generateForAnnotatedElement(
@@ -16,6 +18,7 @@ class ListWidgetGenerator extends GeneratorForAnnotation<ListWidgetGenAnnotation
     final buffer = StringBuffer();
     final visitor = ModelVisitor();
     element.visitChildren(visitor);
+    ClassElement classElement = element as ClassElement;
 
     final pageSize = annotation.read('pageSize').intValue;
     final List<String> defaultFields = annotation.read('defaultFields').listValue.map((element) => element.toStringValue() ?? '').toList();
@@ -49,15 +52,27 @@ class ${className}ListView extends ConsumerWidget {
               width: double.infinity,
               child: DataTable(
                 columns: const [''');
+    for (var field in classElement.fields) {
+      if (_fieldChecker.hasAnnotationOfExact(field)) {
+        String nameValue = _fieldChecker
+          .firstAnnotationOfExact(field)
+          ?.getField('fieldName')
+          ?.toStringValue() ?? '';
 
-    for (var field in defaultFields.isEmpty ? visitor.fields.keys : defaultFields) {
-      buffer.writeln('''
-        DataColumn(
-          label: Expanded(
-            child: Text('$field', style: TextStyle(fontWeight: FontWeight.bold, color: Color.fromARGB(255, 94, 54, 54)), textAlign: TextAlign.center,)
-          ), 
-        ),
-      ''');
+        var fieldName = field.name;
+        if (nameValue.isNotEmpty) {
+          fieldName = nameValue;
+        }
+        if (!(defaultFields.isNotEmpty && !(defaultFields.contains(field.name)))) {
+          buffer.writeln('''
+            DataColumn(
+              label: Expanded(
+                child: Text('$fieldName', style: TextStyle(fontWeight: FontWeight.bold, color: Color.fromARGB(255, 94, 54, 54)), textAlign: TextAlign.center,)
+              ), 
+            ),
+          ''');
+        }
+      }
     }
 
     buffer.writeln('''

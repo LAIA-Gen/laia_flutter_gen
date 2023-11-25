@@ -26,23 +26,29 @@ class HomeWidgetGenerator extends GeneratorForAnnotation<HomeWidgetGenAnnotation
 
     buffer.writeln("Widget dashboardWidget() {");
     buffer.writeln('''
-          return Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
-            margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey, width: 1.0),
-            ),
-            child: const Column(
-              children: [''');
+          int crossAxisCount = _isMobile() ? 2 : 4;
+
+  return GridView.count(
+      primary: false,
+      physics: const ScrollPhysics(),
+      padding: const EdgeInsets.all(20),
+      crossAxisSpacing: 10,
+      mainAxisSpacing: 10,
+      crossAxisCount: crossAxisCount,
+      shrinkWrap: true,
+      children: const [''');
     for (String line in lines) {
       String widgetName = line.trim();
       buffer.writeln('$widgetName(),');
     }
     buffer.writeln('''
               ],
-            ),
-          );
-        }
+    );
+}
+
+bool _isMobile() {
+  return (defaultTargetPlatform == TargetPlatform.iOS || defaultTargetPlatform == TargetPlatform.android);
+}
         ''');
 
     return buffer.toString();

@@ -7,19 +7,26 @@ part of 'home.dart';
 // **************************************************************************
 
 Widget dashboardWidget() {
-  return Container(
-    padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
-    margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-    decoration: BoxDecoration(
-      border: Border.all(color: Colors.grey, width: 1.0),
-    ),
-    child: const Column(
-      children: [
-        WaypointHomeWidget(),
-        UserHomeWidget(),
-        DroneHomeWidget(),
-        FlightPlanHomeWidget(),
-      ],
-    ),
+  int crossAxisCount = _isMobile() ? 2 : 4;
+
+  return GridView.count(
+    primary: false,
+    physics: const ScrollPhysics(),
+    padding: const EdgeInsets.all(20),
+    crossAxisSpacing: 10,
+    mainAxisSpacing: 10,
+    crossAxisCount: crossAxisCount,
+    shrinkWrap: true,
+    children: const [
+      WaypointHomeWidget(),
+      UserHomeWidget(),
+      DroneHomeWidget(),
+      FlightPlanHomeWidget(),
+    ],
   );
+}
+
+bool _isMobile() {
+  return (defaultTargetPlatform == TargetPlatform.iOS ||
+      defaultTargetPlatform == TargetPlatform.android);
 }

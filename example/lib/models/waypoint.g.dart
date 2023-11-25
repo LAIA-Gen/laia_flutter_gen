@@ -126,7 +126,7 @@ class _WaypointWidgetState extends State<WaypointWidget> {
           children: [
             StringWidget(
               key: idWidgetKey,
-              fieldName: "id",
+              fieldName: "Id",
               fieldDescription: "This is the id",
               editable: false,
               placeholder: "Type the id",
@@ -134,7 +134,7 @@ class _WaypointWidgetState extends State<WaypointWidget> {
             ),
             StringWidget(
               key: nameWidgetKey,
-              fieldName: "name",
+              fieldName: "Name",
               fieldDescription: "This is the name",
               editable: true,
               placeholder: "Type the name",
@@ -142,7 +142,7 @@ class _WaypointWidgetState extends State<WaypointWidget> {
             ),
             StringWidget(
               key: descriptionWidgetKey,
-              fieldName: "description",
+              fieldName: "Description",
               fieldDescription: "This is the description",
               editable: true,
               placeholder: "Type the description",
@@ -150,7 +150,7 @@ class _WaypointWidgetState extends State<WaypointWidget> {
             ),
             DefaultWidget(
               key: coordinatesWidgetKey,
-              fieldName: "coordinates",
+              fieldName: "Coordinates",
               fieldDescription: "This is the coordinates",
               editable: true,
               placeholder: "Type the coordinates",
@@ -277,7 +277,7 @@ class WaypointListView extends ConsumerWidget {
                         DataColumn(
                           label: Expanded(
                               child: Text(
-                            'name',
+                            'Name',
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: Color.fromARGB(255, 94, 54, 54)),
@@ -287,7 +287,7 @@ class WaypointListView extends ConsumerWidget {
                         DataColumn(
                           label: Expanded(
                               child: Text(
-                            'description',
+                            'Description',
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: Color.fromARGB(255, 94, 54, 54)),
@@ -297,7 +297,7 @@ class WaypointListView extends ConsumerWidget {
                         DataColumn(
                           label: Expanded(
                               child: Text(
-                            'coordinates',
+                            'Coordinates',
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: Color.fromARGB(255, 94, 54, 54)),

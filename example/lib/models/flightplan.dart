@@ -10,21 +10,26 @@ import 'package:http/http.dart' as http;
 import 'package:example/config/styles.dart';
 import 'dart:convert';
 
-part 'flight_plan.g.dart';
+part 'flightplan.g.dart';
 
 @JsonSerializable()
 @RiverpodGenAnnotation(baseURL)
-@HomeWidgetElementGenAnnotation('assets/flight_plan.png')
+@HomeWidgetElementGenAnnotation()
 @ListWidgetGenAnnotation(defaultFields: ['drone_id', 'user_id', 'start_time', 'end_time', 'route'])
 @elementWidgetGen
 @CopyWith()
 class FlightPlan {
-  @Field(editable: false)
+  @Field(editable: false, fieldName: 'Id')
   final String id;
+  @Field(fieldName: 'Drone')
   final String drone_id;
+  @Field(fieldName: 'User')
   final String user_id;
+  @Field(fieldName: 'Departure time')
   final DateTime start_time;
+  @Field(fieldName: 'Arrival time')
   final DateTime end_time;
+  @Field(fieldName: 'Route')
   final List<String> route;
 
   FlightPlan({

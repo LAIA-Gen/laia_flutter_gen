@@ -14,15 +14,18 @@ part 'waypoint.g.dart';
 
 @JsonSerializable()
 @RiverpodGenAnnotation(baseURL)
-@HomeWidgetElementGenAnnotation('assets/waypoint.png')
+@HomeWidgetElementGenAnnotation()
 @ListWidgetGenAnnotation(defaultFields: ['name', 'description', 'coordinates'])
 @elementWidgetGen
 @CopyWith()
 class Waypoint {
-  @Field(editable: false)
+  @Field(editable: false, fieldName: 'Id')
   final String id;
+  @Field(fieldName: 'Name')
   final String name;
+  @Field(fieldName: 'Description')
   final String description;
+  @Field(fieldName: 'Coordinates')
   final Map<String, dynamic> coordinates;
 
   Waypoint({required this.id, required this.name, required this.description, required this.coordinates});

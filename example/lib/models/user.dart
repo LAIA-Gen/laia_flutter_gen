@@ -14,14 +14,16 @@ part 'user.g.dart';
 
 @JsonSerializable()
 @RiverpodGenAnnotation(baseURL)
-@HomeWidgetElementGenAnnotation('assets/user.png')
+@HomeWidgetElementGenAnnotation()
 @ListWidgetGenAnnotation(defaultFields: ['name', 'email'])
 @elementWidgetGen
 @CopyWith()
 class User {
-  @Field(editable: false)
+  @Field(editable: false, fieldName: 'Id')
   final String id;
+  @Field(fieldName: 'Name')
   final String name;
+  @Field(fieldName: 'Email')
   final String email;
 
   User({required this.id, required this.name, required this.email});

@@ -62,7 +62,8 @@ class IntWidgetState extends State<IntWidget> {
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
           margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
           decoration: BoxDecoration(
-            border: Border.all(color: Colors.grey, width: 1.0),
+            borderRadius: BorderRadius.circular(10.0),
+            color: Styles.secondaryColor
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -173,7 +174,8 @@ class DefaultWidgetState extends State<DefaultWidget> {
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
       margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
       decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey, width: 1.0),
+        borderRadius: BorderRadius.circular(10.0),
+        color: Styles.secondaryColor
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -271,7 +273,8 @@ class DoubleWidgetState extends State<DoubleWidget> {
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
           margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
           decoration: BoxDecoration(
-            border: Border.all(color: Colors.grey, width: 1.0),
+            borderRadius: BorderRadius.circular(10.0),
+            color: Styles.secondaryColor
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -383,7 +386,8 @@ class StringWidgetState extends State<StringWidget> {
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
           margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
           decoration: BoxDecoration(
-            border: Border.all(color: Colors.grey, width: 1.0),
+            borderRadius: BorderRadius.circular(10.0),
+            color: Styles.secondaryColor
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -528,7 +532,8 @@ class DateTimeWidgetState extends State<DateTimeWidget> {
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
           margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
           decoration: BoxDecoration(
-            border: Border.all(color: Colors.grey, width: 1.0),
+            borderRadius: BorderRadius.circular(10.0),
+            color: Styles.secondaryColor
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

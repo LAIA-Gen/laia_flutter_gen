@@ -150,7 +150,7 @@ class _DroneWidgetState extends State<DroneWidget> {
           children: [
             StringWidget(
               key: idWidgetKey,
-              fieldName: "id",
+              fieldName: "Id",
               fieldDescription: "This is the id",
               editable: false,
               placeholder: "Type the id",
@@ -158,7 +158,7 @@ class _DroneWidgetState extends State<DroneWidget> {
             ),
             StringWidget(
               key: user_idWidgetKey,
-              fieldName: "user_id",
+              fieldName: "User",
               fieldDescription: "This is the user_id",
               editable: true,
               placeholder: "Type the user_id",
@@ -166,7 +166,7 @@ class _DroneWidgetState extends State<DroneWidget> {
             ),
             StringWidget(
               key: modelWidgetKey,
-              fieldName: "model",
+              fieldName: "Model",
               fieldDescription: "This is the model",
               editable: true,
               placeholder: "Type the model",
@@ -174,7 +174,7 @@ class _DroneWidgetState extends State<DroneWidget> {
             ),
             DoubleWidget(
               key: weightWidgetKey,
-              fieldName: "weight",
+              fieldName: "Weight",
               fieldDescription: "This is the weight",
               editable: true,
               placeholder: "Type the weight",
@@ -182,7 +182,7 @@ class _DroneWidgetState extends State<DroneWidget> {
             ),
             DoubleWidget(
               key: max_altitudeWidgetKey,
-              fieldName: "max_altitude",
+              fieldName: "Maximum altitude",
               fieldDescription: "This is the max_altitude",
               editable: true,
               placeholder: "Type the max_altitude",
@@ -190,7 +190,7 @@ class _DroneWidgetState extends State<DroneWidget> {
             ),
             DoubleWidget(
               key: max_speedWidgetKey,
-              fieldName: "max_speed",
+              fieldName: "Maximum speed",
               fieldDescription: "This is the max_speed",
               editable: true,
               placeholder: "Type the max_speed",
@@ -318,7 +318,7 @@ class DroneListView extends ConsumerWidget {
                         DataColumn(
                           label: Expanded(
                               child: Text(
-                            'user_id',
+                            'User',
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: Color.fromARGB(255, 94, 54, 54)),
@@ -328,7 +328,7 @@ class DroneListView extends ConsumerWidget {
                         DataColumn(
                           label: Expanded(
                               child: Text(
-                            'model',
+                            'Model',
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: Color.fromARGB(255, 94, 54, 54)),
@@ -338,7 +338,7 @@ class DroneListView extends ConsumerWidget {
                         DataColumn(
                           label: Expanded(
                               child: Text(
-                            'weight',
+                            'Weight',
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: Color.fromARGB(255, 94, 54, 54)),
@@ -348,7 +348,7 @@ class DroneListView extends ConsumerWidget {
                         DataColumn(
                           label: Expanded(
                               child: Text(
-                            'max_altitude',
+                            'Maximum altitude',
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: Color.fromARGB(255, 94, 54, 54)),
@@ -358,7 +358,7 @@ class DroneListView extends ConsumerWidget {
                         DataColumn(
                           label: Expanded(
                               child: Text(
-                            'max_speed',
+                            'Maximum speed',
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: Color.fromARGB(255, 94, 54, 54)),

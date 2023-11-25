@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'flight_plan.dart';
+part of 'flightplan.dart';
 
 // **************************************************************************
 // CopyWithGenerator
@@ -150,7 +150,7 @@ class _FlightPlanWidgetState extends State<FlightPlanWidget> {
           children: [
             StringWidget(
               key: idWidgetKey,
-              fieldName: "id",
+              fieldName: "Id",
               fieldDescription: "This is the id",
               editable: false,
               placeholder: "Type the id",
@@ -158,7 +158,7 @@ class _FlightPlanWidgetState extends State<FlightPlanWidget> {
             ),
             StringWidget(
               key: drone_idWidgetKey,
-              fieldName: "drone_id",
+              fieldName: "Drone",
               fieldDescription: "This is the drone_id",
               editable: true,
               placeholder: "Type the drone_id",
@@ -166,7 +166,7 @@ class _FlightPlanWidgetState extends State<FlightPlanWidget> {
             ),
             StringWidget(
               key: user_idWidgetKey,
-              fieldName: "user_id",
+              fieldName: "User",
               fieldDescription: "This is the user_id",
               editable: true,
               placeholder: "Type the user_id",
@@ -174,7 +174,7 @@ class _FlightPlanWidgetState extends State<FlightPlanWidget> {
             ),
             DateTimeWidget(
               key: start_timeWidgetKey,
-              fieldName: "start_time",
+              fieldName: "Departure time",
               fieldDescription: "This is the start_time",
               editable: true,
               placeholder: "Type the start_time",
@@ -182,7 +182,7 @@ class _FlightPlanWidgetState extends State<FlightPlanWidget> {
             ),
             DateTimeWidget(
               key: end_timeWidgetKey,
-              fieldName: "end_time",
+              fieldName: "Arrival time",
               fieldDescription: "This is the end_time",
               editable: true,
               placeholder: "Type the end_time",
@@ -190,7 +190,7 @@ class _FlightPlanWidgetState extends State<FlightPlanWidget> {
             ),
             DefaultWidget(
               key: routeWidgetKey,
-              fieldName: "route",
+              fieldName: "Route",
               fieldDescription: "This is the route",
               editable: true,
               placeholder: "Type the route",
@@ -258,7 +258,7 @@ class FlightPlanHomeWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image.asset(
-              'assets/flight_plan.png',
+              'assets/flightplan.png',
               width: 40.0,
               height: 40.0,
               color: Colors.white,
@@ -331,7 +331,7 @@ class FlightPlanListView extends ConsumerWidget {
                         DataColumn(
                           label: Expanded(
                               child: Text(
-                            'drone_id',
+                            'Drone',
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: Color.fromARGB(255, 94, 54, 54)),
@@ -341,7 +341,7 @@ class FlightPlanListView extends ConsumerWidget {
                         DataColumn(
                           label: Expanded(
                               child: Text(
-                            'user_id',
+                            'User',
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: Color.fromARGB(255, 94, 54, 54)),
@@ -351,7 +351,7 @@ class FlightPlanListView extends ConsumerWidget {
                         DataColumn(
                           label: Expanded(
                               child: Text(
-                            'start_time',
+                            'Departure time',
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: Color.fromARGB(255, 94, 54, 54)),
@@ -361,7 +361,7 @@ class FlightPlanListView extends ConsumerWidget {
                         DataColumn(
                           label: Expanded(
                               child: Text(
-                            'end_time',
+                            'Arrival time',
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: Color.fromARGB(255, 94, 54, 54)),
@@ -371,7 +371,7 @@ class FlightPlanListView extends ConsumerWidget {
                         DataColumn(
                           label: Expanded(
                               child: Text(
-                            'route',
+                            'Route',
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: Color.fromARGB(255, 94, 54, 54)),
