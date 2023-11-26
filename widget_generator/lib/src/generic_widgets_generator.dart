@@ -616,6 +616,7 @@ class StringWidget extends StatefulWidget {
   final bool editable;
   final String placeholder;
   final String? value;
+  final List<Widget>? additionalChildren;
 
   const StringWidget({
     Key? key,
@@ -624,6 +625,7 @@ class StringWidget extends StatefulWidget {
     required this.editable,
     required this.placeholder,
     required this.value,
+    this.additionalChildren,
   }) : super(key: key);
 
   @override
@@ -712,6 +714,8 @@ class StringWidgetState extends State<StringWidget> {
               ),
             ),
           ),
+        if (widget.additionalChildren != null)
+          ...widget.additionalChildren!
       ],
     );
   }

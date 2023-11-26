@@ -9,6 +9,7 @@ import 'package:example/generic/generic_widgets.dart';
 import 'package:http/http.dart' as http;
 import 'package:example/config/styles.dart';
 import 'dart:convert';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 
 part 'waypoint.g.dart';
 

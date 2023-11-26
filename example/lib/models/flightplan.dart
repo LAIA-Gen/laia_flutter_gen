@@ -11,6 +11,7 @@ import 'package:example/config/styles.dart';
 import 'dart:convert';
 import 'package:example/models/user.dart';
 import 'package:example/models/drone.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 
 part 'flightplan.g.dart';
 

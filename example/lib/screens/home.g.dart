@@ -7,7 +7,7 @@ part of 'home.dart';
 // **************************************************************************
 
 Widget dashboardWidget() {
-  int crossAxisCount = _isMobile() ? 2 : 4;
+  int crossAxisCount = _isMobile() ? 3 : 5;
 
   return GridView.count(
     primary: false,
