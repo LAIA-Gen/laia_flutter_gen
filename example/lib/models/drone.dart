@@ -17,7 +17,7 @@ part 'drone.g.dart';
 @JsonSerializable()
 @RiverpodGenAnnotation(baseURL)
 @HomeWidgetElementGenAnnotation(icon: 'assets/drone.png')
-@ListWidgetGenAnnotation(defaultFields: ['name', 'user_id', 'model', 'weight', 'max_altitude', 'max_speed'])
+@ListWidgetGenAnnotation(defaultFields: ['name', 'user_id', 'model', 'weight', 'max_altitude', 'max_speed'], pageSize: 20)
 @elementWidgetGen
 @CopyWith()
 class Drone {

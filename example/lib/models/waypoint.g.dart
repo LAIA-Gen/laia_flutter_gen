@@ -424,6 +424,21 @@ class WaypointListView extends ConsumerWidget {
     final waypointsAsyncValue =
         ref.watch(getAllWaypointProvider(paginationState));
 
+    final Map<String, int> columnSortStates =
+        ref.watch(waypointPaginationProvider.notifier).getOrders();
+
+    void _onSort(String columnName) {
+      var state = columnSortStates[columnName];
+      if (state == 0 || state == null) {
+        columnSortStates[columnName] = 1;
+      } else if (state == 1) {
+        columnSortStates[columnName] = -1;
+      } else if (state == -1) {
+        columnSortStates.remove(columnName);
+      }
+      ref.read(waypointPaginationProvider.notifier).setOrders(columnSortStates);
+    }
+
     return Scaffold(
         appBar: AppBar(
           title: const Text('Waypoint List'),
@@ -447,39 +462,120 @@ class WaypointListView extends ConsumerWidget {
                               child: SizedBox(
                                 width: double.infinity,
                                 child: DataTable(
-                                  columns: const [
+                                  columns: [
                                     DataColumn(
                                       label: Expanded(
-                                          child: Text(
-                                        'Name',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: Color.fromARGB(
-                                                255, 94, 54, 54)),
-                                        textAlign: TextAlign.center,
-                                      )),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            const Text(
+                                              'Name',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Color.fromARGB(
+                                                      255, 94, 54, 54)),
+                                              textAlign: TextAlign.center,
+                                            ),
+                                            if (columnSortStates['name'] !=
+                                                null) ...[
+                                              Icon(
+                                                columnSortStates['name'] == 1
+                                                    ? Icons
+                                                        .arrow_drop_up_rounded
+                                                    : Icons
+                                                        .arrow_drop_down_rounded,
+                                                color: Colors.black,
+                                              ),
+                                              Text(
+                                                '${columnSortStates.keys.toList().indexOf('name') + 1}',
+                                                style: const TextStyle(
+                                                    fontSize: 10),
+                                              ),
+                                            ],
+                                          ],
+                                        ),
+                                      ),
+                                      onSort: (columnIndex, ascending) =>
+                                          {_onSort('name')},
                                     ),
                                     DataColumn(
                                       label: Expanded(
-                                          child: Text(
-                                        'Description',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: Color.fromARGB(
-                                                255, 94, 54, 54)),
-                                        textAlign: TextAlign.center,
-                                      )),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            const Text(
+                                              'Description',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Color.fromARGB(
+                                                      255, 94, 54, 54)),
+                                              textAlign: TextAlign.center,
+                                            ),
+                                            if (columnSortStates[
+                                                    'description'] !=
+                                                null) ...[
+                                              Icon(
+                                                columnSortStates[
+                                                            'description'] ==
+                                                        1
+                                                    ? Icons
+                                                        .arrow_drop_up_rounded
+                                                    : Icons
+                                                        .arrow_drop_down_rounded,
+                                                color: Colors.black,
+                                              ),
+                                              Text(
+                                                '${columnSortStates.keys.toList().indexOf('description') + 1}',
+                                                style: const TextStyle(
+                                                    fontSize: 10),
+                                              ),
+                                            ],
+                                          ],
+                                        ),
+                                      ),
+                                      onSort: (columnIndex, ascending) =>
+                                          {_onSort('description')},
                                     ),
                                     DataColumn(
                                       label: Expanded(
-                                          child: Text(
-                                        'Coordinates',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: Color.fromARGB(
-                                                255, 94, 54, 54)),
-                                        textAlign: TextAlign.center,
-                                      )),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            const Text(
+                                              'Coordinates',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Color.fromARGB(
+                                                      255, 94, 54, 54)),
+                                              textAlign: TextAlign.center,
+                                            ),
+                                            if (columnSortStates[
+                                                    'coordinates'] !=
+                                                null) ...[
+                                              Icon(
+                                                columnSortStates[
+                                                            'coordinates'] ==
+                                                        1
+                                                    ? Icons
+                                                        .arrow_drop_up_rounded
+                                                    : Icons
+                                                        .arrow_drop_down_rounded,
+                                                color: Colors.black,
+                                              ),
+                                              Text(
+                                                '${columnSortStates.keys.toList().indexOf('coordinates') + 1}',
+                                                style: const TextStyle(
+                                                    fontSize: 10),
+                                              ),
+                                            ],
+                                          ],
+                                        ),
+                                      ),
+                                      onSort: (columnIndex, ascending) =>
+                                          {_onSort('coordinates')},
                                     ),
                                   ],
                                   rows: waypoints.map((waypoint) {
@@ -527,23 +623,53 @@ class WaypointListView extends ConsumerWidget {
   }
 
   void _onPageButtonPressed(int pageNumber, WidgetRef ref,
-      Tuple2<int, int> paginationState, int maxPages) {
+      WaypointPaginationState paginationState, int maxPages) {
     if (pageNumber <= maxPages) {
       ref.read(waypointPaginationProvider.notifier).setPage(pageNumber);
     }
   }
 }
 
-class WaypointPaginationNotifier extends StateNotifier<Tuple2<int, int>> {
-  WaypointPaginationNotifier() : super(const Tuple2<int, int>(0, 10));
+class WaypointPaginationState {
+  final Tuple2<int, int> pagination;
+  final Map<String, int> orders;
+
+  WaypointPaginationState({
+    required this.pagination,
+    required this.orders,
+  });
+}
+
+class WaypointPaginationNotifier
+    extends StateNotifier<WaypointPaginationState> {
+  WaypointPaginationNotifier()
+      : super(WaypointPaginationState(
+          pagination: const Tuple2<int, int>(0, 10),
+          orders: {},
+        ));
 
   void setPage(int page) {
-    state = Tuple2(page * state.item2 - state.item2, state.item2);
+    state = WaypointPaginationState(
+      pagination: Tuple2(page * state.pagination.item1 - state.pagination.item2,
+          state.pagination.item2),
+      orders: state.orders,
+    );
+  }
+
+  void setOrders(Map<String, int> newOrders) {
+    state = WaypointPaginationState(
+      pagination: Tuple2(state.pagination.item1, state.pagination.item2),
+      orders: newOrders,
+    );
+  }
+
+  Map<String, int> getOrders() {
+    return state.orders;
   }
 }
 
 final waypointPaginationProvider =
-    StateNotifierProvider<WaypointPaginationNotifier, Tuple2<int, int>>(
+    StateNotifierProvider<WaypointPaginationNotifier, WaypointPaginationState>(
   (ref) => WaypointPaginationNotifier(),
 );
 
@@ -605,9 +731,17 @@ class WaypointPaginationData {
 }
 
 final getAllWaypointProvider = FutureProvider.autoDispose
-    .family<WaypointPaginationData, Tuple2<int, int>>((ref, tuple) async {
-  final json = await http.post(Uri.parse(
-      '$baseURL/waypoints/all?skip=${tuple.item1}&limit=${tuple.item2}'));
+    .family<WaypointPaginationData, WaypointPaginationState>(
+        (ref, state) async {
+  final fixedQuery = {
+    if (state.orders.isNotEmpty) 'orders': state.orders,
+  };
+
+  final json = await http.post(
+      Uri.parse(
+          '$baseURL/waypoints/all?skip=${state.pagination.item1}&limit=${state.pagination.item2}'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(fixedQuery));
   final jsonData = jsonDecode(json.body);
 
   return WaypointPaginationData(

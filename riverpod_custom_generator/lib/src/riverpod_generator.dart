@@ -73,8 +73,15 @@ class RiverpodCustomGenerator extends GeneratorForAnnotation<RiverpodGenAnnotati
         });
       }
 
-      final getAll${className}Provider = FutureProvider.autoDispose.family<${className}PaginationData, Tuple2<int, int>>((ref, tuple) async {
-        final json = await http.post(Uri.parse('\$baseURL/$classNamePlural/all?skip=\${tuple.item1}&limit=\${tuple.item2}'));
+      final getAll${className}Provider = FutureProvider.autoDispose.family<${className}PaginationData, ${className}PaginationState>((ref, state) async {
+        final fixedQuery = {
+          if (state.orders.isNotEmpty) 'orders': state.orders,
+        };
+        
+        final json = await http.post(Uri.parse(
+          '\$baseURL/$classNamePlural/all?skip=\${state.pagination.item1}&limit=\${state.pagination.item2}'),
+          headers: {'Content-Type': 'application/json'},
+          body: jsonEncode(fixedQuery));
         final jsonData = jsonDecode(json.body);
 
         return ${className}PaginationData(

@@ -388,6 +388,21 @@ class UserListView extends ConsumerWidget {
     final paginationState = ref.watch(userPaginationProvider);
     final usersAsyncValue = ref.watch(getAllUserProvider(paginationState));
 
+    final Map<String, int> columnSortStates =
+        ref.watch(userPaginationProvider.notifier).getOrders();
+
+    void _onSort(String columnName) {
+      var state = columnSortStates[columnName];
+      if (state == 0 || state == null) {
+        columnSortStates[columnName] = 1;
+      } else if (state == 1) {
+        columnSortStates[columnName] = -1;
+      } else if (state == -1) {
+        columnSortStates.remove(columnName);
+      }
+      ref.read(userPaginationProvider.notifier).setOrders(columnSortStates);
+    }
+
     return Scaffold(
         appBar: AppBar(
           title: const Text('User List'),
@@ -411,28 +426,78 @@ class UserListView extends ConsumerWidget {
                               child: SizedBox(
                                 width: double.infinity,
                                 child: DataTable(
-                                  columns: const [
+                                  columns: [
                                     DataColumn(
                                       label: Expanded(
-                                          child: Text(
-                                        'Name',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: Color.fromARGB(
-                                                255, 94, 54, 54)),
-                                        textAlign: TextAlign.center,
-                                      )),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            const Text(
+                                              'Name',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Color.fromARGB(
+                                                      255, 94, 54, 54)),
+                                              textAlign: TextAlign.center,
+                                            ),
+                                            if (columnSortStates['name'] !=
+                                                null) ...[
+                                              Icon(
+                                                columnSortStates['name'] == 1
+                                                    ? Icons
+                                                        .arrow_drop_up_rounded
+                                                    : Icons
+                                                        .arrow_drop_down_rounded,
+                                                color: Colors.black,
+                                              ),
+                                              Text(
+                                                '${columnSortStates.keys.toList().indexOf('name') + 1}',
+                                                style: const TextStyle(
+                                                    fontSize: 10),
+                                              ),
+                                            ],
+                                          ],
+                                        ),
+                                      ),
+                                      onSort: (columnIndex, ascending) =>
+                                          {_onSort('name')},
                                     ),
                                     DataColumn(
                                       label: Expanded(
-                                          child: Text(
-                                        'Email',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: Color.fromARGB(
-                                                255, 94, 54, 54)),
-                                        textAlign: TextAlign.center,
-                                      )),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            const Text(
+                                              'Email',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Color.fromARGB(
+                                                      255, 94, 54, 54)),
+                                              textAlign: TextAlign.center,
+                                            ),
+                                            if (columnSortStates['email'] !=
+                                                null) ...[
+                                              Icon(
+                                                columnSortStates['email'] == 1
+                                                    ? Icons
+                                                        .arrow_drop_up_rounded
+                                                    : Icons
+                                                        .arrow_drop_down_rounded,
+                                                color: Colors.black,
+                                              ),
+                                              Text(
+                                                '${columnSortStates.keys.toList().indexOf('email') + 1}',
+                                                style: const TextStyle(
+                                                    fontSize: 10),
+                                              ),
+                                            ],
+                                          ],
+                                        ),
+                                      ),
+                                      onSort: (columnIndex, ascending) =>
+                                          {_onSort('email')},
                                     ),
                                   ],
                                   rows: users.map((user) {
@@ -476,23 +541,52 @@ class UserListView extends ConsumerWidget {
   }
 
   void _onPageButtonPressed(int pageNumber, WidgetRef ref,
-      Tuple2<int, int> paginationState, int maxPages) {
+      UserPaginationState paginationState, int maxPages) {
     if (pageNumber <= maxPages) {
       ref.read(userPaginationProvider.notifier).setPage(pageNumber);
     }
   }
 }
 
-class UserPaginationNotifier extends StateNotifier<Tuple2<int, int>> {
-  UserPaginationNotifier() : super(const Tuple2<int, int>(0, 10));
+class UserPaginationState {
+  final Tuple2<int, int> pagination;
+  final Map<String, int> orders;
+
+  UserPaginationState({
+    required this.pagination,
+    required this.orders,
+  });
+}
+
+class UserPaginationNotifier extends StateNotifier<UserPaginationState> {
+  UserPaginationNotifier()
+      : super(UserPaginationState(
+          pagination: const Tuple2<int, int>(0, 10),
+          orders: {},
+        ));
 
   void setPage(int page) {
-    state = Tuple2(page * state.item2 - state.item2, state.item2);
+    state = UserPaginationState(
+      pagination: Tuple2(page * state.pagination.item1 - state.pagination.item2,
+          state.pagination.item2),
+      orders: state.orders,
+    );
+  }
+
+  void setOrders(Map<String, int> newOrders) {
+    state = UserPaginationState(
+      pagination: Tuple2(state.pagination.item1, state.pagination.item2),
+      orders: newOrders,
+    );
+  }
+
+  Map<String, int> getOrders() {
+    return state.orders;
   }
 }
 
 final userPaginationProvider =
-    StateNotifierProvider<UserPaginationNotifier, Tuple2<int, int>>(
+    StateNotifierProvider<UserPaginationNotifier, UserPaginationState>(
   (ref) => UserPaginationNotifier(),
 );
 
@@ -554,9 +648,16 @@ class UserPaginationData {
 }
 
 final getAllUserProvider = FutureProvider.autoDispose
-    .family<UserPaginationData, Tuple2<int, int>>((ref, tuple) async {
+    .family<UserPaginationData, UserPaginationState>((ref, state) async {
+  final fixedQuery = {
+    if (state.orders.isNotEmpty) 'orders': state.orders,
+  };
+
   final json = await http.post(
-      Uri.parse('$baseURL/users/all?skip=${tuple.item1}&limit=${tuple.item2}'));
+      Uri.parse(
+          '$baseURL/users/all?skip=${state.pagination.item1}&limit=${state.pagination.item2}'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(fixedQuery));
   final jsonData = jsonDecode(json.body);
 
   return UserPaginationData(

@@ -487,6 +487,21 @@ class DroneListView extends ConsumerWidget {
     final paginationState = ref.watch(dronePaginationProvider);
     final dronesAsyncValue = ref.watch(getAllDroneProvider(paginationState));
 
+    final Map<String, int> columnSortStates =
+        ref.watch(dronePaginationProvider.notifier).getOrders();
+
+    void _onSort(String columnName) {
+      var state = columnSortStates[columnName];
+      if (state == 0 || state == null) {
+        columnSortStates[columnName] = 1;
+      } else if (state == 1) {
+        columnSortStates[columnName] = -1;
+      } else if (state == -1) {
+        columnSortStates.remove(columnName);
+      }
+      ref.read(dronePaginationProvider.notifier).setOrders(columnSortStates);
+    }
+
     return Scaffold(
         appBar: AppBar(
           title: const Text('Drone List'),
@@ -510,72 +525,226 @@ class DroneListView extends ConsumerWidget {
                               child: SizedBox(
                                 width: double.infinity,
                                 child: DataTable(
-                                  columns: const [
+                                  columns: [
                                     DataColumn(
                                       label: Expanded(
-                                          child: Text(
-                                        'Name',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: Color.fromARGB(
-                                                255, 94, 54, 54)),
-                                        textAlign: TextAlign.center,
-                                      )),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            const Text(
+                                              'Name',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Color.fromARGB(
+                                                      255, 94, 54, 54)),
+                                              textAlign: TextAlign.center,
+                                            ),
+                                            if (columnSortStates['name'] !=
+                                                null) ...[
+                                              Icon(
+                                                columnSortStates['name'] == 1
+                                                    ? Icons
+                                                        .arrow_drop_up_rounded
+                                                    : Icons
+                                                        .arrow_drop_down_rounded,
+                                                color: Colors.black,
+                                              ),
+                                              Text(
+                                                '${columnSortStates.keys.toList().indexOf('name') + 1}',
+                                                style: const TextStyle(
+                                                    fontSize: 10),
+                                              ),
+                                            ],
+                                          ],
+                                        ),
+                                      ),
+                                      onSort: (columnIndex, ascending) =>
+                                          {_onSort('name')},
                                     ),
                                     DataColumn(
                                       label: Expanded(
-                                          child: Text(
-                                        'User',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: Color.fromARGB(
-                                                255, 94, 54, 54)),
-                                        textAlign: TextAlign.center,
-                                      )),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            const Text(
+                                              'User',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Color.fromARGB(
+                                                      255, 94, 54, 54)),
+                                              textAlign: TextAlign.center,
+                                            ),
+                                            if (columnSortStates['user_id'] !=
+                                                null) ...[
+                                              Icon(
+                                                columnSortStates['user_id'] == 1
+                                                    ? Icons
+                                                        .arrow_drop_up_rounded
+                                                    : Icons
+                                                        .arrow_drop_down_rounded,
+                                                color: Colors.black,
+                                              ),
+                                              Text(
+                                                '${columnSortStates.keys.toList().indexOf('user_id') + 1}',
+                                                style: const TextStyle(
+                                                    fontSize: 10),
+                                              ),
+                                            ],
+                                          ],
+                                        ),
+                                      ),
+                                      onSort: (columnIndex, ascending) =>
+                                          {_onSort('user_id')},
                                     ),
                                     DataColumn(
                                       label: Expanded(
-                                          child: Text(
-                                        'Model',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: Color.fromARGB(
-                                                255, 94, 54, 54)),
-                                        textAlign: TextAlign.center,
-                                      )),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            const Text(
+                                              'Model',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Color.fromARGB(
+                                                      255, 94, 54, 54)),
+                                              textAlign: TextAlign.center,
+                                            ),
+                                            if (columnSortStates['model'] !=
+                                                null) ...[
+                                              Icon(
+                                                columnSortStates['model'] == 1
+                                                    ? Icons
+                                                        .arrow_drop_up_rounded
+                                                    : Icons
+                                                        .arrow_drop_down_rounded,
+                                                color: Colors.black,
+                                              ),
+                                              Text(
+                                                '${columnSortStates.keys.toList().indexOf('model') + 1}',
+                                                style: const TextStyle(
+                                                    fontSize: 10),
+                                              ),
+                                            ],
+                                          ],
+                                        ),
+                                      ),
+                                      onSort: (columnIndex, ascending) =>
+                                          {_onSort('model')},
                                     ),
                                     DataColumn(
                                       label: Expanded(
-                                          child: Text(
-                                        'Weight',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: Color.fromARGB(
-                                                255, 94, 54, 54)),
-                                        textAlign: TextAlign.center,
-                                      )),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            const Text(
+                                              'Weight',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Color.fromARGB(
+                                                      255, 94, 54, 54)),
+                                              textAlign: TextAlign.center,
+                                            ),
+                                            if (columnSortStates['weight'] !=
+                                                null) ...[
+                                              Icon(
+                                                columnSortStates['weight'] == 1
+                                                    ? Icons
+                                                        .arrow_drop_up_rounded
+                                                    : Icons
+                                                        .arrow_drop_down_rounded,
+                                                color: Colors.black,
+                                              ),
+                                              Text(
+                                                '${columnSortStates.keys.toList().indexOf('weight') + 1}',
+                                                style: const TextStyle(
+                                                    fontSize: 10),
+                                              ),
+                                            ],
+                                          ],
+                                        ),
+                                      ),
+                                      onSort: (columnIndex, ascending) =>
+                                          {_onSort('weight')},
                                     ),
                                     DataColumn(
                                       label: Expanded(
-                                          child: Text(
-                                        'Maximum altitude',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: Color.fromARGB(
-                                                255, 94, 54, 54)),
-                                        textAlign: TextAlign.center,
-                                      )),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            const Text(
+                                              'Maximum altitude',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Color.fromARGB(
+                                                      255, 94, 54, 54)),
+                                              textAlign: TextAlign.center,
+                                            ),
+                                            if (columnSortStates[
+                                                    'max_altitude'] !=
+                                                null) ...[
+                                              Icon(
+                                                columnSortStates[
+                                                            'max_altitude'] ==
+                                                        1
+                                                    ? Icons
+                                                        .arrow_drop_up_rounded
+                                                    : Icons
+                                                        .arrow_drop_down_rounded,
+                                                color: Colors.black,
+                                              ),
+                                              Text(
+                                                '${columnSortStates.keys.toList().indexOf('max_altitude') + 1}',
+                                                style: const TextStyle(
+                                                    fontSize: 10),
+                                              ),
+                                            ],
+                                          ],
+                                        ),
+                                      ),
+                                      onSort: (columnIndex, ascending) =>
+                                          {_onSort('max_altitude')},
                                     ),
                                     DataColumn(
                                       label: Expanded(
-                                          child: Text(
-                                        'Maximum speed',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: Color.fromARGB(
-                                                255, 94, 54, 54)),
-                                        textAlign: TextAlign.center,
-                                      )),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            const Text(
+                                              'Maximum speed',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Color.fromARGB(
+                                                      255, 94, 54, 54)),
+                                              textAlign: TextAlign.center,
+                                            ),
+                                            if (columnSortStates['max_speed'] !=
+                                                null) ...[
+                                              Icon(
+                                                columnSortStates['max_speed'] ==
+                                                        1
+                                                    ? Icons
+                                                        .arrow_drop_up_rounded
+                                                    : Icons
+                                                        .arrow_drop_down_rounded,
+                                                color: Colors.black,
+                                              ),
+                                              Text(
+                                                '${columnSortStates.keys.toList().indexOf('max_speed') + 1}',
+                                                style: const TextStyle(
+                                                    fontSize: 10),
+                                              ),
+                                            ],
+                                          ],
+                                        ),
+                                      ),
+                                      onSort: (columnIndex, ascending) =>
+                                          {_onSort('max_speed')},
                                     ),
                                   ],
                                   rows: drones.map((drone) {
@@ -632,23 +801,52 @@ class DroneListView extends ConsumerWidget {
   }
 
   void _onPageButtonPressed(int pageNumber, WidgetRef ref,
-      Tuple2<int, int> paginationState, int maxPages) {
+      DronePaginationState paginationState, int maxPages) {
     if (pageNumber <= maxPages) {
       ref.read(dronePaginationProvider.notifier).setPage(pageNumber);
     }
   }
 }
 
-class DronePaginationNotifier extends StateNotifier<Tuple2<int, int>> {
-  DronePaginationNotifier() : super(const Tuple2<int, int>(0, 10));
+class DronePaginationState {
+  final Tuple2<int, int> pagination;
+  final Map<String, int> orders;
+
+  DronePaginationState({
+    required this.pagination,
+    required this.orders,
+  });
+}
+
+class DronePaginationNotifier extends StateNotifier<DronePaginationState> {
+  DronePaginationNotifier()
+      : super(DronePaginationState(
+          pagination: const Tuple2<int, int>(0, 20),
+          orders: {},
+        ));
 
   void setPage(int page) {
-    state = Tuple2(page * state.item2 - state.item2, state.item2);
+    state = DronePaginationState(
+      pagination: Tuple2(page * state.pagination.item1 - state.pagination.item2,
+          state.pagination.item2),
+      orders: state.orders,
+    );
+  }
+
+  void setOrders(Map<String, int> newOrders) {
+    state = DronePaginationState(
+      pagination: Tuple2(state.pagination.item1, state.pagination.item2),
+      orders: newOrders,
+    );
+  }
+
+  Map<String, int> getOrders() {
+    return state.orders;
   }
 }
 
 final dronePaginationProvider =
-    StateNotifierProvider<DronePaginationNotifier, Tuple2<int, int>>(
+    StateNotifierProvider<DronePaginationNotifier, DronePaginationState>(
   (ref) => DronePaginationNotifier(),
 );
 
@@ -710,9 +908,16 @@ class DronePaginationData {
 }
 
 final getAllDroneProvider = FutureProvider.autoDispose
-    .family<DronePaginationData, Tuple2<int, int>>((ref, tuple) async {
-  final json = await http.post(Uri.parse(
-      '$baseURL/drones/all?skip=${tuple.item1}&limit=${tuple.item2}'));
+    .family<DronePaginationData, DronePaginationState>((ref, state) async {
+  final fixedQuery = {
+    if (state.orders.isNotEmpty) 'orders': state.orders,
+  };
+
+  final json = await http.post(
+      Uri.parse(
+          '$baseURL/drones/all?skip=${state.pagination.item1}&limit=${state.pagination.item2}'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(fixedQuery));
   final jsonData = jsonDecode(json.body);
 
   return DronePaginationData(

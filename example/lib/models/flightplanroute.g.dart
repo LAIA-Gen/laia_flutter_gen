@@ -513,6 +513,23 @@ class FlightPlanRouteListView extends ConsumerWidget {
     final flightplanroutesAsyncValue =
         ref.watch(getAllFlightPlanRouteProvider(paginationState));
 
+    final Map<String, int> columnSortStates =
+        ref.watch(flightplanroutePaginationProvider.notifier).getOrders();
+
+    void _onSort(String columnName) {
+      var state = columnSortStates[columnName];
+      if (state == 0 || state == null) {
+        columnSortStates[columnName] = 1;
+      } else if (state == 1) {
+        columnSortStates[columnName] = -1;
+      } else if (state == -1) {
+        columnSortStates.remove(columnName);
+      }
+      ref
+          .read(flightplanroutePaginationProvider.notifier)
+          .setOrders(columnSortStates);
+    }
+
     return Scaffold(
         appBar: AppBar(
           title: const Text('FlightPlanRoute List'),
@@ -536,72 +553,229 @@ class FlightPlanRouteListView extends ConsumerWidget {
                               child: SizedBox(
                                 width: double.infinity,
                                 child: DataTable(
-                                  columns: const [
+                                  columns: [
                                     DataColumn(
                                       label: Expanded(
-                                          child: Text(
-                                        'Name',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: Color.fromARGB(
-                                                255, 94, 54, 54)),
-                                        textAlign: TextAlign.center,
-                                      )),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            const Text(
+                                              'Name',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Color.fromARGB(
+                                                      255, 94, 54, 54)),
+                                              textAlign: TextAlign.center,
+                                            ),
+                                            if (columnSortStates['name'] !=
+                                                null) ...[
+                                              Icon(
+                                                columnSortStates['name'] == 1
+                                                    ? Icons
+                                                        .arrow_drop_up_rounded
+                                                    : Icons
+                                                        .arrow_drop_down_rounded,
+                                                color: Colors.black,
+                                              ),
+                                              Text(
+                                                '${columnSortStates.keys.toList().indexOf('name') + 1}',
+                                                style: const TextStyle(
+                                                    fontSize: 10),
+                                              ),
+                                            ],
+                                          ],
+                                        ),
+                                      ),
+                                      onSort: (columnIndex, ascending) =>
+                                          {_onSort('name')},
                                     ),
                                     DataColumn(
                                       label: Expanded(
-                                          child: Text(
-                                        'Drone',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: Color.fromARGB(
-                                                255, 94, 54, 54)),
-                                        textAlign: TextAlign.center,
-                                      )),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            const Text(
+                                              'Drone',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Color.fromARGB(
+                                                      255, 94, 54, 54)),
+                                              textAlign: TextAlign.center,
+                                            ),
+                                            if (columnSortStates['drone_id'] !=
+                                                null) ...[
+                                              Icon(
+                                                columnSortStates[
+                                                            'drone_id'] ==
+                                                        1
+                                                    ? Icons
+                                                        .arrow_drop_up_rounded
+                                                    : Icons
+                                                        .arrow_drop_down_rounded,
+                                                color: Colors.black,
+                                              ),
+                                              Text(
+                                                '${columnSortStates.keys.toList().indexOf('drone_id') + 1}',
+                                                style: const TextStyle(
+                                                    fontSize: 10),
+                                              ),
+                                            ],
+                                          ],
+                                        ),
+                                      ),
+                                      onSort: (columnIndex, ascending) =>
+                                          {_onSort('drone_id')},
                                     ),
                                     DataColumn(
                                       label: Expanded(
-                                          child: Text(
-                                        'User',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: Color.fromARGB(
-                                                255, 94, 54, 54)),
-                                        textAlign: TextAlign.center,
-                                      )),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            const Text(
+                                              'User',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Color.fromARGB(
+                                                      255, 94, 54, 54)),
+                                              textAlign: TextAlign.center,
+                                            ),
+                                            if (columnSortStates['user_id'] !=
+                                                null) ...[
+                                              Icon(
+                                                columnSortStates['user_id'] == 1
+                                                    ? Icons
+                                                        .arrow_drop_up_rounded
+                                                    : Icons
+                                                        .arrow_drop_down_rounded,
+                                                color: Colors.black,
+                                              ),
+                                              Text(
+                                                '${columnSortStates.keys.toList().indexOf('user_id') + 1}',
+                                                style: const TextStyle(
+                                                    fontSize: 10),
+                                              ),
+                                            ],
+                                          ],
+                                        ),
+                                      ),
+                                      onSort: (columnIndex, ascending) =>
+                                          {_onSort('user_id')},
                                     ),
                                     DataColumn(
                                       label: Expanded(
-                                          child: Text(
-                                        'Departure time',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: Color.fromARGB(
-                                                255, 94, 54, 54)),
-                                        textAlign: TextAlign.center,
-                                      )),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            const Text(
+                                              'Departure time',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Color.fromARGB(
+                                                      255, 94, 54, 54)),
+                                              textAlign: TextAlign.center,
+                                            ),
+                                            if (columnSortStates[
+                                                    'start_time'] !=
+                                                null) ...[
+                                              Icon(
+                                                columnSortStates[
+                                                            'start_time'] ==
+                                                        1
+                                                    ? Icons
+                                                        .arrow_drop_up_rounded
+                                                    : Icons
+                                                        .arrow_drop_down_rounded,
+                                                color: Colors.black,
+                                              ),
+                                              Text(
+                                                '${columnSortStates.keys.toList().indexOf('start_time') + 1}',
+                                                style: const TextStyle(
+                                                    fontSize: 10),
+                                              ),
+                                            ],
+                                          ],
+                                        ),
+                                      ),
+                                      onSort: (columnIndex, ascending) =>
+                                          {_onSort('start_time')},
                                     ),
                                     DataColumn(
                                       label: Expanded(
-                                          child: Text(
-                                        'Arrival time',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: Color.fromARGB(
-                                                255, 94, 54, 54)),
-                                        textAlign: TextAlign.center,
-                                      )),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            const Text(
+                                              'Arrival time',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Color.fromARGB(
+                                                      255, 94, 54, 54)),
+                                              textAlign: TextAlign.center,
+                                            ),
+                                            if (columnSortStates['end_time'] !=
+                                                null) ...[
+                                              Icon(
+                                                columnSortStates[
+                                                            'end_time'] ==
+                                                        1
+                                                    ? Icons
+                                                        .arrow_drop_up_rounded
+                                                    : Icons
+                                                        .arrow_drop_down_rounded,
+                                                color: Colors.black,
+                                              ),
+                                              Text(
+                                                '${columnSortStates.keys.toList().indexOf('end_time') + 1}',
+                                                style: const TextStyle(
+                                                    fontSize: 10),
+                                              ),
+                                            ],
+                                          ],
+                                        ),
+                                      ),
+                                      onSort: (columnIndex, ascending) =>
+                                          {_onSort('end_time')},
                                     ),
                                     DataColumn(
                                       label: Expanded(
-                                          child: Text(
-                                        'Route',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: Color.fromARGB(
-                                                255, 94, 54, 54)),
-                                        textAlign: TextAlign.center,
-                                      )),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            const Text(
+                                              'Route',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Color.fromARGB(
+                                                      255, 94, 54, 54)),
+                                              textAlign: TextAlign.center,
+                                            ),
+                                            if (columnSortStates['route'] !=
+                                                null) ...[
+                                              Icon(
+                                                columnSortStates['route'] == 1
+                                                    ? Icons
+                                                        .arrow_drop_up_rounded
+                                                    : Icons
+                                                        .arrow_drop_down_rounded,
+                                                color: Colors.black,
+                                              ),
+                                              Text(
+                                                '${columnSortStates.keys.toList().indexOf('route') + 1}',
+                                                style: const TextStyle(
+                                                    fontSize: 10),
+                                              ),
+                                            ],
+                                          ],
+                                        ),
+                                      ),
+                                      onSort: (columnIndex, ascending) =>
+                                          {_onSort('route')},
                                     ),
                                   ],
                                   rows: flightplanroutes.map((flightplanroute) {
@@ -660,24 +834,53 @@ class FlightPlanRouteListView extends ConsumerWidget {
   }
 
   void _onPageButtonPressed(int pageNumber, WidgetRef ref,
-      Tuple2<int, int> paginationState, int maxPages) {
+      FlightPlanRoutePaginationState paginationState, int maxPages) {
     if (pageNumber <= maxPages) {
       ref.read(flightplanroutePaginationProvider.notifier).setPage(pageNumber);
     }
   }
 }
 
+class FlightPlanRoutePaginationState {
+  final Tuple2<int, int> pagination;
+  final Map<String, int> orders;
+
+  FlightPlanRoutePaginationState({
+    required this.pagination,
+    required this.orders,
+  });
+}
+
 class FlightPlanRoutePaginationNotifier
-    extends StateNotifier<Tuple2<int, int>> {
-  FlightPlanRoutePaginationNotifier() : super(const Tuple2<int, int>(0, 10));
+    extends StateNotifier<FlightPlanRoutePaginationState> {
+  FlightPlanRoutePaginationNotifier()
+      : super(FlightPlanRoutePaginationState(
+          pagination: const Tuple2<int, int>(0, 10),
+          orders: {},
+        ));
 
   void setPage(int page) {
-    state = Tuple2(page * state.item2 - state.item2, state.item2);
+    state = FlightPlanRoutePaginationState(
+      pagination: Tuple2(page * state.pagination.item1 - state.pagination.item2,
+          state.pagination.item2),
+      orders: state.orders,
+    );
+  }
+
+  void setOrders(Map<String, int> newOrders) {
+    state = FlightPlanRoutePaginationState(
+      pagination: Tuple2(state.pagination.item1, state.pagination.item2),
+      orders: newOrders,
+    );
+  }
+
+  Map<String, int> getOrders() {
+    return state.orders;
   }
 }
 
-final flightplanroutePaginationProvider =
-    StateNotifierProvider<FlightPlanRoutePaginationNotifier, Tuple2<int, int>>(
+final flightplanroutePaginationProvider = StateNotifierProvider<
+    FlightPlanRoutePaginationNotifier, FlightPlanRoutePaginationState>(
   (ref) => FlightPlanRoutePaginationNotifier(),
 );
 
@@ -740,10 +943,17 @@ class FlightPlanRoutePaginationData {
 }
 
 final getAllFlightPlanRouteProvider = FutureProvider.autoDispose
-    .family<FlightPlanRoutePaginationData, Tuple2<int, int>>(
-        (ref, tuple) async {
-  final json = await http.post(Uri.parse(
-      '$baseURL/flightplanroutes/all?skip=${tuple.item1}&limit=${tuple.item2}'));
+    .family<FlightPlanRoutePaginationData, FlightPlanRoutePaginationState>(
+        (ref, state) async {
+  final fixedQuery = {
+    if (state.orders.isNotEmpty) 'orders': state.orders,
+  };
+
+  final json = await http.post(
+      Uri.parse(
+          '$baseURL/flightplanroutes/all?skip=${state.pagination.item1}&limit=${state.pagination.item2}'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(fixedQuery));
   final jsonData = jsonDecode(json.body);
 
   return FlightPlanRoutePaginationData(

@@ -38,6 +38,20 @@ class ${className}ListView extends ConsumerWidget {
     final ${classNamePlural}AsyncValue =
         ref.watch(getAll${className}Provider(paginationState));
 
+    final Map<String, int> columnSortStates = ref.watch(${classNameLowercase}PaginationProvider.notifier).getOrders();
+
+    void _onSort(String columnName) {
+      var state = columnSortStates[columnName];
+      if (state == 0 || state == null) {
+        columnSortStates[columnName] = 1;
+      } else if (state == 1) {
+        columnSortStates[columnName] = -1;
+      } else if (state == -1) {
+        columnSortStates.remove(columnName);
+      }
+      ref.read(${classNameLowercase}PaginationProvider.notifier).setOrders(columnSortStates);
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('$className List'),
@@ -61,7 +75,7 @@ class ${className}ListView extends ConsumerWidget {
                         child: SizedBox(
                           width: double.infinity,
                           child: DataTable(
-                            columns: const [''');
+                            columns: [''');
     for (var field in classElement.fields) {
       if (_fieldChecker.hasAnnotationOfExact(field)) {
         String nameValue = _fieldChecker
@@ -77,8 +91,28 @@ class ${className}ListView extends ConsumerWidget {
           buffer.writeln('''
             DataColumn(
               label: Expanded(
-                child: Text('$fieldName', style: TextStyle(fontWeight: FontWeight.bold, color: Color.fromARGB(255, 94, 54, 54)), textAlign: TextAlign.center,)
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [ 
+                    const Text('$fieldName', style: TextStyle(fontWeight: FontWeight.bold, color: Color.fromARGB(255, 94, 54, 54)), textAlign: TextAlign.center,),
+                    if (columnSortStates['${field.name}'] != null) ...[
+                      Icon(
+                        columnSortStates['${field.name}'] == 1
+                            ? Icons.arrow_drop_up_rounded 
+                            : Icons.arrow_drop_down_rounded,
+                        color: Colors.black,
+                      ),
+                      Text(
+                        '\${columnSortStates.keys.toList().indexOf('${field.name}') + 1}',
+                        style: const TextStyle(fontSize: 10),
+                      ),
+                    ],
+                  ],
+                ),
               ), 
+              onSort:(columnIndex, ascending) => {
+                _onSort('${field.name}')
+              },
             ),
           ''');
         }
@@ -129,24 +163,50 @@ class ${className}ListView extends ConsumerWidget {
     ));
   }
 
-  void _onPageButtonPressed(int pageNumber, WidgetRef ref, Tuple2<int, int> paginationState, int maxPages) {
+  void _onPageButtonPressed(int pageNumber, WidgetRef ref, ${className}PaginationState paginationState, int maxPages) {
     if (pageNumber <= maxPages) {
       ref.read(${classNameLowercase}PaginationProvider.notifier).setPage(pageNumber);
     }
   }
 }
 
-      
-class ${className}PaginationNotifier extends StateNotifier<Tuple2<int, int>> {
-  ${className}PaginationNotifier() : super(const Tuple2<int, int>(0, $pageSize));
+class ${className}PaginationState {
+  final Tuple2<int, int> pagination;
+  final Map<String, int> orders;
+
+  ${className}PaginationState({
+    required this.pagination,
+    required this.orders,
+  });
+}
+
+class ${className}PaginationNotifier extends StateNotifier<${className}PaginationState> {
+  ${className}PaginationNotifier() : super(${className}PaginationState(
+          pagination: const Tuple2<int, int>(0, $pageSize),
+          orders: {},
+        ));
 
   void setPage(int page) {
-    state = Tuple2(page*state.item2 - state.item2, state.item2);
+    state = ${className}PaginationState(
+          pagination: Tuple2(page * state.pagination.item1 - state.pagination.item2, state.pagination.item2),
+          orders: state.orders,
+        );
+  }
+
+  void setOrders(Map<String, int> newOrders) {
+    state = ${className}PaginationState(
+          pagination: Tuple2(state.pagination.item1, state.pagination.item2),
+          orders: newOrders,
+        );
+  }
+
+  Map<String, int> getOrders() {
+    return state.orders;
   }
 }
 
 final ${classNameLowercase}PaginationProvider =
-    StateNotifierProvider<${className}PaginationNotifier, Tuple2<int, int>>(
+    StateNotifierProvider<${className}PaginationNotifier, ${className}PaginationState>(
   (ref) => ${className}PaginationNotifier(),
 );
 ''');
