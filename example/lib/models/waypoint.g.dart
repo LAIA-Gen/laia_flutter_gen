@@ -650,7 +650,7 @@ class WaypointPaginationNotifier
 
   void setPage(int page) {
     state = WaypointPaginationState(
-      pagination: Tuple2(page * state.pagination.item1 + state.pagination.item2,
+      pagination: Tuple2(page * state.pagination.item2 - state.pagination.item2,
           state.pagination.item2),
       orders: state.orders,
     );

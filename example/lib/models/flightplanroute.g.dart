@@ -861,7 +861,7 @@ class FlightPlanRoutePaginationNotifier
 
   void setPage(int page) {
     state = FlightPlanRoutePaginationState(
-      pagination: Tuple2(page * state.pagination.item1 + state.pagination.item2,
+      pagination: Tuple2(page * state.pagination.item2 - state.pagination.item2,
           state.pagination.item2),
       orders: state.orders,
     );
