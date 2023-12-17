@@ -567,7 +567,7 @@ class UserPaginationNotifier extends StateNotifier<UserPaginationState> {
 
   void setPage(int page) {
     state = UserPaginationState(
-      pagination: Tuple2(page * state.pagination.item1 - state.pagination.item2,
+      pagination: Tuple2(page * state.pagination.item1 + state.pagination.item2,
           state.pagination.item2),
       orders: state.orders,
     );

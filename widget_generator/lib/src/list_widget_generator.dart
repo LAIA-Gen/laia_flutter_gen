@@ -188,7 +188,7 @@ class ${className}PaginationNotifier extends StateNotifier<${className}Paginatio
 
   void setPage(int page) {
     state = ${className}PaginationState(
-          pagination: Tuple2(page * state.pagination.item1 - state.pagination.item2, state.pagination.item2),
+          pagination: Tuple2(page * state.pagination.item1 + state.pagination.item2, state.pagination.item2),
           orders: state.orders,
         );
   }
