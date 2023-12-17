@@ -437,7 +437,7 @@ class FlightPlanHomeWidget extends StatelessWidget {
       child: Container(
         width: 100.0,
         height: 100.0,
-        color: Styles.primaryColor, // You can choose any color you like
+        color: Styles.primaryColor,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -509,118 +509,137 @@ class FlightPlanListView extends ConsumerWidget {
           error: (error, stackTrace) => Text('Error: $error'),
           data: (FlightPlanPaginationData data) {
             final flightplans = data.items;
-            return ListView(children: [
-              Column(
+            return Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  SingleChildScrollView(
-                    scrollDirection: Axis.vertical,
-                    child: SizedBox(
-                      width: double.infinity,
-                      child: DataTable(
-                        columns: const [
-                          DataColumn(
-                            label: Expanded(
-                                child: Text(
-                              'Name',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Color.fromARGB(255, 94, 54, 54)),
-                              textAlign: TextAlign.center,
-                            )),
-                          ),
-                          DataColumn(
-                            label: Expanded(
-                                child: Text(
-                              'Drone',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Color.fromARGB(255, 94, 54, 54)),
-                              textAlign: TextAlign.center,
-                            )),
-                          ),
-                          DataColumn(
-                            label: Expanded(
-                                child: Text(
-                              'User',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Color.fromARGB(255, 94, 54, 54)),
-                              textAlign: TextAlign.center,
-                            )),
-                          ),
-                          DataColumn(
-                            label: Expanded(
-                                child: Text(
-                              'Departure time',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Color.fromARGB(255, 94, 54, 54)),
-                              textAlign: TextAlign.center,
-                            )),
-                          ),
-                          DataColumn(
-                            label: Expanded(
-                                child: Text(
-                              'Arrival time',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Color.fromARGB(255, 94, 54, 54)),
-                              textAlign: TextAlign.center,
-                            )),
-                          ),
-                          DataColumn(
-                            label: Expanded(
-                                child: Text(
-                              'Route',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Color.fromARGB(255, 94, 54, 54)),
-                              textAlign: TextAlign.center,
-                            )),
-                          ),
-                        ],
-                        rows: flightplans.map((flightplan) {
-                          return DataRow(
-                            cells: [
-                              DataCell(Center(
-                                  child: Text(flightplan.name.toString()))),
-                              DataCell(Center(
-                                  child: Text(flightplan.drone_id.toString()))),
-                              DataCell(Center(
-                                  child: Text(flightplan.user_id.toString()))),
-                              DataCell(Center(
-                                  child:
-                                      Text(flightplan.start_time.toString()))),
-                              DataCell(Center(
-                                  child: Text(flightplan.end_time.toString()))),
-                              DataCell(Center(
-                                  child: Text(flightplan.route.toString()))),
-                            ],
-                            onSelectChanged: (selected) {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        FlightPlanWidget(flightplan)),
-                              );
-                            },
-                          );
-                        }).toList(),
-                        showCheckboxColumn: false,
-                      ),
+                  Expanded(
+                    child: ListView(
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            SingleChildScrollView(
+                              scrollDirection: Axis.vertical,
+                              child: SizedBox(
+                                width: double.infinity,
+                                child: DataTable(
+                                  columns: const [
+                                    DataColumn(
+                                      label: Expanded(
+                                          child: Text(
+                                        'Name',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Color.fromARGB(
+                                                255, 94, 54, 54)),
+                                        textAlign: TextAlign.center,
+                                      )),
+                                    ),
+                                    DataColumn(
+                                      label: Expanded(
+                                          child: Text(
+                                        'Drone',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Color.fromARGB(
+                                                255, 94, 54, 54)),
+                                        textAlign: TextAlign.center,
+                                      )),
+                                    ),
+                                    DataColumn(
+                                      label: Expanded(
+                                          child: Text(
+                                        'User',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Color.fromARGB(
+                                                255, 94, 54, 54)),
+                                        textAlign: TextAlign.center,
+                                      )),
+                                    ),
+                                    DataColumn(
+                                      label: Expanded(
+                                          child: Text(
+                                        'Departure time',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Color.fromARGB(
+                                                255, 94, 54, 54)),
+                                        textAlign: TextAlign.center,
+                                      )),
+                                    ),
+                                    DataColumn(
+                                      label: Expanded(
+                                          child: Text(
+                                        'Arrival time',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Color.fromARGB(
+                                                255, 94, 54, 54)),
+                                        textAlign: TextAlign.center,
+                                      )),
+                                    ),
+                                    DataColumn(
+                                      label: Expanded(
+                                          child: Text(
+                                        'Route',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Color.fromARGB(
+                                                255, 94, 54, 54)),
+                                        textAlign: TextAlign.center,
+                                      )),
+                                    ),
+                                  ],
+                                  rows: flightplans.map((flightplan) {
+                                    return DataRow(
+                                      cells: [
+                                        DataCell(Center(
+                                            child: Text(
+                                                flightplan.name.toString()))),
+                                        DataCell(Center(
+                                            child: Text(flightplan.drone_id
+                                                .toString()))),
+                                        DataCell(Center(
+                                            child: Text(flightplan.user_id
+                                                .toString()))),
+                                        DataCell(Center(
+                                            child: Text(flightplan.start_time
+                                                .toString()))),
+                                        DataCell(Center(
+                                            child: Text(flightplan.end_time
+                                                .toString()))),
+                                        DataCell(Center(
+                                            child: Text(
+                                                flightplan.route.toString()))),
+                                      ],
+                                      onSelectChanged: (selected) {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  FlightPlanWidget(flightplan)),
+                                        );
+                                      },
+                                    );
+                                  }).toList(),
+                                  showCheckboxColumn: false,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                          ],
+                        ),
+                      ],
                     ),
                   ),
-                  const SizedBox(height: 8),
-                ],
-              ),
-              CustomPagination(
-                currentPage: data.currentPage,
-                maxPages: data.maxPages,
-                onPageSelected: (pageNumber) => _onPageButtonPressed(
-                    pageNumber, ref, paginationState, data.maxPages),
-              )
-            ]);
+                  CustomPagination(
+                    currentPage: data.currentPage,
+                    maxPages: data.maxPages,
+                    onPageSelected: (pageNumber) => _onPageButtonPressed(
+                        pageNumber, ref, paginationState, data.maxPages),
+                  )
+                ]);
           },
         ));
   }

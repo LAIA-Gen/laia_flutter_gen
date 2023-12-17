@@ -335,7 +335,7 @@ class UserHomeWidget extends StatelessWidget {
       child: Container(
         width: 100.0,
         height: 100.0,
-        color: Styles.primaryColor, // You can choose any color you like
+        color: Styles.primaryColor,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -397,68 +397,80 @@ class UserListView extends ConsumerWidget {
           error: (error, stackTrace) => Text('Error: $error'),
           data: (UserPaginationData data) {
             final users = data.items;
-            return ListView(children: [
-              Column(
+            return Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  SingleChildScrollView(
-                    scrollDirection: Axis.vertical,
-                    child: SizedBox(
-                      width: double.infinity,
-                      child: DataTable(
-                        columns: const [
-                          DataColumn(
-                            label: Expanded(
-                                child: Text(
-                              'Name',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Color.fromARGB(255, 94, 54, 54)),
-                              textAlign: TextAlign.center,
-                            )),
-                          ),
-                          DataColumn(
-                            label: Expanded(
-                                child: Text(
-                              'Email',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Color.fromARGB(255, 94, 54, 54)),
-                              textAlign: TextAlign.center,
-                            )),
-                          ),
-                        ],
-                        rows: users.map((user) {
-                          return DataRow(
-                            cells: [
-                              DataCell(
-                                  Center(child: Text(user.name.toString()))),
-                              DataCell(
-                                  Center(child: Text(user.email.toString()))),
-                            ],
-                            onSelectChanged: (selected) {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => UserWidget(user)),
-                              );
-                            },
-                          );
-                        }).toList(),
-                        showCheckboxColumn: false,
-                      ),
+                  Expanded(
+                    child: ListView(
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            SingleChildScrollView(
+                              scrollDirection: Axis.vertical,
+                              child: SizedBox(
+                                width: double.infinity,
+                                child: DataTable(
+                                  columns: const [
+                                    DataColumn(
+                                      label: Expanded(
+                                          child: Text(
+                                        'Name',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Color.fromARGB(
+                                                255, 94, 54, 54)),
+                                        textAlign: TextAlign.center,
+                                      )),
+                                    ),
+                                    DataColumn(
+                                      label: Expanded(
+                                          child: Text(
+                                        'Email',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Color.fromARGB(
+                                                255, 94, 54, 54)),
+                                        textAlign: TextAlign.center,
+                                      )),
+                                    ),
+                                  ],
+                                  rows: users.map((user) {
+                                    return DataRow(
+                                      cells: [
+                                        DataCell(Center(
+                                            child: Text(user.name.toString()))),
+                                        DataCell(Center(
+                                            child:
+                                                Text(user.email.toString()))),
+                                      ],
+                                      onSelectChanged: (selected) {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  UserWidget(user)),
+                                        );
+                                      },
+                                    );
+                                  }).toList(),
+                                  showCheckboxColumn: false,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                          ],
+                        ),
+                      ],
                     ),
                   ),
-                  const SizedBox(height: 8),
-                ],
-              ),
-              CustomPagination(
-                currentPage: data.currentPage,
-                maxPages: data.maxPages,
-                onPageSelected: (pageNumber) => _onPageButtonPressed(
-                    pageNumber, ref, paginationState, data.maxPages),
-              )
-            ]);
+                  CustomPagination(
+                    currentPage: data.currentPage,
+                    maxPages: data.maxPages,
+                    onPageSelected: (pageNumber) => _onPageButtonPressed(
+                        pageNumber, ref, paginationState, data.maxPages),
+                  )
+                ]);
           },
         ));
   }

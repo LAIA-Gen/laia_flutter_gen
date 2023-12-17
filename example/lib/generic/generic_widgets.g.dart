@@ -827,37 +827,44 @@ class CustomPagination extends StatelessWidget {
   final Function(int) onPageSelected;
 
   const CustomPagination({
-    super.key,
+    Key? key,
     required this.currentPage,
     required this.maxPages,
     required this.onPageSelected,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        _buildNavigationButton(Icons.arrow_back, () {
-          if (currentPage > 1) onPageSelected(currentPage - 1);
-        }),
-        _buildPageButton(1),
-        if (currentPage > 3) ...[
-          const Text('...'),
+    return Container(
+      padding: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        border: Border.all(color: const Color.fromARGB(255, 233, 233, 233)),
+        borderRadius: BorderRadius.circular(4.0),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          _buildNavigationButton(Icons.arrow_left, () {
+            if (currentPage > 1) onPageSelected(currentPage - 1);
+          }),
+          _buildPageButton(1),
+          if (currentPage > 3) ...[
+            const Text('...'),
+          ],
+          for (int i = currentPage - 1; i <= currentPage + 1; i++) ...[
+            if (i > 1 && i < maxPages) _buildPageButton(i),
+          ],
+          if (currentPage < maxPages - 2) ...[
+            const Text('...'),
+          ],
+          if (1 != maxPages) ...[
+            _buildPageButton(maxPages),
+          ],
+          _buildNavigationButton(Icons.arrow_right, () {
+            if (currentPage < maxPages) onPageSelected(currentPage + 1);
+          }),
         ],
-        for (int i = currentPage - 1; i <= currentPage + 1; i++) ...[
-          if (i > 1 && i < maxPages) _buildPageButton(i),
-        ],
-        if (currentPage < maxPages - 2) ...[
-          const Text('...'),
-        ],
-        if (1 != maxPages) ...[
-          _buildPageButton(maxPages),
-        ],
-        _buildNavigationButton(Icons.arrow_forward, () {
-          if (currentPage < maxPages) onPageSelected(currentPage + 1);
-        }),
-      ],
+      ),
     );
   }
 
@@ -868,8 +875,8 @@ class CustomPagination extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         decoration: BoxDecoration(
           color: pageNumber == currentPage
-              ? const Color.fromARGB(255, 135, 206, 250)
-              : const Color.fromARGB(255, 224, 221, 221),
+              ? const Color.fromARGB(255, 224, 221, 221)
+              : Colors.transparent,
           borderRadius: BorderRadius.circular(4.0),
         ),
         child: Text('$pageNumber'),
@@ -881,9 +888,9 @@ class CustomPagination extends StatelessWidget {
     return InkWell(
       onTap: onPressed,
       child: Container(
-        padding: const EdgeInsets.all(8),
+        padding: const EdgeInsets.all(4),
         decoration: BoxDecoration(
-          color: const Color.fromARGB(255, 224, 221, 221),
+          color: Colors.transparent,
           borderRadius: BorderRadius.circular(4.0),
         ),
         child: Icon(icon),

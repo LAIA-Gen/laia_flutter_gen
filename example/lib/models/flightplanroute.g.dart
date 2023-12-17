@@ -447,7 +447,7 @@ class FlightPlanRouteHomeWidget extends StatelessWidget {
       child: Container(
         width: 100.0,
         height: 100.0,
-        color: Styles.primaryColor, // You can choose any color you like
+        color: Styles.primaryColor,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -522,123 +522,139 @@ class FlightPlanRouteListView extends ConsumerWidget {
           error: (error, stackTrace) => Text('Error: $error'),
           data: (FlightPlanRoutePaginationData data) {
             final flightplanroutes = data.items;
-            return ListView(children: [
-              Column(
+            return Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  SingleChildScrollView(
-                    scrollDirection: Axis.vertical,
-                    child: SizedBox(
-                      width: double.infinity,
-                      child: DataTable(
-                        columns: const [
-                          DataColumn(
-                            label: Expanded(
-                                child: Text(
-                              'Name',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Color.fromARGB(255, 94, 54, 54)),
-                              textAlign: TextAlign.center,
-                            )),
-                          ),
-                          DataColumn(
-                            label: Expanded(
-                                child: Text(
-                              'Drone',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Color.fromARGB(255, 94, 54, 54)),
-                              textAlign: TextAlign.center,
-                            )),
-                          ),
-                          DataColumn(
-                            label: Expanded(
-                                child: Text(
-                              'User',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Color.fromARGB(255, 94, 54, 54)),
-                              textAlign: TextAlign.center,
-                            )),
-                          ),
-                          DataColumn(
-                            label: Expanded(
-                                child: Text(
-                              'Departure time',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Color.fromARGB(255, 94, 54, 54)),
-                              textAlign: TextAlign.center,
-                            )),
-                          ),
-                          DataColumn(
-                            label: Expanded(
-                                child: Text(
-                              'Arrival time',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Color.fromARGB(255, 94, 54, 54)),
-                              textAlign: TextAlign.center,
-                            )),
-                          ),
-                          DataColumn(
-                            label: Expanded(
-                                child: Text(
-                              'Route',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Color.fromARGB(255, 94, 54, 54)),
-                              textAlign: TextAlign.center,
-                            )),
-                          ),
-                        ],
-                        rows: flightplanroutes.map((flightplanroute) {
-                          return DataRow(
-                            cells: [
-                              DataCell(Center(
-                                  child:
-                                      Text(flightplanroute.name.toString()))),
-                              DataCell(Center(
-                                  child: Text(
-                                      flightplanroute.drone_id.toString()))),
-                              DataCell(Center(
-                                  child: Text(
-                                      flightplanroute.user_id.toString()))),
-                              DataCell(Center(
-                                  child: Text(
-                                      flightplanroute.start_time.toString()))),
-                              DataCell(Center(
-                                  child: Text(
-                                      flightplanroute.end_time.toString()))),
-                              DataCell(Center(
-                                  child:
-                                      Text(flightplanroute.route.toString()))),
-                            ],
-                            onSelectChanged: (selected) {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        FlightPlanRouteWidget(flightplanroute)),
-                              );
-                            },
-                          );
-                        }).toList(),
-                        showCheckboxColumn: false,
-                      ),
+                  Expanded(
+                    child: ListView(
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            SingleChildScrollView(
+                              scrollDirection: Axis.vertical,
+                              child: SizedBox(
+                                width: double.infinity,
+                                child: DataTable(
+                                  columns: const [
+                                    DataColumn(
+                                      label: Expanded(
+                                          child: Text(
+                                        'Name',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Color.fromARGB(
+                                                255, 94, 54, 54)),
+                                        textAlign: TextAlign.center,
+                                      )),
+                                    ),
+                                    DataColumn(
+                                      label: Expanded(
+                                          child: Text(
+                                        'Drone',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Color.fromARGB(
+                                                255, 94, 54, 54)),
+                                        textAlign: TextAlign.center,
+                                      )),
+                                    ),
+                                    DataColumn(
+                                      label: Expanded(
+                                          child: Text(
+                                        'User',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Color.fromARGB(
+                                                255, 94, 54, 54)),
+                                        textAlign: TextAlign.center,
+                                      )),
+                                    ),
+                                    DataColumn(
+                                      label: Expanded(
+                                          child: Text(
+                                        'Departure time',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Color.fromARGB(
+                                                255, 94, 54, 54)),
+                                        textAlign: TextAlign.center,
+                                      )),
+                                    ),
+                                    DataColumn(
+                                      label: Expanded(
+                                          child: Text(
+                                        'Arrival time',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Color.fromARGB(
+                                                255, 94, 54, 54)),
+                                        textAlign: TextAlign.center,
+                                      )),
+                                    ),
+                                    DataColumn(
+                                      label: Expanded(
+                                          child: Text(
+                                        'Route',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Color.fromARGB(
+                                                255, 94, 54, 54)),
+                                        textAlign: TextAlign.center,
+                                      )),
+                                    ),
+                                  ],
+                                  rows: flightplanroutes.map((flightplanroute) {
+                                    return DataRow(
+                                      cells: [
+                                        DataCell(Center(
+                                            child: Text(flightplanroute.name
+                                                .toString()))),
+                                        DataCell(Center(
+                                            child: Text(flightplanroute.drone_id
+                                                .toString()))),
+                                        DataCell(Center(
+                                            child: Text(flightplanroute.user_id
+                                                .toString()))),
+                                        DataCell(Center(
+                                            child: Text(flightplanroute
+                                                .start_time
+                                                .toString()))),
+                                        DataCell(Center(
+                                            child: Text(flightplanroute.end_time
+                                                .toString()))),
+                                        DataCell(Center(
+                                            child: Text(flightplanroute.route
+                                                .toString()))),
+                                      ],
+                                      onSelectChanged: (selected) {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  FlightPlanRouteWidget(
+                                                      flightplanroute)),
+                                        );
+                                      },
+                                    );
+                                  }).toList(),
+                                  showCheckboxColumn: false,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                          ],
+                        ),
+                      ],
                     ),
                   ),
-                  const SizedBox(height: 8),
-                ],
-              ),
-              CustomPagination(
-                currentPage: data.currentPage,
-                maxPages: data.maxPages,
-                onPageSelected: (pageNumber) => _onPageButtonPressed(
-                    pageNumber, ref, paginationState, data.maxPages),
-              )
-            ]);
+                  CustomPagination(
+                    currentPage: data.currentPage,
+                    maxPages: data.maxPages,
+                    onPageSelected: (pageNumber) => _onPageButtonPressed(
+                        pageNumber, ref, paginationState, data.maxPages),
+                  )
+                ]);
           },
         ));
   }

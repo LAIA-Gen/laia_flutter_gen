@@ -47,17 +47,21 @@ class ${className}ListView extends ConsumerWidget {
         error: (error, stackTrace) => Text('Error: \$error'),
         data: (${className}PaginationData data) {
           final $classNamePlural = data.items;
-          return ListView(
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
+          return Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Expanded(
+              child: ListView(
                 children: [
-                  SingleChildScrollView(
-                    scrollDirection: Axis.vertical,
-                    child: SizedBox(
-                      width: double.infinity,
-                      child: DataTable(
-                        columns: const [''');
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      SingleChildScrollView(
+                        scrollDirection: Axis.vertical,
+                        child: SizedBox(
+                          width: double.infinity,
+                          child: DataTable(
+                            columns: const [''');
     for (var field in classElement.fields) {
       if (_fieldChecker.hasAnnotationOfExact(field)) {
         String nameValue = _fieldChecker
@@ -111,16 +115,18 @@ class ${className}ListView extends ConsumerWidget {
                   const SizedBox(height: 8),
                 ],
               ),
-              CustomPagination(
-                currentPage: data.currentPage,
-                maxPages: data.maxPages,
-                onPageSelected: (pageNumber) => _onPageButtonPressed(pageNumber, ref, paginationState, data.maxPages),
-              )
-            ]
-          );
-        },
-      )
-    );
+            ],
+          ),
+        ),
+          CustomPagination(
+            currentPage: data.currentPage,
+            maxPages: data.maxPages,
+            onPageSelected: (pageNumber) => _onPageButtonPressed(
+                pageNumber, ref, paginationState, data.maxPages),
+          )
+        ]);
+      },
+    ));
   }
 
   void _onPageButtonPressed(int pageNumber, WidgetRef ref, Tuple2<int, int> paginationState, int maxPages) {
