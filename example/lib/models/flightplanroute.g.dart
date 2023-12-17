@@ -13,6 +13,8 @@ abstract class _$FlightPlanRouteCWProxy {
 
   FlightPlanRoute id(String id);
 
+  FlightPlanRoute name(String name);
+
   FlightPlanRoute route(List<Map<String, dynamic>> route);
 
   FlightPlanRoute start_time(DateTime start_time);
@@ -29,6 +31,7 @@ abstract class _$FlightPlanRouteCWProxy {
     String? drone_id,
     DateTime? end_time,
     String? id,
+    String? name,
     List<Map<String, dynamic>>? route,
     DateTime? start_time,
     String? user_id,
@@ -49,6 +52,9 @@ class _$FlightPlanRouteCWProxyImpl implements _$FlightPlanRouteCWProxy {
 
   @override
   FlightPlanRoute id(String id) => this(id: id);
+
+  @override
+  FlightPlanRoute name(String name) => this(name: name);
 
   @override
   FlightPlanRoute route(List<Map<String, dynamic>> route) => this(route: route);
@@ -72,6 +78,7 @@ class _$FlightPlanRouteCWProxyImpl implements _$FlightPlanRouteCWProxy {
     Object? drone_id = const $CopyWithPlaceholder(),
     Object? end_time = const $CopyWithPlaceholder(),
     Object? id = const $CopyWithPlaceholder(),
+    Object? name = const $CopyWithPlaceholder(),
     Object? route = const $CopyWithPlaceholder(),
     Object? start_time = const $CopyWithPlaceholder(),
     Object? user_id = const $CopyWithPlaceholder(),
@@ -89,6 +96,10 @@ class _$FlightPlanRouteCWProxyImpl implements _$FlightPlanRouteCWProxy {
           ? _value.id
           // ignore: cast_nullable_to_non_nullable
           : id as String,
+      name: name == const $CopyWithPlaceholder() || name == null
+          ? _value.name
+          // ignore: cast_nullable_to_non_nullable
+          : name as String,
       route: route == const $CopyWithPlaceholder() || route == null
           ? _value.route
           // ignore: cast_nullable_to_non_nullable
@@ -128,6 +139,8 @@ class FlightPlanRouteWidget extends StatefulWidget {
 class _FlightPlanRouteWidgetState extends State<FlightPlanRouteWidget> {
   final GlobalKey<StringWidgetState> idWidgetKey =
       GlobalKey<StringWidgetState>();
+  final GlobalKey<StringWidgetState> nameWidgetKey =
+      GlobalKey<StringWidgetState>();
   final GlobalKey<StringWidgetState> drone_idWidgetKey =
       GlobalKey<StringWidgetState>();
   final GlobalKey<StringWidgetState> user_idWidgetKey =
@@ -155,6 +168,14 @@ class _FlightPlanRouteWidgetState extends State<FlightPlanRouteWidget> {
               editable: false,
               placeholder: "Type the id",
               value: widget.element.id,
+            ),
+            StringWidget(
+              key: nameWidgetKey,
+              fieldName: "Name",
+              fieldDescription: "This is the name",
+              editable: true,
+              placeholder: "Type the name",
+              value: widget.element.name,
             ),
             StringWidget(
               key: drone_idWidgetKey,
@@ -203,6 +224,8 @@ class _FlightPlanRouteWidgetState extends State<FlightPlanRouteWidget> {
         onPressed: () async {
           String? updatedid = idWidgetKey.currentState?.getUpdatedValue();
 
+          String? updatedname = nameWidgetKey.currentState?.getUpdatedValue();
+
           String? updateddrone_id =
               drone_idWidgetKey.currentState?.getUpdatedValue();
 
@@ -219,6 +242,7 @@ class _FlightPlanRouteWidgetState extends State<FlightPlanRouteWidget> {
 
           FlightPlanRoute updatedFlightPlanRoute = widget.element.copyWith(
               id: updatedid,
+              name: updatedname,
               drone_id: updateddrone_id,
               user_id: updateduser_id,
               start_time: updatedstart_time,
@@ -281,7 +305,7 @@ class FlightPlanRouteFieldWidgetState
     FlightPlanRoute flightplanroute =
         await container.read(getFlightPlanRouteProvider(widget.value!).future);
     _typeAheadController.text =
-        '<id: ${flightplanroute.id}>';
+        '${flightplanroute.name} <id: ${flightplanroute.id}>';
   }
 
   String? getUpdatedValue() {
@@ -326,13 +350,18 @@ class FlightPlanRouteFieldWidgetState
                           child: TypeAheadField<FlightPlanRoute>(
                             controller: _typeAheadController,
                             suggestionsCallback: (String pattern) async {
-                              options = await container.read(
-                                  getAllFlightPlanRouteProvider(container.read(
-                                          flightplanroutePaginationProvider))
-                                      .future);
-                              print(options);
+                              final flightplanroutePaginationData =
+                                  await container.read(
+                                      getAllFlightPlanRouteProvider(container.read(
+                                              flightplanroutePaginationProvider))
+                                          .future);
+                              final options =
+                                  flightplanroutePaginationData.items;
                               return options
                                   .where((flightplanroute) =>
+                                      flightplanroute.name
+                                          .toLowerCase()
+                                          .contains(pattern.toLowerCase()) ||
                                       flightplanroute.id
                                           .toString()
                                           .contains(pattern.toLowerCase()))
@@ -341,7 +370,7 @@ class FlightPlanRouteFieldWidgetState
                             itemBuilder: (context, flightplanroute) {
                               return ListTile(
                                 title: Text(
-                                    '<id: ${flightplanroute.id}>'),
+                                    '${flightplanroute.name} <id: ${flightplanroute.id}>'),
                               );
                             },
                             onSelected: (FlightPlanRoute value) {
@@ -349,7 +378,7 @@ class FlightPlanRouteFieldWidgetState
                                 isValueChanged = value.id != initialValue;
                                 currentValue = value.id;
                                 _typeAheadController.text =
-                                    '<id: ${value.id}>';
+                                    '${value.name} <id: ${value.id}>';
                               });
                             },
                           ),
@@ -450,6 +479,7 @@ class FlightPlanRouteHomeWidget extends StatelessWidget {
 FlightPlanRoute _$FlightPlanRouteFromJson(Map<String, dynamic> json) =>
     FlightPlanRoute(
       id: json['id'] as String,
+      name: json['name'] as String,
       drone_id: json['drone_id'] as String,
       user_id: json['user_id'] as String,
       start_time: DateTime.parse(json['start_time'] as String),
@@ -462,6 +492,7 @@ FlightPlanRoute _$FlightPlanRouteFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$FlightPlanRouteToJson(FlightPlanRoute instance) =>
     <String, dynamic>{
       'id': instance.id,
+      'name': instance.name,
       'drone_id': instance.drone_id,
       'user_id': instance.user_id,
       'start_time': instance.start_time.toIso8601String(),
@@ -483,132 +514,140 @@ class FlightPlanRouteListView extends ConsumerWidget {
         ref.watch(getAllFlightPlanRouteProvider(paginationState));
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('FlightPlanRoute List'),
-      ),
-      body: flightplanroutesAsyncValue.when(
-        loading: () => const CircularProgressIndicator(),
-        error: (error, stackTrace) => Text('Error: $error'),
-        data: (List<FlightPlanRoute> flightplanroutes) {
-          return SingleChildScrollView(
-              scrollDirection: Axis.vertical,
-              child: SizedBox(
-                  width: double.infinity,
-                  child: DataTable(
-                      columns: const [
-                        DataColumn(
-                          label: Expanded(
-                              child: Text(
-                            'Drone',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Color.fromARGB(255, 94, 54, 54)),
-                            textAlign: TextAlign.center,
-                          )),
-                        ),
-                        DataColumn(
-                          label: Expanded(
-                              child: Text(
-                            'User',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Color.fromARGB(255, 94, 54, 54)),
-                            textAlign: TextAlign.center,
-                          )),
-                        ),
-                        DataColumn(
-                          label: Expanded(
-                              child: Text(
-                            'Departure time',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Color.fromARGB(255, 94, 54, 54)),
-                            textAlign: TextAlign.center,
-                          )),
-                        ),
-                        DataColumn(
-                          label: Expanded(
-                              child: Text(
-                            'Arrival time',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Color.fromARGB(255, 94, 54, 54)),
-                            textAlign: TextAlign.center,
-                          )),
-                        ),
-                        DataColumn(
-                          label: Expanded(
-                              child: Text(
-                            'Route',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Color.fromARGB(255, 94, 54, 54)),
-                            textAlign: TextAlign.center,
-                          )),
-                        ),
-                      ],
-                      rows: flightplanroutes.map((flightplanroute) {
-                        return DataRow(
-                          cells: [
-                            DataCell(Center(
-                                child:
-                                    Text(flightplanroute.drone_id.toString()))),
-                            DataCell(Center(
-                                child:
-                                    Text(flightplanroute.user_id.toString()))),
-                            DataCell(Center(
+        appBar: AppBar(
+          title: const Text('FlightPlanRoute List'),
+        ),
+        body: flightplanroutesAsyncValue.when(
+          loading: () => const CircularProgressIndicator(),
+          error: (error, stackTrace) => Text('Error: $error'),
+          data: (FlightPlanRoutePaginationData data) {
+            final flightplanroutes = data.items;
+            return ListView(children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  SingleChildScrollView(
+                    scrollDirection: Axis.vertical,
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: DataTable(
+                        columns: const [
+                          DataColumn(
+                            label: Expanded(
                                 child: Text(
-                                    flightplanroute.start_time.toString()))),
-                            DataCell(Center(
-                                child:
-                                    Text(flightplanroute.end_time.toString()))),
-                            DataCell(Center(
-                                child: Text(flightplanroute.route.toString()))),
-                          ],
-                          onSelectChanged: (selected) {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      FlightPlanRouteWidget(flightplanroute)),
-                            );
-                          },
-                        );
-                      }).toList(),
-                      showCheckboxColumn: false)));
-        },
-      ),
-      floatingActionButton: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          ElevatedButton(
-            onPressed: () => ref
-                .read(flightplanroutePaginationProvider.notifier)
-                .decrementPage(),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color.fromARGB(255, 224, 221, 221),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(4.0),
+                              'Name',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Color.fromARGB(255, 94, 54, 54)),
+                              textAlign: TextAlign.center,
+                            )),
+                          ),
+                          DataColumn(
+                            label: Expanded(
+                                child: Text(
+                              'Drone',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Color.fromARGB(255, 94, 54, 54)),
+                              textAlign: TextAlign.center,
+                            )),
+                          ),
+                          DataColumn(
+                            label: Expanded(
+                                child: Text(
+                              'User',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Color.fromARGB(255, 94, 54, 54)),
+                              textAlign: TextAlign.center,
+                            )),
+                          ),
+                          DataColumn(
+                            label: Expanded(
+                                child: Text(
+                              'Departure time',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Color.fromARGB(255, 94, 54, 54)),
+                              textAlign: TextAlign.center,
+                            )),
+                          ),
+                          DataColumn(
+                            label: Expanded(
+                                child: Text(
+                              'Arrival time',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Color.fromARGB(255, 94, 54, 54)),
+                              textAlign: TextAlign.center,
+                            )),
+                          ),
+                          DataColumn(
+                            label: Expanded(
+                                child: Text(
+                              'Route',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Color.fromARGB(255, 94, 54, 54)),
+                              textAlign: TextAlign.center,
+                            )),
+                          ),
+                        ],
+                        rows: flightplanroutes.map((flightplanroute) {
+                          return DataRow(
+                            cells: [
+                              DataCell(Center(
+                                  child:
+                                      Text(flightplanroute.name.toString()))),
+                              DataCell(Center(
+                                  child: Text(
+                                      flightplanroute.drone_id.toString()))),
+                              DataCell(Center(
+                                  child: Text(
+                                      flightplanroute.user_id.toString()))),
+                              DataCell(Center(
+                                  child: Text(
+                                      flightplanroute.start_time.toString()))),
+                              DataCell(Center(
+                                  child: Text(
+                                      flightplanroute.end_time.toString()))),
+                              DataCell(Center(
+                                  child:
+                                      Text(flightplanroute.route.toString()))),
+                            ],
+                            onSelectChanged: (selected) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        FlightPlanRouteWidget(flightplanroute)),
+                              );
+                            },
+                          );
+                        }).toList(),
+                        showCheckboxColumn: false,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                ],
               ),
-            ),
-            child: const Icon(Icons.arrow_back),
-          ),
-          const SizedBox(width: 16),
-          ElevatedButton(
-            onPressed: () => ref
-                .read(flightplanroutePaginationProvider.notifier)
-                .incrementPage(),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color.fromARGB(255, 224, 221, 221),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(4.0),
-              ),
-            ),
-            child: const Icon(Icons.arrow_forward),
-          ),
-        ],
-      ),
-    );
+              CustomPagination(
+                currentPage: data.currentPage,
+                maxPages: data.maxPages,
+                onPageSelected: (pageNumber) => _onPageButtonPressed(
+                    pageNumber, ref, paginationState, data.maxPages),
+              )
+            ]);
+          },
+        ));
+  }
+
+  void _onPageButtonPressed(int pageNumber, WidgetRef ref,
+      Tuple2<int, int> paginationState, int maxPages) {
+    if (pageNumber <= maxPages) {
+      ref.read(flightplanroutePaginationProvider.notifier).setPage(pageNumber);
+    }
   }
 }
 
@@ -616,11 +655,8 @@ class FlightPlanRoutePaginationNotifier
     extends StateNotifier<Tuple2<int, int>> {
   FlightPlanRoutePaginationNotifier() : super(const Tuple2<int, int>(0, 10));
 
-  void incrementPage() => state = Tuple2(state.item1 + 10, state.item2);
-  void decrementPage() {
-    if (state.item1 != 0) {
-      state = Tuple2(state.item1 - 10, state.item2);
-    }
+  void setPage(int page) {
+    state = Tuple2(page * state.item2 - state.item2, state.item2);
   }
 }
 
@@ -675,10 +711,30 @@ final deleteFlightPlanRouteProvider = FutureProvider.autoDispose
   }
 });
 
+class FlightPlanRoutePaginationData {
+  final List<FlightPlanRoute> items;
+  final int currentPage;
+  final int maxPages;
+
+  FlightPlanRoutePaginationData({
+    required this.items,
+    required this.currentPage,
+    required this.maxPages,
+  });
+}
+
 final getAllFlightPlanRouteProvider = FutureProvider.autoDispose
-    .family<List<FlightPlanRoute>, Tuple2<int, int>>((ref, tuple) async {
+    .family<FlightPlanRoutePaginationData, Tuple2<int, int>>(
+        (ref, tuple) async {
   final json = await http.post(Uri.parse(
       '$baseURL/flightplanroutes/all?skip=${tuple.item1}&limit=${tuple.item2}'));
-  final jsonData = jsonDecode(json.body) as List;
-  return jsonData.map((data) => FlightPlanRoute.fromJson(data)).toList();
+  final jsonData = jsonDecode(json.body);
+
+  return FlightPlanRoutePaginationData(
+    items: (jsonData['items'] as List)
+        .map((data) => FlightPlanRoute.fromJson(data))
+        .toList(),
+    currentPage: jsonData['current_page'],
+    maxPages: jsonData['max_pages'],
+  );
 });

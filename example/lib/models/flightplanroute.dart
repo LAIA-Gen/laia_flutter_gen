@@ -16,12 +16,14 @@ part 'flightplanroute.g.dart';
 @JsonSerializable()
 @RiverpodGenAnnotation(baseURL)
 @HomeWidgetElementGenAnnotation()
-@ListWidgetGenAnnotation(defaultFields: ['drone_id', 'user_id', 'start_time', 'end_time', 'route'])
+@ListWidgetGenAnnotation(defaultFields: ['name', 'drone_id', 'user_id', 'start_time', 'end_time', 'route'])
 @elementWidgetGen
 @CopyWith()
 class FlightPlanRoute {
   @Field(editable: false, fieldName: 'Id')
   final String id;
+  @Field(fieldName: 'Name')
+  final String name;
   @Field(fieldName: 'Drone')
   final String drone_id;
   @Field(fieldName: 'User')
@@ -35,6 +37,7 @@ class FlightPlanRoute {
 
   FlightPlanRoute({
     required this.id,
+    required this.name,
     required this.drone_id,
     required this.user_id,
     required this.start_time,

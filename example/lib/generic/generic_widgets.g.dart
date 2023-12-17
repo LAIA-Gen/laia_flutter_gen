@@ -821,6 +821,77 @@ class DateTimeWidgetState extends State<DateTimeWidget> {
   }
 }
 
+class CustomPagination extends StatelessWidget {
+  final int currentPage;
+  final int maxPages;
+  final Function(int) onPageSelected;
+
+  const CustomPagination({
+    super.key,
+    required this.currentPage,
+    required this.maxPages,
+    required this.onPageSelected,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        _buildNavigationButton(Icons.arrow_back, () {
+          if (currentPage > 1) onPageSelected(currentPage - 1);
+        }),
+        _buildPageButton(1),
+        if (currentPage > 3) ...[
+          const Text('...'),
+        ],
+        for (int i = currentPage - 1; i <= currentPage + 1; i++) ...[
+          if (i > 1 && i < maxPages) _buildPageButton(i),
+        ],
+        if (currentPage < maxPages - 2) ...[
+          const Text('...'),
+        ],
+        if (1 != maxPages) ...[
+          _buildPageButton(maxPages),
+        ],
+        _buildNavigationButton(Icons.arrow_forward, () {
+          if (currentPage < maxPages) onPageSelected(currentPage + 1);
+        }),
+      ],
+    );
+  }
+
+  Widget _buildPageButton(int pageNumber) {
+    return InkWell(
+      onTap: () => onPageSelected(pageNumber),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        decoration: BoxDecoration(
+          color: pageNumber == currentPage
+              ? const Color.fromARGB(255, 135, 206, 250)
+              : const Color.fromARGB(255, 224, 221, 221),
+          borderRadius: BorderRadius.circular(4.0),
+        ),
+        child: Text('$pageNumber'),
+      ),
+    );
+  }
+
+  Widget _buildNavigationButton(IconData icon, VoidCallback onPressed) {
+    return InkWell(
+      onTap: onPressed,
+      child: Container(
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          color: const Color.fromARGB(255, 224, 221, 221),
+          borderRadius: BorderRadius.circular(4.0),
+        ),
+        child: Icon(icon),
+      ),
+    );
+  }
+}
+
 Widget boolWidget(String fieldName, bool value) {
   return Container(
     padding: const EdgeInsets.all(8.0),

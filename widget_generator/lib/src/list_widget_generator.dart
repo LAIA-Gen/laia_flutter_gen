@@ -45,13 +45,19 @@ class ${className}ListView extends ConsumerWidget {
       body: ${classNamePlural}AsyncValue.when(
         loading: () => const CircularProgressIndicator(),
         error: (error, stackTrace) => Text('Error: \$error'),
-        data: (List<$className> $classNamePlural) {
-          return SingleChildScrollView(
-            scrollDirection: Axis.vertical,
-            child: SizedBox(
-              width: double.infinity,
-              child: DataTable(
-                columns: const [''');
+        data: (${className}PaginationData data) {
+          final $classNamePlural = data.items;
+          return ListView(
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  SingleChildScrollView(
+                    scrollDirection: Axis.vertical,
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: DataTable(
+                        columns: const [''');
     for (var field in classElement.fields) {
       if (_fieldChecker.hasAnnotationOfExact(field)) {
         String nameValue = _fieldChecker
@@ -89,60 +95,47 @@ class ${className}ListView extends ConsumerWidget {
     }
 
     buffer.writeln('''
+                        ],
+                            onSelectChanged: (selected) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => ${className}Widget($classNameLowercase)),
+                              );
+                            },
+                          );
+                        }).toList(),
+                        showCheckboxColumn: false,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
                 ],
-                    onSelectChanged: (selected) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => ${className}Widget($classNameLowercase)),
-                      );
-                    },
-                  );
-                }).toList(),
-                showCheckboxColumn: false
+              ),
+              CustomPagination(
+                currentPage: data.currentPage,
+                maxPages: data.maxPages,
+                onPageSelected: (pageNumber) => _onPageButtonPressed(pageNumber, ref, paginationState, data.maxPages),
               )
-            )
+            ]
           );
         },
-      ),
-      floatingActionButton: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          ElevatedButton(
-            onPressed: () =>
-                ref.read(${classNameLowercase}PaginationProvider.notifier).decrementPage(),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color.fromARGB(255, 224, 221, 221),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(4.0),
-              ),
-            ),
-            child: const Icon(Icons.arrow_back),
-          ),
-          const SizedBox(width: 16),
-          ElevatedButton(
-            onPressed: () =>
-                ref.read(${classNameLowercase}PaginationProvider.notifier).incrementPage(),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color.fromARGB(255, 224, 221, 221),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(4.0),
-              ),
-            ),
-            child: const Icon(Icons.arrow_forward),
-          ),
-        ],
-      ),
+      )
     );
   }
+
+  void _onPageButtonPressed(int pageNumber, WidgetRef ref, Tuple2<int, int> paginationState, int maxPages) {
+    if (pageNumber <= maxPages) {
+      ref.read(${classNameLowercase}PaginationProvider.notifier).setPage(pageNumber);
+    }
+  }
 }
+
+      
 class ${className}PaginationNotifier extends StateNotifier<Tuple2<int, int>> {
   ${className}PaginationNotifier() : super(const Tuple2<int, int>(0, $pageSize));
 
-  void incrementPage() => state = Tuple2(state.item1 + $pageSize, state.item2);
-  void decrementPage() {
-    if (state.item1 != 0) {
-      state = Tuple2(state.item1 - $pageSize, state.item2);
-    }
+  void setPage(int page) {
+    state = Tuple2(page*state.item2 - state.item2, state.item2);
   }
 }
 

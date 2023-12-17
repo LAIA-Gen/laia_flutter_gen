@@ -13,6 +13,8 @@ abstract class _$FlightPlanCWProxy {
 
   FlightPlan id(String id);
 
+  FlightPlan name(String name);
+
   FlightPlan route(List<String> route);
 
   FlightPlan start_time(DateTime start_time);
@@ -29,6 +31,7 @@ abstract class _$FlightPlanCWProxy {
     String? drone_id,
     DateTime? end_time,
     String? id,
+    String? name,
     List<String>? route,
     DateTime? start_time,
     String? user_id,
@@ -51,6 +54,9 @@ class _$FlightPlanCWProxyImpl implements _$FlightPlanCWProxy {
   FlightPlan id(String id) => this(id: id);
 
   @override
+  FlightPlan name(String name) => this(name: name);
+
+  @override
   FlightPlan route(List<String> route) => this(route: route);
 
   @override
@@ -71,6 +77,7 @@ class _$FlightPlanCWProxyImpl implements _$FlightPlanCWProxy {
     Object? drone_id = const $CopyWithPlaceholder(),
     Object? end_time = const $CopyWithPlaceholder(),
     Object? id = const $CopyWithPlaceholder(),
+    Object? name = const $CopyWithPlaceholder(),
     Object? route = const $CopyWithPlaceholder(),
     Object? start_time = const $CopyWithPlaceholder(),
     Object? user_id = const $CopyWithPlaceholder(),
@@ -88,6 +95,10 @@ class _$FlightPlanCWProxyImpl implements _$FlightPlanCWProxy {
           ? _value.id
           // ignore: cast_nullable_to_non_nullable
           : id as String,
+      name: name == const $CopyWithPlaceholder() || name == null
+          ? _value.name
+          // ignore: cast_nullable_to_non_nullable
+          : name as String,
       route: route == const $CopyWithPlaceholder() || route == null
           ? _value.route
           // ignore: cast_nullable_to_non_nullable
@@ -127,6 +138,8 @@ class FlightPlanWidget extends StatefulWidget {
 class _FlightPlanWidgetState extends State<FlightPlanWidget> {
   final GlobalKey<StringWidgetState> idWidgetKey =
       GlobalKey<StringWidgetState>();
+  final GlobalKey<StringWidgetState> nameWidgetKey =
+      GlobalKey<StringWidgetState>();
   final GlobalKey<DroneFieldWidgetState> drone_idWidgetKey =
       GlobalKey<DroneFieldWidgetState>();
   final GlobalKey<UserFieldWidgetState> user_idWidgetKey =
@@ -155,6 +168,14 @@ class _FlightPlanWidgetState extends State<FlightPlanWidget> {
               editable: false,
               placeholder: "Type the id",
               value: widget.element.id,
+            ),
+            StringWidget(
+              key: nameWidgetKey,
+              fieldName: "Name",
+              fieldDescription: "This is the name",
+              editable: true,
+              placeholder: "Type the name",
+              value: widget.element.name,
             ),
             DroneFieldWidget(
               key: drone_idWidgetKey,
@@ -203,6 +224,8 @@ class _FlightPlanWidgetState extends State<FlightPlanWidget> {
         onPressed: () async {
           String? updatedid = idWidgetKey.currentState?.getUpdatedValue();
 
+          String? updatedname = nameWidgetKey.currentState?.getUpdatedValue();
+
           String? updateddrone_id =
               drone_idWidgetKey.currentState?.getUpdatedValue();
 
@@ -217,6 +240,7 @@ class _FlightPlanWidgetState extends State<FlightPlanWidget> {
 
           FlightPlan updatedFlightPlan = widget.element.copyWith(
               id: updatedid,
+              name: updatedname,
               drone_id: updateddrone_id,
               user_id: updateduser_id,
               start_time: updatedstart_time,
@@ -274,7 +298,7 @@ class FlightPlanFieldWidgetState extends State<FlightPlanFieldWidget> {
     currentValue = initialValue ?? '';
     FlightPlan flightplan =
         await container.read(getFlightPlanProvider(widget.value!).future);
-    _typeAheadController.text = '<id: ${flightplan.id}>';
+    _typeAheadController.text = '${flightplan.name} <id: ${flightplan.id}>';
   }
 
   String? getUpdatedValue() {
@@ -319,13 +343,16 @@ class FlightPlanFieldWidgetState extends State<FlightPlanFieldWidget> {
                           child: TypeAheadField<FlightPlan>(
                             controller: _typeAheadController,
                             suggestionsCallback: (String pattern) async {
-                              options = await container.read(
-                                  getAllFlightPlanProvider(container
+                              final flightplanPaginationData = await container
+                                  .read(getAllFlightPlanProvider(container
                                           .read(flightplanPaginationProvider))
                                       .future);
-                              print(options);
+                              final options = flightplanPaginationData.items;
                               return options
                                   .where((flightplan) =>
+                                      flightplan.name
+                                          .toLowerCase()
+                                          .contains(pattern.toLowerCase()) ||
                                       flightplan.id
                                           .toString()
                                           .contains(pattern.toLowerCase()))
@@ -334,7 +361,7 @@ class FlightPlanFieldWidgetState extends State<FlightPlanFieldWidget> {
                             itemBuilder: (context, flightplan) {
                               return ListTile(
                                 title: Text(
-                                    '<id: ${flightplan.id}>'),
+                                    '${flightplan.name} <id: ${flightplan.id}>'),
                               );
                             },
                             onSelected: (FlightPlan value) {
@@ -342,7 +369,7 @@ class FlightPlanFieldWidgetState extends State<FlightPlanFieldWidget> {
                                 isValueChanged = value.id != initialValue;
                                 currentValue = value.id;
                                 _typeAheadController.text =
-                                    '<id: ${value.id}>';
+                                    '${value.name} <id: ${value.id}>';
                               });
                             },
                           ),
@@ -441,6 +468,7 @@ class FlightPlanHomeWidget extends StatelessWidget {
 
 FlightPlan _$FlightPlanFromJson(Map<String, dynamic> json) => FlightPlan(
       id: json['id'] as String,
+      name: json['name'] as String,
       drone_id: json['drone_id'] as String,
       user_id: json['user_id'] as String,
       start_time: DateTime.parse(json['start_time'] as String),
@@ -451,6 +479,7 @@ FlightPlan _$FlightPlanFromJson(Map<String, dynamic> json) => FlightPlan(
 Map<String, dynamic> _$FlightPlanToJson(FlightPlan instance) =>
     <String, dynamic>{
       'id': instance.id,
+      'name': instance.name,
       'drone_id': instance.drone_id,
       'user_id': instance.user_id,
       'start_time': instance.start_time.toIso8601String(),
@@ -472,137 +501,143 @@ class FlightPlanListView extends ConsumerWidget {
         ref.watch(getAllFlightPlanProvider(paginationState));
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('FlightPlan List'),
-      ),
-      body: flightplansAsyncValue.when(
-        loading: () => const CircularProgressIndicator(),
-        error: (error, stackTrace) => Text('Error: $error'),
-        data: (List<FlightPlan> flightplans) {
-          return SingleChildScrollView(
-              scrollDirection: Axis.vertical,
-              child: SizedBox(
-                  width: double.infinity,
-                  child: DataTable(
-                      columns: const [
-                        DataColumn(
-                          label: Expanded(
-                              child: Text(
-                            'Drone',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Color.fromARGB(255, 94, 54, 54)),
-                            textAlign: TextAlign.center,
-                          )),
-                        ),
-                        DataColumn(
-                          label: Expanded(
-                              child: Text(
-                            'User',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Color.fromARGB(255, 94, 54, 54)),
-                            textAlign: TextAlign.center,
-                          )),
-                        ),
-                        DataColumn(
-                          label: Expanded(
-                              child: Text(
-                            'Departure time',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Color.fromARGB(255, 94, 54, 54)),
-                            textAlign: TextAlign.center,
-                          )),
-                        ),
-                        DataColumn(
-                          label: Expanded(
-                              child: Text(
-                            'Arrival time',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Color.fromARGB(255, 94, 54, 54)),
-                            textAlign: TextAlign.center,
-                          )),
-                        ),
-                        DataColumn(
-                          label: Expanded(
-                              child: Text(
-                            'Route',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Color.fromARGB(255, 94, 54, 54)),
-                            textAlign: TextAlign.center,
-                          )),
-                        ),
-                      ],
-                      rows: flightplans.map((flightplan) {
-                        return DataRow(
-                          cells: [
-                            DataCell(Center(
-                                child: Text(flightplan.drone_id.toString()))),
-                            DataCell(Center(
-                                child: Text(flightplan.user_id.toString()))),
-                            DataCell(Center(
-                                child: Text(flightplan.start_time.toString()))),
-                            DataCell(Center(
-                                child: Text(flightplan.end_time.toString()))),
-                            DataCell(Center(
-                                child: Text(flightplan.route.toString()))),
-                          ],
-                          onSelectChanged: (selected) {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      FlightPlanWidget(flightplan)),
-                            );
-                          },
-                        );
-                      }).toList(),
-                      showCheckboxColumn: false)));
-        },
-      ),
-      floatingActionButton: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          ElevatedButton(
-            onPressed: () =>
-                ref.read(flightplanPaginationProvider.notifier).decrementPage(),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color.fromARGB(255, 224, 221, 221),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(4.0),
+        appBar: AppBar(
+          title: const Text('FlightPlan List'),
+        ),
+        body: flightplansAsyncValue.when(
+          loading: () => const CircularProgressIndicator(),
+          error: (error, stackTrace) => Text('Error: $error'),
+          data: (FlightPlanPaginationData data) {
+            final flightplans = data.items;
+            return ListView(children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  SingleChildScrollView(
+                    scrollDirection: Axis.vertical,
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: DataTable(
+                        columns: const [
+                          DataColumn(
+                            label: Expanded(
+                                child: Text(
+                              'Name',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Color.fromARGB(255, 94, 54, 54)),
+                              textAlign: TextAlign.center,
+                            )),
+                          ),
+                          DataColumn(
+                            label: Expanded(
+                                child: Text(
+                              'Drone',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Color.fromARGB(255, 94, 54, 54)),
+                              textAlign: TextAlign.center,
+                            )),
+                          ),
+                          DataColumn(
+                            label: Expanded(
+                                child: Text(
+                              'User',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Color.fromARGB(255, 94, 54, 54)),
+                              textAlign: TextAlign.center,
+                            )),
+                          ),
+                          DataColumn(
+                            label: Expanded(
+                                child: Text(
+                              'Departure time',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Color.fromARGB(255, 94, 54, 54)),
+                              textAlign: TextAlign.center,
+                            )),
+                          ),
+                          DataColumn(
+                            label: Expanded(
+                                child: Text(
+                              'Arrival time',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Color.fromARGB(255, 94, 54, 54)),
+                              textAlign: TextAlign.center,
+                            )),
+                          ),
+                          DataColumn(
+                            label: Expanded(
+                                child: Text(
+                              'Route',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Color.fromARGB(255, 94, 54, 54)),
+                              textAlign: TextAlign.center,
+                            )),
+                          ),
+                        ],
+                        rows: flightplans.map((flightplan) {
+                          return DataRow(
+                            cells: [
+                              DataCell(Center(
+                                  child: Text(flightplan.name.toString()))),
+                              DataCell(Center(
+                                  child: Text(flightplan.drone_id.toString()))),
+                              DataCell(Center(
+                                  child: Text(flightplan.user_id.toString()))),
+                              DataCell(Center(
+                                  child:
+                                      Text(flightplan.start_time.toString()))),
+                              DataCell(Center(
+                                  child: Text(flightplan.end_time.toString()))),
+                              DataCell(Center(
+                                  child: Text(flightplan.route.toString()))),
+                            ],
+                            onSelectChanged: (selected) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        FlightPlanWidget(flightplan)),
+                              );
+                            },
+                          );
+                        }).toList(),
+                        showCheckboxColumn: false,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                ],
               ),
-            ),
-            child: const Icon(Icons.arrow_back),
-          ),
-          const SizedBox(width: 16),
-          ElevatedButton(
-            onPressed: () =>
-                ref.read(flightplanPaginationProvider.notifier).incrementPage(),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color.fromARGB(255, 224, 221, 221),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(4.0),
-              ),
-            ),
-            child: const Icon(Icons.arrow_forward),
-          ),
-        ],
-      ),
-    );
+              CustomPagination(
+                currentPage: data.currentPage,
+                maxPages: data.maxPages,
+                onPageSelected: (pageNumber) => _onPageButtonPressed(
+                    pageNumber, ref, paginationState, data.maxPages),
+              )
+            ]);
+          },
+        ));
+  }
+
+  void _onPageButtonPressed(int pageNumber, WidgetRef ref,
+      Tuple2<int, int> paginationState, int maxPages) {
+    if (pageNumber <= maxPages) {
+      ref.read(flightplanPaginationProvider.notifier).setPage(pageNumber);
+    }
   }
 }
 
 class FlightPlanPaginationNotifier extends StateNotifier<Tuple2<int, int>> {
   FlightPlanPaginationNotifier() : super(const Tuple2<int, int>(0, 10));
 
-  void incrementPage() => state = Tuple2(state.item1 + 10, state.item2);
-  void decrementPage() {
-    if (state.item1 != 0) {
-      state = Tuple2(state.item1 - 10, state.item2);
-    }
+  void setPage(int page) {
+    state = Tuple2(page * state.item2 - state.item2, state.item2);
   }
 }
 
@@ -656,10 +691,29 @@ final deleteFlightPlanProvider =
   }
 });
 
+class FlightPlanPaginationData {
+  final List<FlightPlan> items;
+  final int currentPage;
+  final int maxPages;
+
+  FlightPlanPaginationData({
+    required this.items,
+    required this.currentPage,
+    required this.maxPages,
+  });
+}
+
 final getAllFlightPlanProvider = FutureProvider.autoDispose
-    .family<List<FlightPlan>, Tuple2<int, int>>((ref, tuple) async {
+    .family<FlightPlanPaginationData, Tuple2<int, int>>((ref, tuple) async {
   final json = await http.post(Uri.parse(
       '$baseURL/flightplans/all?skip=${tuple.item1}&limit=${tuple.item2}'));
-  final jsonData = jsonDecode(json.body) as List;
-  return jsonData.map((data) => FlightPlan.fromJson(data)).toList();
+  final jsonData = jsonDecode(json.body);
+
+  return FlightPlanPaginationData(
+    items: (jsonData['items'] as List)
+        .map((data) => FlightPlan.fromJson(data))
+        .toList(),
+    currentPage: jsonData['current_page'],
+    maxPages: jsonData['max_pages'],
+  );
 });

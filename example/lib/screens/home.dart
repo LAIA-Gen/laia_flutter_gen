@@ -29,9 +29,16 @@ class Home extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             dashboardWidget(),
+            map(),
           ],
         ),
       ),
     );
   }
+}
+
+Widget map() {
+  int crossAxisCount = _isMobile() ? 3 : 5;
+
+  return const Text("aa");
 }

@@ -242,10 +242,11 @@ class UserFieldWidgetState extends State<UserFieldWidget> {
                           child: TypeAheadField<User>(
                             controller: _typeAheadController,
                             suggestionsCallback: (String pattern) async {
-                              options = await container.read(getAllUserProvider(
-                                      container.read(userPaginationProvider))
-                                  .future);
-                              print(options);
+                              final userPaginationData = await container.read(
+                                  getAllUserProvider(container
+                                          .read(userPaginationProvider))
+                                      .future);
+                              final options = userPaginationData.items;
                               return options
                                   .where((user) =>
                                       user.name
@@ -388,99 +389,93 @@ class UserListView extends ConsumerWidget {
     final usersAsyncValue = ref.watch(getAllUserProvider(paginationState));
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('User List'),
-      ),
-      body: usersAsyncValue.when(
-        loading: () => const CircularProgressIndicator(),
-        error: (error, stackTrace) => Text('Error: $error'),
-        data: (List<User> users) {
-          return SingleChildScrollView(
-              scrollDirection: Axis.vertical,
-              child: SizedBox(
-                  width: double.infinity,
-                  child: DataTable(
-                      columns: const [
-                        DataColumn(
-                          label: Expanded(
-                              child: Text(
-                            'Name',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Color.fromARGB(255, 94, 54, 54)),
-                            textAlign: TextAlign.center,
-                          )),
-                        ),
-                        DataColumn(
-                          label: Expanded(
-                              child: Text(
-                            'Email',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Color.fromARGB(255, 94, 54, 54)),
-                            textAlign: TextAlign.center,
-                          )),
-                        ),
-                      ],
-                      rows: users.map((user) {
-                        return DataRow(
-                          cells: [
-                            DataCell(Center(child: Text(user.name.toString()))),
-                            DataCell(
-                                Center(child: Text(user.email.toString()))),
-                          ],
-                          onSelectChanged: (selected) {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => UserWidget(user)),
-                            );
-                          },
-                        );
-                      }).toList(),
-                      showCheckboxColumn: false)));
-        },
-      ),
-      floatingActionButton: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          ElevatedButton(
-            onPressed: () =>
-                ref.read(userPaginationProvider.notifier).decrementPage(),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color.fromARGB(255, 224, 221, 221),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(4.0),
+        appBar: AppBar(
+          title: const Text('User List'),
+        ),
+        body: usersAsyncValue.when(
+          loading: () => const CircularProgressIndicator(),
+          error: (error, stackTrace) => Text('Error: $error'),
+          data: (UserPaginationData data) {
+            final users = data.items;
+            return ListView(children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  SingleChildScrollView(
+                    scrollDirection: Axis.vertical,
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: DataTable(
+                        columns: const [
+                          DataColumn(
+                            label: Expanded(
+                                child: Text(
+                              'Name',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Color.fromARGB(255, 94, 54, 54)),
+                              textAlign: TextAlign.center,
+                            )),
+                          ),
+                          DataColumn(
+                            label: Expanded(
+                                child: Text(
+                              'Email',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Color.fromARGB(255, 94, 54, 54)),
+                              textAlign: TextAlign.center,
+                            )),
+                          ),
+                        ],
+                        rows: users.map((user) {
+                          return DataRow(
+                            cells: [
+                              DataCell(
+                                  Center(child: Text(user.name.toString()))),
+                              DataCell(
+                                  Center(child: Text(user.email.toString()))),
+                            ],
+                            onSelectChanged: (selected) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => UserWidget(user)),
+                              );
+                            },
+                          );
+                        }).toList(),
+                        showCheckboxColumn: false,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                ],
               ),
-            ),
-            child: const Icon(Icons.arrow_back),
-          ),
-          const SizedBox(width: 16),
-          ElevatedButton(
-            onPressed: () =>
-                ref.read(userPaginationProvider.notifier).incrementPage(),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color.fromARGB(255, 224, 221, 221),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(4.0),
-              ),
-            ),
-            child: const Icon(Icons.arrow_forward),
-          ),
-        ],
-      ),
-    );
+              CustomPagination(
+                currentPage: data.currentPage,
+                maxPages: data.maxPages,
+                onPageSelected: (pageNumber) => _onPageButtonPressed(
+                    pageNumber, ref, paginationState, data.maxPages),
+              )
+            ]);
+          },
+        ));
+  }
+
+  void _onPageButtonPressed(int pageNumber, WidgetRef ref,
+      Tuple2<int, int> paginationState, int maxPages) {
+    if (pageNumber <= maxPages) {
+      ref.read(userPaginationProvider.notifier).setPage(pageNumber);
+    }
   }
 }
 
 class UserPaginationNotifier extends StateNotifier<Tuple2<int, int>> {
   UserPaginationNotifier() : super(const Tuple2<int, int>(0, 10));
 
-  void incrementPage() => state = Tuple2(state.item1 + 10, state.item2);
-  void decrementPage() {
-    if (state.item1 != 0) {
-      state = Tuple2(state.item1 - 10, state.item2);
-    }
+  void setPage(int page) {
+    state = Tuple2(page * state.item2 - state.item2, state.item2);
   }
 }
 
@@ -534,10 +529,28 @@ final deleteUserProvider =
   }
 });
 
+class UserPaginationData {
+  final List<User> items;
+  final int currentPage;
+  final int maxPages;
+
+  UserPaginationData({
+    required this.items,
+    required this.currentPage,
+    required this.maxPages,
+  });
+}
+
 final getAllUserProvider = FutureProvider.autoDispose
-    .family<List<User>, Tuple2<int, int>>((ref, tuple) async {
+    .family<UserPaginationData, Tuple2<int, int>>((ref, tuple) async {
   final json = await http.post(
       Uri.parse('$baseURL/users/all?skip=${tuple.item1}&limit=${tuple.item2}'));
-  final jsonData = jsonDecode(json.body) as List;
-  return jsonData.map((data) => User.fromJson(data)).toList();
+  final jsonData = jsonDecode(json.body);
+
+  return UserPaginationData(
+    items:
+        (jsonData['items'] as List).map((data) => User.fromJson(data)).toList(),
+    currentPage: jsonData['current_page'],
+    maxPages: jsonData['max_pages'],
+  );
 });

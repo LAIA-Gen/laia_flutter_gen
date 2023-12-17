@@ -274,11 +274,11 @@ class WaypointFieldWidgetState extends State<WaypointFieldWidget> {
                           child: TypeAheadField<Waypoint>(
                             controller: _typeAheadController,
                             suggestionsCallback: (String pattern) async {
-                              options = await container.read(
-                                  getAllWaypointProvider(container
+                              final waypointPaginationData = await container
+                                  .read(getAllWaypointProvider(container
                                           .read(waypointPaginationProvider))
                                       .future);
-                              print(options);
+                              final options = waypointPaginationData.items;
                               return options
                                   .where((waypoint) =>
                                       waypoint.name
@@ -425,113 +425,108 @@ class WaypointListView extends ConsumerWidget {
         ref.watch(getAllWaypointProvider(paginationState));
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Waypoint List'),
-      ),
-      body: waypointsAsyncValue.when(
-        loading: () => const CircularProgressIndicator(),
-        error: (error, stackTrace) => Text('Error: $error'),
-        data: (List<Waypoint> waypoints) {
-          return SingleChildScrollView(
-              scrollDirection: Axis.vertical,
-              child: SizedBox(
-                  width: double.infinity,
-                  child: DataTable(
-                      columns: const [
-                        DataColumn(
-                          label: Expanded(
-                              child: Text(
-                            'Name',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Color.fromARGB(255, 94, 54, 54)),
-                            textAlign: TextAlign.center,
-                          )),
-                        ),
-                        DataColumn(
-                          label: Expanded(
-                              child: Text(
-                            'Description',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Color.fromARGB(255, 94, 54, 54)),
-                            textAlign: TextAlign.center,
-                          )),
-                        ),
-                        DataColumn(
-                          label: Expanded(
-                              child: Text(
-                            'Coordinates',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Color.fromARGB(255, 94, 54, 54)),
-                            textAlign: TextAlign.center,
-                          )),
-                        ),
-                      ],
-                      rows: waypoints.map((waypoint) {
-                        return DataRow(
-                          cells: [
-                            DataCell(
-                                Center(child: Text(waypoint.name.toString()))),
-                            DataCell(Center(
-                                child: Text(waypoint.description.toString()))),
-                            DataCell(Center(
-                                child: Text(waypoint.coordinates.toString()))),
-                          ],
-                          onSelectChanged: (selected) {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      WaypointWidget(waypoint)),
-                            );
-                          },
-                        );
-                      }).toList(),
-                      showCheckboxColumn: false)));
-        },
-      ),
-      floatingActionButton: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          ElevatedButton(
-            onPressed: () =>
-                ref.read(waypointPaginationProvider.notifier).decrementPage(),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color.fromARGB(255, 224, 221, 221),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(4.0),
+        appBar: AppBar(
+          title: const Text('Waypoint List'),
+        ),
+        body: waypointsAsyncValue.when(
+          loading: () => const CircularProgressIndicator(),
+          error: (error, stackTrace) => Text('Error: $error'),
+          data: (WaypointPaginationData data) {
+            final waypoints = data.items;
+            return ListView(children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  SingleChildScrollView(
+                    scrollDirection: Axis.vertical,
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: DataTable(
+                        columns: const [
+                          DataColumn(
+                            label: Expanded(
+                                child: Text(
+                              'Name',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Color.fromARGB(255, 94, 54, 54)),
+                              textAlign: TextAlign.center,
+                            )),
+                          ),
+                          DataColumn(
+                            label: Expanded(
+                                child: Text(
+                              'Description',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Color.fromARGB(255, 94, 54, 54)),
+                              textAlign: TextAlign.center,
+                            )),
+                          ),
+                          DataColumn(
+                            label: Expanded(
+                                child: Text(
+                              'Coordinates',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Color.fromARGB(255, 94, 54, 54)),
+                              textAlign: TextAlign.center,
+                            )),
+                          ),
+                        ],
+                        rows: waypoints.map((waypoint) {
+                          return DataRow(
+                            cells: [
+                              DataCell(Center(
+                                  child: Text(waypoint.name.toString()))),
+                              DataCell(Center(
+                                  child:
+                                      Text(waypoint.description.toString()))),
+                              DataCell(Center(
+                                  child:
+                                      Text(waypoint.coordinates.toString()))),
+                            ],
+                            onSelectChanged: (selected) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        WaypointWidget(waypoint)),
+                              );
+                            },
+                          );
+                        }).toList(),
+                        showCheckboxColumn: false,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                ],
               ),
-            ),
-            child: const Icon(Icons.arrow_back),
-          ),
-          const SizedBox(width: 16),
-          ElevatedButton(
-            onPressed: () =>
-                ref.read(waypointPaginationProvider.notifier).incrementPage(),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color.fromARGB(255, 224, 221, 221),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(4.0),
-              ),
-            ),
-            child: const Icon(Icons.arrow_forward),
-          ),
-        ],
-      ),
-    );
+              CustomPagination(
+                currentPage: data.currentPage,
+                maxPages: data.maxPages,
+                onPageSelected: (pageNumber) => _onPageButtonPressed(
+                    pageNumber, ref, paginationState, data.maxPages),
+              )
+            ]);
+          },
+        ));
+  }
+
+  void _onPageButtonPressed(int pageNumber, WidgetRef ref,
+      Tuple2<int, int> paginationState, int maxPages) {
+    if (pageNumber <= maxPages) {
+      ref.read(waypointPaginationProvider.notifier).setPage(pageNumber);
+    }
   }
 }
 
 class WaypointPaginationNotifier extends StateNotifier<Tuple2<int, int>> {
   WaypointPaginationNotifier() : super(const Tuple2<int, int>(0, 10));
 
-  void incrementPage() => state = Tuple2(state.item1 + 10, state.item2);
-  void decrementPage() {
-    if (state.item1 != 0) {
-      state = Tuple2(state.item1 - 10, state.item2);
-    }
+  void setPage(int page) {
+    state = Tuple2(page * state.item2 - state.item2, state.item2);
   }
 }
 
@@ -585,10 +580,29 @@ final deleteWaypointProvider =
   }
 });
 
+class WaypointPaginationData {
+  final List<Waypoint> items;
+  final int currentPage;
+  final int maxPages;
+
+  WaypointPaginationData({
+    required this.items,
+    required this.currentPage,
+    required this.maxPages,
+  });
+}
+
 final getAllWaypointProvider = FutureProvider.autoDispose
-    .family<List<Waypoint>, Tuple2<int, int>>((ref, tuple) async {
-  final json = await http.post(
-      Uri.parse('$baseURL/waypoints/all?skip=${tuple.item1}&limit=${tuple.item2}'));
-  final jsonData = jsonDecode(json.body) as List;
-  return jsonData.map((data) => Waypoint.fromJson(data)).toList();
+    .family<WaypointPaginationData, Tuple2<int, int>>((ref, tuple) async {
+  final json = await http.post(Uri.parse(
+      '$baseURL/waypoints/all?skip=${tuple.item1}&limit=${tuple.item2}'));
+  final jsonData = jsonDecode(json.body);
+
+  return WaypointPaginationData(
+    items: (jsonData['items'] as List)
+        .map((data) => Waypoint.fromJson(data))
+        .toList(),
+    currentPage: jsonData['current_page'],
+    maxPages: jsonData['max_pages'],
+  );
 });

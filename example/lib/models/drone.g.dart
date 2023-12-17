@@ -15,6 +15,8 @@ abstract class _$DroneCWProxy {
 
   Drone model(String model);
 
+  Drone name(String name);
+
   Drone user_id(String user_id);
 
   Drone weight(double weight);
@@ -30,6 +32,7 @@ abstract class _$DroneCWProxy {
     double? max_altitude,
     double? max_speed,
     String? model,
+    String? name,
     String? user_id,
     double? weight,
   });
@@ -54,6 +57,9 @@ class _$DroneCWProxyImpl implements _$DroneCWProxy {
   Drone model(String model) => this(model: model);
 
   @override
+  Drone name(String name) => this(name: name);
+
+  @override
   Drone user_id(String user_id) => this(user_id: user_id);
 
   @override
@@ -72,6 +78,7 @@ class _$DroneCWProxyImpl implements _$DroneCWProxy {
     Object? max_altitude = const $CopyWithPlaceholder(),
     Object? max_speed = const $CopyWithPlaceholder(),
     Object? model = const $CopyWithPlaceholder(),
+    Object? name = const $CopyWithPlaceholder(),
     Object? user_id = const $CopyWithPlaceholder(),
     Object? weight = const $CopyWithPlaceholder(),
   }) {
@@ -93,6 +100,10 @@ class _$DroneCWProxyImpl implements _$DroneCWProxy {
           ? _value.model
           // ignore: cast_nullable_to_non_nullable
           : model as String,
+      name: name == const $CopyWithPlaceholder() || name == null
+          ? _value.name
+          // ignore: cast_nullable_to_non_nullable
+          : name as String,
       user_id: user_id == const $CopyWithPlaceholder() || user_id == null
           ? _value.user_id
           // ignore: cast_nullable_to_non_nullable
@@ -127,6 +138,8 @@ class DroneWidget extends StatefulWidget {
 class _DroneWidgetState extends State<DroneWidget> {
   final GlobalKey<StringWidgetState> idWidgetKey =
       GlobalKey<StringWidgetState>();
+  final GlobalKey<StringWidgetState> nameWidgetKey =
+      GlobalKey<StringWidgetState>();
   final GlobalKey<UserFieldWidgetState> user_idWidgetKey =
       GlobalKey<UserFieldWidgetState>();
   final GlobalKey<StringWidgetState> modelWidgetKey =
@@ -155,6 +168,14 @@ class _DroneWidgetState extends State<DroneWidget> {
               editable: false,
               placeholder: "Type the id",
               value: widget.element.id,
+            ),
+            StringWidget(
+              key: nameWidgetKey,
+              fieldName: "Name",
+              fieldDescription: "This is the name",
+              editable: true,
+              placeholder: "Type the name",
+              value: widget.element.name,
             ),
             UserFieldWidget(
               key: user_idWidgetKey,
@@ -203,13 +224,18 @@ class _DroneWidgetState extends State<DroneWidget> {
         onPressed: () async {
           String? updatedid = idWidgetKey.currentState?.getUpdatedValue();
 
+          String? updatedname = nameWidgetKey.currentState?.getUpdatedValue();
+
           String? updateduser_id =
               user_idWidgetKey.currentState?.getUpdatedValue();
 
           String? updatedmodel = modelWidgetKey.currentState?.getUpdatedValue();
 
           Drone updatedDrone = widget.element.copyWith(
-              id: updatedid, user_id: updateduser_id, model: updatedmodel);
+              id: updatedid,
+              name: updatedname,
+              user_id: updateduser_id,
+              model: updatedmodel);
           var container = ProviderContainer();
           try {
             await container.read(updateDroneProvider(updatedDrone));
@@ -262,7 +288,7 @@ class DroneFieldWidgetState extends State<DroneFieldWidget> {
     initialValue = widget.value;
     currentValue = initialValue ?? '';
     Drone drone = await container.read(getDroneProvider(widget.value!).future);
-    _typeAheadController.text = '<id: ${drone.id}>';
+    _typeAheadController.text = '${drone.name} <id: ${drone.id}>';
   }
 
   String? getUpdatedValue() {
@@ -307,13 +333,16 @@ class DroneFieldWidgetState extends State<DroneFieldWidget> {
                           child: TypeAheadField<Drone>(
                             controller: _typeAheadController,
                             suggestionsCallback: (String pattern) async {
-                              options = await container.read(
+                              final dronePaginationData = await container.read(
                                   getAllDroneProvider(container
                                           .read(dronePaginationProvider))
                                       .future);
-                              print(options);
+                              final options = dronePaginationData.items;
                               return options
                                   .where((drone) =>
+                                      drone.name
+                                          .toLowerCase()
+                                          .contains(pattern.toLowerCase()) ||
                                       drone.id
                                           .toString()
                                           .contains(pattern.toLowerCase()))
@@ -321,7 +350,7 @@ class DroneFieldWidgetState extends State<DroneFieldWidget> {
                             },
                             itemBuilder: (context, drone) {
                               return ListTile(
-                                title: Text('<id: ${drone.id}>'),
+                                title: Text('${drone.name} <id: ${drone.id}>'),
                               );
                             },
                             onSelected: (Drone value) {
@@ -329,7 +358,7 @@ class DroneFieldWidgetState extends State<DroneFieldWidget> {
                                 isValueChanged = value.id != initialValue;
                                 currentValue = value.id;
                                 _typeAheadController.text =
-                                    '<id: ${value.id}>';
+                                    '${value.name} <id: ${value.id}>';
                               });
                             },
                           ),
@@ -428,6 +457,7 @@ class DroneHomeWidget extends StatelessWidget {
 
 Drone _$DroneFromJson(Map<String, dynamic> json) => Drone(
       id: json['id'] as String,
+      name: json['name'] as String,
       user_id: json['user_id'] as String,
       model: json['model'] as String,
       weight: (json['weight'] as num).toDouble(),
@@ -437,6 +467,7 @@ Drone _$DroneFromJson(Map<String, dynamic> json) => Drone(
 
 Map<String, dynamic> _$DroneToJson(Drone instance) => <String, dynamic>{
       'id': instance.id,
+      'name': instance.name,
       'user_id': instance.user_id,
       'model': instance.model,
       'weight': instance.weight,
@@ -457,136 +488,141 @@ class DroneListView extends ConsumerWidget {
     final dronesAsyncValue = ref.watch(getAllDroneProvider(paginationState));
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Drone List'),
-      ),
-      body: dronesAsyncValue.when(
-        loading: () => const CircularProgressIndicator(),
-        error: (error, stackTrace) => Text('Error: $error'),
-        data: (List<Drone> drones) {
-          return SingleChildScrollView(
-              scrollDirection: Axis.vertical,
-              child: SizedBox(
-                  width: double.infinity,
-                  child: DataTable(
-                      columns: const [
-                        DataColumn(
-                          label: Expanded(
-                              child: Text(
-                            'User',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Color.fromARGB(255, 94, 54, 54)),
-                            textAlign: TextAlign.center,
-                          )),
-                        ),
-                        DataColumn(
-                          label: Expanded(
-                              child: Text(
-                            'Model',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Color.fromARGB(255, 94, 54, 54)),
-                            textAlign: TextAlign.center,
-                          )),
-                        ),
-                        DataColumn(
-                          label: Expanded(
-                              child: Text(
-                            'Weight',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Color.fromARGB(255, 94, 54, 54)),
-                            textAlign: TextAlign.center,
-                          )),
-                        ),
-                        DataColumn(
-                          label: Expanded(
-                              child: Text(
-                            'Maximum altitude',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Color.fromARGB(255, 94, 54, 54)),
-                            textAlign: TextAlign.center,
-                          )),
-                        ),
-                        DataColumn(
-                          label: Expanded(
-                              child: Text(
-                            'Maximum speed',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Color.fromARGB(255, 94, 54, 54)),
-                            textAlign: TextAlign.center,
-                          )),
-                        ),
-                      ],
-                      rows: drones.map((drone) {
-                        return DataRow(
-                          cells: [
-                            DataCell(
-                                Center(child: Text(drone.user_id.toString()))),
-                            DataCell(
-                                Center(child: Text(drone.model.toString()))),
-                            DataCell(
-                                Center(child: Text(drone.weight.toString()))),
-                            DataCell(Center(
-                                child: Text(drone.max_altitude.toString()))),
-                            DataCell(Center(
-                                child: Text(drone.max_speed.toString()))),
-                          ],
-                          onSelectChanged: (selected) {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => DroneWidget(drone)),
-                            );
-                          },
-                        );
-                      }).toList(),
-                      showCheckboxColumn: false)));
-        },
-      ),
-      floatingActionButton: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          ElevatedButton(
-            onPressed: () =>
-                ref.read(dronePaginationProvider.notifier).decrementPage(),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color.fromARGB(255, 224, 221, 221),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(4.0),
+        appBar: AppBar(
+          title: const Text('Drone List'),
+        ),
+        body: dronesAsyncValue.when(
+          loading: () => const CircularProgressIndicator(),
+          error: (error, stackTrace) => Text('Error: $error'),
+          data: (DronePaginationData data) {
+            final drones = data.items;
+            return ListView(children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  SingleChildScrollView(
+                    scrollDirection: Axis.vertical,
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: DataTable(
+                        columns: const [
+                          DataColumn(
+                            label: Expanded(
+                                child: Text(
+                              'Name',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Color.fromARGB(255, 94, 54, 54)),
+                              textAlign: TextAlign.center,
+                            )),
+                          ),
+                          DataColumn(
+                            label: Expanded(
+                                child: Text(
+                              'User',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Color.fromARGB(255, 94, 54, 54)),
+                              textAlign: TextAlign.center,
+                            )),
+                          ),
+                          DataColumn(
+                            label: Expanded(
+                                child: Text(
+                              'Model',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Color.fromARGB(255, 94, 54, 54)),
+                              textAlign: TextAlign.center,
+                            )),
+                          ),
+                          DataColumn(
+                            label: Expanded(
+                                child: Text(
+                              'Weight',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Color.fromARGB(255, 94, 54, 54)),
+                              textAlign: TextAlign.center,
+                            )),
+                          ),
+                          DataColumn(
+                            label: Expanded(
+                                child: Text(
+                              'Maximum altitude',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Color.fromARGB(255, 94, 54, 54)),
+                              textAlign: TextAlign.center,
+                            )),
+                          ),
+                          DataColumn(
+                            label: Expanded(
+                                child: Text(
+                              'Maximum speed',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Color.fromARGB(255, 94, 54, 54)),
+                              textAlign: TextAlign.center,
+                            )),
+                          ),
+                        ],
+                        rows: drones.map((drone) {
+                          return DataRow(
+                            cells: [
+                              DataCell(
+                                  Center(child: Text(drone.name.toString()))),
+                              DataCell(Center(
+                                  child: Text(drone.user_id.toString()))),
+                              DataCell(
+                                  Center(child: Text(drone.model.toString()))),
+                              DataCell(
+                                  Center(child: Text(drone.weight.toString()))),
+                              DataCell(Center(
+                                  child: Text(drone.max_altitude.toString()))),
+                              DataCell(Center(
+                                  child: Text(drone.max_speed.toString()))),
+                            ],
+                            onSelectChanged: (selected) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => DroneWidget(drone)),
+                              );
+                            },
+                          );
+                        }).toList(),
+                        showCheckboxColumn: false,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                ],
               ),
-            ),
-            child: const Icon(Icons.arrow_back),
-          ),
-          const SizedBox(width: 16),
-          ElevatedButton(
-            onPressed: () =>
-                ref.read(dronePaginationProvider.notifier).incrementPage(),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color.fromARGB(255, 224, 221, 221),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(4.0),
-              ),
-            ),
-            child: const Icon(Icons.arrow_forward),
-          ),
-        ],
-      ),
-    );
+              CustomPagination(
+                currentPage: data.currentPage,
+                maxPages: data.maxPages,
+                onPageSelected: (pageNumber) => _onPageButtonPressed(
+                    pageNumber, ref, paginationState, data.maxPages),
+              )
+            ]);
+          },
+        ));
+  }
+
+  void _onPageButtonPressed(int pageNumber, WidgetRef ref,
+      Tuple2<int, int> paginationState, int maxPages) {
+    if (pageNumber <= maxPages) {
+      ref.read(dronePaginationProvider.notifier).setPage(pageNumber);
+    }
   }
 }
 
 class DronePaginationNotifier extends StateNotifier<Tuple2<int, int>> {
   DronePaginationNotifier() : super(const Tuple2<int, int>(0, 10));
 
-  void incrementPage() => state = Tuple2(state.item1 + 10, state.item2);
-  void decrementPage() {
-    if (state.item1 != 0) {
-      state = Tuple2(state.item1 - 10, state.item2);
-    }
+  void setPage(int page) {
+    state = Tuple2(page * state.item2 - state.item2, state.item2);
   }
 }
 
@@ -640,10 +676,29 @@ final deleteDroneProvider =
   }
 });
 
+class DronePaginationData {
+  final List<Drone> items;
+  final int currentPage;
+  final int maxPages;
+
+  DronePaginationData({
+    required this.items,
+    required this.currentPage,
+    required this.maxPages,
+  });
+}
+
 final getAllDroneProvider = FutureProvider.autoDispose
-    .family<List<Drone>, Tuple2<int, int>>((ref, tuple) async {
-  final json = await http.post(
-      Uri.parse('$baseURL/drones/all?skip=${tuple.item1}&limit=${tuple.item2}'));
-  final jsonData = jsonDecode(json.body) as List;
-  return jsonData.map((data) => Drone.fromJson(data)).toList();
+    .family<DronePaginationData, Tuple2<int, int>>((ref, tuple) async {
+  final json = await http.post(Uri.parse(
+      '$baseURL/drones/all?skip=${tuple.item1}&limit=${tuple.item2}'));
+  final jsonData = jsonDecode(json.body);
+
+  return DronePaginationData(
+    items: (jsonData['items'] as List)
+        .map((data) => Drone.fromJson(data))
+        .toList(),
+    currentPage: jsonData['current_page'],
+    maxPages: jsonData['max_pages'],
+  );
 });

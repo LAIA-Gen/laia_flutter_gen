@@ -341,9 +341,9 @@ class ${visitor.className}FieldWidgetState extends State<${visitor.className}Fie
                           child: TypeAheadField<${visitor.className}>(
                             controller: _typeAheadController,
                             suggestionsCallback: (String pattern) async {
-                              options = await container.read(
+                              final ${visitor.className.toLowerCase()}PaginationData = await container.read(
                                 getAll${visitor.className}Provider(container.read(${visitor.className.toLowerCase()}PaginationProvider)).future);
-                                print(options);
+                              final options = ${visitor.className.toLowerCase()}PaginationData.items;
                               return options
                               .where((${visitor.className.toLowerCase()}) =>
                                   ${visitor.className.toLowerCase()}.name.toLowerCase().contains(pattern.toLowerCase()) ||
