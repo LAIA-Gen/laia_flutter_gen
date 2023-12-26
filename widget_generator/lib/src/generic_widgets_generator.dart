@@ -972,50 +972,177 @@ class CustomSearchBar extends StatefulWidget {
 }
 
 class _CustomSearchBarState extends State<CustomSearchBar> {
-  String? selectedField;
+  List<SearchRow> searchRows = [];
 
   @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        DropdownButton<String>(
-          value: selectedField ?? (widget.filters.keys.isNotEmpty ? widget.filters.keys.first : null),
-          items: widget.fields.map((String field) {
-            return DropdownMenuItem<String>(
-              value: field,
-              child: Text(field),
-            );
-          }).toList(),
-          onChanged: (String? newSelectedField) {
-            setState(() {
-              if (selectedField != newSelectedField) {
-                if (selectedField != null) {
-                  widget.onFilterRemove(selectedField!, widget.filters[selectedField!] ?? '');
-                }
-              }
-              selectedField = newSelectedField;
-            });
+  void initState() {
+    super.initState();
+    _updateSearchRows();
+  }
 
-            if (newSelectedField != null) {
-              widget.onFilterChanged(newSelectedField, widget.filters[newSelectedField] ?? '');
-            }
-          },
-        ),
-        const SizedBox(width: 8),
-        Expanded(
-          child: TextFormField(
-            decoration: const InputDecoration(
-              hintText: 'Enter search value',
-            ),
-            onChanged: (String filterValue) {
-              if (selectedField != null) {
-                widget.onFilterChanged(selectedField!, filterValue);
-              }
-            },
+  @override
+  void didUpdateWidget(covariant CustomSearchBar oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.filters != oldWidget.filters) {
+      _updateSearchRows();
+    }
+  }
+
+  void _updateSearchRows() {
+    Future.delayed(Duration.zero, () {
+      setState(() {
+        searchRows = widget.filters.entries
+            .map((entry) => SearchRow(selectedField: entry.key, filterValue: entry.value))
+            .toList();
+      });
+    });
+  }
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        for (var i = 0; i < searchRows.length; i++)
+          Container(
+            margin: const EdgeInsets.only(top: 5),
+            child: _buildSearchRow(searchRows[i], i),
           ),
+        Row(
+          children: [
+            Container(
+              margin: const EdgeInsets.only(top: 8, bottom: 8, left: 8),
+              child: ElevatedButton(
+                onPressed: _canAddRow() ? _addRow : null,
+                child: const Text('Add Filter'),
+              ),
+            ),
+          ],
         ),
       ],
     );
+  }
+
+  Widget _buildSearchRow(SearchRow searchRow, int index) {
+    List<String> availableFields = _getAvailableFields(searchRow);
+
+    return Row(
+      children: [
+        const SizedBox(width: 5),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
+          decoration: BoxDecoration(
+            color: const Color.fromARGB(255, 236, 236, 236), 
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(
+              color: Colors.grey,
+              width: 1.0,
+            ),
+          ),
+          child:
+            DropdownButton<String>(
+              value: searchRow.selectedField ?? availableFields.first,
+              items: availableFields.map((String field) {
+                return DropdownMenuItem<String>(
+                  value: field,
+                  child: Text(field),
+                );
+              }).toList(),
+              onChanged: (String? newSelectedField) {
+                widget.onFilterRemove(
+                      searchRow.selectedField!, searchRow.filterValue ?? '');
+                setState(() {
+                  searchRow.selectedField = newSelectedField;
+                });
+
+                if (newSelectedField != null) {
+                  widget.onFilterChanged(
+                      newSelectedField, searchRow.filterValue ?? '');
+                }
+              },
+              icon: const Icon(Icons.arrow_drop_down),
+              underline: const SizedBox(),
+            ),
+          ),
+          const SizedBox(width: 5),
+          Expanded(
+            child: TextFormField(
+              controller: searchRow.textEditingController,
+              decoration: InputDecoration(
+                hintText: 'Enter search value',
+                 border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+              borderSide: const BorderSide(
+                color: Colors.grey,
+              ),
+            ),
+              ),
+              onEditingComplete: () {
+                if (searchRow.selectedField != null) {
+                  widget.onFilterChanged(searchRow.selectedField!, searchRow.textEditingController.text);
+                }
+              },
+            ),
+          ),
+          IconButton(
+            icon: const Icon(Icons.delete_outline),
+            onPressed: () {
+              _removeRow(index);
+              widget.onFilterRemove(
+                      searchRow.selectedField!, searchRow.filterValue ?? '');
+            },
+          ),
+      ],
+    );
+  }
+
+
+  List<String> _getAvailableFields(SearchRow currentRow) {
+    Set<String?> selectedFields = searchRows
+        .where((row) => row != currentRow && row.selectedField != null)
+        .map((row) => row.selectedField)
+        .toSet();
+
+    List<String> availableFields =
+        widget.fields.where((field) => !selectedFields.contains(field)).toList();
+
+    return availableFields;
+  }
+
+  bool _canAddRow() {
+    List<String> availableFields = _getAvailableFields(SearchRow());
+    return availableFields.isNotEmpty;
+  }
+
+  void _addRow() {
+    setState(() {
+      SearchRow newRow = SearchRow();
+      List<String> availableFields = _getAvailableFields(newRow);
+      if (availableFields.isNotEmpty) {
+        newRow.selectedField = availableFields.first;
+        widget.onFilterChanged(
+                      newRow.selectedField ?? '', '');
+      }
+      searchRows.add(newRow);
+    });
+  }
+
+  void _removeRow(int index) {
+    setState(() {
+      searchRows.removeAt(index);
+    });
+  }
+}
+
+
+class SearchRow {
+  String? selectedField;
+  String? filterValue;
+  final TextEditingController textEditingController = TextEditingController();
+
+  SearchRow({this.selectedField, this.filterValue}) {
+    textEditingController.text = filterValue ?? '';
   }
 }
 ''');

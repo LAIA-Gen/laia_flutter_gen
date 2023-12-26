@@ -55,14 +55,8 @@ class ${className}ListView extends ConsumerWidget {
     }
 
     void onFilter(String fieldName, String filterValue) {
-      var state = fieldsFilterStates[fieldName];
-      if (filterValue != "") {
-        fieldsFilterStates[fieldName] = filterValue;
-      } else {
-        if (state != null) {
-          fieldsFilterStates.remove(fieldName);
-        }
-      }
+      fieldsFilterStates[fieldName] = filterValue;
+      ref.read(${classNameLowercase}PaginationProvider.notifier).setFilters(fieldsFilterStates);
     }
 
     void onFilterRemove(String fieldName, String filterValue) {

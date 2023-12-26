@@ -506,14 +506,8 @@ class DroneListView extends ConsumerWidget {
     }
 
     void onFilter(String fieldName, String filterValue) {
-      var state = fieldsFilterStates[fieldName];
-      if (filterValue != "") {
-        fieldsFilterStates[fieldName] = filterValue;
-      } else {
-        if (state != null) {
-          fieldsFilterStates.remove(fieldName);
-        }
-      }
+      fieldsFilterStates[fieldName] = filterValue;
+      ref.read(dronePaginationProvider.notifier).setFilters(fieldsFilterStates);
     }
 
     void onFilterRemove(String fieldName, String filterValue) {
@@ -962,7 +956,21 @@ final getAllDroneProvider = FutureProvider.autoDispose
     .family<DronePaginationData, DronePaginationState>((ref, state) async {
   final fixedQuery = {
     if (state.orders.isNotEmpty) 'orders': state.orders,
+    if (state.filters.isNotEmpty)
+      'filters': Map.from(state.filters)
+        ..removeWhere((key, value) => value == null || value == ''),
   };
+
+  final regexFilters = fixedQuery['filters'];
+
+  if (regexFilters != null && regexFilters.isNotEmpty) {
+    final modifiedFilters = regexFilters.map((key, value) {
+      final regexValue = {r'$regex': value, r'$options': 'i'};
+      return MapEntry(key, regexValue);
+    });
+
+    fixedQuery['filters'] = modifiedFilters;
+  }
 
   final json = await http.post(
       Uri.parse(
