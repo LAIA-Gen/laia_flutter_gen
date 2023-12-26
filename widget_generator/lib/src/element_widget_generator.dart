@@ -278,7 +278,7 @@ class ${visitor.className}FieldWidget extends StatefulWidget {
 }
 
 class ${visitor.className}FieldWidgetState extends State<${visitor.className}FieldWidget> {
-  TextEditingController _typeAheadController = TextEditingController();
+  final TextEditingController _typeAheadController = TextEditingController();
   bool isValueChanged = false;
   late String? initialValue;
   late String currentValue;

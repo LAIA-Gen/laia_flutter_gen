@@ -899,6 +899,77 @@ class CustomPagination extends StatelessWidget {
   }
 }
 
+class CustomSearchBar extends StatefulWidget {
+  final List<String> fields;
+  final Map<String, String> filters;
+  final Function(String, String) onFilterChanged;
+  final Function(String, String) onFilterRemove;
+
+  const CustomSearchBar({
+    Key? key,
+    required this.fields,
+    required this.filters,
+    required this.onFilterChanged,
+    required this.onFilterRemove,
+  }) : super(key: key);
+
+  @override
+  _CustomSearchBarState createState() => _CustomSearchBarState();
+}
+
+class _CustomSearchBarState extends State<CustomSearchBar> {
+  String? selectedField;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        DropdownButton<String>(
+          value: selectedField ??
+              (widget.filters.keys.isNotEmpty
+                  ? widget.filters.keys.first
+                  : null),
+          items: widget.fields.map((String field) {
+            return DropdownMenuItem<String>(
+              value: field,
+              child: Text(field),
+            );
+          }).toList(),
+          onChanged: (String? newSelectedField) {
+            setState(() {
+              if (selectedField != newSelectedField) {
+                if (selectedField != null) {
+                  widget.onFilterRemove(
+                      selectedField!, widget.filters[selectedField!] ?? '');
+                }
+              }
+              selectedField = newSelectedField;
+            });
+
+            if (newSelectedField != null) {
+              widget.onFilterChanged(
+                  newSelectedField, widget.filters[newSelectedField] ?? '');
+            }
+          },
+        ),
+        const SizedBox(width: 8),
+        Expanded(
+          child: TextFormField(
+            decoration: const InputDecoration(
+              hintText: 'Enter search value',
+            ),
+            onChanged: (String filterValue) {
+              if (selectedField != null) {
+                widget.onFilterChanged(selectedField!, filterValue);
+              }
+            },
+          ),
+        ),
+      ],
+    );
+  }
+}
+
 Widget boolWidget(String fieldName, bool value) {
   return Container(
     padding: const EdgeInsets.all(8.0),

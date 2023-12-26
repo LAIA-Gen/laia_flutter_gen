@@ -40,7 +40,9 @@ class ${className}ListView extends ConsumerWidget {
 
     final Map<String, int> columnSortStates = ref.watch(${classNameLowercase}PaginationProvider.notifier).getOrders();
 
-    void _onSort(String columnName) {
+    final Map<String, String> fieldsFilterStates = ref.watch(${classNameLowercase}PaginationProvider.notifier).getFilters();
+
+    void onSort(String columnName) {
       var state = columnSortStates[columnName];
       if (state == 0 || state == null) {
         columnSortStates[columnName] = 1;
@@ -50,6 +52,23 @@ class ${className}ListView extends ConsumerWidget {
         columnSortStates.remove(columnName);
       }
       ref.read(${classNameLowercase}PaginationProvider.notifier).setOrders(columnSortStates);
+    }
+
+    void onFilter(String fieldName, String filterValue) {
+      var state = fieldsFilterStates[fieldName];
+      if (filterValue != "") {
+        fieldsFilterStates[fieldName] = filterValue;
+      } else {
+        if (state != null) {
+          fieldsFilterStates.remove(fieldName);
+        }
+      }
+    }
+
+    void onFilterRemove(String fieldName, String filterValue) {
+      if (fieldsFilterStates.containsKey(fieldName)) {
+          fieldsFilterStates.remove(fieldName);
+      }
     }
 
     return Scaffold(
@@ -64,6 +83,26 @@ class ${className}ListView extends ConsumerWidget {
           return Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            CustomSearchBar(
+              fields: const [''');
+
+    bool isFirstField = true;
+
+    for (var field in classElement.fields) {
+        if (!isFirstField) {
+            buffer.write(', ');
+        } else {
+            isFirstField = false;
+        }
+
+        buffer.write("'${field.name}'");
+    }
+
+    buffer.writeln('''],
+              filters: fieldsFilterStates,
+              onFilterChanged: onFilter,
+              onFilterRemove: onFilterRemove,
+            ),
             Expanded(
               child: ListView(
                 children: [
@@ -111,7 +150,7 @@ class ${className}ListView extends ConsumerWidget {
                 ),
               ), 
               onSort:(columnIndex, ascending) => {
-                _onSort('${field.name}')
+                onSort('${field.name}')
               },
             ),
           ''');
@@ -173,10 +212,12 @@ class ${className}ListView extends ConsumerWidget {
 class ${className}PaginationState {
   final Tuple2<int, int> pagination;
   final Map<String, int> orders;
+  final Map<String, String> filters;
 
   ${className}PaginationState({
     required this.pagination,
     required this.orders,
+    required this.filters,
   });
 }
 
@@ -184,12 +225,14 @@ class ${className}PaginationNotifier extends StateNotifier<${className}Paginatio
   ${className}PaginationNotifier() : super(${className}PaginationState(
           pagination: const Tuple2<int, int>(0, $pageSize),
           orders: {},
+          filters: {},
         ));
 
   void setPage(int page) {
     state = ${className}PaginationState(
           pagination: Tuple2(page * state.pagination.item2 - state.pagination.item2, state.pagination.item2),
           orders: state.orders,
+          filters: state.filters,
         );
   }
 
@@ -197,11 +240,24 @@ class ${className}PaginationNotifier extends StateNotifier<${className}Paginatio
     state = ${className}PaginationState(
           pagination: Tuple2(state.pagination.item1, state.pagination.item2),
           orders: newOrders,
+          filters: state.filters,
         );
+  }
+
+  void setFilters(Map<String, String> newFilters) {
+    state = ${className}PaginationState(
+      pagination: Tuple2(state.pagination.item1, state.pagination.item2),
+      orders: state.orders,
+      filters: newFilters,
+    );
   }
 
   Map<String, int> getOrders() {
     return state.orders;
+  }
+
+  Map<String, String> getFilters() {
+    return state.filters;
   }
 }
 

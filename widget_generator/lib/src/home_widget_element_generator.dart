@@ -33,7 +33,7 @@ class HomeWidgetElementGenerator extends GeneratorForAnnotation<HomeWidgetElemen
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => ${visitor.className}ListView()),
+          MaterialPageRoute(builder: (context) => const ${visitor.className}ListView()),
         );
       },
       child: Container(

@@ -286,7 +286,7 @@ class FlightPlanRouteFieldWidget extends StatefulWidget {
 
 class FlightPlanRouteFieldWidgetState
     extends State<FlightPlanRouteFieldWidget> {
-  TextEditingController _typeAheadController = TextEditingController();
+  final TextEditingController _typeAheadController = TextEditingController();
   bool isValueChanged = false;
   late String? initialValue;
   late String currentValue;
@@ -441,7 +441,8 @@ class FlightPlanRouteHomeWidget extends StatelessWidget {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => FlightPlanRouteListView()),
+          MaterialPageRoute(
+              builder: (context) => const FlightPlanRouteListView()),
         );
       },
       child: Container(
@@ -516,7 +517,10 @@ class FlightPlanRouteListView extends ConsumerWidget {
     final Map<String, int> columnSortStates =
         ref.watch(flightplanroutePaginationProvider.notifier).getOrders();
 
-    void _onSort(String columnName) {
+    final Map<String, String> fieldsFilterStates =
+        ref.watch(flightplanroutePaginationProvider.notifier).getFilters();
+
+    void onSort(String columnName) {
       var state = columnSortStates[columnName];
       if (state == 0 || state == null) {
         columnSortStates[columnName] = 1;
@@ -528,6 +532,23 @@ class FlightPlanRouteListView extends ConsumerWidget {
       ref
           .read(flightplanroutePaginationProvider.notifier)
           .setOrders(columnSortStates);
+    }
+
+    void onFilter(String fieldName, String filterValue) {
+      var state = fieldsFilterStates[fieldName];
+      if (filterValue != "") {
+        fieldsFilterStates[fieldName] = filterValue;
+      } else {
+        if (state != null) {
+          fieldsFilterStates.remove(fieldName);
+        }
+      }
+    }
+
+    void onFilterRemove(String fieldName, String filterValue) {
+      if (fieldsFilterStates.containsKey(fieldName)) {
+        fieldsFilterStates.remove(fieldName);
+      }
     }
 
     return Scaffold(
@@ -542,6 +563,20 @@ class FlightPlanRouteListView extends ConsumerWidget {
             return Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
+                  CustomSearchBar(
+                    fields: const [
+                      'id',
+                      'name',
+                      'drone_id',
+                      'user_id',
+                      'start_time',
+                      'end_time',
+                      'route'
+                    ],
+                    filters: fieldsFilterStates,
+                    onFilterChanged: onFilter,
+                    onFilterRemove: onFilterRemove,
+                  ),
                   Expanded(
                     child: ListView(
                       children: [
@@ -588,7 +623,7 @@ class FlightPlanRouteListView extends ConsumerWidget {
                                         ),
                                       ),
                                       onSort: (columnIndex, ascending) =>
-                                          {_onSort('name')},
+                                          {onSort('name')},
                                     ),
                                     DataColumn(
                                       label: Expanded(
@@ -626,7 +661,7 @@ class FlightPlanRouteListView extends ConsumerWidget {
                                         ),
                                       ),
                                       onSort: (columnIndex, ascending) =>
-                                          {_onSort('drone_id')},
+                                          {onSort('drone_id')},
                                     ),
                                     DataColumn(
                                       label: Expanded(
@@ -662,7 +697,7 @@ class FlightPlanRouteListView extends ConsumerWidget {
                                         ),
                                       ),
                                       onSort: (columnIndex, ascending) =>
-                                          {_onSort('user_id')},
+                                          {onSort('user_id')},
                                     ),
                                     DataColumn(
                                       label: Expanded(
@@ -701,7 +736,7 @@ class FlightPlanRouteListView extends ConsumerWidget {
                                         ),
                                       ),
                                       onSort: (columnIndex, ascending) =>
-                                          {_onSort('start_time')},
+                                          {onSort('start_time')},
                                     ),
                                     DataColumn(
                                       label: Expanded(
@@ -739,7 +774,7 @@ class FlightPlanRouteListView extends ConsumerWidget {
                                         ),
                                       ),
                                       onSort: (columnIndex, ascending) =>
-                                          {_onSort('end_time')},
+                                          {onSort('end_time')},
                                     ),
                                     DataColumn(
                                       label: Expanded(
@@ -775,7 +810,7 @@ class FlightPlanRouteListView extends ConsumerWidget {
                                         ),
                                       ),
                                       onSort: (columnIndex, ascending) =>
-                                          {_onSort('route')},
+                                          {onSort('route')},
                                     ),
                                   ],
                                   rows: flightplanroutes.map((flightplanroute) {
@@ -844,10 +879,12 @@ class FlightPlanRouteListView extends ConsumerWidget {
 class FlightPlanRoutePaginationState {
   final Tuple2<int, int> pagination;
   final Map<String, int> orders;
+  final Map<String, String> filters;
 
   FlightPlanRoutePaginationState({
     required this.pagination,
     required this.orders,
+    required this.filters,
   });
 }
 
@@ -857,6 +894,7 @@ class FlightPlanRoutePaginationNotifier
       : super(FlightPlanRoutePaginationState(
           pagination: const Tuple2<int, int>(0, 10),
           orders: {},
+          filters: {},
         ));
 
   void setPage(int page) {
@@ -864,6 +902,7 @@ class FlightPlanRoutePaginationNotifier
       pagination: Tuple2(page * state.pagination.item2 - state.pagination.item2,
           state.pagination.item2),
       orders: state.orders,
+      filters: state.filters,
     );
   }
 
@@ -871,11 +910,24 @@ class FlightPlanRoutePaginationNotifier
     state = FlightPlanRoutePaginationState(
       pagination: Tuple2(state.pagination.item1, state.pagination.item2),
       orders: newOrders,
+      filters: state.filters,
+    );
+  }
+
+  void setFilters(Map<String, String> newFilters) {
+    state = FlightPlanRoutePaginationState(
+      pagination: Tuple2(state.pagination.item1, state.pagination.item2),
+      orders: state.orders,
+      filters: newFilters,
     );
   }
 
   Map<String, int> getOrders() {
     return state.orders;
+  }
+
+  Map<String, String> getFilters() {
+    return state.filters;
   }
 }
 

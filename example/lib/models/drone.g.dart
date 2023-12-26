@@ -271,7 +271,7 @@ class DroneFieldWidget extends StatefulWidget {
 }
 
 class DroneFieldWidgetState extends State<DroneFieldWidget> {
-  TextEditingController _typeAheadController = TextEditingController();
+  final TextEditingController _typeAheadController = TextEditingController();
   bool isValueChanged = false;
   late String? initialValue;
   late String currentValue;
@@ -420,7 +420,7 @@ class DroneHomeWidget extends StatelessWidget {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => DroneListView()),
+          MaterialPageRoute(builder: (context) => const DroneListView()),
         );
       },
       child: Container(
@@ -490,7 +490,10 @@ class DroneListView extends ConsumerWidget {
     final Map<String, int> columnSortStates =
         ref.watch(dronePaginationProvider.notifier).getOrders();
 
-    void _onSort(String columnName) {
+    final Map<String, String> fieldsFilterStates =
+        ref.watch(dronePaginationProvider.notifier).getFilters();
+
+    void onSort(String columnName) {
       var state = columnSortStates[columnName];
       if (state == 0 || state == null) {
         columnSortStates[columnName] = 1;
@@ -500,6 +503,23 @@ class DroneListView extends ConsumerWidget {
         columnSortStates.remove(columnName);
       }
       ref.read(dronePaginationProvider.notifier).setOrders(columnSortStates);
+    }
+
+    void onFilter(String fieldName, String filterValue) {
+      var state = fieldsFilterStates[fieldName];
+      if (filterValue != "") {
+        fieldsFilterStates[fieldName] = filterValue;
+      } else {
+        if (state != null) {
+          fieldsFilterStates.remove(fieldName);
+        }
+      }
+    }
+
+    void onFilterRemove(String fieldName, String filterValue) {
+      if (fieldsFilterStates.containsKey(fieldName)) {
+        fieldsFilterStates.remove(fieldName);
+      }
     }
 
     return Scaffold(
@@ -514,6 +534,20 @@ class DroneListView extends ConsumerWidget {
             return Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
+                  CustomSearchBar(
+                    fields: const [
+                      'id',
+                      'name',
+                      'user_id',
+                      'model',
+                      'weight',
+                      'max_altitude',
+                      'max_speed'
+                    ],
+                    filters: fieldsFilterStates,
+                    onFilterChanged: onFilter,
+                    onFilterRemove: onFilterRemove,
+                  ),
                   Expanded(
                     child: ListView(
                       children: [
@@ -560,7 +594,7 @@ class DroneListView extends ConsumerWidget {
                                         ),
                                       ),
                                       onSort: (columnIndex, ascending) =>
-                                          {_onSort('name')},
+                                          {onSort('name')},
                                     ),
                                     DataColumn(
                                       label: Expanded(
@@ -596,7 +630,7 @@ class DroneListView extends ConsumerWidget {
                                         ),
                                       ),
                                       onSort: (columnIndex, ascending) =>
-                                          {_onSort('user_id')},
+                                          {onSort('user_id')},
                                     ),
                                     DataColumn(
                                       label: Expanded(
@@ -632,7 +666,7 @@ class DroneListView extends ConsumerWidget {
                                         ),
                                       ),
                                       onSort: (columnIndex, ascending) =>
-                                          {_onSort('model')},
+                                          {onSort('model')},
                                     ),
                                     DataColumn(
                                       label: Expanded(
@@ -668,7 +702,7 @@ class DroneListView extends ConsumerWidget {
                                         ),
                                       ),
                                       onSort: (columnIndex, ascending) =>
-                                          {_onSort('weight')},
+                                          {onSort('weight')},
                                     ),
                                     DataColumn(
                                       label: Expanded(
@@ -707,7 +741,7 @@ class DroneListView extends ConsumerWidget {
                                         ),
                                       ),
                                       onSort: (columnIndex, ascending) =>
-                                          {_onSort('max_altitude')},
+                                          {onSort('max_altitude')},
                                     ),
                                     DataColumn(
                                       label: Expanded(
@@ -744,7 +778,7 @@ class DroneListView extends ConsumerWidget {
                                         ),
                                       ),
                                       onSort: (columnIndex, ascending) =>
-                                          {_onSort('max_speed')},
+                                          {onSort('max_speed')},
                                     ),
                                   ],
                                   rows: drones.map((drone) {
@@ -811,10 +845,12 @@ class DroneListView extends ConsumerWidget {
 class DronePaginationState {
   final Tuple2<int, int> pagination;
   final Map<String, int> orders;
+  final Map<String, String> filters;
 
   DronePaginationState({
     required this.pagination,
     required this.orders,
+    required this.filters,
   });
 }
 
@@ -823,6 +859,7 @@ class DronePaginationNotifier extends StateNotifier<DronePaginationState> {
       : super(DronePaginationState(
           pagination: const Tuple2<int, int>(0, 20),
           orders: {},
+          filters: {},
         ));
 
   void setPage(int page) {
@@ -830,6 +867,7 @@ class DronePaginationNotifier extends StateNotifier<DronePaginationState> {
       pagination: Tuple2(page * state.pagination.item2 - state.pagination.item2,
           state.pagination.item2),
       orders: state.orders,
+      filters: state.filters,
     );
   }
 
@@ -837,11 +875,24 @@ class DronePaginationNotifier extends StateNotifier<DronePaginationState> {
     state = DronePaginationState(
       pagination: Tuple2(state.pagination.item1, state.pagination.item2),
       orders: newOrders,
+      filters: state.filters,
+    );
+  }
+
+  void setFilters(Map<String, String> newFilters) {
+    state = DronePaginationState(
+      pagination: Tuple2(state.pagination.item1, state.pagination.item2),
+      orders: state.orders,
+      filters: newFilters,
     );
   }
 
   Map<String, int> getOrders() {
     return state.orders;
+  }
+
+  Map<String, String> getFilters() {
+    return state.filters;
   }
 }
 
