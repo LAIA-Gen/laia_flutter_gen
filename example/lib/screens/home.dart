@@ -4,6 +4,7 @@ import 'package:example/models/flightplan.dart';
 import 'package:example/models/user.dart';
 import 'package:example/models/waypoint.dart';
 import 'package:example/models/flightplanroute.dart';
+import 'package:example/screens/enaireMap.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -16,29 +17,24 @@ class Home extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // final AsyncValue<Person> personAsyncValue = ref.watch(getPersonProvider(1));
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('This is your APP :)'),
       ),
-      body: SingleChildScrollView(
-        scrollDirection: Axis.vertical,
-        child:Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            dashboardWidget(),
-            map(),
-          ],
-        ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          dashboardWidget(),
+          Flexible(
+            child: Padding(
+              padding: EdgeInsets.all(8.0),
+              child: EnaireMap(),
+            ),
+          ),
+        ],
       ),
     );
   }
-}
-
-Widget map() {
-  int crossAxisCount = _isMobile() ? 3 : 5;
-
-  return const Text("aa");
 }

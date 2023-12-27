@@ -322,7 +322,7 @@ class MapView extends StatelessWidget {
                   width: 56,
                   height: 56,
                   point: LatLng(coordinates[1], coordinates[0]),
-                  builder: (context) => const Icon(
+                  child: const Icon(
                     Icons.location_on_outlined,
                     color: Color.fromARGB(255, 214,166,146),
                     size: 35,
@@ -371,7 +371,7 @@ class RouteView extends StatelessWidget {
               width: 56,
               height: 56,
               point: LatLng(coord[1], coord[0]),
-              builder: (context) => const Icon(
+              child: const Icon(
                 Icons.location_on_outlined,
                 color: Color.fromARGB(255, 103, 146, 144),
                 size: 35,
@@ -1145,6 +1145,12 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
       case 'String':
         filter = {r'\$regex': searchRow.textEditingController.text, r'\$options': 'i'};
         break;
+      case 'int':
+        filter = int.tryParse(searchRow.textEditingController.text);
+        break;
+      case 'double':
+        filter = double.tryParse(searchRow.textEditingController.text);
+        break;
     }
 
     widget.onFilterChanged(searchRow.selectedField!, filter);
@@ -1163,11 +1169,21 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
       switch (type) {
         case 'String':
           if (value is Map<String, dynamic> &&
-            value.containsKey(r'\$regex') &&
-            value.containsKey(r'\$options')) {
-          dynamic regexValue = value[r'\$regex'];
-          valueReturned = regexValue?.toString() ?? '';
-        }
+              value.containsKey(r'\$regex') &&
+              value.containsKey(r'\$options')) {
+            dynamic regexValue = value[r'\$regex'];
+            valueReturned = regexValue?.toString() ?? '';
+          }
+          break;
+        case 'int':
+          if (value == null) {
+            valueReturned = '';
+          }
+          break;
+        case 'double':
+          if (value == null) {
+            valueReturned = '';
+          }
           break;
       }
 
