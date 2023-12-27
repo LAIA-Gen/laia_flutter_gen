@@ -517,7 +517,7 @@ class FlightPlanRouteListView extends ConsumerWidget {
     final Map<String, int> columnSortStates =
         ref.watch(flightplanroutePaginationProvider.notifier).getOrders();
 
-    final Map<String, String> fieldsFilterStates =
+    final Map<String, dynamic> fieldsFilterStates =
         ref.watch(flightplanroutePaginationProvider.notifier).getFilters();
 
     void onSort(String columnName) {
@@ -534,14 +534,14 @@ class FlightPlanRouteListView extends ConsumerWidget {
           .setOrders(columnSortStates);
     }
 
-    void onFilter(String fieldName, String filterValue) {
+    void onFilter(String fieldName, dynamic filterValue) {
       fieldsFilterStates[fieldName] = filterValue;
       ref
           .read(flightplanroutePaginationProvider.notifier)
           .setFilters(fieldsFilterStates);
     }
 
-    void onFilterRemove(String fieldName, String filterValue) {
+    void onFilterRemove(String fieldName, dynamic filterValue) {
       if (fieldsFilterStates.containsKey(fieldName)) {
         fieldsFilterStates.remove(fieldName);
       }
@@ -560,15 +560,15 @@ class FlightPlanRouteListView extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   CustomSearchBar(
-                    fields: const [
-                      'id',
-                      'name',
-                      'drone_id',
-                      'user_id',
-                      'start_time',
-                      'end_time',
-                      'route'
-                    ],
+                    fields: const {
+                      'id': 'String',
+                      'name': 'String',
+                      'drone_id': 'String',
+                      'user_id': 'String',
+                      'start_time': 'DateTime',
+                      'end_time': 'DateTime',
+                      'route': 'List<Map<String, dynamic>>'
+                    },
                     filters: fieldsFilterStates,
                     onFilterChanged: onFilter,
                     onFilterRemove: onFilterRemove,
@@ -875,7 +875,7 @@ class FlightPlanRouteListView extends ConsumerWidget {
 class FlightPlanRoutePaginationState {
   final Tuple2<int, int> pagination;
   final Map<String, int> orders;
-  final Map<String, String> filters;
+  final Map<String, dynamic> filters;
 
   FlightPlanRoutePaginationState({
     required this.pagination,
@@ -910,7 +910,7 @@ class FlightPlanRoutePaginationNotifier
     );
   }
 
-  void setFilters(Map<String, String> newFilters) {
+  void setFilters(Map<String, dynamic> newFilters) {
     state = FlightPlanRoutePaginationState(
       pagination: Tuple2(state.pagination.item1, state.pagination.item2),
       orders: state.orders,
@@ -922,7 +922,7 @@ class FlightPlanRoutePaginationNotifier
     return state.orders;
   }
 
-  Map<String, String> getFilters() {
+  Map<String, dynamic> getFilters() {
     return state.filters;
   }
 }
@@ -999,17 +999,6 @@ final getAllFlightPlanRouteProvider = FutureProvider.autoDispose
       'filters': Map.from(state.filters)
         ..removeWhere((key, value) => value == null || value == ''),
   };
-
-  final regexFilters = fixedQuery['filters'];
-
-  if (regexFilters != null && regexFilters.isNotEmpty) {
-    final modifiedFilters = regexFilters.map((key, value) {
-      final regexValue = {r'$regex': value, r'$options': 'i'};
-      return MapEntry(key, regexValue);
-    });
-
-    fixedQuery['filters'] = modifiedFilters;
-  }
 
   final json = await http.post(
       Uri.parse(

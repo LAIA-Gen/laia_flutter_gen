@@ -490,7 +490,7 @@ class DroneListView extends ConsumerWidget {
     final Map<String, int> columnSortStates =
         ref.watch(dronePaginationProvider.notifier).getOrders();
 
-    final Map<String, String> fieldsFilterStates =
+    final Map<String, dynamic> fieldsFilterStates =
         ref.watch(dronePaginationProvider.notifier).getFilters();
 
     void onSort(String columnName) {
@@ -505,12 +505,12 @@ class DroneListView extends ConsumerWidget {
       ref.read(dronePaginationProvider.notifier).setOrders(columnSortStates);
     }
 
-    void onFilter(String fieldName, String filterValue) {
+    void onFilter(String fieldName, dynamic filterValue) {
       fieldsFilterStates[fieldName] = filterValue;
       ref.read(dronePaginationProvider.notifier).setFilters(fieldsFilterStates);
     }
 
-    void onFilterRemove(String fieldName, String filterValue) {
+    void onFilterRemove(String fieldName, dynamic filterValue) {
       if (fieldsFilterStates.containsKey(fieldName)) {
         fieldsFilterStates.remove(fieldName);
       }
@@ -529,15 +529,15 @@ class DroneListView extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   CustomSearchBar(
-                    fields: const [
-                      'id',
-                      'name',
-                      'user_id',
-                      'model',
-                      'weight',
-                      'max_altitude',
-                      'max_speed'
-                    ],
+                    fields: const {
+                      'id': 'String',
+                      'name': 'String',
+                      'user_id': 'String',
+                      'model': 'String',
+                      'weight': 'double',
+                      'max_altitude': 'double',
+                      'max_speed': 'double'
+                    },
                     filters: fieldsFilterStates,
                     onFilterChanged: onFilter,
                     onFilterRemove: onFilterRemove,
@@ -839,7 +839,7 @@ class DroneListView extends ConsumerWidget {
 class DronePaginationState {
   final Tuple2<int, int> pagination;
   final Map<String, int> orders;
-  final Map<String, String> filters;
+  final Map<String, dynamic> filters;
 
   DronePaginationState({
     required this.pagination,
@@ -873,7 +873,7 @@ class DronePaginationNotifier extends StateNotifier<DronePaginationState> {
     );
   }
 
-  void setFilters(Map<String, String> newFilters) {
+  void setFilters(Map<String, dynamic> newFilters) {
     state = DronePaginationState(
       pagination: Tuple2(state.pagination.item1, state.pagination.item2),
       orders: state.orders,
@@ -885,7 +885,7 @@ class DronePaginationNotifier extends StateNotifier<DronePaginationState> {
     return state.orders;
   }
 
-  Map<String, String> getFilters() {
+  Map<String, dynamic> getFilters() {
     return state.filters;
   }
 }
@@ -960,17 +960,6 @@ final getAllDroneProvider = FutureProvider.autoDispose
       'filters': Map.from(state.filters)
         ..removeWhere((key, value) => value == null || value == ''),
   };
-
-  final regexFilters = fixedQuery['filters'];
-
-  if (regexFilters != null && regexFilters.isNotEmpty) {
-    final modifiedFilters = regexFilters.map((key, value) {
-      final regexValue = {r'$regex': value, r'$options': 'i'};
-      return MapEntry(key, regexValue);
-    });
-
-    fixedQuery['filters'] = modifiedFilters;
-  }
 
   final json = await http.post(
       Uri.parse(

@@ -954,10 +954,10 @@ class CustomPagination extends StatelessWidget {
 
     buffer.writeln('''
 class CustomSearchBar extends StatefulWidget {
-  final List<String> fields;
-  final Map<String, String> filters;
-  final Function(String, String) onFilterChanged;
-  final Function(String, String) onFilterRemove;
+  final Map<String, String> fields;
+  final Map<String, dynamic> filters;
+  final Function(String, dynamic) onFilterChanged;
+  final Function(String, dynamic) onFilterRemove;
 
   const CustomSearchBar({
     Key? key,
@@ -992,7 +992,7 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
     Future.delayed(Duration.zero, () {
       setState(() {
         searchRows = widget.filters.entries
-            .map((entry) => SearchRow(selectedField: entry.key, filterValue: entry.value))
+            .map((entry) => SearchRow(selectedField: entry.key, filterValue: _getValue(entry.key, entry.value)))
             .toList();
       });
     });
@@ -1054,8 +1054,7 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
                 });
 
                 if (newSelectedField != null) {
-                  widget.onFilterChanged(
-                      newSelectedField, searchRow.filterValue ?? '');
+                  _filterChanged(index);
                 }
               },
               icon: const Icon(Icons.arrow_drop_down),
@@ -1080,7 +1079,7 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
               ),
               onEditingComplete: () {
                 if (searchRow.selectedField != null) {
-                  widget.onFilterChanged(searchRow.selectedField!, searchRow.textEditingController.text);
+                  _filterChanged(index);
                 }
               },
             ),
@@ -1105,7 +1104,7 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
         .toSet();
 
     List<String> availableFields =
-        widget.fields.where((field) => !selectedFields.contains(field)).toList();
+        widget.fields.keys.where((field) => !selectedFields.contains(field)).toList();
 
     return availableFields;
   }
@@ -1133,16 +1132,59 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
       searchRows.removeAt(index);
     });
   }
+  
+  void _filterChanged(int index) {
+    SearchRow searchRow = searchRows[index];
+
+    if (widget.fields.containsKey(searchRow.selectedField)) {
+    String? type = widget.fields[searchRow.selectedField];
+
+    dynamic filter = searchRow.textEditingController.text;
+
+    switch (type) {
+      case 'String':
+        filter = {r'\$regex': searchRow.textEditingController.text, r'\$options': 'i'};
+        break;
+    }
+
+    widget.onFilterChanged(searchRow.selectedField!, filter);
+    } else {
+      print('Selected field not found: \${searchRow.selectedField}');
+    }
+  }
+
+  String _getValue(String field, dynamic value) {
+    
+    if (widget.fields.containsKey(field)) {
+      String? type = widget.fields[field];
+
+      String valueReturned = value.toString();
+
+      switch (type) {
+        case 'String':
+          if (value is Map<String, dynamic> &&
+            value.containsKey(r'\$regex') &&
+            value.containsKey(r'\$options')) {
+          dynamic regexValue = value[r'\$regex'];
+          valueReturned = regexValue?.toString() ?? '';
+        }
+          break;
+      }
+
+      return valueReturned;
+    }
+    return value.toString();
+  }
 }
 
 
 class SearchRow {
   String? selectedField;
-  String? filterValue;
+  dynamic filterValue;
   final TextEditingController textEditingController = TextEditingController();
 
   SearchRow({this.selectedField, this.filterValue}) {
-    textEditingController.text = filterValue ?? '';
+    textEditingController.text = filterValue.toString();
   }
 }
 ''');

@@ -40,7 +40,7 @@ class ${className}ListView extends ConsumerWidget {
 
     final Map<String, int> columnSortStates = ref.watch(${classNameLowercase}PaginationProvider.notifier).getOrders();
 
-    final Map<String, String> fieldsFilterStates = ref.watch(${classNameLowercase}PaginationProvider.notifier).getFilters();
+    final Map<String, dynamic> fieldsFilterStates = ref.watch(${classNameLowercase}PaginationProvider.notifier).getFilters();
 
     void onSort(String columnName) {
       var state = columnSortStates[columnName];
@@ -54,12 +54,12 @@ class ${className}ListView extends ConsumerWidget {
       ref.read(${classNameLowercase}PaginationProvider.notifier).setOrders(columnSortStates);
     }
 
-    void onFilter(String fieldName, String filterValue) {
+    void onFilter(String fieldName, dynamic filterValue) {
       fieldsFilterStates[fieldName] = filterValue;
       ref.read(${classNameLowercase}PaginationProvider.notifier).setFilters(fieldsFilterStates);
     }
 
-    void onFilterRemove(String fieldName, String filterValue) {
+    void onFilterRemove(String fieldName, dynamic filterValue) {
       if (fieldsFilterStates.containsKey(fieldName)) {
           fieldsFilterStates.remove(fieldName);
       }
@@ -78,7 +78,7 @@ class ${className}ListView extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             CustomSearchBar(
-              fields: const [''');
+              fields: const {''');
 
     bool isFirstField = true;
 
@@ -89,10 +89,10 @@ class ${className}ListView extends ConsumerWidget {
             isFirstField = false;
         }
 
-        buffer.write("'${field.name}'");
+        buffer.write("'${field.name}': '${field.type.toString()}'");
     }
 
-    buffer.writeln('''],
+    buffer.writeln('''},
               filters: fieldsFilterStates,
               onFilterChanged: onFilter,
               onFilterRemove: onFilterRemove,
@@ -206,7 +206,7 @@ class ${className}ListView extends ConsumerWidget {
 class ${className}PaginationState {
   final Tuple2<int, int> pagination;
   final Map<String, int> orders;
-  final Map<String, String> filters;
+  final Map<String, dynamic> filters;
 
   ${className}PaginationState({
     required this.pagination,
@@ -238,7 +238,7 @@ class ${className}PaginationNotifier extends StateNotifier<${className}Paginatio
         );
   }
 
-  void setFilters(Map<String, String> newFilters) {
+  void setFilters(Map<String, dynamic> newFilters) {
     state = ${className}PaginationState(
       pagination: Tuple2(state.pagination.item1, state.pagination.item2),
       orders: state.orders,
@@ -250,7 +250,7 @@ class ${className}PaginationNotifier extends StateNotifier<${className}Paginatio
     return state.orders;
   }
 
-  Map<String, String> getFilters() {
+  Map<String, dynamic> getFilters() {
     return state.filters;
   }
 }

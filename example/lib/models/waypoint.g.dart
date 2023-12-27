@@ -427,7 +427,7 @@ class WaypointListView extends ConsumerWidget {
     final Map<String, int> columnSortStates =
         ref.watch(waypointPaginationProvider.notifier).getOrders();
 
-    final Map<String, String> fieldsFilterStates =
+    final Map<String, dynamic> fieldsFilterStates =
         ref.watch(waypointPaginationProvider.notifier).getFilters();
 
     void onSort(String columnName) {
@@ -442,14 +442,14 @@ class WaypointListView extends ConsumerWidget {
       ref.read(waypointPaginationProvider.notifier).setOrders(columnSortStates);
     }
 
-    void onFilter(String fieldName, String filterValue) {
+    void onFilter(String fieldName, dynamic filterValue) {
       fieldsFilterStates[fieldName] = filterValue;
       ref
           .read(waypointPaginationProvider.notifier)
           .setFilters(fieldsFilterStates);
     }
 
-    void onFilterRemove(String fieldName, String filterValue) {
+    void onFilterRemove(String fieldName, dynamic filterValue) {
       if (fieldsFilterStates.containsKey(fieldName)) {
         fieldsFilterStates.remove(fieldName);
       }
@@ -468,7 +468,12 @@ class WaypointListView extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   CustomSearchBar(
-                    fields: const ['id', 'name', 'description', 'coordinates'],
+                    fields: const {
+                      'id': 'String',
+                      'name': 'String',
+                      'description': 'String',
+                      'coordinates': 'Map<String, dynamic>'
+                    },
                     filters: fieldsFilterStates,
                     onFilterChanged: onFilter,
                     onFilterRemove: onFilterRemove,
@@ -655,7 +660,7 @@ class WaypointListView extends ConsumerWidget {
 class WaypointPaginationState {
   final Tuple2<int, int> pagination;
   final Map<String, int> orders;
-  final Map<String, String> filters;
+  final Map<String, dynamic> filters;
 
   WaypointPaginationState({
     required this.pagination,
@@ -690,7 +695,7 @@ class WaypointPaginationNotifier
     );
   }
 
-  void setFilters(Map<String, String> newFilters) {
+  void setFilters(Map<String, dynamic> newFilters) {
     state = WaypointPaginationState(
       pagination: Tuple2(state.pagination.item1, state.pagination.item2),
       orders: state.orders,
@@ -702,7 +707,7 @@ class WaypointPaginationNotifier
     return state.orders;
   }
 
-  Map<String, String> getFilters() {
+  Map<String, dynamic> getFilters() {
     return state.filters;
   }
 }
@@ -778,17 +783,6 @@ final getAllWaypointProvider = FutureProvider.autoDispose
       'filters': Map.from(state.filters)
         ..removeWhere((key, value) => value == null || value == ''),
   };
-
-  final regexFilters = fixedQuery['filters'];
-
-  if (regexFilters != null && regexFilters.isNotEmpty) {
-    final modifiedFilters = regexFilters.map((key, value) {
-      final regexValue = {r'$regex': value, r'$options': 'i'};
-      return MapEntry(key, regexValue);
-    });
-
-    fixedQuery['filters'] = modifiedFilters;
-  }
 
   final json = await http.post(
       Uri.parse(
