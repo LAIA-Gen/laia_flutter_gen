@@ -1,28 +1,28 @@
-import 'package:annotations/annotations.dart';
-import 'package:example/models/drone.dart';
-import 'package:example/models/flightplan.dart';
-import 'package:example/models/user.dart';
-import 'package:example/models/waypoint.dart';
-import 'package:example/models/flightplanroute.dart';
-import 'package:flutter/foundation.dart';
+import 'package:example/screens/rabbitMQ.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_arcgis/flutter_map_arcgis.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class EnaireMap extends StatelessWidget {
+class EnaireMap extends ConsumerWidget {
+
+  const EnaireMap({super.key});
+  
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final amqpProviderValue = ref.watch(amqpProvider);
+
     return FlutterMap(
-      options: MapOptions(
+      options: const MapOptions(
         center: LatLng(41.3851, 2.1734),
-        zoom: 14.0,
+        zoom: 10.0,
       ),
       children: [
         TileLayer(
           urlTemplate: 'http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}',
-          subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+          subdomains: const ['mt0', 'mt1', 'mt2', 'mt3'],
         ),
         FeatureLayer(
           FeatureLayerOptions(
@@ -71,6 +71,20 @@ class EnaireMap extends StatelessWidget {
             onTap: (attributes, LatLng location) {
             },
           ),
+        ),
+        MarkerLayer(
+          markers: [
+            Marker(
+              width: 40.0,
+              height: 40.0,
+              point: LatLng(amqpProviderValue.latitude, amqpProviderValue.longitude),
+              child: const Icon(
+                Icons.my_location,
+                color: Color.fromARGB(255, 161, 38, 69),
+                size: 35,
+              ),
+            ),
+          ],
         ),
       ],
     );

@@ -9,11 +9,12 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+
 part 'home.g.dart';
+
 
 @homeWidget
 class Home extends ConsumerWidget {
-  const Home({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -27,7 +28,7 @@ class Home extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           dashboardWidget(),
-          Flexible(
+          const Flexible(
             child: Padding(
               padding: EdgeInsets.all(8.0),
               child: EnaireMap(),
