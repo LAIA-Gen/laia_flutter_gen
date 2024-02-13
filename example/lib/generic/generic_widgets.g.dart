@@ -1014,14 +1014,25 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
           child: TextFormField(
             controller: searchRow.textEditingController,
             decoration: InputDecoration(
-              hintText: 'Enter search value',
+              hintText: ' Enter search value',
+              contentPadding: const EdgeInsets.symmetric(vertical: 8),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10),
+                borderSide: const BorderSide(
+                  color: Colors.grey,
+                ),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10),
                 borderSide: const BorderSide(
                   color: Colors.grey,
+                ),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: const BorderSide(
+                  color: Colors.grey,
+                  width: 1.0,
                 ),
               ),
             ),
