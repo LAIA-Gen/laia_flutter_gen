@@ -1209,19 +1209,86 @@ class SearchRow {
 // BoolWidget (TODO)
 // **************************************************************************
 
-    buffer.writeln("Widget boolWidget(String fieldName, bool value) {");
-    buffer.writeln("return Container(");
-    buffer.writeln("  padding: const EdgeInsets.all(8.0),");
-    buffer.writeln("  decoration: BoxDecoration(");
-    buffer.writeln("    color: value ? Colors.green : Colors.red,");
-    buffer.writeln("    borderRadius: BorderRadius.circular(8.0),");
-    buffer.writeln("  ),");
-    buffer.writeln("  child: Text(");
-    buffer.writeln("    value ? 'Active' : 'Inactive',");
-    buffer.writeln("    style: const TextStyle(color: Colors.white),");
-    buffer.writeln("  ),");
-    buffer.writeln(");");
-    buffer.writeln("}");
+    buffer.writeln("""
+class BoolWidget extends StatefulWidget {
+  final String fieldName;
+  final String fieldDescription;
+  final bool editable;
+  final bool value;
+
+  const BoolWidget({
+    Key? key,
+    required this.fieldName,
+    required this.fieldDescription,
+    required this.editable,
+    required this.value,
+  }) : super(key: key);
+
+  @override
+  BoolWidgetState createState() => BoolWidgetState();
+}
+
+class BoolWidgetState extends State<BoolWidget> {
+  bool? _updatedValue;
+
+  @override
+  void initState() {
+    super.initState();
+    _updatedValue = widget.value;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+          margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10.0),
+            color: Colors.blueGrey, // Customize as needed
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "\${widget.fieldName}:",
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(width: 8.0),
+                  Text(
+                    widget.fieldDescription,
+                    style: const TextStyle(color: Colors.grey),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8.0),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  widget.editable
+                      ? Checkbox(
+                          value: _updatedValue ?? false,
+                          onChanged: (newValue) {
+                            setState(() {
+                              _updatedValue = newValue;
+                            });
+                          },
+                        )
+                      : Text(widget.value.toString()),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+""");
 
 // **************************************************************************
 // StringListWidget (TODO)

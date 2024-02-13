@@ -191,7 +191,7 @@ class _${visitor.className}WidgetState extends State<${visitor.className}Widget>
             fieldName: "$fieldDisplayName",
             fieldDescription: "$fieldDescription",
             editable: $editable,
-            placeholder: "$placeholder",
+            ${widget == 'BoolWidget' ? "" : "placeholder: \"$placeholder\","}
             value: $fieldAccessor,
           ),
       ''');
