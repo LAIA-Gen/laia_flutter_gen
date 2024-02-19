@@ -22,9 +22,10 @@ class ElementWidgetGenerator extends GeneratorForAnnotation<ElementWidgetGenAnno
 
     buffer.writeln('''
 class ${visitor.className}Widget extends StatefulWidget {
-  final ${visitor.className} element;
+  final ${visitor.className}? element;
+  final bool isEditing;
 
-  const ${visitor.className}Widget(this.element, {Key? key}) : super(key: key);
+  const ${visitor.className}Widget({this.element, required this.isEditing, Key? key}) : super(key: key);
 
   @override
   _${visitor.className}WidgetState createState() => _${visitor.className}WidgetState();
@@ -102,7 +103,7 @@ class _${visitor.className}WidgetState extends State<${visitor.className}Widget>
       String fieldName = field.name;
       String fieldDisplayName = fieldName;
       String fieldType = field.type.toString();
-      String fieldAccessor = 'widget.element.$fieldName';
+      String fieldAccessor = 'widget.element?.$fieldName';
       String widget = 'defaultWidget';
       String fieldDescription = "This is the $fieldName";
       String placeholder = 'Type the $fieldName';
@@ -214,6 +215,12 @@ class _${visitor.className}WidgetState extends State<${visitor.className}Widget>
           int? updated$fieldName = ${fieldName}WidgetKey.currentState?.getUpdatedValue();
 ''');         updatedFields.add('$fieldName: updated$fieldName');
               break;
+            case 'double':
+            case 'double?':
+              buffer.writeln('''
+          double? updated$fieldName = ${fieldName}WidgetKey.currentState?.getUpdatedValue();
+''');         updatedFields.add('$fieldName: updated$fieldName');
+              break;
             case 'String':
             case 'String?':
               buffer.writeln('''
@@ -224,6 +231,12 @@ class _${visitor.className}WidgetState extends State<${visitor.className}Widget>
             case 'DateTime?':
               buffer.writeln('''
           DateTime? updated$fieldName = ${fieldName}WidgetKey.currentState?.getUpdatedValue();
+''');         updatedFields.add('$fieldName: updated$fieldName');
+              break;
+            case 'bool':
+            case 'bool?':
+              buffer.writeln('''
+          bool? updated$fieldName = ${fieldName}WidgetKey.currentState?.getUpdatedValue();
 ''');         updatedFields.add('$fieldName: updated$fieldName');
               break;
             case 'Map<String, dynamic>':
@@ -238,13 +251,56 @@ class _${visitor.className}WidgetState extends State<${visitor.className}Widget>
         }
     
     buffer.writeln('''
-          ${visitor.className} updated${visitor.className} = widget.element.copyWith(
+          ${visitor.className} updated${visitor.className} = widget.element ?? ${visitor.className}(''');
+    
+    for (var fieldName in visitor.fields.keys) {
+      String fieldType = visitor.fields[fieldName];
+
+      switch (fieldType) {
+        case 'int':
+        case 'int?':
+          buffer.writeln('''$fieldName: updated$fieldName ?? 0,''');
+          break;
+        case 'double':
+        case 'double?':
+          buffer.writeln('''$fieldName: updated$fieldName ?? 0.0,''');
+          break;
+        case 'String':
+        case 'String?':
+          buffer.writeln('''$fieldName: updated$fieldName ?? '',''');
+          break;
+        case 'DateTime':
+        case 'DateTime?':
+          buffer.writeln('''$fieldName: updated$fieldName ?? DateTime.now(),''');
+          break;
+        case 'bool':
+        case 'bool?':
+          buffer.writeln('''$fieldName: updated$fieldName ?? false,''');
+          break;
+        case 'Map<String, dynamic>':
+        case 'Map<String, dynamic>?':
+        case 'List<Map<String, dynamic>>':
+        case 'List<Map<String, dynamic>>?':
+          buffer.writeln('''$fieldName: updated$fieldName ?? {},''');
+          break;
+      }
+    }
+
+    buffer.writeln('''
+          );
+
+          updated${visitor.className} = updated${visitor.className}.copyWith(
             ${updatedFields.join(',\n  ')}
           );
           var container = ProviderContainer();
           try {
-            await container.read(update${visitor.className}Provider(updated${visitor.className}));
-            print('${visitor.className} updated successfully');
+            if (widget.isEditing) {
+              await container.read(update${visitor.className}Provider(updated${visitor.className}));
+              print('${visitor.className} updated successfully');
+            } else {
+              await container.read(create${visitor.className}Provider(updated${visitor.className}));
+              print('${visitor.className} created successfully');
+            }
           } catch (error) {
             print('Failed to update ${visitor.className}: \$error');
           }
@@ -394,7 +450,7 @@ class ${visitor.className}FieldWidgetState extends State<${visitor.className}Fie
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => ${visitor.className}Widget(${visitor.className.toLowerCase()}),
+                    builder: (context) => ${visitor.className}Widget(element: ${visitor.className.toLowerCase()}, isEditing: true),
                   ),
                 );
               } catch (error) {

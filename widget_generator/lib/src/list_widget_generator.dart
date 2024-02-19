@@ -68,6 +68,21 @@ class ${className}ListView extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('$className List'),
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const ${className}Widget(
+                    isEditing: false,
+                  ),
+                ),
+              );
+            },
+            icon: const Icon(Icons.add),
+          ),
+        ],
       ),
       body: ${classNamePlural}AsyncValue.when(
         loading: () => const CircularProgressIndicator(),
@@ -170,7 +185,7 @@ class ${className}ListView extends ConsumerWidget {
                             onSelectChanged: (selected) {
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(builder: (context) => ${className}Widget($classNameLowercase)),
+                                MaterialPageRoute(builder: (context) => ${className}Widget(element: $classNameLowercase, isEditing: true)),
                               );
                             },
                           );
