@@ -128,9 +128,11 @@ extension $FlightPlanRouteCopyWith on FlightPlanRoute {
 // **************************************************************************
 
 class FlightPlanRouteWidget extends StatefulWidget {
-  final FlightPlanRoute element;
+  final FlightPlanRoute? element;
+  final bool isEditing;
 
-  const FlightPlanRouteWidget(this.element, {Key? key}) : super(key: key);
+  const FlightPlanRouteWidget({this.element, required this.isEditing, Key? key})
+      : super(key: key);
 
   @override
   _FlightPlanRouteWidgetState createState() => _FlightPlanRouteWidgetState();
@@ -167,7 +169,7 @@ class _FlightPlanRouteWidgetState extends State<FlightPlanRouteWidget> {
               fieldDescription: "This is the id",
               editable: false,
               placeholder: "Type the id",
-              value: widget.element.id,
+              value: widget.element?.id,
             ),
             StringWidget(
               key: nameWidgetKey,
@@ -175,7 +177,7 @@ class _FlightPlanRouteWidgetState extends State<FlightPlanRouteWidget> {
               fieldDescription: "This is the name",
               editable: true,
               placeholder: "Type the name",
-              value: widget.element.name,
+              value: widget.element?.name,
             ),
             StringWidget(
               key: drone_idWidgetKey,
@@ -183,7 +185,7 @@ class _FlightPlanRouteWidgetState extends State<FlightPlanRouteWidget> {
               fieldDescription: "This is the drone_id",
               editable: true,
               placeholder: "Type the drone_id",
-              value: widget.element.drone_id,
+              value: widget.element?.drone_id,
             ),
             StringWidget(
               key: user_idWidgetKey,
@@ -191,7 +193,7 @@ class _FlightPlanRouteWidgetState extends State<FlightPlanRouteWidget> {
               fieldDescription: "This is the user_id",
               editable: true,
               placeholder: "Type the user_id",
-              value: widget.element.user_id,
+              value: widget.element?.user_id,
             ),
             DateTimeWidget(
               key: start_timeWidgetKey,
@@ -199,7 +201,7 @@ class _FlightPlanRouteWidgetState extends State<FlightPlanRouteWidget> {
               fieldDescription: "This is the start_time",
               editable: true,
               placeholder: "Type the start_time",
-              value: widget.element.start_time,
+              value: widget.element?.start_time,
             ),
             DateTimeWidget(
               key: end_timeWidgetKey,
@@ -207,7 +209,7 @@ class _FlightPlanRouteWidgetState extends State<FlightPlanRouteWidget> {
               fieldDescription: "This is the end_time",
               editable: true,
               placeholder: "Type the end_time",
-              value: widget.element.end_time,
+              value: widget.element?.end_time,
             ),
             MapWidget(
               key: routeWidgetKey,
@@ -215,7 +217,7 @@ class _FlightPlanRouteWidgetState extends State<FlightPlanRouteWidget> {
               fieldDescription: "This is the route",
               editable: true,
               placeholder: "Type the route",
-              value: widget.element.route,
+              value: widget.element?.route,
             ),
           ],
         ),
@@ -240,7 +242,18 @@ class _FlightPlanRouteWidgetState extends State<FlightPlanRouteWidget> {
 
           dynamic updatedroute = routeWidgetKey.currentState?.getUpdatedValue();
 
-          FlightPlanRoute updatedFlightPlanRoute = widget.element.copyWith(
+          FlightPlanRoute updatedFlightPlanRoute = widget.element ??
+              FlightPlanRoute(
+                id: updatedid ?? '',
+                name: updatedname ?? '',
+                drone_id: updateddrone_id ?? '',
+                user_id: updateduser_id ?? '',
+                start_time: updatedstart_time ?? DateTime.now(),
+                end_time: updatedend_time ?? DateTime.now(),
+                route: updatedroute ?? {},
+              );
+
+          updatedFlightPlanRoute = updatedFlightPlanRoute.copyWith(
               id: updatedid,
               name: updatedname,
               drone_id: updateddrone_id,
@@ -250,9 +263,15 @@ class _FlightPlanRouteWidgetState extends State<FlightPlanRouteWidget> {
               route: updatedroute);
           var container = ProviderContainer();
           try {
-            await container
-                .read(updateFlightPlanRouteProvider(updatedFlightPlanRoute));
-            print('FlightPlanRoute updated successfully');
+            if (widget.isEditing) {
+              await container
+                  .read(updateFlightPlanRouteProvider(updatedFlightPlanRoute));
+              print('FlightPlanRoute updated successfully');
+            } else {
+              await container
+                  .read(createFlightPlanRouteProvider(updatedFlightPlanRoute));
+              print('FlightPlanRoute created successfully');
+            }
           } catch (error) {
             print('Failed to update FlightPlanRoute: $error');
           }
@@ -413,8 +432,8 @@ class FlightPlanRouteFieldWidgetState
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) =>
-                        FlightPlanRouteWidget(flightplanroute),
+                    builder: (context) => FlightPlanRouteWidget(
+                        element: flightplanroute, isEditing: true),
                   ),
                 );
               } catch (error) {
@@ -550,6 +569,21 @@ class FlightPlanRouteListView extends ConsumerWidget {
     return Scaffold(
         appBar: AppBar(
           title: const Text('FlightPlanRoute List'),
+          actions: [
+            IconButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const FlightPlanRouteWidget(
+                      isEditing: false,
+                    ),
+                  ),
+                );
+              },
+              icon: const Icon(Icons.add),
+            ),
+          ],
         ),
         body: flightplanroutesAsyncValue.when(
           loading: () => const CircularProgressIndicator(),
@@ -838,7 +872,8 @@ class FlightPlanRouteListView extends ConsumerWidget {
                                           MaterialPageRoute(
                                               builder: (context) =>
                                                   FlightPlanRouteWidget(
-                                                      flightplanroute)),
+                                                      element: flightplanroute,
+                                                      isEditing: true)),
                                         );
                                       },
                                     );
@@ -939,7 +974,7 @@ final flightplanroutePaginationProvider = StateNotifierProvider<
 final getFlightPlanRouteProvider = FutureProvider.autoDispose
     .family<FlightPlanRoute, String>((ref, flightplanrouteId) async {
   final json =
-      await http.get(Uri.parse('$baseURL/flightplanroutes/$flightplanrouteId'));
+      await http.get(Uri.parse('$baseURL/flightplanroute/$flightplanrouteId'));
   final jsonData = jsonDecode(json.body);
   return FlightPlanRoute.fromJson(jsonData);
 });
@@ -947,7 +982,7 @@ final getFlightPlanRouteProvider = FutureProvider.autoDispose
 final createFlightPlanRouteProvider = FutureProvider.autoDispose
     .family<void, FlightPlanRoute>((ref, flightplanrouteInstance) async {
   final response = await http.post(
-    Uri.parse('$baseURL/flightplanroutes'),
+    Uri.parse('$baseURL/flightplanroute'),
     headers: {'Content-Type': 'application/json'},
     body: jsonEncode(flightplanrouteInstance.toJson()),
   );
@@ -959,7 +994,7 @@ final createFlightPlanRouteProvider = FutureProvider.autoDispose
 final updateFlightPlanRouteProvider = FutureProvider.autoDispose
     .family<void, FlightPlanRoute>((ref, flightplanrouteInstance) async {
   final response = await http.put(
-    Uri.parse('$baseURL/flightplanroutes/${flightplanrouteInstance.id}'),
+    Uri.parse('$baseURL/flightplanroute/${flightplanrouteInstance.id}'),
     headers: {'Content-Type': 'application/json'},
     body: jsonEncode(flightplanrouteInstance.toJson()),
   );
@@ -971,7 +1006,7 @@ final updateFlightPlanRouteProvider = FutureProvider.autoDispose
 final deleteFlightPlanRouteProvider = FutureProvider.autoDispose
     .family<void, int>((ref, flightplanrouteId) async {
   final response = await http.delete(
-    Uri.parse('$baseURL/flightplanroutes/$flightplanrouteId'),
+    Uri.parse('$baseURL/flightplanroute/$flightplanrouteId'),
   );
   if (response.statusCode != 204) {
     throw Exception('Failed to delete FlightPlanRoute');
@@ -1002,7 +1037,7 @@ final getAllFlightPlanRouteProvider = FutureProvider.autoDispose
 
   final json = await http.post(
       Uri.parse(
-          '$baseURL/flightplanroutes/all?skip=${state.pagination.item1}&limit=${state.pagination.item2}'),
+          '$baseURL/flightplanroutes?skip=${state.pagination.item1}&limit=${state.pagination.item2}'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode(fixedQuery));
   final jsonData = jsonDecode(json.body);

@@ -127,9 +127,11 @@ extension $DroneCopyWith on Drone {
 // **************************************************************************
 
 class DroneWidget extends StatefulWidget {
-  final Drone element;
+  final Drone? element;
+  final bool isEditing;
 
-  const DroneWidget(this.element, {Key? key}) : super(key: key);
+  const DroneWidget({this.element, required this.isEditing, Key? key})
+      : super(key: key);
 
   @override
   _DroneWidgetState createState() => _DroneWidgetState();
@@ -167,7 +169,7 @@ class _DroneWidgetState extends State<DroneWidget> {
               fieldDescription: "This is the id",
               editable: false,
               placeholder: "Type the id",
-              value: widget.element.id,
+              value: widget.element?.id,
             ),
             StringWidget(
               key: nameWidgetKey,
@@ -175,7 +177,7 @@ class _DroneWidgetState extends State<DroneWidget> {
               fieldDescription: "This is the name",
               editable: true,
               placeholder: "Type the name",
-              value: widget.element.name,
+              value: widget.element?.name,
             ),
             UserFieldWidget(
               key: user_idWidgetKey,
@@ -183,7 +185,7 @@ class _DroneWidgetState extends State<DroneWidget> {
               fieldDescription: "This is the user_id",
               editable: true,
               placeholder: "Type the user_id",
-              value: widget.element.user_id,
+              value: widget.element?.user_id,
             ),
             StringWidget(
               key: modelWidgetKey,
@@ -191,7 +193,7 @@ class _DroneWidgetState extends State<DroneWidget> {
               fieldDescription: "This is the model",
               editable: true,
               placeholder: "Type the model",
-              value: widget.element.model,
+              value: widget.element?.model,
             ),
             DoubleWidget(
               key: weightWidgetKey,
@@ -199,7 +201,7 @@ class _DroneWidgetState extends State<DroneWidget> {
               fieldDescription: "This is the weight",
               editable: true,
               placeholder: "Type the weight",
-              value: widget.element.weight,
+              value: widget.element?.weight,
             ),
             DoubleWidget(
               key: max_altitudeWidgetKey,
@@ -207,7 +209,7 @@ class _DroneWidgetState extends State<DroneWidget> {
               fieldDescription: "This is the max_altitude",
               editable: true,
               placeholder: "Type the max_altitude",
-              value: widget.element.max_altitude,
+              value: widget.element?.max_altitude,
             ),
             DoubleWidget(
               key: max_speedWidgetKey,
@@ -215,7 +217,7 @@ class _DroneWidgetState extends State<DroneWidget> {
               fieldDescription: "This is the max_speed",
               editable: true,
               placeholder: "Type the max_speed",
-              value: widget.element.max_speed,
+              value: widget.element?.max_speed,
             ),
           ],
         ),
@@ -231,15 +233,43 @@ class _DroneWidgetState extends State<DroneWidget> {
 
           String? updatedmodel = modelWidgetKey.currentState?.getUpdatedValue();
 
-          Drone updatedDrone = widget.element.copyWith(
+          double? updatedweight =
+              weightWidgetKey.currentState?.getUpdatedValue();
+
+          double? updatedmax_altitude =
+              max_altitudeWidgetKey.currentState?.getUpdatedValue();
+
+          double? updatedmax_speed =
+              max_speedWidgetKey.currentState?.getUpdatedValue();
+
+          Drone updatedDrone = widget.element ??
+              Drone(
+                id: updatedid ?? '',
+                name: updatedname ?? '',
+                user_id: updateduser_id ?? '',
+                model: updatedmodel ?? '',
+                weight: updatedweight ?? 0.0,
+                max_altitude: updatedmax_altitude ?? 0.0,
+                max_speed: updatedmax_speed ?? 0.0,
+              );
+
+          updatedDrone = updatedDrone.copyWith(
               id: updatedid,
               name: updatedname,
               user_id: updateduser_id,
-              model: updatedmodel);
+              model: updatedmodel,
+              weight: updatedweight,
+              max_altitude: updatedmax_altitude,
+              max_speed: updatedmax_speed);
           var container = ProviderContainer();
           try {
-            await container.read(updateDroneProvider(updatedDrone));
-            print('Drone updated successfully');
+            if (widget.isEditing) {
+              await container.read(updateDroneProvider(updatedDrone));
+              print('Drone updated successfully');
+            } else {
+              await container.read(createDroneProvider(updatedDrone));
+              print('Drone created successfully');
+            }
           } catch (error) {
             print('Failed to update Drone: $error');
           }
@@ -393,7 +423,8 @@ class DroneFieldWidgetState extends State<DroneFieldWidget> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => DroneWidget(drone),
+                    builder: (context) =>
+                        DroneWidget(element: drone, isEditing: true),
                   ),
                 );
               } catch (error) {
@@ -519,6 +550,21 @@ class DroneListView extends ConsumerWidget {
     return Scaffold(
         appBar: AppBar(
           title: const Text('Drone List'),
+          actions: [
+            IconButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const DroneWidget(
+                      isEditing: false,
+                    ),
+                  ),
+                );
+              },
+              icon: const Icon(Icons.add),
+            ),
+          ],
         ),
         body: dronesAsyncValue.when(
           loading: () => const CircularProgressIndicator(),
@@ -801,8 +847,9 @@ class DroneListView extends ConsumerWidget {
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                              builder: (context) =>
-                                                  DroneWidget(drone)),
+                                              builder: (context) => DroneWidget(
+                                                  element: drone,
+                                                  isEditing: true)),
                                         );
                                       },
                                     );
@@ -901,7 +948,7 @@ final dronePaginationProvider =
 
 final getDroneProvider =
     FutureProvider.autoDispose.family<Drone, String>((ref, droneId) async {
-  final json = await http.get(Uri.parse('$baseURL/drones/$droneId'));
+  final json = await http.get(Uri.parse('$baseURL/drone/$droneId'));
   final jsonData = jsonDecode(json.body);
   return Drone.fromJson(jsonData);
 });
@@ -909,7 +956,7 @@ final getDroneProvider =
 final createDroneProvider =
     FutureProvider.autoDispose.family<void, Drone>((ref, droneInstance) async {
   final response = await http.post(
-    Uri.parse('$baseURL/drones'),
+    Uri.parse('$baseURL/drone'),
     headers: {'Content-Type': 'application/json'},
     body: jsonEncode(droneInstance.toJson()),
   );
@@ -921,7 +968,7 @@ final createDroneProvider =
 final updateDroneProvider =
     FutureProvider.autoDispose.family<void, Drone>((ref, droneInstance) async {
   final response = await http.put(
-    Uri.parse('$baseURL/drones/${droneInstance.id}'),
+    Uri.parse('$baseURL/drone/${droneInstance.id}'),
     headers: {'Content-Type': 'application/json'},
     body: jsonEncode(droneInstance.toJson()),
   );
@@ -933,7 +980,7 @@ final updateDroneProvider =
 final deleteDroneProvider =
     FutureProvider.autoDispose.family<void, int>((ref, droneId) async {
   final response = await http.delete(
-    Uri.parse('$baseURL/drones/$droneId'),
+    Uri.parse('$baseURL/drone/$droneId'),
   );
   if (response.statusCode != 204) {
     throw Exception('Failed to delete Drone');
@@ -963,7 +1010,7 @@ final getAllDroneProvider = FutureProvider.autoDispose
 
   final json = await http.post(
       Uri.parse(
-          '$baseURL/drones/all?skip=${state.pagination.item1}&limit=${state.pagination.item2}'),
+          '$baseURL/drones?skip=${state.pagination.item1}&limit=${state.pagination.item2}'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode(fixedQuery));
   final jsonData = jsonDecode(json.body);

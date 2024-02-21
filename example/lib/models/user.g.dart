@@ -82,9 +82,11 @@ extension $UserCopyWith on User {
 // **************************************************************************
 
 class UserWidget extends StatefulWidget {
-  final User element;
+  final User? element;
+  final bool isEditing;
 
-  const UserWidget(this.element, {Key? key}) : super(key: key);
+  const UserWidget({this.element, required this.isEditing, Key? key})
+      : super(key: key);
 
   @override
   _UserWidgetState createState() => _UserWidgetState();
@@ -114,7 +116,7 @@ class _UserWidgetState extends State<UserWidget> {
               fieldDescription: "This is the id",
               editable: false,
               placeholder: "Type the id",
-              value: widget.element.id,
+              value: widget.element?.id,
             ),
             StringWidget(
               key: nameWidgetKey,
@@ -122,7 +124,7 @@ class _UserWidgetState extends State<UserWidget> {
               fieldDescription: "This is the name",
               editable: true,
               placeholder: "Type the name",
-              value: widget.element.name,
+              value: widget.element?.name,
             ),
             StringWidget(
               key: emailWidgetKey,
@@ -130,7 +132,7 @@ class _UserWidgetState extends State<UserWidget> {
               fieldDescription: "This is the email",
               editable: true,
               placeholder: "Type the email",
-              value: widget.element.email,
+              value: widget.element?.email,
             ),
           ],
         ),
@@ -143,12 +145,24 @@ class _UserWidgetState extends State<UserWidget> {
 
           String? updatedemail = emailWidgetKey.currentState?.getUpdatedValue();
 
-          User updatedUser = widget.element
-              .copyWith(id: updatedid, name: updatedname, email: updatedemail);
+          User updatedUser = widget.element ??
+              User(
+                id: updatedid ?? '',
+                name: updatedname ?? '',
+                email: updatedemail ?? '',
+              );
+
+          updatedUser = updatedUser.copyWith(
+              id: updatedid, name: updatedname, email: updatedemail);
           var container = ProviderContainer();
           try {
-            await container.read(updateUserProvider(updatedUser));
-            print('User updated successfully');
+            if (widget.isEditing) {
+              await container.read(updateUserProvider(updatedUser));
+              print('User updated successfully');
+            } else {
+              await container.read(createUserProvider(updatedUser));
+              print('User created successfully');
+            }
           } catch (error) {
             print('Failed to update User: $error');
           }
@@ -302,7 +316,8 @@ class UserFieldWidgetState extends State<UserFieldWidget> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => UserWidget(user),
+                    builder: (context) =>
+                        UserWidget(element: user, isEditing: true),
                   ),
                 );
               } catch (error) {
@@ -420,6 +435,21 @@ class UserListView extends ConsumerWidget {
     return Scaffold(
         appBar: AppBar(
           title: const Text('User List'),
+          actions: [
+            IconButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const UserWidget(
+                      isEditing: false,
+                    ),
+                  ),
+                );
+              },
+              icon: const Icon(Icons.add),
+            ),
+          ],
         ),
         body: usersAsyncValue.when(
           loading: () => const CircularProgressIndicator(),
@@ -537,8 +567,9 @@ class UserListView extends ConsumerWidget {
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                              builder: (context) =>
-                                                  UserWidget(user)),
+                                              builder: (context) => UserWidget(
+                                                  element: user,
+                                                  isEditing: true)),
                                         );
                                       },
                                     );
@@ -637,7 +668,7 @@ final userPaginationProvider =
 
 final getUserProvider =
     FutureProvider.autoDispose.family<User, String>((ref, userId) async {
-  final json = await http.get(Uri.parse('$baseURL/users/$userId'));
+  final json = await http.get(Uri.parse('$baseURL/user/$userId'));
   final jsonData = jsonDecode(json.body);
   return User.fromJson(jsonData);
 });
@@ -645,7 +676,7 @@ final getUserProvider =
 final createUserProvider =
     FutureProvider.autoDispose.family<void, User>((ref, userInstance) async {
   final response = await http.post(
-    Uri.parse('$baseURL/users'),
+    Uri.parse('$baseURL/user'),
     headers: {'Content-Type': 'application/json'},
     body: jsonEncode(userInstance.toJson()),
   );
@@ -657,7 +688,7 @@ final createUserProvider =
 final updateUserProvider =
     FutureProvider.autoDispose.family<void, User>((ref, userInstance) async {
   final response = await http.put(
-    Uri.parse('$baseURL/users/${userInstance.id}'),
+    Uri.parse('$baseURL/user/${userInstance.id}'),
     headers: {'Content-Type': 'application/json'},
     body: jsonEncode(userInstance.toJson()),
   );
@@ -669,7 +700,7 @@ final updateUserProvider =
 final deleteUserProvider =
     FutureProvider.autoDispose.family<void, int>((ref, userId) async {
   final response = await http.delete(
-    Uri.parse('$baseURL/users/$userId'),
+    Uri.parse('$baseURL/user/$userId'),
   );
   if (response.statusCode != 204) {
     throw Exception('Failed to delete User');
@@ -699,7 +730,7 @@ final getAllUserProvider = FutureProvider.autoDispose
 
   final json = await http.post(
       Uri.parse(
-          '$baseURL/users/all?skip=${state.pagination.item1}&limit=${state.pagination.item2}'),
+          '$baseURL/users?skip=${state.pagination.item1}&limit=${state.pagination.item2}'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode(fixedQuery));
   final jsonData = jsonDecode(json.body);

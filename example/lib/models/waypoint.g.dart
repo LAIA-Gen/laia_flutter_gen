@@ -96,9 +96,11 @@ extension $WaypointCopyWith on Waypoint {
 // **************************************************************************
 
 class WaypointWidget extends StatefulWidget {
-  final Waypoint element;
+  final Waypoint? element;
+  final bool isEditing;
 
-  const WaypointWidget(this.element, {Key? key}) : super(key: key);
+  const WaypointWidget({this.element, required this.isEditing, Key? key})
+      : super(key: key);
 
   @override
   _WaypointWidgetState createState() => _WaypointWidgetState();
@@ -130,7 +132,7 @@ class _WaypointWidgetState extends State<WaypointWidget> {
               fieldDescription: "This is the id",
               editable: false,
               placeholder: "Type the id",
-              value: widget.element.id,
+              value: widget.element?.id,
             ),
             StringWidget(
               key: nameWidgetKey,
@@ -138,7 +140,7 @@ class _WaypointWidgetState extends State<WaypointWidget> {
               fieldDescription: "This is the name",
               editable: true,
               placeholder: "Type the name",
-              value: widget.element.name,
+              value: widget.element?.name,
             ),
             StringWidget(
               key: descriptionWidgetKey,
@@ -146,7 +148,7 @@ class _WaypointWidgetState extends State<WaypointWidget> {
               fieldDescription: "This is the description",
               editable: true,
               placeholder: "Type the description",
-              value: widget.element.description,
+              value: widget.element?.description,
             ),
             MapWidget(
               key: coordinatesWidgetKey,
@@ -154,7 +156,7 @@ class _WaypointWidgetState extends State<WaypointWidget> {
               fieldDescription: "This is the coordinates",
               editable: true,
               placeholder: "Type the coordinates",
-              value: widget.element.coordinates,
+              value: widget.element?.coordinates,
             ),
           ],
         ),
@@ -171,15 +173,28 @@ class _WaypointWidgetState extends State<WaypointWidget> {
           dynamic updatedcoordinates =
               coordinatesWidgetKey.currentState?.getUpdatedValue();
 
-          Waypoint updatedWaypoint = widget.element.copyWith(
+          Waypoint updatedWaypoint = widget.element ??
+              Waypoint(
+                id: updatedid ?? '',
+                name: updatedname ?? '',
+                description: updateddescription ?? '',
+                coordinates: updatedcoordinates ?? {},
+              );
+
+          updatedWaypoint = updatedWaypoint.copyWith(
               id: updatedid,
               name: updatedname,
               description: updateddescription,
               coordinates: updatedcoordinates);
           var container = ProviderContainer();
           try {
-            await container.read(updateWaypointProvider(updatedWaypoint));
-            print('Waypoint updated successfully');
+            if (widget.isEditing) {
+              await container.read(updateWaypointProvider(updatedWaypoint));
+              print('Waypoint updated successfully');
+            } else {
+              await container.read(createWaypointProvider(updatedWaypoint));
+              print('Waypoint created successfully');
+            }
           } catch (error) {
             print('Failed to update Waypoint: $error');
           }
@@ -335,7 +350,8 @@ class WaypointFieldWidgetState extends State<WaypointFieldWidget> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => WaypointWidget(waypoint),
+                    builder: (context) =>
+                        WaypointWidget(element: waypoint, isEditing: true),
                   ),
                 );
               } catch (error) {
@@ -458,6 +474,21 @@ class WaypointListView extends ConsumerWidget {
     return Scaffold(
         appBar: AppBar(
           title: const Text('Waypoint List'),
+          actions: [
+            IconButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const WaypointWidget(
+                      isEditing: false,
+                    ),
+                  ),
+                );
+              },
+              icon: const Icon(Icons.add),
+            ),
+          ],
         ),
         body: waypointsAsyncValue.when(
           loading: () => const CircularProgressIndicator(),
@@ -623,7 +654,9 @@ class WaypointListView extends ConsumerWidget {
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                                  WaypointWidget(waypoint)),
+                                                  WaypointWidget(
+                                                      element: waypoint,
+                                                      isEditing: true)),
                                         );
                                       },
                                     );
@@ -723,7 +756,7 @@ final waypointPaginationProvider =
 
 final getWaypointProvider = FutureProvider.autoDispose
     .family<Waypoint, String>((ref, waypointId) async {
-  final json = await http.get(Uri.parse('$baseURL/waypoints/$waypointId'));
+  final json = await http.get(Uri.parse('$baseURL/waypoint/$waypointId'));
   final jsonData = jsonDecode(json.body);
   return Waypoint.fromJson(jsonData);
 });
@@ -731,7 +764,7 @@ final getWaypointProvider = FutureProvider.autoDispose
 final createWaypointProvider = FutureProvider.autoDispose
     .family<void, Waypoint>((ref, waypointInstance) async {
   final response = await http.post(
-    Uri.parse('$baseURL/waypoints'),
+    Uri.parse('$baseURL/waypoint'),
     headers: {'Content-Type': 'application/json'},
     body: jsonEncode(waypointInstance.toJson()),
   );
@@ -743,7 +776,7 @@ final createWaypointProvider = FutureProvider.autoDispose
 final updateWaypointProvider = FutureProvider.autoDispose
     .family<void, Waypoint>((ref, waypointInstance) async {
   final response = await http.put(
-    Uri.parse('$baseURL/waypoints/${waypointInstance.id}'),
+    Uri.parse('$baseURL/waypoint/${waypointInstance.id}'),
     headers: {'Content-Type': 'application/json'},
     body: jsonEncode(waypointInstance.toJson()),
   );
@@ -755,7 +788,7 @@ final updateWaypointProvider = FutureProvider.autoDispose
 final deleteWaypointProvider =
     FutureProvider.autoDispose.family<void, int>((ref, waypointId) async {
   final response = await http.delete(
-    Uri.parse('$baseURL/waypoints/$waypointId'),
+    Uri.parse('$baseURL/waypoint/$waypointId'),
   );
   if (response.statusCode != 204) {
     throw Exception('Failed to delete Waypoint');
@@ -786,7 +819,7 @@ final getAllWaypointProvider = FutureProvider.autoDispose
 
   final json = await http.post(
       Uri.parse(
-          '$baseURL/waypoints/all?skip=${state.pagination.item1}&limit=${state.pagination.item2}'),
+          '$baseURL/waypoints?skip=${state.pagination.item1}&limit=${state.pagination.item2}'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode(fixedQuery));
   final jsonData = jsonDecode(json.body);
