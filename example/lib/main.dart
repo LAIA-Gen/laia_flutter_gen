@@ -18,10 +18,10 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: ThemeData(
         appBarTheme: const AppBarTheme(
-          color:  Color.fromARGB(244, 224, 224, 214),
+          color:  Color.fromARGB(255, 255, 255, 255),
         ), 
         colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.brown),
-        scaffoldBackgroundColor: const Color.fromARGB(244, 245, 245, 239),
+        scaffoldBackgroundColor: const Color.fromARGB(244, 255, 255, 255),
         textTheme: const TextTheme(
           bodyLarge: TextStyle(color: Colors.black),
           bodyMedium: TextStyle(color: Colors.black),

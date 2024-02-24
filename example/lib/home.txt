@@ -1,5 +1,2 @@
-WaypointHomeWidget
-UserHomeWidget
-DroneHomeWidget
-FlightPlanHomeWidget
-FlightPlanRouteHomeWidget
+CustomerHomeWidget
+ShoeHomeWidget

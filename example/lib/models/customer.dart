@@ -11,27 +11,29 @@ import 'package:example/config/styles.dart';
 import 'dart:convert';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 
-part 'waypoint.g.dart';
+part 'customer.g.dart';
 
 @JsonSerializable()
 @RiverpodGenAnnotation(baseURL)
 @HomeWidgetElementGenAnnotation()
-@ListWidgetGenAnnotation(defaultFields: ['name', 'description', 'coordinates'])
+@ListWidgetGenAnnotation()
 @elementWidgetGen
 @CopyWith()
-class Waypoint {
-  @Field(editable: false, fieldName: 'Id')
+class Customer {
+  @Field(fieldName: 'email')
+  final String email;
+  @Field(fieldName: 'id')
   final String id;
-  @Field(fieldName: 'Name')
+  @Field(fieldName: 'name')
   final String name;
-  @Field(fieldName: 'Description')
-  final String description;
-  @Field(fieldName: 'Coordinates')
-  final Map<String, dynamic> coordinates;
 
-  Waypoint({required this.id, required this.name, required this.description, required this.coordinates});
+  Customer({
+    required this.email,
+    required this.id,
+    required this.name
+  });
 
-  factory Waypoint.fromJson(Map<String, dynamic> json) => _$WaypointFromJson(json);
+  factory Customer.fromJson(Map<String, dynamic> json) => _$CustomerFromJson(json);
 
-  Map<String, dynamic> toJson() => _$WaypointToJson(this);
+  Map<String, dynamic> toJson() => _$CustomerToJson(this);
 }

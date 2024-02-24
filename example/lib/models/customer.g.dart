@@ -1,60 +1,60 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'user.dart';
+part of 'customer.dart';
 
 // **************************************************************************
 // CopyWithGenerator
 // **************************************************************************
 
-abstract class _$UserCWProxy {
-  User email(String email);
+abstract class _$CustomerCWProxy {
+  Customer email(String email);
 
-  User id(String id);
+  Customer id(String id);
 
-  User name(String name);
+  Customer name(String name);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `User(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Customer(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
   /// Usage
   /// ```dart
-  /// User(...).copyWith(id: 12, name: "My name")
+  /// Customer(...).copyWith(id: 12, name: "My name")
   /// ````
-  User call({
+  Customer call({
     String? email,
     String? id,
     String? name,
   });
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfUser.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfUser.copyWith.fieldName(...)`
-class _$UserCWProxyImpl implements _$UserCWProxy {
-  final User _value;
+/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfCustomer.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfCustomer.copyWith.fieldName(...)`
+class _$CustomerCWProxyImpl implements _$CustomerCWProxy {
+  final Customer _value;
 
-  const _$UserCWProxyImpl(this._value);
-
-  @override
-  User email(String email) => this(email: email);
+  const _$CustomerCWProxyImpl(this._value);
 
   @override
-  User id(String id) => this(id: id);
+  Customer email(String email) => this(email: email);
 
   @override
-  User name(String name) => this(name: name);
+  Customer id(String id) => this(id: id);
+
+  @override
+  Customer name(String name) => this(name: name);
 
   @override
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `User(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Customer(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
   /// Usage
   /// ```dart
-  /// User(...).copyWith(id: 12, name: "My name")
+  /// Customer(...).copyWith(id: 12, name: "My name")
   /// ````
-  User call({
+  Customer call({
     Object? email = const $CopyWithPlaceholder(),
     Object? id = const $CopyWithPlaceholder(),
     Object? name = const $CopyWithPlaceholder(),
   }) {
-    return User(
+    return Customer(
       email: email == const $CopyWithPlaceholder() || email == null
           ? _value.email
           // ignore: cast_nullable_to_non_nullable
@@ -71,100 +71,100 @@ class _$UserCWProxyImpl implements _$UserCWProxy {
   }
 }
 
-extension $UserCopyWith on User {
-  /// Returns a callable class that can be used as follows: `instanceOfUser.copyWith(...)` or like so:`instanceOfUser.copyWith.fieldName(...)`.
+extension $CustomerCopyWith on Customer {
+  /// Returns a callable class that can be used as follows: `instanceOfCustomer.copyWith(...)` or like so:`instanceOfCustomer.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
-  _$UserCWProxy get copyWith => _$UserCWProxyImpl(this);
+  _$CustomerCWProxy get copyWith => _$CustomerCWProxyImpl(this);
 }
 
 // **************************************************************************
 // ElementWidgetGenerator
 // **************************************************************************
 
-class UserWidget extends StatefulWidget {
-  final User? element;
+class CustomerWidget extends StatefulWidget {
+  final Customer? element;
   final bool isEditing;
 
-  const UserWidget({this.element, required this.isEditing, Key? key})
+  const CustomerWidget({this.element, required this.isEditing, Key? key})
       : super(key: key);
 
   @override
-  _UserWidgetState createState() => _UserWidgetState();
+  _CustomerWidgetState createState() => _CustomerWidgetState();
 }
 
-class _UserWidgetState extends State<UserWidget> {
+class _CustomerWidgetState extends State<CustomerWidget> {
+  final GlobalKey<StringWidgetState> emailWidgetKey =
+      GlobalKey<StringWidgetState>();
   final GlobalKey<StringWidgetState> idWidgetKey =
       GlobalKey<StringWidgetState>();
   final GlobalKey<StringWidgetState> nameWidgetKey =
-      GlobalKey<StringWidgetState>();
-  final GlobalKey<StringWidgetState> emailWidgetKey =
       GlobalKey<StringWidgetState>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('User'),
+        title: const Text('Customer'),
       ),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: Column(
           children: [
             StringWidget(
+              key: emailWidgetKey,
+              fieldName: "email",
+              fieldDescription: "This is the email",
+              editable: true,
+              placeholder: "Type the email",
+              value: widget.element?.email,
+            ),
+            StringWidget(
               key: idWidgetKey,
-              fieldName: "Id",
+              fieldName: "id",
               fieldDescription: "This is the id",
-              editable: false,
+              editable: true,
               placeholder: "Type the id",
               value: widget.element?.id,
             ),
             StringWidget(
               key: nameWidgetKey,
-              fieldName: "Name",
+              fieldName: "name",
               fieldDescription: "This is the name",
               editable: true,
               placeholder: "Type the name",
               value: widget.element?.name,
-            ),
-            StringWidget(
-              key: emailWidgetKey,
-              fieldName: "Email",
-              fieldDescription: "This is the email",
-              editable: true,
-              placeholder: "Type the email",
-              value: widget.element?.email,
             ),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
+          String? updatedemail = emailWidgetKey.currentState?.getUpdatedValue();
+
           String? updatedid = idWidgetKey.currentState?.getUpdatedValue();
 
           String? updatedname = nameWidgetKey.currentState?.getUpdatedValue();
 
-          String? updatedemail = emailWidgetKey.currentState?.getUpdatedValue();
-
-          User updatedUser = widget.element ??
-              User(
+          Customer updatedCustomer = widget.element ??
+              Customer(
+                email: updatedemail ?? '',
                 id: updatedid ?? '',
                 name: updatedname ?? '',
-                email: updatedemail ?? '',
               );
 
-          updatedUser = updatedUser.copyWith(
-              id: updatedid, name: updatedname, email: updatedemail);
+          updatedCustomer = updatedCustomer.copyWith(
+              email: updatedemail, id: updatedid, name: updatedname);
           var container = ProviderContainer();
           try {
             if (widget.isEditing) {
-              await container.read(updateUserProvider(updatedUser));
-              print('User updated successfully');
+              await container.read(updateCustomerProvider(updatedCustomer));
+              print('Customer updated successfully');
             } else {
-              await container.read(createUserProvider(updatedUser));
-              print('User created successfully');
+              await container.read(createCustomerProvider(updatedCustomer));
+              print('Customer created successfully');
             }
           } catch (error) {
-            print('Failed to update User: $error');
+            print('Failed to update Customer: $error');
           }
         },
         child: Icon(Icons.save),
@@ -173,14 +173,14 @@ class _UserWidgetState extends State<UserWidget> {
   }
 }
 
-class UserFieldWidget extends StatefulWidget {
+class CustomerFieldWidget extends StatefulWidget {
   final String fieldName;
   final String fieldDescription;
   final bool editable;
   final String placeholder;
   final String? value;
 
-  const UserFieldWidget({
+  const CustomerFieldWidget({
     Key? key,
     required this.fieldName,
     required this.fieldDescription,
@@ -190,15 +190,15 @@ class UserFieldWidget extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  UserFieldWidgetState createState() => UserFieldWidgetState();
+  CustomerFieldWidgetState createState() => CustomerFieldWidgetState();
 }
 
-class UserFieldWidgetState extends State<UserFieldWidget> {
+class CustomerFieldWidgetState extends State<CustomerFieldWidget> {
   final TextEditingController _typeAheadController = TextEditingController();
   bool isValueChanged = false;
   late String? initialValue;
   late String currentValue;
-  late List<User> options;
+  late List<Customer> options;
 
   @override
   void initState() {
@@ -210,8 +210,9 @@ class UserFieldWidgetState extends State<UserFieldWidget> {
     super.initState();
     initialValue = widget.value;
     currentValue = initialValue ?? '';
-    User user = await container.read(getUserProvider(widget.value!).future);
-    _typeAheadController.text = '${user.name} <id: ${user.id}>';
+    Customer customer =
+        await container.read(getCustomerProvider(widget.value!).future);
+    _typeAheadController.text = '${customer.name} <id: ${customer.id}>';
   }
 
   String? getUpdatedValue() {
@@ -253,30 +254,31 @@ class UserFieldWidgetState extends State<UserFieldWidget> {
                 children: [
                   widget.editable
                       ? Expanded(
-                          child: TypeAheadField<User>(
+                          child: TypeAheadField<Customer>(
                             controller: _typeAheadController,
                             suggestionsCallback: (String pattern) async {
-                              final userPaginationData = await container.read(
-                                  getAllUserProvider(container
-                                          .read(userPaginationProvider))
+                              final customerPaginationData = await container
+                                  .read(getAllCustomerProvider(container
+                                          .read(customerPaginationProvider))
                                       .future);
-                              final options = userPaginationData.items;
+                              final options = customerPaginationData.items;
                               return options
-                                  .where((user) =>
-                                      user.name
+                                  .where((customer) =>
+                                      customer.name
                                           .toLowerCase()
                                           .contains(pattern.toLowerCase()) ||
-                                      user.id
+                                      customer.id
                                           .toString()
                                           .contains(pattern.toLowerCase()))
                                   .toList();
                             },
-                            itemBuilder: (context, user) {
+                            itemBuilder: (context, customer) {
                               return ListTile(
-                                title: Text('${user.name} <id: ${user.id}>'),
+                                title: Text(
+                                    '${customer.name} <id: ${customer.id}>'),
                               );
                             },
-                            onSelected: (User value) {
+                            onSelected: (Customer value) {
                               setState(() {
                                 isValueChanged = value.id != initialValue;
                                 currentValue = value.id;
@@ -311,20 +313,20 @@ class UserFieldWidgetState extends State<UserFieldWidget> {
           child: ElevatedButton(
             onPressed: () async {
               try {
-                User user =
-                    await container.read(getUserProvider(widget.value!).future);
+                Customer customer = await container
+                    .read(getCustomerProvider(widget.value!).future);
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) =>
-                        UserWidget(element: user, isEditing: true),
+                        CustomerWidget(element: customer, isEditing: true),
                   ),
                 );
               } catch (error) {
-                print('Failed to fetch user: $error');
+                print('Failed to fetch customer: $error');
               }
             },
-            child: const Text('View User'),
+            child: const Text('View Customer'),
           ),
         ),
       ],
@@ -336,33 +338,36 @@ class UserFieldWidgetState extends State<UserFieldWidget> {
 // HomeWidgetElementGenerator
 // **************************************************************************
 
-class UserHomeWidget extends StatelessWidget {
-  const UserHomeWidget({super.key});
+class CustomerHomeWidget extends StatelessWidget {
+  const CustomerHomeWidget({super.key});
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const UserListView()),
+          MaterialPageRoute(builder: (context) => const CustomerListView()),
         );
       },
       child: Container(
         width: 100.0,
         height: 100.0,
-        color: Styles.primaryColor,
+        decoration: BoxDecoration(
+          color: Styles.dashboardBlock,
+          borderRadius: BorderRadius.circular(20.0),
+        ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image.asset(
-              'assets/user.png',
+              'assets/customer.png',
               width: 40.0,
               height: 40.0,
               color: Colors.white,
             ),
             const SizedBox(height: 8.0),
             const Text(
-              "User",
+              "Customer",
               style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
@@ -379,35 +384,36 @@ class UserHomeWidget extends StatelessWidget {
 // JsonSerializableGenerator
 // **************************************************************************
 
-User _$UserFromJson(Map<String, dynamic> json) => User(
+Customer _$CustomerFromJson(Map<String, dynamic> json) => Customer(
+      email: json['email'] as String,
       id: json['id'] as String,
       name: json['name'] as String,
-      email: json['email'] as String,
     );
 
-Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
+Map<String, dynamic> _$CustomerToJson(Customer instance) => <String, dynamic>{
+      'email': instance.email,
       'id': instance.id,
       'name': instance.name,
-      'email': instance.email,
     };
 
 // **************************************************************************
 // ListWidgetGenerator
 // **************************************************************************
 
-class UserListView extends ConsumerWidget {
-  const UserListView({super.key});
+class CustomerListView extends ConsumerWidget {
+  const CustomerListView({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final paginationState = ref.watch(userPaginationProvider);
-    final usersAsyncValue = ref.watch(getAllUserProvider(paginationState));
+    final paginationState = ref.watch(customerPaginationProvider);
+    final customersAsyncValue =
+        ref.watch(getAllCustomerProvider(paginationState));
 
     final Map<String, int> columnSortStates =
-        ref.watch(userPaginationProvider.notifier).getOrders();
+        ref.watch(customerPaginationProvider.notifier).getOrders();
 
     final Map<String, dynamic> fieldsFilterStates =
-        ref.watch(userPaginationProvider.notifier).getFilters();
+        ref.watch(customerPaginationProvider.notifier).getFilters();
 
     void onSort(String columnName) {
       var state = columnSortStates[columnName];
@@ -418,12 +424,14 @@ class UserListView extends ConsumerWidget {
       } else if (state == -1) {
         columnSortStates.remove(columnName);
       }
-      ref.read(userPaginationProvider.notifier).setOrders(columnSortStates);
+      ref.read(customerPaginationProvider.notifier).setOrders(columnSortStates);
     }
 
     void onFilter(String fieldName, dynamic filterValue) {
       fieldsFilterStates[fieldName] = filterValue;
-      ref.read(userPaginationProvider.notifier).setFilters(fieldsFilterStates);
+      ref
+          .read(customerPaginationProvider.notifier)
+          .setFilters(fieldsFilterStates);
     }
 
     void onFilterRemove(String fieldName, dynamic filterValue) {
@@ -434,14 +442,14 @@ class UserListView extends ConsumerWidget {
 
     return Scaffold(
         appBar: AppBar(
-          title: const Text('User List'),
+          title: const Text('Customer List'),
           actions: [
             IconButton(
               onPressed: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const UserWidget(
+                    builder: (context) => const CustomerWidget(
                       isEditing: false,
                     ),
                   ),
@@ -451,19 +459,19 @@ class UserListView extends ConsumerWidget {
             ),
           ],
         ),
-        body: usersAsyncValue.when(
+        body: customersAsyncValue.when(
           loading: () => const CircularProgressIndicator(),
           error: (error, stackTrace) => Text('Error: $error'),
-          data: (UserPaginationData data) {
-            final users = data.items;
+          data: (CustomerPaginationData data) {
+            final customers = data.items;
             return Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   CustomSearchBar(
                     fields: const {
+                      'email': 'String',
                       'id': 'String',
-                      'name': 'String',
-                      'email': 'String'
+                      'name': 'String'
                     },
                     filters: fieldsFilterStates,
                     onFilterChanged: onFilter,
@@ -488,43 +496,7 @@ class UserListView extends ConsumerWidget {
                                               MainAxisAlignment.center,
                                           children: [
                                             const Text(
-                                              'Name',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Color.fromARGB(
-                                                      255, 94, 54, 54)),
-                                              textAlign: TextAlign.center,
-                                            ),
-                                            if (columnSortStates['name'] !=
-                                                null) ...[
-                                              Icon(
-                                                columnSortStates['name'] == 1
-                                                    ? Icons
-                                                        .arrow_drop_up_rounded
-                                                    : Icons
-                                                        .arrow_drop_down_rounded,
-                                                color: Colors.black,
-                                              ),
-                                              Text(
-                                                '${columnSortStates.keys.toList().indexOf('name') + 1}',
-                                                style: const TextStyle(
-                                                    fontSize: 10),
-                                              ),
-                                            ],
-                                          ],
-                                        ),
-                                      ),
-                                      onSort: (columnIndex, ascending) =>
-                                          {onSort('name')},
-                                    ),
-                                    DataColumn(
-                                      label: Expanded(
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            const Text(
-                                              'Email',
+                                              'email',
                                               style: TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   color: Color.fromARGB(
@@ -553,23 +525,100 @@ class UserListView extends ConsumerWidget {
                                       onSort: (columnIndex, ascending) =>
                                           {onSort('email')},
                                     ),
+                                    DataColumn(
+                                      label: Expanded(
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            const Text(
+                                              'id',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Color.fromARGB(
+                                                      255, 94, 54, 54)),
+                                              textAlign: TextAlign.center,
+                                            ),
+                                            if (columnSortStates['id'] !=
+                                                null) ...[
+                                              Icon(
+                                                columnSortStates['id'] == 1
+                                                    ? Icons
+                                                        .arrow_drop_up_rounded
+                                                    : Icons
+                                                        .arrow_drop_down_rounded,
+                                                color: Colors.black,
+                                              ),
+                                              Text(
+                                                '${columnSortStates.keys.toList().indexOf('id') + 1}',
+                                                style: const TextStyle(
+                                                    fontSize: 10),
+                                              ),
+                                            ],
+                                          ],
+                                        ),
+                                      ),
+                                      onSort: (columnIndex, ascending) =>
+                                          {onSort('id')},
+                                    ),
+                                    DataColumn(
+                                      label: Expanded(
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            const Text(
+                                              'name',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Color.fromARGB(
+                                                      255, 94, 54, 54)),
+                                              textAlign: TextAlign.center,
+                                            ),
+                                            if (columnSortStates['name'] !=
+                                                null) ...[
+                                              Icon(
+                                                columnSortStates['name'] == 1
+                                                    ? Icons
+                                                        .arrow_drop_up_rounded
+                                                    : Icons
+                                                        .arrow_drop_down_rounded,
+                                                color: Colors.black,
+                                              ),
+                                              Text(
+                                                '${columnSortStates.keys.toList().indexOf('name') + 1}',
+                                                style: const TextStyle(
+                                                    fontSize: 10),
+                                              ),
+                                            ],
+                                          ],
+                                        ),
+                                      ),
+                                      onSort: (columnIndex, ascending) =>
+                                          {onSort('name')},
+                                    ),
                                   ],
-                                  rows: users.map((user) {
+                                  rows: customers.map((customer) {
                                     return DataRow(
                                       cells: [
                                         DataCell(Center(
-                                            child: Text(user.name.toString()))),
+                                            child: Text(
+                                                customer.email.toString()))),
                                         DataCell(Center(
                                             child:
-                                                Text(user.email.toString()))),
+                                                Text(customer.id.toString()))),
+                                        DataCell(Center(
+                                            child: Text(
+                                                customer.name.toString()))),
                                       ],
                                       onSelectChanged: (selected) {
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                              builder: (context) => UserWidget(
-                                                  element: user,
-                                                  isEditing: true)),
+                                              builder: (context) =>
+                                                  CustomerWidget(
+                                                      element: customer,
+                                                      isEditing: true)),
                                         );
                                       },
                                     );
@@ -596,35 +645,36 @@ class UserListView extends ConsumerWidget {
   }
 
   void _onPageButtonPressed(int pageNumber, WidgetRef ref,
-      UserPaginationState paginationState, int maxPages) {
+      CustomerPaginationState paginationState, int maxPages) {
     if (pageNumber <= maxPages) {
-      ref.read(userPaginationProvider.notifier).setPage(pageNumber);
+      ref.read(customerPaginationProvider.notifier).setPage(pageNumber);
     }
   }
 }
 
-class UserPaginationState {
+class CustomerPaginationState {
   final Tuple2<int, int> pagination;
   final Map<String, int> orders;
   final Map<String, dynamic> filters;
 
-  UserPaginationState({
+  CustomerPaginationState({
     required this.pagination,
     required this.orders,
     required this.filters,
   });
 }
 
-class UserPaginationNotifier extends StateNotifier<UserPaginationState> {
-  UserPaginationNotifier()
-      : super(UserPaginationState(
+class CustomerPaginationNotifier
+    extends StateNotifier<CustomerPaginationState> {
+  CustomerPaginationNotifier()
+      : super(CustomerPaginationState(
           pagination: const Tuple2<int, int>(0, 10),
           orders: {},
           filters: {},
         ));
 
   void setPage(int page) {
-    state = UserPaginationState(
+    state = CustomerPaginationState(
       pagination: Tuple2(page * state.pagination.item2 - state.pagination.item2,
           state.pagination.item2),
       orders: state.orders,
@@ -633,7 +683,7 @@ class UserPaginationNotifier extends StateNotifier<UserPaginationState> {
   }
 
   void setOrders(Map<String, int> newOrders) {
-    state = UserPaginationState(
+    state = CustomerPaginationState(
       pagination: Tuple2(state.pagination.item1, state.pagination.item2),
       orders: newOrders,
       filters: state.filters,
@@ -641,7 +691,7 @@ class UserPaginationNotifier extends StateNotifier<UserPaginationState> {
   }
 
   void setFilters(Map<String, dynamic> newFilters) {
-    state = UserPaginationState(
+    state = CustomerPaginationState(
       pagination: Tuple2(state.pagination.item1, state.pagination.item2),
       orders: state.orders,
       filters: newFilters,
@@ -657,70 +707,71 @@ class UserPaginationNotifier extends StateNotifier<UserPaginationState> {
   }
 }
 
-final userPaginationProvider =
-    StateNotifierProvider<UserPaginationNotifier, UserPaginationState>(
-  (ref) => UserPaginationNotifier(),
+final customerPaginationProvider =
+    StateNotifierProvider<CustomerPaginationNotifier, CustomerPaginationState>(
+  (ref) => CustomerPaginationNotifier(),
 );
 
 // **************************************************************************
 // RiverpodCustomGenerator
 // **************************************************************************
 
-final getUserProvider =
-    FutureProvider.autoDispose.family<User, String>((ref, userId) async {
-  final json = await http.get(Uri.parse('$baseURL/user/$userId'));
+final getCustomerProvider = FutureProvider.autoDispose
+    .family<Customer, String>((ref, customerId) async {
+  final json = await http.get(Uri.parse('$baseURL/customer/$customerId'));
   final jsonData = jsonDecode(json.body);
-  return User.fromJson(jsonData);
+  return Customer.fromJson(jsonData);
 });
 
-final createUserProvider =
-    FutureProvider.autoDispose.family<void, User>((ref, userInstance) async {
+final createCustomerProvider = FutureProvider.autoDispose
+    .family<void, Customer>((ref, customerInstance) async {
   final response = await http.post(
-    Uri.parse('$baseURL/user'),
+    Uri.parse('$baseURL/customer'),
     headers: {'Content-Type': 'application/json'},
-    body: jsonEncode(userInstance.toJson()),
+    body: jsonEncode(customerInstance.toJson()),
   );
   if (response.statusCode != 201) {
-    throw Exception('Failed to create User');
+    throw Exception('Failed to create Customer');
   }
 });
 
-final updateUserProvider =
-    FutureProvider.autoDispose.family<void, User>((ref, userInstance) async {
+final updateCustomerProvider = FutureProvider.autoDispose
+    .family<void, Customer>((ref, customerInstance) async {
   final response = await http.put(
-    Uri.parse('$baseURL/user/${userInstance.id}'),
+    Uri.parse('$baseURL/customer/${customerInstance.id}'),
     headers: {'Content-Type': 'application/json'},
-    body: jsonEncode(userInstance.toJson()),
+    body: jsonEncode(customerInstance.toJson()),
   );
   if (response.statusCode != 200) {
-    throw Exception('Failed to update User');
+    throw Exception('Failed to update Customer');
   }
 });
 
-final deleteUserProvider =
-    FutureProvider.autoDispose.family<void, int>((ref, userId) async {
+final deleteCustomerProvider =
+    FutureProvider.autoDispose.family<void, int>((ref, customerId) async {
   final response = await http.delete(
-    Uri.parse('$baseURL/user/$userId'),
+    Uri.parse('$baseURL/customer/$customerId'),
   );
   if (response.statusCode != 204) {
-    throw Exception('Failed to delete User');
+    throw Exception('Failed to delete Customer');
   }
 });
 
-class UserPaginationData {
-  final List<User> items;
+class CustomerPaginationData {
+  final List<Customer> items;
   final int currentPage;
   final int maxPages;
 
-  UserPaginationData({
+  CustomerPaginationData({
     required this.items,
     required this.currentPage,
     required this.maxPages,
   });
 }
 
-final getAllUserProvider = FutureProvider.autoDispose
-    .family<UserPaginationData, UserPaginationState>((ref, state) async {
+final getAllCustomerProvider = FutureProvider.autoDispose
+    .family<CustomerPaginationData, CustomerPaginationState>(
+        (ref, state) async {
   final fixedQuery = {
     if (state.orders.isNotEmpty) 'orders': state.orders,
     if (state.filters.isNotEmpty)
@@ -730,14 +781,15 @@ final getAllUserProvider = FutureProvider.autoDispose
 
   final json = await http.post(
       Uri.parse(
-          '$baseURL/users?skip=${state.pagination.item1}&limit=${state.pagination.item2}'),
+          '$baseURL/customers?skip=${state.pagination.item1}&limit=${state.pagination.item2}'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode(fixedQuery));
   final jsonData = jsonDecode(json.body);
 
-  return UserPaginationData(
-    items:
-        (jsonData['items'] as List).map((data) => User.fromJson(data)).toList(),
+  return CustomerPaginationData(
+    items: (jsonData['items'] as List)
+        .map((data) => Customer.fromJson(data))
+        .toList(),
     currentPage: jsonData['current_page'],
     maxPages: jsonData['max_pages'],
   );
