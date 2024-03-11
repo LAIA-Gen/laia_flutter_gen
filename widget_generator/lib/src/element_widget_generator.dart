@@ -283,6 +283,10 @@ class _${visitor.className}WidgetState extends State<${visitor.className}Widget>
         case 'List<Map<String, dynamic>>?':
           buffer.writeln('''$fieldName: updated$fieldName ?? {},''');
           break;
+        case 'List<String>':
+        case 'List<String>?':
+          buffer.writeln('''$fieldName: [''],''');
+          break;
       }
     }
 
@@ -414,7 +418,7 @@ class ${visitor.className}FieldWidgetState extends State<${visitor.className}Fie
                             onSelected: (${visitor.className} value) {
                               setState(() {
                                 isValueChanged = value.id != initialValue;
-                                currentValue = value.id;
+                                currentValue = value.id!;
                                 _typeAheadController.text = '\${value.name} <id: \${value.id}>';
                               });
                             },

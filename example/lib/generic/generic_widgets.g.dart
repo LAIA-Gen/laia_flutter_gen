@@ -948,25 +948,61 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        for (var i = 0; i < searchRows.length; i++)
-          Container(
-            margin: const EdgeInsets.only(top: 5),
-            child: _buildSearchRow(searchRows[i], i),
-          ),
-        Row(
-          children: [
-            Container(
-              margin: const EdgeInsets.only(top: 8, bottom: 8, left: 8),
-              child: ElevatedButton(
-                onPressed: _canAddRow() ? _addRow : null,
-                child: const Text('Add Filter'),
-              ),
-            ),
-          ],
+    return Container(
+      padding: const EdgeInsets.all(2),
+      decoration: BoxDecoration(
+        border: const Border(
+          bottom:
+              BorderSide(color: Color.fromARGB(255, 233, 233, 233), width: 1.0),
         ),
-      ],
+        borderRadius: BorderRadius.circular(4.0),
+      ),
+      child: Column(
+        children: [
+          for (var i = 0; i < searchRows.length; i++)
+            Container(
+              margin: const EdgeInsets.only(top: 5),
+              child: _buildSearchRow(searchRows[i], i),
+            ),
+          Row(
+            children: [
+              Container(
+                margin: const EdgeInsets.only(top: 3, bottom: 8, left: 8),
+                child: ElevatedButton(
+                  onPressed: _canAddRow() ? _addRow : null,
+                  style: ButtonStyle(
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                    ),
+                    backgroundColor: MaterialStateProperty.all<Color>(
+                        Styles.buttonPrimaryColor),
+                    elevation:
+                        MaterialStateProperty.resolveWith<double>((states) {
+                      if (states.contains(MaterialState.hovered) ||
+                          states.contains(MaterialState.pressed)) {
+                        return 0;
+                      }
+                      return 0;
+                    }),
+                    foregroundColor:
+                        MaterialStateProperty.all<Color>(Colors.white),
+                    overlayColor:
+                        MaterialStateProperty.resolveWith<Color>((states) {
+                      if (states.contains(MaterialState.hovered)) {
+                        return Styles.buttonPrimaryColorHover;
+                      }
+                      return Colors.transparent;
+                    }),
+                  ),
+                  child: const Text('Add Filter'),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 
@@ -975,72 +1011,85 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
 
     return Row(
       children: [
-        const SizedBox(width: 5),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
-          decoration: BoxDecoration(
-            color: const Color.fromARGB(255, 236, 236, 236),
-            borderRadius: BorderRadius.circular(10),
-            border: Border.all(
-              color: Colors.grey,
-              width: 1.0,
+        const SizedBox(width: 2),
+        SizedBox(
+          height: 35,
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(
+                color: const Color.fromARGB(255, 218, 218, 218),
+                width: 1.0,
+              ),
             ),
-          ),
-          child: DropdownButton<String>(
-            value: searchRow.selectedField ?? availableFields.first,
-            items: availableFields.map((String field) {
-              return DropdownMenuItem<String>(
-                value: field,
-                child: Text(field),
-              );
-            }).toList(),
-            onChanged: (String? newSelectedField) {
-              widget.onFilterRemove(
-                  searchRow.selectedField!, searchRow.filterValue ?? '');
-              setState(() {
-                searchRow.selectedField = newSelectedField;
-              });
+            child: DropdownButton<String>(
+              value: searchRow.selectedField ?? availableFields.first,
+              dropdownColor: Colors.white,
+              items: availableFields.map((String field) {
+                return DropdownMenuItem<String>(
+                  value: field,
+                  child: SizedBox(
+                    child: Center(
+                      child: Text(field),
+                    ),
+                  ),
+                );
+              }).toList(),
+              onChanged: (String? newSelectedField) {
+                widget.onFilterRemove(
+                    searchRow.selectedField!, searchRow.filterValue ?? '');
+                setState(() {
+                  searchRow.selectedField = newSelectedField;
+                });
 
-              if (newSelectedField != null) {
-                _filterChanged(index);
-              }
-            },
-            icon: const Icon(Icons.arrow_drop_down),
-            underline: const SizedBox(),
+                if (newSelectedField != null) {
+                  _filterChanged(index);
+                }
+              },
+              icon: const Icon(Icons.arrow_drop_down),
+              underline: const SizedBox(),
+            ),
           ),
         ),
         const SizedBox(width: 5),
         Expanded(
-          child: TextFormField(
-            controller: searchRow.textEditingController,
-            decoration: InputDecoration(
-              hintText: ' Enter search value',
-              contentPadding: const EdgeInsets.symmetric(vertical: 8),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-                borderSide: const BorderSide(
-                  color: Colors.grey,
+          child: SizedBox(
+            height: 35,
+            child: TextFormField(
+              controller: searchRow.textEditingController,
+              textAlignVertical: TextAlignVertical.center,
+              decoration: InputDecoration(
+                hintText: 'Enter search value',
+                contentPadding:
+                    const EdgeInsets.symmetric(vertical: 0, horizontal: 5),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: const BorderSide(
+                    color: Color.fromARGB(255, 218, 218, 218),
+                  ),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: const BorderSide(
+                    color: Color.fromARGB(255, 218, 218, 218),
+                  ),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: const BorderSide(
+                    color: Color.fromARGB(255, 218, 218, 218),
+                    width: 1.0,
+                  ),
                 ),
               ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-                borderSide: const BorderSide(
-                  color: Colors.grey,
-                ),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-                borderSide: const BorderSide(
-                  color: Colors.grey,
-                  width: 1.0,
-                ),
-              ),
+              onEditingComplete: () {
+                if (searchRow.selectedField != null) {
+                  _filterChanged(index);
+                }
+              },
             ),
-            onEditingComplete: () {
-              if (searchRow.selectedField != null) {
-                _filterChanged(index);
-              }
-            },
           ),
         ),
         IconButton(
@@ -1163,18 +1212,83 @@ class SearchRow {
   }
 }
 
-Widget boolWidget(String fieldName, bool value) {
-  return Container(
-    padding: const EdgeInsets.all(8.0),
-    decoration: BoxDecoration(
-      color: value ? Colors.green : Colors.red,
-      borderRadius: BorderRadius.circular(8.0),
-    ),
-    child: Text(
-      value ? 'Active' : 'Inactive',
-      style: const TextStyle(color: Colors.white),
-    ),
-  );
+class BoolWidget extends StatefulWidget {
+  final String fieldName;
+  final String fieldDescription;
+  final bool editable;
+  final bool value;
+
+  const BoolWidget({
+    Key? key,
+    required this.fieldName,
+    required this.fieldDescription,
+    required this.editable,
+    required this.value,
+  }) : super(key: key);
+
+  @override
+  BoolWidgetState createState() => BoolWidgetState();
+}
+
+class BoolWidgetState extends State<BoolWidget> {
+  bool? _updatedValue;
+
+  @override
+  void initState() {
+    super.initState();
+    _updatedValue = widget.value;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+          margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10.0),
+            color: Colors.blueGrey, // Customize as needed
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "${widget.fieldName}:",
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(width: 8.0),
+                  Text(
+                    widget.fieldDescription,
+                    style: const TextStyle(color: Colors.grey),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8.0),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  widget.editable
+                      ? Checkbox(
+                          value: _updatedValue ?? false,
+                          onChanged: (newValue) {
+                            setState(() {
+                              _updatedValue = newValue;
+                            });
+                          },
+                        )
+                      : Text(widget.value.toString()),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
 }
 
 Widget stringListWidget(String fieldName, List<String> value) {

@@ -1,96 +1,90 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'flightplan.dart';
+part of 'shoe.dart';
 
 // **************************************************************************
 // CopyWithGenerator
 // **************************************************************************
 
-abstract class _$FlightPlanCWProxy {
-  FlightPlan drone_id(String drone_id);
+abstract class _$ShoeCWProxy {
+  Shoe brand(String brand);
 
-  FlightPlan end_time(DateTime end_time);
+  Shoe customerId(String customerId);
 
-  FlightPlan id(String id);
+  Shoe id(String id);
 
-  FlightPlan name(String name);
+  Shoe name(String name);
 
-  FlightPlan route(List<String> route);
+  Shoe price(double price);
 
-  FlightPlan start_time(DateTime start_time);
+  Shoe size(double size);
 
-  FlightPlan user_id(String user_id);
-
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `FlightPlan(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Shoe(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
   /// Usage
   /// ```dart
-  /// FlightPlan(...).copyWith(id: 12, name: "My name")
+  /// Shoe(...).copyWith(id: 12, name: "My name")
   /// ````
-  FlightPlan call({
-    String? drone_id,
-    DateTime? end_time,
+  Shoe call({
+    String? brand,
+    String? customerId,
     String? id,
     String? name,
-    List<String>? route,
-    DateTime? start_time,
-    String? user_id,
+    double? price,
+    double? size,
   });
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfFlightPlan.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfFlightPlan.copyWith.fieldName(...)`
-class _$FlightPlanCWProxyImpl implements _$FlightPlanCWProxy {
-  final FlightPlan _value;
+/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfShoe.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfShoe.copyWith.fieldName(...)`
+class _$ShoeCWProxyImpl implements _$ShoeCWProxy {
+  final Shoe _value;
 
-  const _$FlightPlanCWProxyImpl(this._value);
-
-  @override
-  FlightPlan drone_id(String drone_id) => this(drone_id: drone_id);
+  const _$ShoeCWProxyImpl(this._value);
 
   @override
-  FlightPlan end_time(DateTime end_time) => this(end_time: end_time);
+  Shoe brand(String brand) => this(brand: brand);
 
   @override
-  FlightPlan id(String id) => this(id: id);
+  Shoe customerId(String customerId) => this(customerId: customerId);
 
   @override
-  FlightPlan name(String name) => this(name: name);
+  Shoe id(String id) => this(id: id);
 
   @override
-  FlightPlan route(List<String> route) => this(route: route);
+  Shoe name(String name) => this(name: name);
 
   @override
-  FlightPlan start_time(DateTime start_time) => this(start_time: start_time);
+  Shoe price(double price) => this(price: price);
 
   @override
-  FlightPlan user_id(String user_id) => this(user_id: user_id);
+  Shoe size(double size) => this(size: size);
 
   @override
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `FlightPlan(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Shoe(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
   /// Usage
   /// ```dart
-  /// FlightPlan(...).copyWith(id: 12, name: "My name")
+  /// Shoe(...).copyWith(id: 12, name: "My name")
   /// ````
-  FlightPlan call({
-    Object? drone_id = const $CopyWithPlaceholder(),
-    Object? end_time = const $CopyWithPlaceholder(),
+  Shoe call({
+    Object? brand = const $CopyWithPlaceholder(),
+    Object? customerId = const $CopyWithPlaceholder(),
     Object? id = const $CopyWithPlaceholder(),
     Object? name = const $CopyWithPlaceholder(),
-    Object? route = const $CopyWithPlaceholder(),
-    Object? start_time = const $CopyWithPlaceholder(),
-    Object? user_id = const $CopyWithPlaceholder(),
+    Object? price = const $CopyWithPlaceholder(),
+    Object? size = const $CopyWithPlaceholder(),
   }) {
-    return FlightPlan(
-      drone_id: drone_id == const $CopyWithPlaceholder() || drone_id == null
-          ? _value.drone_id
+    return Shoe(
+      brand: brand == const $CopyWithPlaceholder() || brand == null
+          ? _value.brand
           // ignore: cast_nullable_to_non_nullable
-          : drone_id as String,
-      end_time: end_time == const $CopyWithPlaceholder() || end_time == null
-          ? _value.end_time
-          // ignore: cast_nullable_to_non_nullable
-          : end_time as DateTime,
+          : brand as String,
+      customerId:
+          customerId == const $CopyWithPlaceholder() || customerId == null
+              ? _value.customerId
+              // ignore: cast_nullable_to_non_nullable
+              : customerId as String,
       id: id == const $CopyWithPlaceholder() || id == null
           ? _value.id
           // ignore: cast_nullable_to_non_nullable
@@ -99,158 +93,157 @@ class _$FlightPlanCWProxyImpl implements _$FlightPlanCWProxy {
           ? _value.name
           // ignore: cast_nullable_to_non_nullable
           : name as String,
-      route: route == const $CopyWithPlaceholder() || route == null
-          ? _value.route
+      price: price == const $CopyWithPlaceholder() || price == null
+          ? _value.price
           // ignore: cast_nullable_to_non_nullable
-          : route as List<String>,
-      start_time:
-          start_time == const $CopyWithPlaceholder() || start_time == null
-              ? _value.start_time
-              // ignore: cast_nullable_to_non_nullable
-              : start_time as DateTime,
-      user_id: user_id == const $CopyWithPlaceholder() || user_id == null
-          ? _value.user_id
+          : price as double,
+      size: size == const $CopyWithPlaceholder() || size == null
+          ? _value.size
           // ignore: cast_nullable_to_non_nullable
-          : user_id as String,
+          : size as double,
     );
   }
 }
 
-extension $FlightPlanCopyWith on FlightPlan {
-  /// Returns a callable class that can be used as follows: `instanceOfFlightPlan.copyWith(...)` or like so:`instanceOfFlightPlan.copyWith.fieldName(...)`.
+extension $ShoeCopyWith on Shoe {
+  /// Returns a callable class that can be used as follows: `instanceOfShoe.copyWith(...)` or like so:`instanceOfShoe.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
-  _$FlightPlanCWProxy get copyWith => _$FlightPlanCWProxyImpl(this);
+  _$ShoeCWProxy get copyWith => _$ShoeCWProxyImpl(this);
 }
 
 // **************************************************************************
 // ElementWidgetGenerator
 // **************************************************************************
 
-class FlightPlanWidget extends StatefulWidget {
-  final FlightPlan element;
+class ShoeWidget extends StatefulWidget {
+  final Shoe? element;
+  final bool isEditing;
 
-  const FlightPlanWidget(this.element, {Key? key}) : super(key: key);
+  const ShoeWidget({this.element, required this.isEditing, Key? key})
+      : super(key: key);
 
   @override
-  _FlightPlanWidgetState createState() => _FlightPlanWidgetState();
+  _ShoeWidgetState createState() => _ShoeWidgetState();
 }
 
-class _FlightPlanWidgetState extends State<FlightPlanWidget> {
+class _ShoeWidgetState extends State<ShoeWidget> {
+  final GlobalKey<StringWidgetState> brandWidgetKey =
+      GlobalKey<StringWidgetState>();
+  final GlobalKey<CustomerFieldWidgetState> customerIdWidgetKey =
+      GlobalKey<CustomerFieldWidgetState>();
   final GlobalKey<StringWidgetState> idWidgetKey =
       GlobalKey<StringWidgetState>();
   final GlobalKey<StringWidgetState> nameWidgetKey =
       GlobalKey<StringWidgetState>();
-  final GlobalKey<DroneFieldWidgetState> drone_idWidgetKey =
-      GlobalKey<DroneFieldWidgetState>();
-  final GlobalKey<UserFieldWidgetState> user_idWidgetKey =
-      GlobalKey<UserFieldWidgetState>();
-  final GlobalKey<DateTimeWidgetState> start_timeWidgetKey =
-      GlobalKey<DateTimeWidgetState>();
-  final GlobalKey<DateTimeWidgetState> end_timeWidgetKey =
-      GlobalKey<DateTimeWidgetState>();
-  final GlobalKey<DefaultWidgetState> routeWidgetKey =
-      GlobalKey<DefaultWidgetState>();
+  final GlobalKey<DoubleWidgetState> priceWidgetKey =
+      GlobalKey<DoubleWidgetState>();
+  final GlobalKey<DoubleWidgetState> sizeWidgetKey =
+      GlobalKey<DoubleWidgetState>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('FlightPlan'),
+        title: const Text('Shoe'),
       ),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: Column(
           children: [
             StringWidget(
+              key: brandWidgetKey,
+              fieldName: "brand",
+              fieldDescription: "This is the brand",
+              editable: true,
+              placeholder: "Type the brand",
+              value: widget.element?.brand,
+            ),
+            CustomerFieldWidget(
+              key: customerIdWidgetKey,
+              fieldName: "customerId",
+              fieldDescription: "This is the customerId",
+              editable: true,
+              placeholder: "Type the customerId",
+              value: widget.element?.customerId,
+            ),
+            StringWidget(
               key: idWidgetKey,
-              fieldName: "Id",
+              fieldName: "id",
               fieldDescription: "This is the id",
-              editable: false,
+              editable: true,
               placeholder: "Type the id",
-              value: widget.element.id,
+              value: widget.element?.id,
             ),
             StringWidget(
               key: nameWidgetKey,
-              fieldName: "Name",
+              fieldName: "name",
               fieldDescription: "This is the name",
               editable: true,
               placeholder: "Type the name",
-              value: widget.element.name,
+              value: widget.element?.name,
             ),
-            DroneFieldWidget(
-              key: drone_idWidgetKey,
-              fieldName: "Drone",
-              fieldDescription: "This is the drone_id",
+            DoubleWidget(
+              key: priceWidgetKey,
+              fieldName: "price",
+              fieldDescription: "This is the price",
               editable: true,
-              placeholder: "Type the drone_id",
-              value: widget.element.drone_id,
+              placeholder: "Type the price",
+              value: widget.element?.price,
             ),
-            UserFieldWidget(
-              key: user_idWidgetKey,
-              fieldName: "User",
-              fieldDescription: "This is the user_id",
+            DoubleWidget(
+              key: sizeWidgetKey,
+              fieldName: "size",
+              fieldDescription: "This is the size",
               editable: true,
-              placeholder: "Type the user_id",
-              value: widget.element.user_id,
-            ),
-            DateTimeWidget(
-              key: start_timeWidgetKey,
-              fieldName: "Departure time",
-              fieldDescription: "This is the start_time",
-              editable: true,
-              placeholder: "Type the start_time",
-              value: widget.element.start_time,
-            ),
-            DateTimeWidget(
-              key: end_timeWidgetKey,
-              fieldName: "Arrival time",
-              fieldDescription: "This is the end_time",
-              editable: true,
-              placeholder: "Type the end_time",
-              value: widget.element.end_time,
-            ),
-            DefaultWidget(
-              key: routeWidgetKey,
-              fieldName: "Route",
-              fieldDescription: "This is the route",
-              editable: true,
-              placeholder: "Type the route",
-              value: widget.element.route,
+              placeholder: "Type the size",
+              value: widget.element?.size,
             ),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
+          String? updatedbrand = brandWidgetKey.currentState?.getUpdatedValue();
+
+          String? updatedcustomerId =
+              customerIdWidgetKey.currentState?.getUpdatedValue();
+
           String? updatedid = idWidgetKey.currentState?.getUpdatedValue();
 
           String? updatedname = nameWidgetKey.currentState?.getUpdatedValue();
 
-          String? updateddrone_id =
-              drone_idWidgetKey.currentState?.getUpdatedValue();
+          double? updatedprice = priceWidgetKey.currentState?.getUpdatedValue();
 
-          String? updateduser_id =
-              user_idWidgetKey.currentState?.getUpdatedValue();
+          double? updatedsize = sizeWidgetKey.currentState?.getUpdatedValue();
 
-          DateTime? updatedstart_time =
-              start_timeWidgetKey.currentState?.getUpdatedValue();
+          Shoe updatedShoe = widget.element ??
+              Shoe(
+                brand: updatedbrand ?? '',
+                customerId: updatedcustomerId ?? '',
+                id: updatedid ?? '',
+                name: updatedname ?? '',
+                price: updatedprice ?? 0.0,
+                size: updatedsize ?? 0.0,
+              );
 
-          DateTime? updatedend_time =
-              end_timeWidgetKey.currentState?.getUpdatedValue();
-
-          FlightPlan updatedFlightPlan = widget.element.copyWith(
+          updatedShoe = updatedShoe.copyWith(
+              brand: updatedbrand,
+              customerId: updatedcustomerId,
               id: updatedid,
               name: updatedname,
-              drone_id: updateddrone_id,
-              user_id: updateduser_id,
-              start_time: updatedstart_time,
-              end_time: updatedend_time);
+              price: updatedprice,
+              size: updatedsize);
           var container = ProviderContainer();
           try {
-            await container.read(updateFlightPlanProvider(updatedFlightPlan));
-            print('FlightPlan updated successfully');
+            if (widget.isEditing) {
+              await container.read(updateShoeProvider(updatedShoe));
+              print('Shoe updated successfully');
+            } else {
+              await container.read(createShoeProvider(updatedShoe));
+              print('Shoe created successfully');
+            }
           } catch (error) {
-            print('Failed to update FlightPlan: $error');
+            print('Failed to update Shoe: $error');
           }
         },
         child: Icon(Icons.save),
@@ -259,14 +252,14 @@ class _FlightPlanWidgetState extends State<FlightPlanWidget> {
   }
 }
 
-class FlightPlanFieldWidget extends StatefulWidget {
+class ShoeFieldWidget extends StatefulWidget {
   final String fieldName;
   final String fieldDescription;
   final bool editable;
   final String placeholder;
   final String? value;
 
-  const FlightPlanFieldWidget({
+  const ShoeFieldWidget({
     Key? key,
     required this.fieldName,
     required this.fieldDescription,
@@ -276,15 +269,15 @@ class FlightPlanFieldWidget extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  FlightPlanFieldWidgetState createState() => FlightPlanFieldWidgetState();
+  ShoeFieldWidgetState createState() => ShoeFieldWidgetState();
 }
 
-class FlightPlanFieldWidgetState extends State<FlightPlanFieldWidget> {
+class ShoeFieldWidgetState extends State<ShoeFieldWidget> {
   final TextEditingController _typeAheadController = TextEditingController();
   bool isValueChanged = false;
   late String? initialValue;
   late String currentValue;
-  late List<FlightPlan> options;
+  late List<Shoe> options;
 
   @override
   void initState() {
@@ -296,9 +289,8 @@ class FlightPlanFieldWidgetState extends State<FlightPlanFieldWidget> {
     super.initState();
     initialValue = widget.value;
     currentValue = initialValue ?? '';
-    FlightPlan flightplan =
-        await container.read(getFlightPlanProvider(widget.value!).future);
-    _typeAheadController.text = '${flightplan.name} <id: ${flightplan.id}>';
+    Shoe shoe = await container.read(getShoeProvider(widget.value!).future);
+    _typeAheadController.text = '${shoe.name} <id: ${shoe.id}>';
   }
 
   String? getUpdatedValue() {
@@ -340,31 +332,30 @@ class FlightPlanFieldWidgetState extends State<FlightPlanFieldWidget> {
                 children: [
                   widget.editable
                       ? Expanded(
-                          child: TypeAheadField<FlightPlan>(
+                          child: TypeAheadField<Shoe>(
                             controller: _typeAheadController,
                             suggestionsCallback: (String pattern) async {
-                              final flightplanPaginationData = await container
-                                  .read(getAllFlightPlanProvider(container
-                                          .read(flightplanPaginationProvider))
+                              final shoePaginationData = await container.read(
+                                  getAllShoeProvider(container
+                                          .read(shoePaginationProvider))
                                       .future);
-                              final options = flightplanPaginationData.items;
+                              final options = shoePaginationData.items;
                               return options
-                                  .where((flightplan) =>
-                                      flightplan.name
+                                  .where((shoe) =>
+                                      shoe.name
                                           .toLowerCase()
                                           .contains(pattern.toLowerCase()) ||
-                                      flightplan.id
+                                      shoe.id
                                           .toString()
                                           .contains(pattern.toLowerCase()))
                                   .toList();
                             },
-                            itemBuilder: (context, flightplan) {
+                            itemBuilder: (context, shoe) {
                               return ListTile(
-                                title: Text(
-                                    '${flightplan.name} <id: ${flightplan.id}>'),
+                                title: Text('${shoe.name} <id: ${shoe.id}>'),
                               );
                             },
-                            onSelected: (FlightPlan value) {
+                            onSelected: (Shoe value) {
                               setState(() {
                                 isValueChanged = value.id != initialValue;
                                 currentValue = value.id;
@@ -399,19 +390,20 @@ class FlightPlanFieldWidgetState extends State<FlightPlanFieldWidget> {
           child: ElevatedButton(
             onPressed: () async {
               try {
-                FlightPlan flightplan = await container
-                    .read(getFlightPlanProvider(widget.value!).future);
+                Shoe shoe =
+                    await container.read(getShoeProvider(widget.value!).future);
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => FlightPlanWidget(flightplan),
+                    builder: (context) =>
+                        ShoeWidget(element: shoe, isEditing: true),
                   ),
                 );
               } catch (error) {
-                print('Failed to fetch flightplan: $error');
+                print('Failed to fetch shoe: $error');
               }
             },
-            child: const Text('View FlightPlan'),
+            child: const Text('View Shoe'),
           ),
         ),
       ],
@@ -423,33 +415,36 @@ class FlightPlanFieldWidgetState extends State<FlightPlanFieldWidget> {
 // HomeWidgetElementGenerator
 // **************************************************************************
 
-class FlightPlanHomeWidget extends StatelessWidget {
-  const FlightPlanHomeWidget({super.key});
+class ShoeHomeWidget extends StatelessWidget {
+  const ShoeHomeWidget({super.key});
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const FlightPlanListView()),
+          MaterialPageRoute(builder: (context) => const ShoeListView()),
         );
       },
       child: Container(
         width: 100.0,
         height: 100.0,
-        color: Styles.primaryColor,
+        decoration: BoxDecoration(
+          color: Styles.dashboardBlock,
+          borderRadius: BorderRadius.circular(20.0),
+        ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image.asset(
-              'assets/flightplan.png',
+              'assets/shoe.png',
               width: 40.0,
               height: 40.0,
               color: Colors.white,
             ),
             const SizedBox(height: 8.0),
             const Text(
-              "FlightPlan",
+              "Shoe",
               style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
@@ -466,45 +461,41 @@ class FlightPlanHomeWidget extends StatelessWidget {
 // JsonSerializableGenerator
 // **************************************************************************
 
-FlightPlan _$FlightPlanFromJson(Map<String, dynamic> json) => FlightPlan(
+Shoe _$ShoeFromJson(Map<String, dynamic> json) => Shoe(
+      brand: json['brand'] as String,
+      customerId: json['customerId'] as String,
       id: json['id'] as String,
       name: json['name'] as String,
-      drone_id: json['drone_id'] as String,
-      user_id: json['user_id'] as String,
-      start_time: DateTime.parse(json['start_time'] as String),
-      end_time: DateTime.parse(json['end_time'] as String),
-      route: (json['route'] as List<dynamic>).map((e) => e as String).toList(),
+      price: (json['price'] as num).toDouble(),
+      size: (json['size'] as num).toDouble(),
     );
 
-Map<String, dynamic> _$FlightPlanToJson(FlightPlan instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$ShoeToJson(Shoe instance) => <String, dynamic>{
+      'brand': instance.brand,
+      'customerId': instance.customerId,
       'id': instance.id,
       'name': instance.name,
-      'drone_id': instance.drone_id,
-      'user_id': instance.user_id,
-      'start_time': instance.start_time.toIso8601String(),
-      'end_time': instance.end_time.toIso8601String(),
-      'route': instance.route,
+      'price': instance.price,
+      'size': instance.size,
     };
 
 // **************************************************************************
 // ListWidgetGenerator
 // **************************************************************************
 
-class FlightPlanListView extends ConsumerWidget {
-  const FlightPlanListView({super.key});
+class ShoeListView extends ConsumerWidget {
+  const ShoeListView({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final paginationState = ref.watch(flightplanPaginationProvider);
-    final flightplansAsyncValue =
-        ref.watch(getAllFlightPlanProvider(paginationState));
+    final paginationState = ref.watch(shoePaginationProvider);
+    final shoesAsyncValue = ref.watch(getAllShoeProvider(paginationState));
 
     final Map<String, int> columnSortStates =
-        ref.watch(flightplanPaginationProvider.notifier).getOrders();
+        ref.watch(shoePaginationProvider.notifier).getOrders();
 
     final Map<String, dynamic> fieldsFilterStates =
-        ref.watch(flightplanPaginationProvider.notifier).getFilters();
+        ref.watch(shoePaginationProvider.notifier).getFilters();
 
     void onSort(String columnName) {
       var state = columnSortStates[columnName];
@@ -515,16 +506,12 @@ class FlightPlanListView extends ConsumerWidget {
       } else if (state == -1) {
         columnSortStates.remove(columnName);
       }
-      ref
-          .read(flightplanPaginationProvider.notifier)
-          .setOrders(columnSortStates);
+      ref.read(shoePaginationProvider.notifier).setOrders(columnSortStates);
     }
 
     void onFilter(String fieldName, dynamic filterValue) {
       fieldsFilterStates[fieldName] = filterValue;
-      ref
-          .read(flightplanPaginationProvider.notifier)
-          .setFilters(fieldsFilterStates);
+      ref.read(shoePaginationProvider.notifier).setFilters(fieldsFilterStates);
     }
 
     void onFilterRemove(String fieldName, dynamic filterValue) {
@@ -535,25 +522,39 @@ class FlightPlanListView extends ConsumerWidget {
 
     return Scaffold(
         appBar: AppBar(
-          title: const Text('FlightPlan List'),
+          title: const Text('Shoe List'),
+          actions: [
+            IconButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const ShoeWidget(
+                      isEditing: false,
+                    ),
+                  ),
+                );
+              },
+              icon: const Icon(Icons.add),
+            ),
+          ],
         ),
-        body: flightplansAsyncValue.when(
+        body: shoesAsyncValue.when(
           loading: () => const CircularProgressIndicator(),
           error: (error, stackTrace) => Text('Error: $error'),
-          data: (FlightPlanPaginationData data) {
-            final flightplans = data.items;
+          data: (ShoePaginationData data) {
+            final shoes = data.items;
             return Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   CustomSearchBar(
                     fields: const {
+                      'brand': 'String',
+                      'customerId': 'String',
                       'id': 'String',
                       'name': 'String',
-                      'drone_id': 'String',
-                      'user_id': 'String',
-                      'start_time': 'DateTime',
-                      'end_time': 'DateTime',
-                      'route': 'List<String>'
+                      'price': 'double',
+                      'size': 'double'
                     },
                     filters: fieldsFilterStates,
                     onFilterChanged: onFilter,
@@ -578,7 +579,118 @@ class FlightPlanListView extends ConsumerWidget {
                                               MainAxisAlignment.center,
                                           children: [
                                             const Text(
-                                              'Name',
+                                              'brand',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Color.fromARGB(
+                                                      255, 94, 54, 54)),
+                                              textAlign: TextAlign.center,
+                                            ),
+                                            if (columnSortStates['brand'] !=
+                                                null) ...[
+                                              Icon(
+                                                columnSortStates['brand'] == 1
+                                                    ? Icons
+                                                        .arrow_drop_up_rounded
+                                                    : Icons
+                                                        .arrow_drop_down_rounded,
+                                                color: Colors.black,
+                                              ),
+                                              Text(
+                                                '${columnSortStates.keys.toList().indexOf('brand') + 1}',
+                                                style: const TextStyle(
+                                                    fontSize: 10),
+                                              ),
+                                            ],
+                                          ],
+                                        ),
+                                      ),
+                                      onSort: (columnIndex, ascending) =>
+                                          {onSort('brand')},
+                                    ),
+                                    DataColumn(
+                                      label: Expanded(
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            const Text(
+                                              'customerId',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Color.fromARGB(
+                                                      255, 94, 54, 54)),
+                                              textAlign: TextAlign.center,
+                                            ),
+                                            if (columnSortStates[
+                                                    'customerId'] !=
+                                                null) ...[
+                                              Icon(
+                                                columnSortStates[
+                                                            'customerId'] ==
+                                                        1
+                                                    ? Icons
+                                                        .arrow_drop_up_rounded
+                                                    : Icons
+                                                        .arrow_drop_down_rounded,
+                                                color: Colors.black,
+                                              ),
+                                              Text(
+                                                '${columnSortStates.keys.toList().indexOf('customerId') + 1}',
+                                                style: const TextStyle(
+                                                    fontSize: 10),
+                                              ),
+                                            ],
+                                          ],
+                                        ),
+                                      ),
+                                      onSort: (columnIndex, ascending) =>
+                                          {onSort('customerId')},
+                                    ),
+                                    DataColumn(
+                                      label: Expanded(
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            const Text(
+                                              'id',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Color.fromARGB(
+                                                      255, 94, 54, 54)),
+                                              textAlign: TextAlign.center,
+                                            ),
+                                            if (columnSortStates['id'] !=
+                                                null) ...[
+                                              Icon(
+                                                columnSortStates['id'] == 1
+                                                    ? Icons
+                                                        .arrow_drop_up_rounded
+                                                    : Icons
+                                                        .arrow_drop_down_rounded,
+                                                color: Colors.black,
+                                              ),
+                                              Text(
+                                                '${columnSortStates.keys.toList().indexOf('id') + 1}',
+                                                style: const TextStyle(
+                                                    fontSize: 10),
+                                              ),
+                                            ],
+                                          ],
+                                        ),
+                                      ),
+                                      onSort: (columnIndex, ascending) =>
+                                          {onSort('id')},
+                                    ),
+                                    DataColumn(
+                                      label: Expanded(
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            const Text(
+                                              'name',
                                               style: TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   color: Color.fromARGB(
@@ -614,19 +726,17 @@ class FlightPlanListView extends ConsumerWidget {
                                               MainAxisAlignment.center,
                                           children: [
                                             const Text(
-                                              'Drone',
+                                              'price',
                                               style: TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   color: Color.fromARGB(
                                                       255, 94, 54, 54)),
                                               textAlign: TextAlign.center,
                                             ),
-                                            if (columnSortStates['drone_id'] !=
+                                            if (columnSortStates['price'] !=
                                                 null) ...[
                                               Icon(
-                                                columnSortStates[
-                                                            'drone_id'] ==
-                                                        1
+                                                columnSortStates['price'] == 1
                                                     ? Icons
                                                         .arrow_drop_up_rounded
                                                     : Icons
@@ -634,7 +744,7 @@ class FlightPlanListView extends ConsumerWidget {
                                                 color: Colors.black,
                                               ),
                                               Text(
-                                                '${columnSortStates.keys.toList().indexOf('drone_id') + 1}',
+                                                '${columnSortStates.keys.toList().indexOf('price') + 1}',
                                                 style: const TextStyle(
                                                     fontSize: 10),
                                               ),
@@ -643,7 +753,7 @@ class FlightPlanListView extends ConsumerWidget {
                                         ),
                                       ),
                                       onSort: (columnIndex, ascending) =>
-                                          {onSort('drone_id')},
+                                          {onSort('price')},
                                     ),
                                     DataColumn(
                                       label: Expanded(
@@ -652,17 +762,17 @@ class FlightPlanListView extends ConsumerWidget {
                                               MainAxisAlignment.center,
                                           children: [
                                             const Text(
-                                              'User',
+                                              'size',
                                               style: TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   color: Color.fromARGB(
                                                       255, 94, 54, 54)),
                                               textAlign: TextAlign.center,
                                             ),
-                                            if (columnSortStates['user_id'] !=
+                                            if (columnSortStates['size'] !=
                                                 null) ...[
                                               Icon(
-                                                columnSortStates['user_id'] == 1
+                                                columnSortStates['size'] == 1
                                                     ? Icons
                                                         .arrow_drop_up_rounded
                                                     : Icons
@@ -670,7 +780,7 @@ class FlightPlanListView extends ConsumerWidget {
                                                 color: Colors.black,
                                               ),
                                               Text(
-                                                '${columnSortStates.keys.toList().indexOf('user_id') + 1}',
+                                                '${columnSortStates.keys.toList().indexOf('size') + 1}',
                                                 style: const TextStyle(
                                                     fontSize: 10),
                                               ),
@@ -679,150 +789,35 @@ class FlightPlanListView extends ConsumerWidget {
                                         ),
                                       ),
                                       onSort: (columnIndex, ascending) =>
-                                          {onSort('user_id')},
-                                    ),
-                                    DataColumn(
-                                      label: Expanded(
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            const Text(
-                                              'Departure time',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Color.fromARGB(
-                                                      255, 94, 54, 54)),
-                                              textAlign: TextAlign.center,
-                                            ),
-                                            if (columnSortStates[
-                                                    'start_time'] !=
-                                                null) ...[
-                                              Icon(
-                                                columnSortStates[
-                                                            'start_time'] ==
-                                                        1
-                                                    ? Icons
-                                                        .arrow_drop_up_rounded
-                                                    : Icons
-                                                        .arrow_drop_down_rounded,
-                                                color: Colors.black,
-                                              ),
-                                              Text(
-                                                '${columnSortStates.keys.toList().indexOf('start_time') + 1}',
-                                                style: const TextStyle(
-                                                    fontSize: 10),
-                                              ),
-                                            ],
-                                          ],
-                                        ),
-                                      ),
-                                      onSort: (columnIndex, ascending) =>
-                                          {onSort('start_time')},
-                                    ),
-                                    DataColumn(
-                                      label: Expanded(
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            const Text(
-                                              'Arrival time',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Color.fromARGB(
-                                                      255, 94, 54, 54)),
-                                              textAlign: TextAlign.center,
-                                            ),
-                                            if (columnSortStates['end_time'] !=
-                                                null) ...[
-                                              Icon(
-                                                columnSortStates[
-                                                            'end_time'] ==
-                                                        1
-                                                    ? Icons
-                                                        .arrow_drop_up_rounded
-                                                    : Icons
-                                                        .arrow_drop_down_rounded,
-                                                color: Colors.black,
-                                              ),
-                                              Text(
-                                                '${columnSortStates.keys.toList().indexOf('end_time') + 1}',
-                                                style: const TextStyle(
-                                                    fontSize: 10),
-                                              ),
-                                            ],
-                                          ],
-                                        ),
-                                      ),
-                                      onSort: (columnIndex, ascending) =>
-                                          {onSort('end_time')},
-                                    ),
-                                    DataColumn(
-                                      label: Expanded(
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            const Text(
-                                              'Route',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Color.fromARGB(
-                                                      255, 94, 54, 54)),
-                                              textAlign: TextAlign.center,
-                                            ),
-                                            if (columnSortStates['route'] !=
-                                                null) ...[
-                                              Icon(
-                                                columnSortStates['route'] == 1
-                                                    ? Icons
-                                                        .arrow_drop_up_rounded
-                                                    : Icons
-                                                        .arrow_drop_down_rounded,
-                                                color: Colors.black,
-                                              ),
-                                              Text(
-                                                '${columnSortStates.keys.toList().indexOf('route') + 1}',
-                                                style: const TextStyle(
-                                                    fontSize: 10),
-                                              ),
-                                            ],
-                                          ],
-                                        ),
-                                      ),
-                                      onSort: (columnIndex, ascending) =>
-                                          {onSort('route')},
+                                          {onSort('size')},
                                     ),
                                   ],
-                                  rows: flightplans.map((flightplan) {
+                                  rows: shoes.map((shoe) {
                                     return DataRow(
                                       cells: [
                                         DataCell(Center(
-                                            child: Text(
-                                                flightplan.name.toString()))),
-                                        DataCell(Center(
-                                            child: Text(flightplan.drone_id
-                                                .toString()))),
-                                        DataCell(Center(
-                                            child: Text(flightplan.user_id
-                                                .toString()))),
-                                        DataCell(Center(
-                                            child: Text(flightplan.start_time
-                                                .toString()))),
-                                        DataCell(Center(
-                                            child: Text(flightplan.end_time
-                                                .toString()))),
+                                            child:
+                                                Text(shoe.brand.toString()))),
                                         DataCell(Center(
                                             child: Text(
-                                                flightplan.route.toString()))),
+                                                shoe.customerId.toString()))),
+                                        DataCell(Center(
+                                            child: Text(shoe.id.toString()))),
+                                        DataCell(Center(
+                                            child: Text(shoe.name.toString()))),
+                                        DataCell(Center(
+                                            child:
+                                                Text(shoe.price.toString()))),
+                                        DataCell(Center(
+                                            child: Text(shoe.size.toString()))),
                                       ],
                                       onSelectChanged: (selected) {
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                              builder: (context) =>
-                                                  FlightPlanWidget(flightplan)),
+                                              builder: (context) => ShoeWidget(
+                                                  element: shoe,
+                                                  isEditing: true)),
                                         );
                                       },
                                     );
@@ -849,36 +844,35 @@ class FlightPlanListView extends ConsumerWidget {
   }
 
   void _onPageButtonPressed(int pageNumber, WidgetRef ref,
-      FlightPlanPaginationState paginationState, int maxPages) {
+      ShoePaginationState paginationState, int maxPages) {
     if (pageNumber <= maxPages) {
-      ref.read(flightplanPaginationProvider.notifier).setPage(pageNumber);
+      ref.read(shoePaginationProvider.notifier).setPage(pageNumber);
     }
   }
 }
 
-class FlightPlanPaginationState {
+class ShoePaginationState {
   final Tuple2<int, int> pagination;
   final Map<String, int> orders;
   final Map<String, dynamic> filters;
 
-  FlightPlanPaginationState({
+  ShoePaginationState({
     required this.pagination,
     required this.orders,
     required this.filters,
   });
 }
 
-class FlightPlanPaginationNotifier
-    extends StateNotifier<FlightPlanPaginationState> {
-  FlightPlanPaginationNotifier()
-      : super(FlightPlanPaginationState(
+class ShoePaginationNotifier extends StateNotifier<ShoePaginationState> {
+  ShoePaginationNotifier()
+      : super(ShoePaginationState(
           pagination: const Tuple2<int, int>(0, 10),
           orders: {},
           filters: {},
         ));
 
   void setPage(int page) {
-    state = FlightPlanPaginationState(
+    state = ShoePaginationState(
       pagination: Tuple2(page * state.pagination.item2 - state.pagination.item2,
           state.pagination.item2),
       orders: state.orders,
@@ -887,7 +881,7 @@ class FlightPlanPaginationNotifier
   }
 
   void setOrders(Map<String, int> newOrders) {
-    state = FlightPlanPaginationState(
+    state = ShoePaginationState(
       pagination: Tuple2(state.pagination.item1, state.pagination.item2),
       orders: newOrders,
       filters: state.filters,
@@ -895,7 +889,7 @@ class FlightPlanPaginationNotifier
   }
 
   void setFilters(Map<String, dynamic> newFilters) {
-    state = FlightPlanPaginationState(
+    state = ShoePaginationState(
       pagination: Tuple2(state.pagination.item1, state.pagination.item2),
       orders: state.orders,
       filters: newFilters,
@@ -911,71 +905,70 @@ class FlightPlanPaginationNotifier
   }
 }
 
-final flightplanPaginationProvider = StateNotifierProvider<
-    FlightPlanPaginationNotifier, FlightPlanPaginationState>(
-  (ref) => FlightPlanPaginationNotifier(),
+final shoePaginationProvider =
+    StateNotifierProvider<ShoePaginationNotifier, ShoePaginationState>(
+  (ref) => ShoePaginationNotifier(),
 );
 
 // **************************************************************************
 // RiverpodCustomGenerator
 // **************************************************************************
 
-final getFlightPlanProvider = FutureProvider.autoDispose
-    .family<FlightPlan, String>((ref, flightplanId) async {
-  final json = await http.get(Uri.parse('$baseURL/flightplans/$flightplanId'));
+final getShoeProvider =
+    FutureProvider.autoDispose.family<Shoe, String>((ref, shoeId) async {
+  final json = await http.get(Uri.parse('$baseURL/shoe/$shoeId'));
   final jsonData = jsonDecode(json.body);
-  return FlightPlan.fromJson(jsonData);
+  return Shoe.fromJson(jsonData);
 });
 
-final createFlightPlanProvider = FutureProvider.autoDispose
-    .family<void, FlightPlan>((ref, flightplanInstance) async {
+final createShoeProvider =
+    FutureProvider.autoDispose.family<void, Shoe>((ref, shoeInstance) async {
   final response = await http.post(
-    Uri.parse('$baseURL/flightplans'),
+    Uri.parse('$baseURL/shoe'),
     headers: {'Content-Type': 'application/json'},
-    body: jsonEncode(flightplanInstance.toJson()),
+    body: jsonEncode(shoeInstance.toJson()),
   );
   if (response.statusCode != 201) {
-    throw Exception('Failed to create FlightPlan');
+    throw Exception('Failed to create Shoe');
   }
 });
 
-final updateFlightPlanProvider = FutureProvider.autoDispose
-    .family<void, FlightPlan>((ref, flightplanInstance) async {
+final updateShoeProvider =
+    FutureProvider.autoDispose.family<void, Shoe>((ref, shoeInstance) async {
   final response = await http.put(
-    Uri.parse('$baseURL/flightplans/${flightplanInstance.id}'),
+    Uri.parse('$baseURL/shoe/${shoeInstance.id}'),
     headers: {'Content-Type': 'application/json'},
-    body: jsonEncode(flightplanInstance.toJson()),
+    body: jsonEncode(shoeInstance.toJson()),
   );
   if (response.statusCode != 200) {
-    throw Exception('Failed to update FlightPlan');
+    throw Exception('Failed to update Shoe');
   }
 });
 
-final deleteFlightPlanProvider =
-    FutureProvider.autoDispose.family<void, int>((ref, flightplanId) async {
+final deleteShoeProvider =
+    FutureProvider.autoDispose.family<void, int>((ref, shoeId) async {
   final response = await http.delete(
-    Uri.parse('$baseURL/flightplans/$flightplanId'),
+    Uri.parse('$baseURL/shoe/$shoeId'),
   );
   if (response.statusCode != 204) {
-    throw Exception('Failed to delete FlightPlan');
+    throw Exception('Failed to delete Shoe');
   }
 });
 
-class FlightPlanPaginationData {
-  final List<FlightPlan> items;
+class ShoePaginationData {
+  final List<Shoe> items;
   final int currentPage;
   final int maxPages;
 
-  FlightPlanPaginationData({
+  ShoePaginationData({
     required this.items,
     required this.currentPage,
     required this.maxPages,
   });
 }
 
-final getAllFlightPlanProvider = FutureProvider.autoDispose
-    .family<FlightPlanPaginationData, FlightPlanPaginationState>(
-        (ref, state) async {
+final getAllShoeProvider = FutureProvider.autoDispose
+    .family<ShoePaginationData, ShoePaginationState>((ref, state) async {
   final fixedQuery = {
     if (state.orders.isNotEmpty) 'orders': state.orders,
     if (state.filters.isNotEmpty)
@@ -985,15 +978,14 @@ final getAllFlightPlanProvider = FutureProvider.autoDispose
 
   final json = await http.post(
       Uri.parse(
-          '$baseURL/flightplans/all?skip=${state.pagination.item1}&limit=${state.pagination.item2}'),
+          '$baseURL/shoes?skip=${state.pagination.item1}&limit=${state.pagination.item2}'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode(fixedQuery));
   final jsonData = jsonDecode(json.body);
 
-  return FlightPlanPaginationData(
-    items: (jsonData['items'] as List)
-        .map((data) => FlightPlan.fromJson(data))
-        .toList(),
+  return ShoePaginationData(
+    items:
+        (jsonData['items'] as List).map((data) => Shoe.fromJson(data)).toList(),
     currentPage: jsonData['current_page'],
     maxPages: jsonData['max_pages'],
   );

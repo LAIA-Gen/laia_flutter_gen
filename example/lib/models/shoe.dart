@@ -10,26 +10,40 @@ import 'package:http/http.dart' as http;
 import 'package:example/config/styles.dart';
 import 'dart:convert';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:example/models/customer.dart';
 
-part 'user.g.dart';
+part 'shoe.g.dart';
 
 @JsonSerializable()
 @RiverpodGenAnnotation(baseURL)
 @HomeWidgetElementGenAnnotation()
-@ListWidgetGenAnnotation(defaultFields: ['name', 'email'])
+@ListWidgetGenAnnotation()
 @elementWidgetGen
 @CopyWith()
-class User {
-  @Field(editable: false, fieldName: 'Id')
+class Shoe {
+  @Field(fieldName: 'brand')
+  final String brand;
+  @Field(relation: 'Customer')
+  final String customerId;
+  @Field(fieldName: 'id')
   final String id;
-  @Field(fieldName: 'Name')
+  @Field(fieldName: 'name')
   final String name;
-  @Field(fieldName: 'Email')
-  final String email;
+  @Field(fieldName: 'price')
+  final double price;
+  @Field(fieldName: 'size')
+  final double size;
 
-  User({required this.id, required this.name, required this.email});
+  Shoe({
+    required this.brand,
+    required this.customerId,
+    required this.id,
+    required this.name,
+    required this.price,
+    required this.size
+  });
 
-  factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
+  factory Shoe.fromJson(Map<String, dynamic> json) => _$ShoeFromJson(json);
 
-  Map<String, dynamic> toJson() => _$UserToJson(this);
+  Map<String, dynamic> toJson() => _$ShoeToJson(this);
 }

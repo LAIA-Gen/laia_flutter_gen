@@ -6,28 +6,39 @@ part of 'home.dart';
 // HomeWidgetGenerator
 // **************************************************************************
 
-Widget dashboardWidget() {
-  int crossAxisCount = _isMobile() ? 3 : 5;
+Widget dashboardWidget(BuildContext context) {
+  int crossAxisCount = _isMobile(MediaQuery.of(context)) ? 3 : 5;
 
-  return GridView.count(
-    primary: false,
-    physics: const ScrollPhysics(),
-    padding: const EdgeInsets.all(20),
-    crossAxisSpacing: 10,
-    mainAxisSpacing: 10,
-    crossAxisCount: crossAxisCount,
-    shrinkWrap: true,
-    children: const [
-      WaypointHomeWidget(),
-      UserHomeWidget(),
-      DroneHomeWidget(),
-      FlightPlanHomeWidget(),
-      FlightPlanRouteHomeWidget(),
+  return CustomScrollView(
+    slivers: [
+      SliverPadding(
+        padding: const EdgeInsets.all(20),
+        sliver: SliverGrid(
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: crossAxisCount,
+            crossAxisSpacing: 10,
+            mainAxisSpacing: 10,
+          ),
+          delegate: SliverChildBuilderDelegate(
+            (BuildContext context, int index) {
+              return _dashboardWidgets[index];
+            },
+            childCount: _dashboardWidgets.length,
+          ),
+        ),
+      ),
     ],
   );
 }
 
-bool _isMobile() {
+bool _isMobile(MediaQueryData mediaQuery) {
+  final Size screenSize = mediaQuery.size;
   return (defaultTargetPlatform == TargetPlatform.iOS ||
-      defaultTargetPlatform == TargetPlatform.android);
+          defaultTargetPlatform == TargetPlatform.android) ||
+      screenSize.width < screenSize.height;
 }
+
+List<Widget> _dashboardWidgets = [
+  CustomerHomeWidget(),
+  ShoeHomeWidget(),
+];

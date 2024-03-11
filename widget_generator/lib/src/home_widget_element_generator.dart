@@ -39,7 +39,10 @@ class HomeWidgetElementGenerator extends GeneratorForAnnotation<HomeWidgetElemen
       child: Container(
         width: 100.0,
         height: 100.0,
-        color: Styles.primaryColor,
+        decoration: BoxDecoration(
+          color: Styles.dashboardBlock,
+          borderRadius: BorderRadius.circular(20.0),
+        ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

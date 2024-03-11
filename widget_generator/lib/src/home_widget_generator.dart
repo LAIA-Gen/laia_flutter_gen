@@ -24,31 +24,46 @@ class HomeWidgetGenerator extends GeneratorForAnnotation<HomeWidgetGenAnnotation
 
     List<String> lines = file.readAsLinesSync();
 
-    buffer.writeln("Widget dashboardWidget() {");
+    buffer.writeln("Widget dashboardWidget(BuildContext context) {");
     buffer.writeln('''
-          int crossAxisCount = _isMobile() ? 3 : 5;
+          int crossAxisCount = _isMobile(MediaQuery.of(context)) ? 3 : 5;
+  
+  return CustomScrollView(
+    slivers: [
+      SliverPadding(
+        padding: const EdgeInsets.all(20),
+        sliver: SliverGrid(
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: crossAxisCount,
+            crossAxisSpacing: 10,
+            mainAxisSpacing: 10,
+          ),
+          delegate: SliverChildBuilderDelegate(
+            (BuildContext context, int index) {
+              return _dashboardWidgets[index];
+            },
+            childCount: _dashboardWidgets.length,
+          ),
+        ),
+      ),
+    ],
+  );
+}
 
-  return GridView.count(
-      primary: false,
-      physics: const ScrollPhysics(),
-      padding: const EdgeInsets.all(20),
-      crossAxisSpacing: 10,
-      mainAxisSpacing: 10,
-      crossAxisCount: crossAxisCount,
-      shrinkWrap: true,
-      children: const [''');
+bool _isMobile(MediaQueryData mediaQuery) {
+  final Size screenSize = mediaQuery.size;
+  return (defaultTargetPlatform == TargetPlatform.iOS ||
+      defaultTargetPlatform == TargetPlatform.android) ||
+      screenSize.width < screenSize.height;
+}
+
+List<Widget> _dashboardWidgets = [''');
     for (String line in lines) {
       String widgetName = line.trim();
       buffer.writeln('$widgetName(),');
     }
     buffer.writeln('''
-              ],
-    );
-}
-
-bool _isMobile() {
-  return (defaultTargetPlatform == TargetPlatform.iOS || defaultTargetPlatform == TargetPlatform.android);
-}
+];
         ''');
 
     return buffer.toString();
