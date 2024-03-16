@@ -1,8 +1,7 @@
-name: widget_generator
-description: A new Flutter package project.
+name: laia_annotations
+description: It is the annotations package required for the laia code generation packages to work.
 version: 0.0.1
 homepage:
-publish_to: none
 
 environment:
   sdk: '>=3.1.3 <4.0.0'
@@ -11,15 +10,10 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  build:
-  source_gen:
-  annotations:
-    path: ../annotations/
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^2.0.0
-  build_runner: ^2.4.6
 
 flutter:

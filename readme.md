@@ -3,8 +3,8 @@
 This repository contains the necessary packages for Flutter code generation:
 
 **Dev Dependencies:**
-- `riverpod_custom_generator`
-- `widget_generator`
+- `laia_riverpod_custom_generator`
+- `laia_widget_generator`
 
 **Dependencies:**
-- `annotations`
+- `laia_annotations`

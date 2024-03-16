@@ -1,4 +1,4 @@
-import 'package:annotations/annotations.dart';
+import 'package:laia_annotations/laia_annotations.dart';
 import 'package:example/models/customer.dart';
 import 'package:example/models/shoe.dart';
 import 'package:flutter/foundation.dart';

@@ -25,13 +25,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.11.2"
-  annotations:
-    dependency: "direct main"
-    description:
-      path: "../annotations"
-      relative: true
-    source: path
-    version: "0.0.1"
   args:
     dependency: transitive
     description:
@@ -495,6 +488,27 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.7.1"
+  laia_annotations:
+    dependency: "direct main"
+    description:
+      path: "../laia_annotations"
+      relative: true
+    source: path
+    version: "0.0.1"
+  laia_riverpod_custom_generator:
+    dependency: "direct dev"
+    description:
+      path: "../laia_riverpod_custom_generator"
+      relative: true
+    source: path
+    version: "0.0.1"
+  laia_widget_generator:
+    dependency: "direct dev"
+    description:
+      path: "../laia_widget_generator"
+      relative: true
+    source: path
+    version: "0.0.1"
   latlong2:
     dependency: "direct main"
     description:
@@ -663,13 +677,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.3.4"
-  riverpod_custom_generator:
-    dependency: "direct dev"
-    description:
-      path: "../riverpod_custom_generator"
-      relative: true
-    source: path
-    version: "0.0.1"
   riverpod_lint:
     dependency: "direct dev"
     description:
@@ -875,13 +882,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.4.0"
-  widget_generator:
-    dependency: "direct dev"
-    description:
-      path: "../widget_generator"
-      relative: true
-    source: path
-    version: "0.0.1"
   wkt_parser:
     dependency: transitive
     description:

@@ -1,4 +1,4 @@
-library annotations;
+library laia_annotations;
 
 export 'src/riverpod_generator.dart';
 export 'src/element_widget_generator.dart';

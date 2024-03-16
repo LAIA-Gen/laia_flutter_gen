@@ -1,13 +1,13 @@
 targets:
   $default:
     builders:
-      widget_generator|annotations:
+      laia_widget_generator|laia_annotations:
         enabled: true
 
 builders:
-  widget_generator:
-    target: ":widget_generator"
-    import: "package:widget_generator/widget_generator.dart"
+  laia_widget_generator:
+    target: ":laia_widget_generator"
+    import: "package:laia_widget_generator/laia_widget_generator.dart"
     builder_factories: ["generateHomeWidgetElement", "generateElementWidget", "generateGenericWidgets", "generateHomeWidget", "generateListWidget"]
     build_extensions: { ".dart": [".g.part"] }
     auto_apply: dependents

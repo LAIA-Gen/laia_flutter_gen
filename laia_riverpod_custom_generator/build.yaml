@@ -1,13 +1,13 @@
 targets:
   $default:
     builders:
-      riverpod_custom_generator|annotations:
+      laia_riverpod_custom_generator|laia_annotations:
         enabled: true
 
 builders:
-  riverpod_custom_generator:
-    target: ":riverpod_custom_generator"
-    import: "package:riverpod_custom_generator/generators.dart"
+  laia_riverpod_custom_generator:
+    target: ":laia_riverpod_custom_generator"
+    import: "package:laia_riverpod_custom_generator/laia_riverpod_custom_generator.dart"
     builder_factories: ["generateRiverpod"]
     build_extensions: { ".dart": [".g.part"] }
     auto_apply: dependents
