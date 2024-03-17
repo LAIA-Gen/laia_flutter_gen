@@ -1,7 +1,7 @@
 name: laia_riverpod_custom_generator
 description: It is a code generation package that generates the riverpod providers for the curd operations given dart class model. 
 
-version: 0.0.1
+version: 0.0.2
 homepage:
 
 environment:
@@ -14,7 +14,7 @@ dependencies:
   build: ^2.4.1
   source_gen: ^1.5.0
   laia_annotations: ^0.0.1
-  analyzer: ^6.2.0
+  analyzer: ^5.13.0
 
 dev_dependencies:
   flutter_test:
