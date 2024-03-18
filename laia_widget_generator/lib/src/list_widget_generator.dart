@@ -29,12 +29,28 @@ class ListWidgetGenerator extends GeneratorForAnnotation<ListWidgetGenAnnotation
     var classNamePlural = '${classNameLowercase}s';
 
     buffer.writeln('''
-class ${className}ListView extends ConsumerWidget {
-  const ${className}ListView({super.key});
+class ${className}ListView extends ConsumerStatefulWidget {
+  final Map<String, dynamic> extraFilters;
+
+  const ${className}ListView({Key? key, this.extraFilters = const {}}) : super(key: key);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  _${className}ListViewState createState() => _${className}ListViewState();
+}
+
+class _${className}ListViewState extends ConsumerState<${className}ListView> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(${classNameLowercase}PaginationProvider.notifier).setFilters(widget.extraFilters);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final paginationState = ref.watch(${classNameLowercase}PaginationProvider);
+
     final ${classNamePlural}AsyncValue =
         ref.watch(getAll${className}Provider(paginationState));
 
@@ -63,6 +79,19 @@ class ${className}ListView extends ConsumerWidget {
       if (fieldsFilterStates.containsKey(fieldName)) {
           fieldsFilterStates.remove(fieldName);
       }
+    }
+
+    Future<List<$className>> fetch${className}List(List<String>? ids) async {
+      if (ids == null || ids.isEmpty) {
+        return [];
+      }
+      final nonEmptyIds = ids.where((id) => id.isNotEmpty).toList();
+      List<$className> ${classNameLowercase}List = await Future.wait(
+        nonEmptyIds.map((id) async {
+          return await ref.read(get${className}Provider(id).future);
+        }),
+      );
+      return ${classNameLowercase}List;
     }
 
     return Scaffold(
@@ -175,9 +204,90 @@ class ${className}ListView extends ConsumerWidget {
 ''');
 
     for (var field in defaultFields.isEmpty ? visitor.fields.keys : defaultFields) {
-      buffer.writeln('''
-        DataCell(Center(child: Text($classNameLowercase.$field.toString()))),
-      ''');
+      var fieldType = visitor.fields[field].type.toString();
+      String relation = '';
+      relation = _fieldChecker
+              .firstAnnotationOfExact(visitor.fields[field])
+              ?.getField('relation')
+              ?.toStringValue() ?? relation;
+      if (relation != '') {
+        if (fieldType == 'String' || fieldType == 'String?') {
+            
+          }
+          else {
+            buffer.writeln('''
+DataCell(Center(
+  child: FutureBuilder<List<$className>>(
+    future: fetch${className}List(pets.ownerids),
+    builder: (context, snapshot) {
+      if (snapshot.connectionState ==
+              ConnectionState.waiting ||
+          snapshot.data == null) {
+        return const CircularProgressIndicator();
+      } else {
+        return Wrap(
+          spacing: 4,
+          children: snapshot.data!.map(($classNameLowercase) {
+            return ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ${className}Widget(
+                      element: $classNameLowercase,
+                      isEditing: true,
+                    ),
+                  ),
+                );
+              },
+              style: ButtonStyle(
+                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                ),
+                padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+                  EdgeInsets.symmetric(horizontal: 1, vertical: 1),
+                ),
+                backgroundColor: MaterialStateProperty.all<Color>(
+                    Styles.buttonPrimaryColor),
+                elevation:
+                    MaterialStateProperty.resolveWith<double>((states) {
+                  if (states.contains(MaterialState.hovered) ||
+                      states.contains(MaterialState.pressed)) {
+                    return 0;
+                  }
+                  return 0;
+                }),
+                foregroundColor:
+                    MaterialStateProperty.all<Color>(Colors.white),
+                overlayColor:
+                    MaterialStateProperty.resolveWith<Color>((states) {
+                  if (states.contains(MaterialState.hovered)) {
+                    return Styles.buttonPrimaryColorHover;
+                  }
+                  return Colors.transparent;
+                }),
+              ),
+              child: Text(
+                $classNameLowercase.name,
+                style: TextStyle(color: Colors.white),
+              ),
+            );
+          }).toList(),
+        );
+      }
+    },
+  ),
+),
+),
+''');
+          }
+      } else {
+        buffer.writeln('''
+          DataCell(Center(child: Text($classNameLowercase.$field.toString()))),
+        ''');
+      }
     }
 
     buffer.writeln('''

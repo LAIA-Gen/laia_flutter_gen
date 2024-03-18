@@ -80,7 +80,12 @@ class _${visitor.className}WidgetState extends State<${visitor.className}Widget>
               ?.getField('relation')
               ?.toStringValue() ?? relation;
         if (relation != '') {
-          widget = '${relation}FieldWidget';
+          if (fieldType == 'String' || fieldType == 'String?') {
+            widget = '${relation}FieldWidget';
+          }
+          else {
+            widget = '${relation}MultiFieldWidget';
+          }
         }
       }
 
@@ -182,8 +187,16 @@ class _${visitor.className}WidgetState extends State<${visitor.className}Widget>
         widget = widgetValue;
       }
 
+      var multiRelation = false;
+
       if (relation != '') {
-        widget = '${relation}FieldWidget';
+        if (fieldType == 'String' || fieldType == 'String?') {
+          widget = '${relation}FieldWidget';
+        }
+        else {
+          widget = '${relation}MultiFieldWidget';
+          multiRelation = true;
+        }
       }
 
       buffer.writeln('''
@@ -192,10 +205,19 @@ class _${visitor.className}WidgetState extends State<${visitor.className}Widget>
             fieldName: "$fieldDisplayName",
             fieldDescription: "$fieldDescription",
             editable: $editable,
-            ${widget == 'BoolWidget' ? "" : "placeholder: \"$placeholder\","}
+            ${widget == 'BoolWidget' ? "" : "placeholder: \"$placeholder\","}''');
+
+      if (multiRelation) {
+        buffer.writeln('''
+            values: $fieldAccessor,
+          ),
+      ''');
+      } else {
+        buffer.writeln('''
             value: $fieldAccessor,
           ),
       ''');
+      }
     }
     buffer.writeln('],');
     buffer.writeln('),');
@@ -225,6 +247,12 @@ class _${visitor.className}WidgetState extends State<${visitor.className}Widget>
             case 'String?':
               buffer.writeln('''
           String? updated$fieldName = ${fieldName}WidgetKey.currentState?.getUpdatedValue();
+''');         updatedFields.add('$fieldName: updated$fieldName');
+              break;
+            case 'List<String>':
+            case 'List<String>?':
+              buffer.writeln('''
+          List<String>? updated$fieldName = ${fieldName}WidgetKey.currentState?.getUpdatedValue();
 ''');         updatedFields.add('$fieldName: updated$fieldName');
               break;
             case 'DateTime':
@@ -285,7 +313,7 @@ class _${visitor.className}WidgetState extends State<${visitor.className}Widget>
           break;
         case 'List<String>':
         case 'List<String>?':
-          buffer.writeln('''$fieldName: [''],''');
+          buffer.writeln('''$fieldName: updated$fieldName ?? [''],''');
           break;
       }
     }
@@ -462,6 +490,204 @@ class ${visitor.className}FieldWidgetState extends State<${visitor.className}Fie
               }
             },
             child: const Text('View ${visitor.className}'),
+          ),
+        ),
+      ],
+    );
+  }
+}
+''');
+
+  buffer.writeln('''
+class ${visitor.className}MultiFieldWidget extends StatefulWidget {
+  final String fieldName;
+  final String fieldDescription;
+  final bool editable;
+  final String placeholder;
+  final List<String>? values;
+
+  const ${visitor.className}MultiFieldWidget({
+    Key? key,
+    required this.fieldName,
+    required this.fieldDescription,
+    required this.editable,
+    required this.placeholder,
+    required this.values,
+  }) : super(key: key);
+
+  @override
+  ${visitor.className}MultiFieldWidgetState createState() => ${visitor.className}MultiFieldWidgetState();
+}
+
+class ${visitor.className}MultiFieldWidgetState extends State<${visitor.className}MultiFieldWidget> {
+  final TextEditingController _typeAheadController = TextEditingController();
+  bool isValueChanged = false;
+  late List<String> initialValues = [];
+  late List<String> currentValues = [];
+  late List<${visitor.className}> options = [];
+
+  @override
+  void initState() {
+    super.initState();
+    initializeValues();
+  }
+
+  Future<void> initializeValues() async {
+    super.initState();
+    initialValues = widget.values ?? [];
+    currentValues = initialValues;
+    if (widget.values != null) {
+      List<${visitor.className}> ${visitor.className.toLowerCase()}List = await Future.wait(
+        (widget.values ?? []).where((value) => value != '').map((value) async {
+          return await container.read(get${visitor.className}Provider(value).future);
+        }),
+      );
+      String concatenatedText = '\${${visitor.className.toLowerCase()}List.map((${visitor.className.toLowerCase()}) {
+          return '\${${visitor.className.toLowerCase()}.name} <id: \${${visitor.className.toLowerCase()}.id}>';
+        }).join(', ')}, ';
+        _typeAheadController.text = concatenatedText;
+    } else {
+      _typeAheadController.text = '';
+    }
+  }
+
+  List<String>? getUpdatedValue() {
+    return isValueChanged ? currentValues : initialValues;
+  }
+
+  var container = ProviderContainer();
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+          margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10.0),
+              color: Styles.secondaryColor),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "\${widget.fieldName}:",
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(width: 8.0),
+                  Text(
+                    widget.fieldDescription,
+                    style: const TextStyle(color: Colors.grey),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8.0),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  widget.editable
+                      ? Expanded(
+                          child: TypeAheadField<${visitor.className}>(
+                            controller: _typeAheadController,
+                            suggestionsCallback: (String pattern) async {
+                              final idRegex = RegExp(r'<id:\s*([a-fA-F0-9]+)\s*>');
+                              final matches = idRegex.allMatches(pattern);
+                              final ids = <String>[];
+                              
+                              for (final match in matches) {
+                                ids.add(match.group(1)!);
+                              }
+                              currentValues = ids;
+                              Function eq = const ListEquality().equals;
+                              bool previusValue = isValueChanged;
+                              isValueChanged = !eq(currentValues, initialValues.where((value) => value.isNotEmpty).toList());
+                              if (previusValue != isValueChanged) {
+                                setState(() {
+                                  _typeAheadController.text = _typeAheadController.text;
+                                });
+                              }
+                              final inputParts = pattern.split(',').last.trim();
+                              container.read(${visitor.className.toLowerCase()}PaginationProvider.notifier).setFilters({'id': {'\$nin': currentValues}});
+                              final ${visitor.className.toLowerCase()}PaginationData = await container
+                                .read(getAll${visitor.className}Provider(container.read(${visitor.className.toLowerCase()}PaginationProvider)).future);
+                              final options = ${visitor.className.toLowerCase()}PaginationData.items;
+                              return options
+                              .where((${visitor.className.toLowerCase()}) =>
+                                  ${visitor.className.toLowerCase()}.name.toLowerCase().contains(inputParts.toLowerCase()) ||
+                                  ${visitor.className.toLowerCase()}.id.toString().toLowerCase().contains(inputParts.toLowerCase()))
+                              .toList();
+                            },
+                            itemBuilder: (context, ${visitor.className.toLowerCase()}) {
+                              return ListTile(
+                                title: Text('\${${visitor.className.toLowerCase()}.name} <id: \${${visitor.className.toLowerCase()}.id}>'),
+                              );
+                            },
+                            onSelected: (${visitor.className} value) async {
+                              isValueChanged = !initialValues.contains(value.id);
+                              currentValues.add(value.id!);
+                              
+                              List<${visitor.className}> ${visitor.className.toLowerCase()}List = await Future.wait(
+                              (currentValues).where((value) => value != '').map((value) async {
+                                return await container.read(get${visitor.className}Provider(value).future);
+                              }));
+                              String concatenatedText = '\${${visitor.className.toLowerCase()}List.map((${visitor.className.toLowerCase()}) {
+                                return '\${${visitor.className.toLowerCase()}.name} <id: \${${visitor.className.toLowerCase()}.id}>';
+                              }).join(', ')}, ';
+
+                              setState(() {
+                                _typeAheadController.text = concatenatedText;
+                              });
+                              setState(() {
+                                isValueChanged = value.id != initialValue;
+                                currentValue = value.id!;
+                                _typeAheadController.text = '\${value.name} <id: \${value.id}>';
+                              });
+                            },
+                          ),
+                        )
+                      : Text(widget.values.toString()),
+                ],
+              ),
+            ],
+          ),
+        ),
+        if (isValueChanged)
+          Positioned(
+            top: 0,
+            left: 0,
+            child: Container(
+              width: 20,
+              height: 20,
+              decoration: const BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.orange,
+              ),
+            ),
+          ),
+        Positioned(
+          top: 0,
+          right: 0,
+          child: ElevatedButton(
+            onPressed: () async {
+              try {
+                final query = {
+                  'id': {'\$in': currentValues.where((value) => value.isNotEmpty).toList()}
+                };
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        ${visitor.className}ListView(extraFilters: query),
+                  ),
+                );
+              } catch (error) {
+                print('Failed to fetch ${visitor.className.toLowerCase()}s: \$error');
+              }
+            },
+            child: const Text('View ${visitor.className}s'),
           ),
         ),
       ],
