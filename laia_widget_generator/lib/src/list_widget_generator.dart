@@ -79,22 +79,31 @@ class _${className}ListViewState extends ConsumerState<${className}ListView> {
       if (fieldsFilterStates.containsKey(fieldName)) {
           fieldsFilterStates.remove(fieldName);
       }
-    }
+    }''');
 
-    Future<List<$className>> fetch${className}List(List<String>? ids) async {
-      if (ids == null || ids.isEmpty) {
-        return [];
+    for (var field in classElement.fields) {
+      String relation = '';
+      relation = _fieldChecker
+              .firstAnnotationOfExact(field)
+              ?.getField('relation')
+              ?.toStringValue() ?? relation;
+      if (relation != '') {
+        buffer.writeln('''Future<List<$relation>> fetch${relation}List(List<String>? ids) async {
+          if (ids == null || ids.isEmpty) {
+            return [];
+          }
+          final nonEmptyIds = ids.where((id) => id.isNotEmpty).toList();
+          List<$relation> ${relation.toLowerCase()}List = await Future.wait(
+            nonEmptyIds.map((id) async {
+              return await ref.read(get${relation}Provider(id).future);
+            }),
+          );
+          return ${relation.toLowerCase()}List;
+        }''');
       }
-      final nonEmptyIds = ids.where((id) => id.isNotEmpty).toList();
-      List<$className> ${classNameLowercase}List = await Future.wait(
-        nonEmptyIds.map((id) async {
-          return await ref.read(get${className}Provider(id).future);
-        }),
-      );
-      return ${classNameLowercase}List;
     }
 
-    return Scaffold(
+    buffer.writeln('''return Scaffold(
       appBar: AppBar(
         title: const Text('$className List'),
         actions: [
@@ -204,21 +213,19 @@ class _${className}ListViewState extends ConsumerState<${className}ListView> {
 ''');
 
     for (var field in defaultFields.isEmpty ? visitor.fields.keys : defaultFields) {
-      var fieldType = visitor.fields[field].type.toString();
+      var field_info = classElement.fields.firstWhere((element) => element.name == field);
+      var fieldType = field_info.type;
       String relation = '';
       relation = _fieldChecker
-              .firstAnnotationOfExact(visitor.fields[field])
+              .firstAnnotationOfExact(field_info)
               ?.getField('relation')
               ?.toStringValue() ?? relation;
       if (relation != '') {
         if (fieldType == 'String' || fieldType == 'String?') {
-            
-          }
-          else {
             buffer.writeln('''
 DataCell(Center(
-  child: FutureBuilder<List<$className>>(
-    future: fetch${className}List(pets.ownerids),
+  child: FutureBuilder<List<$relation>>(
+    future: fetch${relation}List([$classNameLowercase.$field ?? '']),
     builder: (context, snapshot) {
       if (snapshot.connectionState ==
               ConnectionState.waiting ||
@@ -227,14 +234,14 @@ DataCell(Center(
       } else {
         return Wrap(
           spacing: 4,
-          children: snapshot.data!.map(($classNameLowercase) {
+          children: snapshot.data!.map((${relation.toLowerCase()}) {
             return ElevatedButton(
               onPressed: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => ${className}Widget(
-                      element: $classNameLowercase,
+                    builder: (context) => ${relation}Widget(
+                      element: ${relation.toLowerCase()},
                       isEditing: true,
                     ),
                   ),
@@ -270,7 +277,76 @@ DataCell(Center(
                 }),
               ),
               child: Text(
-                $classNameLowercase.name,
+                ${relation.toLowerCase()}.name,
+                style: TextStyle(color: Colors.white),
+              ),
+            );
+          }).toList(),
+        );
+      }
+    },
+  ),
+),
+),
+''');
+        }
+        else {
+            buffer.writeln('''
+DataCell(Center(
+  child: FutureBuilder<List<$relation>>(
+    future: fetch${relation}List($classNameLowercase.$field),
+    builder: (context, snapshot) {
+      if (snapshot.connectionState ==
+              ConnectionState.waiting ||
+          snapshot.data == null) {
+        return const CircularProgressIndicator();
+      } else {
+        return Wrap(
+          spacing: 4,
+          children: snapshot.data!.map((${relation.toLowerCase()}) {
+            return ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ${relation}Widget(
+                      element: ${relation.toLowerCase()},
+                      isEditing: true,
+                    ),
+                  ),
+                );
+              },
+              style: ButtonStyle(
+                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                ),
+                padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+                  EdgeInsets.symmetric(horizontal: 1, vertical: 1),
+                ),
+                backgroundColor: MaterialStateProperty.all<Color>(
+                    Styles.buttonPrimaryColor),
+                elevation:
+                    MaterialStateProperty.resolveWith<double>((states) {
+                  if (states.contains(MaterialState.hovered) ||
+                      states.contains(MaterialState.pressed)) {
+                    return 0;
+                  }
+                  return 0;
+                }),
+                foregroundColor:
+                    MaterialStateProperty.all<Color>(Colors.white),
+                overlayColor:
+                    MaterialStateProperty.resolveWith<Color>((states) {
+                  if (states.contains(MaterialState.hovered)) {
+                    return Styles.buttonPrimaryColorHover;
+                  }
+                  return Colors.transparent;
+                }),
+              ),
+              child: Text(
+                ${relation.toLowerCase()}.name,
                 style: TextStyle(color: Colors.white),
               ),
             );

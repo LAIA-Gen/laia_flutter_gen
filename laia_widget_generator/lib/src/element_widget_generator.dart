@@ -593,7 +593,7 @@ class ${visitor.className}MultiFieldWidgetState extends State<${visitor.classNam
                           child: TypeAheadField<${visitor.className}>(
                             controller: _typeAheadController,
                             suggestionsCallback: (String pattern) async {
-                              final idRegex = RegExp(r'<id:\s*([a-fA-F0-9]+)\s*>');
+                              final idRegex = RegExp(r'<id:\\\s*([a-fA-F0-9]+)\\\s*>');
                               final matches = idRegex.allMatches(pattern);
                               final ids = <String>[];
                               
@@ -610,7 +610,7 @@ class ${visitor.className}MultiFieldWidgetState extends State<${visitor.classNam
                                 });
                               }
                               final inputParts = pattern.split(',').last.trim();
-                              container.read(${visitor.className.toLowerCase()}PaginationProvider.notifier).setFilters({'id': {'\$nin': currentValues}});
+                              container.read(${visitor.className.toLowerCase()}PaginationProvider.notifier).setFilters({'id': {'\\\$nin': currentValues}});
                               final ${visitor.className.toLowerCase()}PaginationData = await container
                                 .read(getAll${visitor.className}Provider(container.read(${visitor.className.toLowerCase()}PaginationProvider)).future);
                               final options = ${visitor.className.toLowerCase()}PaginationData.items;
@@ -639,11 +639,6 @@ class ${visitor.className}MultiFieldWidgetState extends State<${visitor.classNam
 
                               setState(() {
                                 _typeAheadController.text = concatenatedText;
-                              });
-                              setState(() {
-                                isValueChanged = value.id != initialValue;
-                                currentValue = value.id!;
-                                _typeAheadController.text = '\${value.name} <id: \${value.id}>';
                               });
                             },
                           ),
@@ -674,7 +669,7 @@ class ${visitor.className}MultiFieldWidgetState extends State<${visitor.classNam
             onPressed: () async {
               try {
                 final query = {
-                  'id': {'\$in': currentValues.where((value) => value.isNotEmpty).toList()}
+                  'id': {'\\\$in': currentValues.where((value) => value.isNotEmpty).toList()}
                 };
                 Navigator.push(
                   context,
