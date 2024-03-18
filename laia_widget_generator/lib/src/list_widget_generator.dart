@@ -214,7 +214,7 @@ class _${className}ListViewState extends ConsumerState<${className}ListView> {
 
     for (var field in defaultFields.isEmpty ? visitor.fields.keys : defaultFields) {
       var field_info = classElement.fields.firstWhere((element) => element.name == field);
-      var fieldType = field_info.type;
+      var fieldType = field_info.type.toString();
       String relation = '';
       relation = _fieldChecker
               .firstAnnotationOfExact(field_info)
