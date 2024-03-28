@@ -1,170 +1,144 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'shoe.dart';
+part of 'drone.dart';
 
 // **************************************************************************
 // CopyWithGenerator
 // **************************************************************************
 
-abstract class _$ShoeCWProxy {
-  Shoe brand(String brand);
+abstract class _$DroneCWProxy {
+  Drone description(String? description);
 
-  Shoe customerId(String customerId);
+  Drone flightplan(LineString flightplan);
 
-  Shoe id(String id);
+  Drone id(String? id);
 
-  Shoe name(String name);
+  Drone name(String name);
 
-  Shoe price(double price);
-
-  Shoe size(double size);
-
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Shoe(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Drone(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
   /// Usage
   /// ```dart
-  /// Shoe(...).copyWith(id: 12, name: "My name")
+  /// Drone(...).copyWith(id: 12, name: "My name")
   /// ````
-  Shoe call({
-    String? brand,
-    String? customerId,
+  Drone call({
+    String? description,
+    LineString? flightplan,
     String? id,
     String? name,
-    double? price,
-    double? size,
   });
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfShoe.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfShoe.copyWith.fieldName(...)`
-class _$ShoeCWProxyImpl implements _$ShoeCWProxy {
-  final Shoe _value;
+/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfDrone.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfDrone.copyWith.fieldName(...)`
+class _$DroneCWProxyImpl implements _$DroneCWProxy {
+  final Drone _value;
 
-  const _$ShoeCWProxyImpl(this._value);
-
-  @override
-  Shoe brand(String brand) => this(brand: brand);
+  const _$DroneCWProxyImpl(this._value);
 
   @override
-  Shoe customerId(String customerId) => this(customerId: customerId);
+  Drone description(String? description) => this(description: description);
 
   @override
-  Shoe id(String id) => this(id: id);
+  Drone flightplan(LineString flightplan) => this(flightplan: flightplan);
 
   @override
-  Shoe name(String name) => this(name: name);
+  Drone id(String? id) => this(id: id);
 
   @override
-  Shoe price(double price) => this(price: price);
-
-  @override
-  Shoe size(double size) => this(size: size);
+  Drone name(String name) => this(name: name);
 
   @override
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Shoe(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Drone(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
   /// Usage
   /// ```dart
-  /// Shoe(...).copyWith(id: 12, name: "My name")
+  /// Drone(...).copyWith(id: 12, name: "My name")
   /// ````
-  Shoe call({
-    Object? brand = const $CopyWithPlaceholder(),
-    Object? customerId = const $CopyWithPlaceholder(),
+  Drone call({
+    Object? description = const $CopyWithPlaceholder(),
+    Object? flightplan = const $CopyWithPlaceholder(),
     Object? id = const $CopyWithPlaceholder(),
     Object? name = const $CopyWithPlaceholder(),
-    Object? price = const $CopyWithPlaceholder(),
-    Object? size = const $CopyWithPlaceholder(),
   }) {
-    return Shoe(
-      brand: brand == const $CopyWithPlaceholder() || brand == null
-          ? _value.brand
+    return Drone(
+      description: description == const $CopyWithPlaceholder()
+          ? _value.description
           // ignore: cast_nullable_to_non_nullable
-          : brand as String,
-      customerId:
-          customerId == const $CopyWithPlaceholder() || customerId == null
-              ? _value.customerId
+          : description as String?,
+      flightplan:
+          flightplan == const $CopyWithPlaceholder() || flightplan == null
+              ? _value.flightplan
               // ignore: cast_nullable_to_non_nullable
-              : customerId as String,
-      id: id == const $CopyWithPlaceholder() || id == null
+              : flightplan as LineString,
+      id: id == const $CopyWithPlaceholder()
           ? _value.id
           // ignore: cast_nullable_to_non_nullable
-          : id as String,
+          : id as String?,
       name: name == const $CopyWithPlaceholder() || name == null
           ? _value.name
           // ignore: cast_nullable_to_non_nullable
           : name as String,
-      price: price == const $CopyWithPlaceholder() || price == null
-          ? _value.price
-          // ignore: cast_nullable_to_non_nullable
-          : price as double,
-      size: size == const $CopyWithPlaceholder() || size == null
-          ? _value.size
-          // ignore: cast_nullable_to_non_nullable
-          : size as double,
     );
   }
 }
 
-extension $ShoeCopyWith on Shoe {
-  /// Returns a callable class that can be used as follows: `instanceOfShoe.copyWith(...)` or like so:`instanceOfShoe.copyWith.fieldName(...)`.
+extension $DroneCopyWith on Drone {
+  /// Returns a callable class that can be used as follows: `instanceOfDrone.copyWith(...)` or like so:`instanceOfDrone.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
-  _$ShoeCWProxy get copyWith => _$ShoeCWProxyImpl(this);
+  _$DroneCWProxy get copyWith => _$DroneCWProxyImpl(this);
 }
 
 // **************************************************************************
 // ElementWidgetGenerator
 // **************************************************************************
 
-class ShoeWidget extends StatefulWidget {
-  final Shoe? element;
+class DroneWidget extends StatefulWidget {
+  final Drone? element;
   final bool isEditing;
 
-  const ShoeWidget({this.element, required this.isEditing, Key? key})
+  const DroneWidget({this.element, required this.isEditing, Key? key})
       : super(key: key);
 
   @override
-  _ShoeWidgetState createState() => _ShoeWidgetState();
+  _DroneWidgetState createState() => _DroneWidgetState();
 }
 
-class _ShoeWidgetState extends State<ShoeWidget> {
-  final GlobalKey<StringWidgetState> brandWidgetKey =
+class _DroneWidgetState extends State<DroneWidget> {
+  final GlobalKey<StringWidgetState> descriptionWidgetKey =
       GlobalKey<StringWidgetState>();
-  final GlobalKey<CustomerFieldWidgetState> customerIdWidgetKey =
-      GlobalKey<CustomerFieldWidgetState>();
+  final GlobalKey<MapWidgetState> flightplanWidgetKey =
+      GlobalKey<MapWidgetState>();
   final GlobalKey<StringWidgetState> idWidgetKey =
       GlobalKey<StringWidgetState>();
   final GlobalKey<StringWidgetState> nameWidgetKey =
       GlobalKey<StringWidgetState>();
-  final GlobalKey<DoubleWidgetState> priceWidgetKey =
-      GlobalKey<DoubleWidgetState>();
-  final GlobalKey<DoubleWidgetState> sizeWidgetKey =
-      GlobalKey<DoubleWidgetState>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Shoe'),
+        title: const Text('Drone'),
       ),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: Column(
           children: [
             StringWidget(
-              key: brandWidgetKey,
-              fieldName: "brand",
-              fieldDescription: "This is the brand",
+              key: descriptionWidgetKey,
+              fieldName: "description",
+              fieldDescription: "This is the description",
               editable: true,
-              placeholder: "Type the brand",
-              value: widget.element?.brand,
+              placeholder: "Type the description",
+              value: widget.element?.description,
             ),
-            CustomerFieldWidget(
-              key: customerIdWidgetKey,
-              fieldName: "customerId",
-              fieldDescription: "This is the customerId",
+            MapWidget(
+              key: flightplanWidgetKey,
+              fieldName: "flightplan",
+              fieldDescription: "This is the flightplan",
               editable: true,
-              placeholder: "Type the customerId",
-              value: widget.element?.customerId,
+              placeholder: "Type the flightplan",
+              value: widget.element?.flightplan,
             ),
             StringWidget(
               key: idWidgetKey,
@@ -182,68 +156,45 @@ class _ShoeWidgetState extends State<ShoeWidget> {
               placeholder: "Type the name",
               value: widget.element?.name,
             ),
-            DoubleWidget(
-              key: priceWidgetKey,
-              fieldName: "price",
-              fieldDescription: "This is the price",
-              editable: true,
-              placeholder: "Type the price",
-              value: widget.element?.price,
-            ),
-            DoubleWidget(
-              key: sizeWidgetKey,
-              fieldName: "size",
-              fieldDescription: "This is the size",
-              editable: true,
-              placeholder: "Type the size",
-              value: widget.element?.size,
-            ),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          String? updatedbrand = brandWidgetKey.currentState?.getUpdatedValue();
+          String? updateddescription =
+              descriptionWidgetKey.currentState?.getUpdatedValue();
 
-          String? updatedcustomerId =
-              customerIdWidgetKey.currentState?.getUpdatedValue();
+          dynamic updatedflightplan =
+              flightplanWidgetKey.currentState?.getUpdatedValue();
 
           String? updatedid = idWidgetKey.currentState?.getUpdatedValue();
 
           String? updatedname = nameWidgetKey.currentState?.getUpdatedValue();
 
-          double? updatedprice = priceWidgetKey.currentState?.getUpdatedValue();
-
-          double? updatedsize = sizeWidgetKey.currentState?.getUpdatedValue();
-
-          Shoe updatedShoe = widget.element ??
-              Shoe(
-                brand: updatedbrand ?? '',
-                customerId: updatedcustomerId ?? '',
+          Drone updatedDrone = widget.element ??
+              Drone(
+                description: updateddescription ?? '',
+                flightplan: updatedflightplan ?? '',
                 id: updatedid ?? '',
                 name: updatedname ?? '',
-                price: updatedprice ?? 0.0,
-                size: updatedsize ?? 0.0,
               );
 
-          updatedShoe = updatedShoe.copyWith(
-              brand: updatedbrand,
-              customerId: updatedcustomerId,
+          updatedDrone = updatedDrone.copyWith(
+              description: updateddescription,
+              flightplan: updatedflightplan,
               id: updatedid,
-              name: updatedname,
-              price: updatedprice,
-              size: updatedsize);
+              name: updatedname);
           var container = ProviderContainer();
           try {
             if (widget.isEditing) {
-              await container.read(updateShoeProvider(updatedShoe));
-              print('Shoe updated successfully');
+              await container.read(updateDroneProvider(updatedDrone));
+              print('Drone updated successfully');
             } else {
-              await container.read(createShoeProvider(updatedShoe));
-              print('Shoe created successfully');
+              await container.read(createDroneProvider(updatedDrone));
+              print('Drone created successfully');
             }
           } catch (error) {
-            print('Failed to update Shoe: $error');
+            print('Failed to update Drone: $error');
           }
         },
         child: Icon(Icons.save),
@@ -252,14 +203,14 @@ class _ShoeWidgetState extends State<ShoeWidget> {
   }
 }
 
-class ShoeFieldWidget extends StatefulWidget {
+class DroneFieldWidget extends StatefulWidget {
   final String fieldName;
   final String fieldDescription;
   final bool editable;
   final String placeholder;
   final String? value;
 
-  const ShoeFieldWidget({
+  const DroneFieldWidget({
     Key? key,
     required this.fieldName,
     required this.fieldDescription,
@@ -269,15 +220,15 @@ class ShoeFieldWidget extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  ShoeFieldWidgetState createState() => ShoeFieldWidgetState();
+  DroneFieldWidgetState createState() => DroneFieldWidgetState();
 }
 
-class ShoeFieldWidgetState extends State<ShoeFieldWidget> {
+class DroneFieldWidgetState extends State<DroneFieldWidget> {
   final TextEditingController _typeAheadController = TextEditingController();
   bool isValueChanged = false;
   late String? initialValue;
   late String currentValue;
-  late List<Shoe> options;
+  late List<Drone> options;
 
   @override
   void initState() {
@@ -289,8 +240,8 @@ class ShoeFieldWidgetState extends State<ShoeFieldWidget> {
     super.initState();
     initialValue = widget.value;
     currentValue = initialValue ?? '';
-    Shoe shoe = await container.read(getShoeProvider(widget.value!).future);
-    _typeAheadController.text = '${shoe.name} <id: ${shoe.id}>';
+    Drone drone = await container.read(getDroneProvider(widget.value!).future);
+    _typeAheadController.text = '${drone.name} <id: ${drone.id}>';
   }
 
   String? getUpdatedValue() {
@@ -332,33 +283,33 @@ class ShoeFieldWidgetState extends State<ShoeFieldWidget> {
                 children: [
                   widget.editable
                       ? Expanded(
-                          child: TypeAheadField<Shoe>(
+                          child: TypeAheadField<Drone>(
                             controller: _typeAheadController,
                             suggestionsCallback: (String pattern) async {
-                              final shoePaginationData = await container.read(
-                                  getAllShoeProvider(container
-                                          .read(shoePaginationProvider))
+                              final dronePaginationData = await container.read(
+                                  getAllDroneProvider(container
+                                          .read(dronePaginationProvider))
                                       .future);
-                              final options = shoePaginationData.items;
+                              final options = dronePaginationData.items;
                               return options
-                                  .where((shoe) =>
-                                      shoe.name
+                                  .where((drone) =>
+                                      drone.name
                                           .toLowerCase()
                                           .contains(pattern.toLowerCase()) ||
-                                      shoe.id
+                                      drone.id
                                           .toString()
                                           .contains(pattern.toLowerCase()))
                                   .toList();
                             },
-                            itemBuilder: (context, shoe) {
+                            itemBuilder: (context, drone) {
                               return ListTile(
-                                title: Text('${shoe.name} <id: ${shoe.id}>'),
+                                title: Text('${drone.name} <id: ${drone.id}>'),
                               );
                             },
-                            onSelected: (Shoe value) {
+                            onSelected: (Drone value) {
                               setState(() {
                                 isValueChanged = value.id != initialValue;
-                                currentValue = value.id;
+                                currentValue = value.id!;
                                 _typeAheadController.text =
                                     '${value.name} <id: ${value.id}>';
                               });
@@ -390,20 +341,236 @@ class ShoeFieldWidgetState extends State<ShoeFieldWidget> {
           child: ElevatedButton(
             onPressed: () async {
               try {
-                Shoe shoe =
-                    await container.read(getShoeProvider(widget.value!).future);
+                Drone drone = await container
+                    .read(getDroneProvider(widget.value!).future);
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) =>
-                        ShoeWidget(element: shoe, isEditing: true),
+                        DroneWidget(element: drone, isEditing: true),
                   ),
                 );
               } catch (error) {
-                print('Failed to fetch shoe: $error');
+                print('Failed to fetch drone: $error');
               }
             },
-            child: const Text('View Shoe'),
+            child: const Text('View Drone'),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class DroneMultiFieldWidget extends StatefulWidget {
+  final String fieldName;
+  final String fieldDescription;
+  final bool editable;
+  final String placeholder;
+  final List<String>? values;
+
+  const DroneMultiFieldWidget({
+    Key? key,
+    required this.fieldName,
+    required this.fieldDescription,
+    required this.editable,
+    required this.placeholder,
+    required this.values,
+  }) : super(key: key);
+
+  @override
+  DroneMultiFieldWidgetState createState() => DroneMultiFieldWidgetState();
+}
+
+class DroneMultiFieldWidgetState extends State<DroneMultiFieldWidget> {
+  final TextEditingController _typeAheadController = TextEditingController();
+  bool isValueChanged = false;
+  late List<String> initialValues = [];
+  late List<String> currentValues = [];
+  late List<Drone> options = [];
+
+  @override
+  void initState() {
+    super.initState();
+    initializeValues();
+  }
+
+  Future<void> initializeValues() async {
+    super.initState();
+    initialValues = widget.values ?? [];
+    currentValues = initialValues;
+    if (widget.values != null) {
+      List<Drone> droneList = await Future.wait(
+        (widget.values ?? []).where((value) => value != '').map((value) async {
+          return await container.read(getDroneProvider(value).future);
+        }),
+      );
+      String concatenatedText = '${droneList.map((drone) {
+        return '${drone.name} <id: ${drone.id}>';
+      }).join(', ')}, ';
+      _typeAheadController.text = concatenatedText;
+    } else {
+      _typeAheadController.text = '';
+    }
+  }
+
+  List<String>? getUpdatedValue() {
+    return isValueChanged ? currentValues : initialValues;
+  }
+
+  var container = ProviderContainer();
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+          margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10.0),
+              color: Styles.secondaryColor),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "${widget.fieldName}:",
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(width: 8.0),
+                  Text(
+                    widget.fieldDescription,
+                    style: const TextStyle(color: Colors.grey),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8.0),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  widget.editable
+                      ? Expanded(
+                          child: TypeAheadField<Drone>(
+                            controller: _typeAheadController,
+                            suggestionsCallback: (String pattern) async {
+                              final idRegex =
+                                  RegExp(r'<id:\s*([a-fA-F0-9]+)\s*>');
+                              final matches = idRegex.allMatches(pattern);
+                              final ids = <String>[];
+
+                              for (final match in matches) {
+                                ids.add(match.group(1)!);
+                              }
+                              currentValues = ids;
+                              Function eq = const ListEquality().equals;
+                              bool previusValue = isValueChanged;
+                              isValueChanged = !eq(
+                                  currentValues,
+                                  initialValues
+                                      .where((value) => value.isNotEmpty)
+                                      .toList());
+                              if (previusValue != isValueChanged) {
+                                setState(() {
+                                  _typeAheadController.text =
+                                      _typeAheadController.text;
+                                });
+                              }
+                              final inputParts = pattern.split(',').last.trim();
+                              container
+                                  .read(dronePaginationProvider.notifier)
+                                  .setFilters({
+                                'id': {'\$nin': currentValues}
+                              });
+                              final dronePaginationData = await container.read(
+                                  getAllDroneProvider(container
+                                          .read(dronePaginationProvider))
+                                      .future);
+                              final options = dronePaginationData.items;
+                              return options
+                                  .where((drone) =>
+                                      drone.name
+                                          .toLowerCase()
+                                          .contains(inputParts.toLowerCase()) ||
+                                      drone.id
+                                          .toString()
+                                          .toLowerCase()
+                                          .contains(inputParts.toLowerCase()))
+                                  .toList();
+                            },
+                            itemBuilder: (context, drone) {
+                              return ListTile(
+                                title: Text('${drone.name} <id: ${drone.id}>'),
+                              );
+                            },
+                            onSelected: (Drone value) async {
+                              isValueChanged =
+                                  !initialValues.contains(value.id);
+                              currentValues.add(value.id!);
+
+                              List<Drone> droneList = await Future.wait(
+                                  (currentValues)
+                                      .where((value) => value != '')
+                                      .map((value) async {
+                                return await container
+                                    .read(getDroneProvider(value).future);
+                              }));
+                              String concatenatedText =
+                                  '${droneList.map((drone) {
+                                return '${drone.name} <id: ${drone.id}>';
+                              }).join(', ')}, ';
+
+                              setState(() {
+                                _typeAheadController.text = concatenatedText;
+                              });
+                            },
+                          ),
+                        )
+                      : Text(widget.values.toString()),
+                ],
+              ),
+            ],
+          ),
+        ),
+        if (isValueChanged)
+          Positioned(
+            top: 0,
+            left: 0,
+            child: Container(
+              width: 20,
+              height: 20,
+              decoration: const BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.orange,
+              ),
+            ),
+          ),
+        Positioned(
+          top: 0,
+          right: 0,
+          child: ElevatedButton(
+            onPressed: () async {
+              try {
+                final query = {
+                  'id': {
+                    '\$in': currentValues
+                        .where((value) => value.isNotEmpty)
+                        .toList()
+                  }
+                };
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => DroneListView(extraFilters: query),
+                  ),
+                );
+              } catch (error) {
+                print('Failed to fetch drones: $error');
+              }
+            },
+            child: const Text('View Drones'),
           ),
         ),
       ],
@@ -415,15 +582,15 @@ class ShoeFieldWidgetState extends State<ShoeFieldWidget> {
 // HomeWidgetElementGenerator
 // **************************************************************************
 
-class ShoeHomeWidget extends StatelessWidget {
-  const ShoeHomeWidget({super.key});
+class DroneHomeWidget extends StatelessWidget {
+  const DroneHomeWidget({super.key});
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const ShoeListView()),
+          MaterialPageRoute(builder: (context) => DroneListView()),
         );
       },
       child: Container(
@@ -437,14 +604,14 @@ class ShoeHomeWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image.asset(
-              'assets/shoe.png',
+              'assets/drone.png',
               width: 40.0,
               height: 40.0,
               color: Colors.white,
             ),
             const SizedBox(height: 8.0),
             const Text(
-              "Shoe",
+              "Drone",
               style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
@@ -461,41 +628,62 @@ class ShoeHomeWidget extends StatelessWidget {
 // JsonSerializableGenerator
 // **************************************************************************
 
-Shoe _$ShoeFromJson(Map<String, dynamic> json) => Shoe(
-      brand: json['brand'] as String,
-      customerId: json['customerId'] as String,
-      id: json['id'] as String,
+Drone _$DroneFromJson(Map<String, dynamic> json) => Drone(
+      description: json['description'] as String?,
+      flightplan:
+          LineString.fromJson(json['flightplan'] as Map<String, dynamic>),
+      id: json['id'] as String?,
       name: json['name'] as String,
-      price: (json['price'] as num).toDouble(),
-      size: (json['size'] as num).toDouble(),
     );
 
-Map<String, dynamic> _$ShoeToJson(Shoe instance) => <String, dynamic>{
-      'brand': instance.brand,
-      'customerId': instance.customerId,
+Map<String, dynamic> _$DroneToJson(Drone instance) => <String, dynamic>{
+      'description': instance.description,
+      'flightplan': instance.flightplan,
       'id': instance.id,
       'name': instance.name,
-      'price': instance.price,
-      'size': instance.size,
     };
 
 // **************************************************************************
 // ListWidgetGenerator
 // **************************************************************************
 
-class ShoeListView extends ConsumerWidget {
-  const ShoeListView({super.key});
+class DroneListView extends ConsumerStatefulWidget {
+  final Map<String, dynamic>? extraFilters;
+  final Map<String, dynamic> currentFilters = {};
+
+  DroneListView({Key? key, this.extraFilters}) : super(key: key);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final paginationState = ref.watch(shoePaginationProvider);
-    final shoesAsyncValue = ref.watch(getAllShoeProvider(paginationState));
+  _DroneListViewState createState() => _DroneListViewState();
+}
+
+class _DroneListViewState extends ConsumerState<DroneListView> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (widget.extraFilters != null) {
+        widget.extraFilters!.forEach((key, value) {
+          widget.currentFilters[key] = value;
+        });
+      }
+      ref
+          .read(dronePaginationProvider.notifier)
+          .setFilters(widget.extraFilters!);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final paginationState = ref.watch(dronePaginationProvider);
+
+    final dronesAsyncValue = ref.watch(getAllDroneProvider(paginationState));
 
     final Map<String, int> columnSortStates =
-        ref.watch(shoePaginationProvider.notifier).getOrders();
+        ref.watch(dronePaginationProvider.notifier).getOrders();
 
     final Map<String, dynamic> fieldsFilterStates =
-        ref.watch(shoePaginationProvider.notifier).getFilters();
+        ref.watch(dronePaginationProvider.notifier).getFilters();
 
     void onSort(String columnName) {
       var state = columnSortStates[columnName];
@@ -506,30 +694,32 @@ class ShoeListView extends ConsumerWidget {
       } else if (state == -1) {
         columnSortStates.remove(columnName);
       }
-      ref.read(shoePaginationProvider.notifier).setOrders(columnSortStates);
+      ref.read(dronePaginationProvider.notifier).setOrders(columnSortStates);
     }
 
     void onFilter(String fieldName, dynamic filterValue) {
-      fieldsFilterStates[fieldName] = filterValue;
-      ref.read(shoePaginationProvider.notifier).setFilters(fieldsFilterStates);
+      widget.currentFilters[fieldName] = filterValue;
+      ref
+          .read(dronePaginationProvider.notifier)
+          .setFilters(widget.currentFilters);
     }
 
     void onFilterRemove(String fieldName, dynamic filterValue) {
-      if (fieldsFilterStates.containsKey(fieldName)) {
-        fieldsFilterStates.remove(fieldName);
+      if (widget.currentFilters.containsKey(fieldName)) {
+        widget.currentFilters.remove(fieldName);
       }
     }
 
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Shoe List'),
+          title: const Text('Drone List'),
           actions: [
             IconButton(
               onPressed: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const ShoeWidget(
+                    builder: (context) => const DroneWidget(
                       isEditing: false,
                     ),
                   ),
@@ -539,22 +729,20 @@ class ShoeListView extends ConsumerWidget {
             ),
           ],
         ),
-        body: shoesAsyncValue.when(
+        body: dronesAsyncValue.when(
           loading: () => const CircularProgressIndicator(),
           error: (error, stackTrace) => Text('Error: $error'),
-          data: (ShoePaginationData data) {
-            final shoes = data.items;
+          data: (DronePaginationData data) {
+            final drones = data.items;
             return Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   CustomSearchBar(
                     fields: const {
-                      'brand': 'String',
-                      'customerId': 'String',
-                      'id': 'String',
-                      'name': 'String',
-                      'price': 'double',
-                      'size': 'double'
+                      'description': 'String?',
+                      'flightplan': 'LineString',
+                      'id': 'String?',
+                      'name': 'String'
                     },
                     filters: fieldsFilterStates,
                     onFilterChanged: onFilter,
@@ -579,43 +767,7 @@ class ShoeListView extends ConsumerWidget {
                                               MainAxisAlignment.center,
                                           children: [
                                             const Text(
-                                              'brand',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Color.fromARGB(
-                                                      255, 94, 54, 54)),
-                                              textAlign: TextAlign.center,
-                                            ),
-                                            if (columnSortStates['brand'] !=
-                                                null) ...[
-                                              Icon(
-                                                columnSortStates['brand'] == 1
-                                                    ? Icons
-                                                        .arrow_drop_up_rounded
-                                                    : Icons
-                                                        .arrow_drop_down_rounded,
-                                                color: Colors.black,
-                                              ),
-                                              Text(
-                                                '${columnSortStates.keys.toList().indexOf('brand') + 1}',
-                                                style: const TextStyle(
-                                                    fontSize: 10),
-                                              ),
-                                            ],
-                                          ],
-                                        ),
-                                      ),
-                                      onSort: (columnIndex, ascending) =>
-                                          {onSort('brand')},
-                                    ),
-                                    DataColumn(
-                                      label: Expanded(
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            const Text(
-                                              'customerId',
+                                              'description',
                                               style: TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   color: Color.fromARGB(
@@ -623,11 +775,11 @@ class ShoeListView extends ConsumerWidget {
                                               textAlign: TextAlign.center,
                                             ),
                                             if (columnSortStates[
-                                                    'customerId'] !=
+                                                    'description'] !=
                                                 null) ...[
                                               Icon(
                                                 columnSortStates[
-                                                            'customerId'] ==
+                                                            'description'] ==
                                                         1
                                                     ? Icons
                                                         .arrow_drop_up_rounded
@@ -636,7 +788,7 @@ class ShoeListView extends ConsumerWidget {
                                                 color: Colors.black,
                                               ),
                                               Text(
-                                                '${columnSortStates.keys.toList().indexOf('customerId') + 1}',
+                                                '${columnSortStates.keys.toList().indexOf('description') + 1}',
                                                 style: const TextStyle(
                                                     fontSize: 10),
                                               ),
@@ -645,7 +797,46 @@ class ShoeListView extends ConsumerWidget {
                                         ),
                                       ),
                                       onSort: (columnIndex, ascending) =>
-                                          {onSort('customerId')},
+                                          {onSort('description')},
+                                    ),
+                                    DataColumn(
+                                      label: Expanded(
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            const Text(
+                                              'flightplan',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Color.fromARGB(
+                                                      255, 94, 54, 54)),
+                                              textAlign: TextAlign.center,
+                                            ),
+                                            if (columnSortStates[
+                                                    'flightplan'] !=
+                                                null) ...[
+                                              Icon(
+                                                columnSortStates[
+                                                            'flightplan'] ==
+                                                        1
+                                                    ? Icons
+                                                        .arrow_drop_up_rounded
+                                                    : Icons
+                                                        .arrow_drop_down_rounded,
+                                                color: Colors.black,
+                                              ),
+                                              Text(
+                                                '${columnSortStates.keys.toList().indexOf('flightplan') + 1}',
+                                                style: const TextStyle(
+                                                    fontSize: 10),
+                                              ),
+                                            ],
+                                          ],
+                                        ),
+                                      ),
+                                      onSort: (columnIndex, ascending) =>
+                                          {onSort('flightplan')},
                                     ),
                                     DataColumn(
                                       label: Expanded(
@@ -719,104 +910,28 @@ class ShoeListView extends ConsumerWidget {
                                       onSort: (columnIndex, ascending) =>
                                           {onSort('name')},
                                     ),
-                                    DataColumn(
-                                      label: Expanded(
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            const Text(
-                                              'price',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Color.fromARGB(
-                                                      255, 94, 54, 54)),
-                                              textAlign: TextAlign.center,
-                                            ),
-                                            if (columnSortStates['price'] !=
-                                                null) ...[
-                                              Icon(
-                                                columnSortStates['price'] == 1
-                                                    ? Icons
-                                                        .arrow_drop_up_rounded
-                                                    : Icons
-                                                        .arrow_drop_down_rounded,
-                                                color: Colors.black,
-                                              ),
-                                              Text(
-                                                '${columnSortStates.keys.toList().indexOf('price') + 1}',
-                                                style: const TextStyle(
-                                                    fontSize: 10),
-                                              ),
-                                            ],
-                                          ],
-                                        ),
-                                      ),
-                                      onSort: (columnIndex, ascending) =>
-                                          {onSort('price')},
-                                    ),
-                                    DataColumn(
-                                      label: Expanded(
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            const Text(
-                                              'size',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Color.fromARGB(
-                                                      255, 94, 54, 54)),
-                                              textAlign: TextAlign.center,
-                                            ),
-                                            if (columnSortStates['size'] !=
-                                                null) ...[
-                                              Icon(
-                                                columnSortStates['size'] == 1
-                                                    ? Icons
-                                                        .arrow_drop_up_rounded
-                                                    : Icons
-                                                        .arrow_drop_down_rounded,
-                                                color: Colors.black,
-                                              ),
-                                              Text(
-                                                '${columnSortStates.keys.toList().indexOf('size') + 1}',
-                                                style: const TextStyle(
-                                                    fontSize: 10),
-                                              ),
-                                            ],
-                                          ],
-                                        ),
-                                      ),
-                                      onSort: (columnIndex, ascending) =>
-                                          {onSort('size')},
-                                    ),
                                   ],
-                                  rows: shoes.map((shoe) {
+                                  rows: drones.map((drone) {
                                     return DataRow(
                                       cells: [
                                         DataCell(Center(
-                                            child:
-                                                Text(shoe.brand.toString()))),
+                                            child: Text(
+                                                drone.description.toString()))),
                                         DataCell(Center(
                                             child: Text(
-                                                shoe.customerId.toString()))),
+                                                drone.flightplan.toString()))),
                                         DataCell(Center(
-                                            child: Text(shoe.id.toString()))),
-                                        DataCell(Center(
-                                            child: Text(shoe.name.toString()))),
+                                            child: Text(drone.id.toString()))),
                                         DataCell(Center(
                                             child:
-                                                Text(shoe.price.toString()))),
-                                        DataCell(Center(
-                                            child: Text(shoe.size.toString()))),
+                                                Text(drone.name.toString()))),
                                       ],
                                       onSelectChanged: (selected) {
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                              builder: (context) => ShoeWidget(
-                                                  element: shoe,
+                                              builder: (context) => DroneWidget(
+                                                  element: drone,
                                                   isEditing: true)),
                                         );
                                       },
@@ -844,35 +959,35 @@ class ShoeListView extends ConsumerWidget {
   }
 
   void _onPageButtonPressed(int pageNumber, WidgetRef ref,
-      ShoePaginationState paginationState, int maxPages) {
+      DronePaginationState paginationState, int maxPages) {
     if (pageNumber <= maxPages) {
-      ref.read(shoePaginationProvider.notifier).setPage(pageNumber);
+      ref.read(dronePaginationProvider.notifier).setPage(pageNumber);
     }
   }
 }
 
-class ShoePaginationState {
+class DronePaginationState {
   final Tuple2<int, int> pagination;
   final Map<String, int> orders;
   final Map<String, dynamic> filters;
 
-  ShoePaginationState({
+  DronePaginationState({
     required this.pagination,
     required this.orders,
     required this.filters,
   });
 }
 
-class ShoePaginationNotifier extends StateNotifier<ShoePaginationState> {
-  ShoePaginationNotifier()
-      : super(ShoePaginationState(
+class DronePaginationNotifier extends StateNotifier<DronePaginationState> {
+  DronePaginationNotifier()
+      : super(DronePaginationState(
           pagination: const Tuple2<int, int>(0, 10),
           orders: {},
           filters: {},
         ));
 
   void setPage(int page) {
-    state = ShoePaginationState(
+    state = DronePaginationState(
       pagination: Tuple2(page * state.pagination.item2 - state.pagination.item2,
           state.pagination.item2),
       orders: state.orders,
@@ -881,7 +996,7 @@ class ShoePaginationNotifier extends StateNotifier<ShoePaginationState> {
   }
 
   void setOrders(Map<String, int> newOrders) {
-    state = ShoePaginationState(
+    state = DronePaginationState(
       pagination: Tuple2(state.pagination.item1, state.pagination.item2),
       orders: newOrders,
       filters: state.filters,
@@ -889,7 +1004,7 @@ class ShoePaginationNotifier extends StateNotifier<ShoePaginationState> {
   }
 
   void setFilters(Map<String, dynamic> newFilters) {
-    state = ShoePaginationState(
+    state = DronePaginationState(
       pagination: Tuple2(state.pagination.item1, state.pagination.item2),
       orders: state.orders,
       filters: newFilters,
@@ -905,70 +1020,70 @@ class ShoePaginationNotifier extends StateNotifier<ShoePaginationState> {
   }
 }
 
-final shoePaginationProvider =
-    StateNotifierProvider<ShoePaginationNotifier, ShoePaginationState>(
-  (ref) => ShoePaginationNotifier(),
+final dronePaginationProvider =
+    StateNotifierProvider<DronePaginationNotifier, DronePaginationState>(
+  (ref) => DronePaginationNotifier(),
 );
 
 // **************************************************************************
 // RiverpodCustomGenerator
 // **************************************************************************
 
-final getShoeProvider =
-    FutureProvider.autoDispose.family<Shoe, String>((ref, shoeId) async {
-  final json = await http.get(Uri.parse('$baseURL/shoe/$shoeId'));
+final getDroneProvider =
+    FutureProvider.autoDispose.family<Drone, String>((ref, droneId) async {
+  final json = await http.get(Uri.parse('$baseURL/drone/$droneId'));
   final jsonData = jsonDecode(json.body);
-  return Shoe.fromJson(jsonData);
+  return Drone.fromJson(jsonData);
 });
 
-final createShoeProvider =
-    FutureProvider.autoDispose.family<void, Shoe>((ref, shoeInstance) async {
+final createDroneProvider =
+    FutureProvider.autoDispose.family<void, Drone>((ref, droneInstance) async {
   final response = await http.post(
-    Uri.parse('$baseURL/shoe'),
+    Uri.parse('$baseURL/drone'),
     headers: {'Content-Type': 'application/json'},
-    body: jsonEncode(shoeInstance.toJson()),
+    body: jsonEncode(droneInstance.toJson()),
   );
   if (response.statusCode != 201) {
-    throw Exception('Failed to create Shoe');
+    throw Exception('Failed to create Drone');
   }
 });
 
-final updateShoeProvider =
-    FutureProvider.autoDispose.family<void, Shoe>((ref, shoeInstance) async {
+final updateDroneProvider =
+    FutureProvider.autoDispose.family<void, Drone>((ref, droneInstance) async {
   final response = await http.put(
-    Uri.parse('$baseURL/shoe/${shoeInstance.id}'),
+    Uri.parse('$baseURL/drone/${droneInstance.id}'),
     headers: {'Content-Type': 'application/json'},
-    body: jsonEncode(shoeInstance.toJson()),
+    body: jsonEncode(droneInstance.toJson()),
   );
   if (response.statusCode != 200) {
-    throw Exception('Failed to update Shoe');
+    throw Exception('Failed to update Drone');
   }
 });
 
-final deleteShoeProvider =
-    FutureProvider.autoDispose.family<void, int>((ref, shoeId) async {
+final deleteDroneProvider =
+    FutureProvider.autoDispose.family<void, int>((ref, droneId) async {
   final response = await http.delete(
-    Uri.parse('$baseURL/shoe/$shoeId'),
+    Uri.parse('$baseURL/drone/$droneId'),
   );
   if (response.statusCode != 204) {
-    throw Exception('Failed to delete Shoe');
+    throw Exception('Failed to delete Drone');
   }
 });
 
-class ShoePaginationData {
-  final List<Shoe> items;
+class DronePaginationData {
+  final List<Drone> items;
   final int currentPage;
   final int maxPages;
 
-  ShoePaginationData({
+  DronePaginationData({
     required this.items,
     required this.currentPage,
     required this.maxPages,
   });
 }
 
-final getAllShoeProvider = FutureProvider.autoDispose
-    .family<ShoePaginationData, ShoePaginationState>((ref, state) async {
+final getAllDroneProvider = FutureProvider.autoDispose
+    .family<DronePaginationData, DronePaginationState>((ref, state) async {
   final fixedQuery = {
     if (state.orders.isNotEmpty) 'orders': state.orders,
     if (state.filters.isNotEmpty)
@@ -978,14 +1093,15 @@ final getAllShoeProvider = FutureProvider.autoDispose
 
   final json = await http.post(
       Uri.parse(
-          '$baseURL/shoes?skip=${state.pagination.item1}&limit=${state.pagination.item2}'),
+          '$baseURL/drones?skip=${state.pagination.item1}&limit=${state.pagination.item2}'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode(fixedQuery));
   final jsonData = jsonDecode(json.body);
 
-  return ShoePaginationData(
-    items:
-        (jsonData['items'] as List).map((data) => Shoe.fromJson(data)).toList(),
+  return DronePaginationData(
+    items: (jsonData['items'] as List)
+        .map((data) => Drone.fromJson(data))
+        .toList(),
     currentPage: jsonData['current_page'],
     maxPages: jsonData['max_pages'],
   );

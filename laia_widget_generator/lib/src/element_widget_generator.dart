@@ -55,10 +55,18 @@ class _${visitor.className}WidgetState extends State<${visitor.className}Widget>
         case 'DateTime?':
           widget = 'DateTimeWidget';
           break;
-        case 'Map<String, dynamic>':
-        case 'Map<String, dynamic>?':
-        case 'List<Map<String, dynamic>>':
-        case 'List<Map<String, dynamic>>?':
+        case 'LineString':
+        case 'MultiLineString':
+        case 'MultiPoint':
+        case 'MultiPolygon':
+        case 'Point':
+        case 'Polygon':
+        case 'LineString?':
+        case 'MultiLineString?':
+        case 'MultiPoint?':
+        case 'MultiPolygon?':
+        case 'Point?':
+        case 'Polygon?':
           widget = 'MapWidget';
           break;
         default: 
@@ -168,10 +176,18 @@ class _${visitor.className}WidgetState extends State<${visitor.className}Widget>
         case 'bool?':
           widget = 'BoolWidget';
           break;
-        case 'Map<String, dynamic>':
-        case 'Map<String, dynamic>?':
-        case 'List<Map<String, dynamic>>':
-        case 'List<Map<String, dynamic>>?':
+        case 'LineString':
+        case 'MultiLineString':
+        case 'MultiPoint':
+        case 'MultiPolygon':
+        case 'Point':
+        case 'Polygon':
+        case 'LineString?':
+        case 'MultiLineString?':
+        case 'MultiPoint?':
+        case 'MultiPolygon?':
+        case 'Point?':
+        case 'Polygon?':
           widget = 'MapWidget';
           break;
         default:
@@ -275,6 +291,12 @@ class _${visitor.className}WidgetState extends State<${visitor.className}Widget>
           dynamic updated$fieldName = ${fieldName}WidgetKey.currentState?.getUpdatedValue();
 ''');         updatedFields.add('$fieldName: updated$fieldName');
               break;
+            default:
+              buffer.writeln('''
+          dynamic updated$fieldName = ${fieldName}WidgetKey.currentState?.getUpdatedValue();
+''');         updatedFields.add('$fieldName: updated$fieldName');
+              break;
+            
           }
         }
     
@@ -315,6 +337,9 @@ class _${visitor.className}WidgetState extends State<${visitor.className}Widget>
         case 'List<String>?':
           buffer.writeln('''$fieldName: updated$fieldName ?? [''],''');
           break;
+        default:
+          buffer.writeln('''$fieldName: updated$fieldName ?? '',''');
+              break;
       }
     }
 

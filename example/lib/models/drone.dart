@@ -1,3 +1,4 @@
+import 'package:example/models/geometry.dart';
 import 'package:laia_annotations/laia_annotations.dart';
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
@@ -9,9 +10,10 @@ import 'package:example/generic/generic_widgets.dart';
 import 'package:http/http.dart' as http;
 import 'package:example/config/styles.dart';
 import 'dart:convert';
+import 'package:collection/collection.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 
-part 'customer.g.dart';
+part 'drone.g.dart';
 
 @JsonSerializable()
 @RiverpodGenAnnotation(baseURL)
@@ -19,21 +21,24 @@ part 'customer.g.dart';
 @ListWidgetGenAnnotation()
 @elementWidgetGen
 @CopyWith()
-class Customer {
-  @Field(fieldName: 'email')
-  final String email;
+class Drone {
+  @Field(fieldName: 'description')
+  final String? description;
+  @Field(fieldName: 'flightplan')
+  final LineString flightplan;
   @Field(fieldName: 'id')
-  final String id;
+  final String? id;
   @Field(fieldName: 'name')
   final String name;
 
-  Customer({
-    required this.email,
+  Drone({
+    required this.description,
+    required this.flightplan,
     required this.id,
     required this.name
   });
 
-  factory Customer.fromJson(Map<String, dynamic> json) => _$CustomerFromJson(json);
+  factory Drone.fromJson(Map<String, dynamic> json) => _$DroneFromJson(json);
 
-  Map<String, dynamic> toJson() => _$CustomerToJson(this);
+  Map<String, dynamic> toJson() => _$DroneToJson(this);
 }

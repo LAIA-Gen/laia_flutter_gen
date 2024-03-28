@@ -144,7 +144,7 @@ class MapWidget extends StatefulWidget {
   final String fieldDescription;
   final bool editable;
   final String placeholder;
-  final dynamic value;
+  final Feature? value;
 
   const MapWidget({
     Key? key,
@@ -177,10 +177,8 @@ class MapWidgetState extends State<MapWidget> {
 
   @override
   Widget build(BuildContext context) {
-    bool isPointType = widget.value is Map<String, dynamic> &&
-      widget.value['type'] == 'Point';
-    bool isListType = 
-        widget.value is List<Map<String, dynamic>> && widget.value[0]['type'] == 'Point';
+    bool isPointType =  widget.value!.geometry.type == 'Point';
+    bool isLineStringType = widget.value!.geometry.type == 'LineString';
 
     return Stack(
       children: [
@@ -222,7 +220,7 @@ class MapWidgetState extends State<MapWidget> {
                             decoration: InputDecoration(
                               hintText: widget.placeholder,
                             ),
-                            initialValue: widget.value?.toString(),
+                            initialValue: widget.value.toString(),
                             onChanged: (newValue) {
                               setState(() {
                                 isValueChanged = newValue != initialValue.toString();
@@ -256,18 +254,18 @@ class MapWidgetState extends State<MapWidget> {
             right: 0,
             child: ElevatedButton(
               onPressed: () {
-                showMapView(context, widget.value['coordinates']);
+                showPointView(context, widget.value!.geometry.coordinates);
               },
               child: const Text('Map'),
             ),
           ),
-        if (isListType)
+        if (isLineStringType)
           Positioned(
             top: 0,
             right: 0,
             child: ElevatedButton(
               onPressed: () {
-                showRouteView(context, widget.value);
+                showRouteView(context, widget.value!.geometry.coordinates);
               },
               child: const Text('Show Route'),
             ),
@@ -276,18 +274,15 @@ class MapWidgetState extends State<MapWidget> {
     );
   }
 
-  void showMapView(BuildContext context, List<dynamic> coordinates) {
+ void showPointView(BuildContext context, List<dynamic> coordinates) {
     List<double> doubleCoordinates = coordinates.cast<double>();
     Navigator.of(context).push(MaterialPageRoute(
       builder: (context) => MapView(doubleCoordinates),
     ));
   }
 
-  void showRouteView(BuildContext context, List<Map<String, dynamic>> points) {
-    List<List<double>> routeCoordinates = [];
-    for (var point in points) {
-      routeCoordinates.add(point['coordinates'].cast<double>());
-    }
+  void showRouteView(BuildContext context, List<List<double>> points) {
+    List<List<double>> routeCoordinates = points;
 
     Navigator.of(context).push(MaterialPageRoute(
       builder: (context) => RouteView(routeCoordinates),
@@ -461,10 +456,6 @@ class DefaultWidgetState extends State<DefaultWidget> {
               widget.editable
                   ? Expanded(
                       child: TextFormField(
-                        keyboardType: TextInputType.number,
-                        inputFormatters: <TextInputFormatter>[
-                          FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                        ],
                         decoration: InputDecoration(
                           hintText: widget.placeholder,
                         ),
@@ -1353,20 +1344,6 @@ class BoolWidgetState extends State<BoolWidget> {
     buffer.writeln("  children: [");
     buffer.writeln("    Text('\$fieldName:'),");
     buffer.writeln("    for (var item in value) Text('- \$item'),");
-    buffer.writeln("  ],");
-    buffer.writeln(");");
-    buffer.writeln("}");
-
-// **************************************************************************
-// MapWidget (TODO)
-// **************************************************************************
-
-    buffer.writeln("Widget mapWidget(String fieldName, Map<String, dynamic> value) {");
-    buffer.writeln("return Column(");
-    buffer.writeln("  crossAxisAlignment: CrossAxisAlignment.start,");
-    buffer.writeln("  children: [");
-    buffer.writeln("    Text('\$fieldName:'),");
-    buffer.writeln("    for (var entry in value.entries) Text('\${entry.key}: \${entry.value}'),");
     buffer.writeln("  ],");
     buffer.writeln(");");
     buffer.writeln("}");

@@ -30,9 +30,10 @@ class ListWidgetGenerator extends GeneratorForAnnotation<ListWidgetGenAnnotation
 
     buffer.writeln('''
 class ${className}ListView extends ConsumerStatefulWidget {
-  final Map<String, dynamic> extraFilters;
+  final Map<String, dynamic>? extraFilters;
+  final Map<String, dynamic> currentFilters = {};
 
-  const ${className}ListView({Key? key, this.extraFilters = const {}}) : super(key: key);
+  ${className}ListView({Key? key, this.extraFilters}) : super(key: key);
 
   @override
   _${className}ListViewState createState() => _${className}ListViewState();
@@ -43,7 +44,12 @@ class _${className}ListViewState extends ConsumerState<${className}ListView> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(${classNameLowercase}PaginationProvider.notifier).setFilters(widget.extraFilters);
+      if (widget.extraFilters != null) {
+        widget.extraFilters!.forEach((key, value) {
+          widget.currentFilters[key] = value;
+        });
+      }
+      ref.read(${classNameLowercase}PaginationProvider.notifier).setFilters(widget.extraFilters!);
     });
   }
 
@@ -71,13 +77,13 @@ class _${className}ListViewState extends ConsumerState<${className}ListView> {
     }
 
     void onFilter(String fieldName, dynamic filterValue) {
-      fieldsFilterStates[fieldName] = filterValue;
-      ref.read(${classNameLowercase}PaginationProvider.notifier).setFilters(fieldsFilterStates);
+      widget.currentFilters[fieldName] = filterValue;
+      ref.read(${classNameLowercase}PaginationProvider.notifier).setFilters(widget.currentFilters);
     }
 
     void onFilterRemove(String fieldName, dynamic filterValue) {
-      if (fieldsFilterStates.containsKey(fieldName)) {
-          fieldsFilterStates.remove(fieldName);
+      if (widget.currentFilters.containsKey(fieldName)) {
+        widget.currentFilters.remove(fieldName);
       }
     }''');
 

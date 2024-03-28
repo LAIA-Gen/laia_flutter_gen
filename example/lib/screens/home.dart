@@ -1,6 +1,5 @@
 import 'package:laia_annotations/laia_annotations.dart';
-import 'package:example/models/customer.dart';
-import 'package:example/models/shoe.dart';
+import 'package:example/models/drone.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 

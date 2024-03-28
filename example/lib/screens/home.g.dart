@@ -39,6 +39,5 @@ bool _isMobile(MediaQueryData mediaQuery) {
 }
 
 List<Widget> _dashboardWidgets = [
-  CustomerHomeWidget(),
-  ShoeHomeWidget(),
+  DroneHomeWidget(),
 ];

@@ -1,3 +1,4 @@
+import 'package:example/models/geometry.dart';
 import 'package:laia_annotations/laia_annotations.dart';
 import 'package:example/config/styles.dart';
 import 'package:flutter/material.dart';

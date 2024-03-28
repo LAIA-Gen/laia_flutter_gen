@@ -491,9 +491,10 @@ packages:
   laia_annotations:
     dependency: "direct main"
     description:
-      path: "../laia_annotations"
-      relative: true
-    source: path
+      name: laia_annotations
+      sha256: f52132e0444772e4981ecdbcb09b31a9da64519d167b325f772ae80b43390f67
+      url: "https://pub.dev"
+    source: hosted
     version: "0.0.1"
   laia_riverpod_custom_generator:
     dependency: "direct dev"
@@ -501,14 +502,14 @@ packages:
       path: "../laia_riverpod_custom_generator"
       relative: true
     source: path
-    version: "0.0.1"
+    version: "0.0.3"
   laia_widget_generator:
     dependency: "direct dev"
     description:
       path: "../laia_widget_generator"
       relative: true
     source: path
-    version: "0.0.1"
+    version: "0.0.3"
   latlong2:
     dependency: "direct main"
     description:
