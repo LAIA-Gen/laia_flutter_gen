@@ -156,8 +156,8 @@ class MapWidgetState extends State<MapWidget> {
 
   @override
   Widget build(BuildContext context) {
-    bool isPointType = widget.value!.geometry.type == 'Point';
-    bool isLineStringType = widget.value!.geometry.type == 'LineString';
+    bool isPointType = widget.value?.geometry.type == 'Point';
+    bool isLineStringType = widget.value?.geometry.type == 'LineString';
 
     return Stack(
       children: [
@@ -190,26 +190,52 @@ class MapWidgetState extends State<MapWidget> {
                 children: [
                   widget.editable
                       ? Expanded(
-                          child: TextFormField(
-                            keyboardType: TextInputType.number,
-                            inputFormatters: <TextInputFormatter>[
-                              FilteringTextInputFormatter.allow(
-                                  RegExp(r'[0-9]')),
-                            ],
-                            decoration: InputDecoration(
-                              hintText: widget.placeholder,
+                        child: DataTable(
+                          columns: const [
+                            DataColumn(label: Text('Coordinates')),
+                            DataColumn(
+                              label: SizedBox(),
+                              numeric: true,
+                            ), 
+                          ],
+                          rows: List<DataRow>.generate(
+                            widget.value?.geometry.coordinates.length,
+                            (index) => DataRow(
+                              cells: [
+                                DataCell(
+                                  TextFormField(
+                                    keyboardType: TextInputType.number,
+                                    inputFormatters: <TextInputFormatter>[
+                                      FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                                    ],
+                                    decoration: InputDecoration(
+                                      hintText: widget.placeholder,
+                                    ),
+                                    initialValue: widget.value?.geometry.coordinates[index]?.toString(),
+                                    onChanged: (newValue) {
+                                      setState(() {
+                                        isValueChanged = newValue != initialValue?.toString();
+                                        currentValue = newValue;
+                                      });
+                                    },
+                                  ),
+                                ),
+                                DataCell(
+                                  IconButton(
+                                    icon: Icon(Icons.delete),
+                                    onPressed: () {
+                                      setState(() {
+                                        widget.value?.geometry.coordinates.removeAt(index);
+                                      });
+                                    },
+                                  ),
+                                )
+                              ],
                             ),
-                            initialValue: widget.value.toString(),
-                            onChanged: (newValue) {
-                              setState(() {
-                                isValueChanged =
-                                    newValue != initialValue.toString();
-                                currentValue = newValue;
-                              });
-                            },
                           ),
-                        )
-                      : Text(widget.value?.toString() ?? widget.placeholder),
+                        ),
+                      )
+                    : Text(widget.value?.toString() ?? widget.placeholder),
                 ],
               ),
             ],
@@ -234,7 +260,7 @@ class MapWidgetState extends State<MapWidget> {
             right: 0,
             child: ElevatedButton(
               onPressed: () {
-                showPointView(context, widget.value!.geometry.coordinates);
+                showPointView(context, widget.value);
               },
               child: const Text('Map'),
             ),
@@ -245,7 +271,7 @@ class MapWidgetState extends State<MapWidget> {
             right: 0,
             child: ElevatedButton(
               onPressed: () {
-                showRouteView(context, widget.value!.geometry.coordinates);
+                showLineStringView(context, widget.value);
               },
               child: const Text('Show Route'),
             ),
@@ -254,26 +280,38 @@ class MapWidgetState extends State<MapWidget> {
     );
   }
 
-  void showPointView(BuildContext context, List<dynamic> coordinates) {
-    List<double> doubleCoordinates = coordinates.cast<double>();
+  void showPointView(BuildContext context, Feature? point) {
+    List<double> doubleCoordinates = point?.geometry.coordinates;
+    dynamic properties = point?.properties;
+  
     Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => MapView(doubleCoordinates),
+      builder: (context) => PointView(doubleCoordinates, properties),
     ));
   }
 
-  void showRouteView(BuildContext context, List<List<double>> points) {
-    List<List<double>> routeCoordinates = points;
+  void showLineStringView(BuildContext context, Feature? points) {
+    List<List<double>> routeCoordinates = points?.geometry.coordinates;
+    dynamic properties = points?.properties;
 
     Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => RouteView(routeCoordinates),
+      builder: (context) => LineStringView(routeCoordinates, properties),
     ));
   }
 }
 
-class MapView extends StatelessWidget {
+class PointView extends StatelessWidget {
   final List<double> coordinates;
+  final dynamic properties;
 
-  const MapView(this.coordinates, {super.key});
+  const PointView(this.coordinates, this.properties, {super.key});
+
+  String formatProperties(Map<String, dynamic> properties) {
+    String message = '';
+    properties.forEach((key, value) {
+      message += '$key: $value\n';
+    });
+    return message;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -297,11 +335,14 @@ class MapView extends StatelessWidget {
                 width: 56,
                 height: 56,
                 point: LatLng(coordinates[1], coordinates[0]),
-                child: const Icon(
-                  Icons.location_on_outlined,
-                  color: Color.fromARGB(255, 214, 166, 146),
-                  size: 35,
-                ),
+                child: Tooltip(
+                  message: formatProperties(properties),
+                  child: const Icon(
+                    Icons.location_on_outlined,
+                    color: Color.fromARGB(255, 214, 166, 146),
+                    size: 35,
+                  ),
+                )
               )
             ],
           )
@@ -311,10 +352,19 @@ class MapView extends StatelessWidget {
   }
 }
 
-class RouteView extends StatelessWidget {
+class LineStringView extends StatelessWidget {
   final List<List<double>> routeCoordinates;
+  final dynamic properties;
 
-  const RouteView(this.routeCoordinates, {super.key});
+  const LineStringView(this.routeCoordinates, this.properties, {super.key});
+
+  String formatProperties(Map<String, dynamic> properties) {
+    String message = '';
+    properties.forEach((key, value) {
+      message += '$key: $value\n';
+    });
+    return message;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -349,11 +399,14 @@ class RouteView extends StatelessWidget {
                       width: 56,
                       height: 56,
                       point: LatLng(coord[1], coord[0]),
-                      child: const Icon(
-                        Icons.location_on_outlined,
-                        color: Color.fromARGB(255, 103, 146, 144),
-                        size: 35,
-                      ),
+                      child: Tooltip(
+                        message: formatProperties(properties),
+                        child: const Icon(
+                          Icons.location_on_outlined,
+                          color: Color.fromARGB(255, 214, 166, 146),
+                          size: 35,
+                        ),
+                      )
                     ))
                 .toList(),
           ),
