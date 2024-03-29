@@ -123,7 +123,7 @@ class MapWidget extends StatefulWidget {
   final String fieldDescription;
   final bool editable;
   final String placeholder;
-  final Feature? value;
+  final Feature value;
 
   const MapWidget({
     Key? key,
@@ -142,16 +142,14 @@ class MapWidgetState extends State<MapWidget> {
   bool isValueChanged = false;
   late Feature? initialValue;
   late Feature? currentValue;
-  dynamic geometry;
+  late Geometry geometry;
 
   @override
   void initState() {
     super.initState();
     initialValue = widget.value;
     currentValue = initialValue;
-    if (widget.value != null && widget.value?.geometry != null) {
-      geometry = widget.value?.geometry;
-    }
+    geometry = widget.value.geometry;
   }
 
   dynamic getUpdatedValue() {
@@ -160,8 +158,8 @@ class MapWidgetState extends State<MapWidget> {
 
   @override
   Widget build(BuildContext context) {
-    bool isPointType = widget.value!.geometry.type == 'Point';
-    bool isLineStringType = widget.value!.geometry.type == 'LineString';
+    bool isPointType = widget.value.geometry.type == 'Point';
+    bool isLineStringType = widget.value.geometry.type == 'LineString';
 
     return Stack(
       children: [
@@ -209,7 +207,7 @@ class MapWidgetState extends State<MapWidget> {
                                     ),
                                   ],
                                   rows: List<DataRow>.generate(
-                                    geometry?.coordinates.length ?? 0,
+                                    geometry.coordinates?.length ?? 0,
                                     (index) => DataRow(
                                       cells: [
                                         DataCell(
@@ -218,22 +216,24 @@ class MapWidgetState extends State<MapWidget> {
                                               hintText: widget.placeholder,
                                             ),
                                             initialValue: geometry
-                                                ?.coordinates[index]
+                                                .coordinates[index]
                                                 .toString(),
                                             onChanged: (newValue) {
                                               setState(() {
                                                 if (isLineStringType) {
-                                                  List<String> coordinateStrings = newValue
-                                                    .replaceAll('[', '') 
-                                                    .replaceAll(']', '')
-                                                    .split(','); 
+                                                  List<String>
+                                                      coordinateStrings =
+                                                      newValue
+                                                          .replaceAll('[', '')
+                                                          .replaceAll(']', '')
+                                                          .split(',');
                                                   List<double> coordinates =
                                                       coordinateStrings
                                                           .map((str) =>
                                                               double.parse(str))
                                                           .toList();
 
-                                                  geometry?.coordinates[index] =
+                                                  geometry.coordinates[index] =
                                                       coordinates;
                                                 }
                                                 currentValue =
@@ -249,7 +249,7 @@ class MapWidgetState extends State<MapWidget> {
                                                 Icons.delete_outline),
                                             onPressed: () {
                                               setState(() {
-                                                geometry?.coordinates
+                                                geometry.coordinates
                                                     .removeAt(index);
                                               });
                                             },
@@ -260,14 +260,14 @@ class MapWidgetState extends State<MapWidget> {
                                   ),
                                 ),
                               )))
-                      : Text(widget.value?.toString() ?? widget.placeholder),
+                      : Text(widget.value.toString()),
                   if (widget.editable)
                     IconButton(
                       icon: const Icon(Icons.add),
                       onPressed: () {
                         setState(() {
                           if (isLineStringType) {
-                            geometry?.coordinates.add(<double>[]);
+                            geometry.coordinates.add(<double>[]);
                           }
                         });
                       },

@@ -25,7 +25,7 @@ class Drone {
   @Field(fieldName: 'description')
   final String? description;
   @Field(fieldName: 'flightplan')
-  final LineString flightplan;
+  final Point flightplan;
   @Field(fieldName: 'id')
   final String? id;
   @Field(fieldName: 'name')

@@ -9,7 +9,7 @@ part of 'drone.dart';
 abstract class _$DroneCWProxy {
   Drone description(String? description);
 
-  Drone flightplan(LineString flightplan);
+  Drone flightplan(Point flightplan);
 
   Drone id(String? id);
 
@@ -23,7 +23,7 @@ abstract class _$DroneCWProxy {
   /// ````
   Drone call({
     String? description,
-    LineString? flightplan,
+    Point? flightplan,
     String? id,
     String? name,
   });
@@ -39,7 +39,7 @@ class _$DroneCWProxyImpl implements _$DroneCWProxy {
   Drone description(String? description) => this(description: description);
 
   @override
-  Drone flightplan(LineString flightplan) => this(flightplan: flightplan);
+  Drone flightplan(Point flightplan) => this(flightplan: flightplan);
 
   @override
   Drone id(String? id) => this(id: id);
@@ -70,7 +70,7 @@ class _$DroneCWProxyImpl implements _$DroneCWProxy {
           flightplan == const $CopyWithPlaceholder() || flightplan == null
               ? _value.flightplan
               // ignore: cast_nullable_to_non_nullable
-              : flightplan as LineString,
+              : flightplan as Point,
       id: id == const $CopyWithPlaceholder()
           ? _value.id
           // ignore: cast_nullable_to_non_nullable
@@ -138,7 +138,11 @@ class _DroneWidgetState extends State<DroneWidget> {
               fieldDescription: "This is the flightplan",
               editable: true,
               placeholder: "Type the flightplan",
-              value: widget.element?.flightplan,
+              value: widget.element?.flightplan ??
+                  Point(
+                      type: "type",
+                      geometry: GeometryPoint(coordinates: [], type: "Point"),
+                      properties: {}),
             ),
             StringWidget(
               key: idWidgetKey,
@@ -630,8 +634,7 @@ class DroneHomeWidget extends StatelessWidget {
 
 Drone _$DroneFromJson(Map<String, dynamic> json) => Drone(
       description: json['description'] as String?,
-      flightplan:
-          LineString.fromJson(json['flightplan'] as Map<String, dynamic>),
+      flightplan: Point.fromJson(json['flightplan'] as Map<String, dynamic>),
       id: json['id'] as String?,
       name: json['name'] as String,
     );
@@ -740,7 +743,7 @@ class _DroneListViewState extends ConsumerState<DroneListView> {
                   CustomSearchBar(
                     fields: const {
                       'description': 'String?',
-                      'flightplan': 'LineString',
+                      'flightplan': 'Point',
                       'id': 'String?',
                       'name': 'String'
                     },
