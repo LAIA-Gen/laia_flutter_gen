@@ -231,7 +231,7 @@ class _${visitor.className}WidgetState extends State<${visitor.className}Widget>
       } else {
         if (widget == "MapWidget") {
           buffer.writeln('''
-            value: $fieldAccessor  ?? $fieldType(type: "type", geometry: Geometry$fieldType(coordinates: [], type: "$fieldType"), properties: {}),
+            value: $fieldAccessor  ?? $fieldType(type: "Feature", geometry: Geometry$fieldType(coordinates: [], type: "$fieldType"), properties: {}),
           ),
       ''');
         } else {
@@ -291,12 +291,22 @@ class _${visitor.className}WidgetState extends State<${visitor.className}Widget>
           bool? updated$fieldName = ${fieldName}WidgetKey.currentState?.getUpdatedValue();
 ''');         updatedFields.add('$fieldName: updated$fieldName');
               break;
-            case 'Map<String, dynamic>':
-            case 'Map<String, dynamic>?':
-            case 'List<Map<String, dynamic>>':
-            case 'List<Map<String, dynamic>>?':
+            case 'LineString':
+            case 'MultiLineString':
+            case 'MultiPoint':
+            case 'MultiPolygon':
+            case 'Point':
+            case 'Polygon':
+            case 'LineString?':
+            case 'MultiLineString?':
+            case 'MultiPoint?':
+            case 'MultiPolygon?':
+            case 'Point?':
+            case 'Polygon?':
               buffer.writeln('''
           dynamic updated$fieldName = ${fieldName}WidgetKey.currentState?.getUpdatedValue();
+
+          updated$fieldName = $fieldType(type: "Feature", geometry: Geometry$fieldType(coordinates:updated$fieldName.geometry.coordinates, type: updated$fieldName.geometry.type), properties: updated$fieldName.properties);
 ''');         updatedFields.add('$fieldName: updated$fieldName');
               break;
             default:

@@ -160,10 +160,17 @@ class MapWidget extends StatefulWidget {
 }
 
 class MapWidgetState extends State<MapWidget> {
+  late List<TextEditingController> textControllers;
+  late bool isPointType;
+  late bool isLineStringType;
+  late bool isPolygonType;
+  late bool isMultiPointType;
+  late bool isMultiLineStringType;
+  late bool isMultiPolygonType;
   bool isValueChanged = false;
-  late Feature? initialValue;
-  late Feature? currentValue;
-  late Geometry geometry;
+  Feature? initialValue;
+  Feature? currentValue;
+  Geometry? geometry;
 
   @override
   void initState() {
@@ -171,6 +178,46 @@ class MapWidgetState extends State<MapWidget> {
     initialValue = widget.value;
     currentValue = initialValue;
     geometry = widget.value.geometry;
+    isPointType = widget.value.geometry.type == 'Point';
+    isLineStringType = widget.value.geometry.type == 'LineString';
+    isPolygonType = widget.value.geometry.type == 'Polygon';
+    isMultiPointType = widget.value.geometry.type == 'MultiPoint';
+    isMultiLineStringType = widget.value.geometry.type == 'MultiLineString';
+    isMultiPolygonType = widget.value.geometry.type == 'MultiPolygon';
+    updateTextControllers();
+  }
+
+  void updateTextControllers() {
+    textControllers = List.generate(
+      isPointType
+        ? 1 //only one row for a point
+        : isLineStringType
+          ? (geometry?.coordinates?.length ?? 0)
+          : isPolygonType
+            ? (geometry?.coordinates?.length ?? 0)
+            : isMultiPointType
+              ? (geometry?.coordinates?.length ?? 0)
+              : isMultiLineStringType
+                ? (geometry?.coordinates?.length ?? 0)
+                : isMultiPolygonType
+                  ? (geometry?.coordinates?.length ?? 0)
+                  : 0,
+      (index) => TextEditingController(
+        text: isPointType ? 
+            geometry?.coordinates.toString() :
+          isLineStringType ?
+            geometry?.coordinates[index].toString() :
+          isPolygonType ?
+            geometry?.coordinates[index].toString() :
+          isMultiPointType ?
+            geometry?.coordinates[index].toString() :
+          isMultiLineStringType ? 
+            geometry?.coordinates[index].toString() :
+          isMultiPolygonType ?
+            geometry?.coordinates[index].toString() :
+            "",
+      ),
+    );
   }
 
   dynamic getUpdatedValue() {
@@ -179,8 +226,6 @@ class MapWidgetState extends State<MapWidget> {
 
   @override
   Widget build(BuildContext context) {
-    bool isPointType = widget.value.geometry.type == 'Point';
-    bool isLineStringType = widget.value.geometry.type == 'LineString';
 
     return Stack(
       children: [
@@ -229,38 +274,99 @@ class MapWidgetState extends State<MapWidget> {
                                 ), 
                               ],
                               rows: List<DataRow>.generate(
-                                geometry.coordinates?.length ?? 0,
-                                (index) => DataRow(
-                                  cells: [
-                                    DataCell(
-                                      TextFormField(
-                                        decoration: InputDecoration(
-                                          hintText: widget.placeholder,
-                                        ),
-                                        initialValue: geometry.coordinates[index].toString(),
-                                        onChanged: (newValue) {
-                                          setState(() {
-                                            if (isLineStringType) {
-                                              List<String> coordinateStrings = newValue
-                                                    .replaceAll('[', '') 
-                                                    .replaceAll(']', '')
-                                                    .split(','); 
-                                              List<double> coordinates = coordinateStrings.map((str) => double.parse(str)).toList();
+                                    isPointType
+                                      ? 1 //only one row for a point
+                                      : isLineStringType
+                                        ? (geometry?.coordinates?.length ?? 0) //a row for each point
+                                        : isPolygonType
+                                          ? (geometry?.coordinates?.length ?? 0) //a row for each polygon
+                                          : isMultiPointType
+                                            ? (geometry?.coordinates?.length ?? 0) //a row for each point
+                                            : isMultiLineStringType
+                                              ? (geometry?.coordinates?.length ?? 0) //a row for each line
+                                              : isMultiPolygonType
+                                                ? (geometry?.coordinates?.length ?? 0) //a row for each polygon
+                                                : 0,
+                                    (index) => DataRow(
+                                      cells: [
+                                        DataCell(
+                                          TextFormField(
+                                            decoration: InputDecoration(
+                                              hintText: widget.placeholder,
+                                            ),
+                                            controller: textControllers[index],
+                                            onChanged: (newValue) {
+                                              setState(() {
+                                                if (isPointType) {
+                                                  List<String>
+                                                      coordinateStrings =
+                                                      newValue
+                                                          .replaceAll('[', '')
+                                                          .replaceAll(']', '')
+                                                          .split(',');
+                                                  List<double> coordinates =
+                                                      coordinateStrings
+                                                          .map((str) =>
+                                                              double.parse(str))
+                                                          .toList();
+                                                  geometry = geometry?.copyWith(coordinates: coordinates);
+                                                } else if (isLineStringType) {
+                                                  List<String> coordinateStrings = newValue
+                                                        .replaceAll('[', '') 
+                                                        .replaceAll(']', '')
+                                                        .split(','); 
+                                                  List<double> coordinates = coordinateStrings.map((str) => double.parse(str)).toList();
 
-                                              geometry.coordinates[index] = coordinates;
-                                            }
-                                            currentValue = currentValue?.copyWith(geometry: geometry);
-                                          });
-                                        },
-                                      ),
-                                    ),
-                                    DataCell(
-                                      IconButton(
-                                        icon: const Icon(Icons.delete_outline),
-                                        onPressed: () {
-                                          setState(() {
-                                            geometry.coordinates.removeAt(index);
-                                          });
+                                                  geometry?.coordinates[index] =
+                                                      coordinates;
+                                                } else if (isPolygonType) {
+
+                                                } else if (isMultiPointType) {
+
+                                                } else if (isMultiLineStringType) {
+
+                                                } else if (isMultiPolygonType) {
+
+                                                }
+                                                currentValue = currentValue?.copyWith(geometry: geometry);
+                                                if (currentValue != initialValue) {
+                                                  isValueChanged = true;
+                                                } else {
+                                                  isValueChanged = false;
+                                                }
+                                              });
+                                            },
+                                          ),
+                                        ),
+                                        DataCell(
+                                          IconButton(
+                                            icon: const Icon(Icons.delete_outline),
+                                            onPressed: () {
+                                              setState(() {
+                                                if (isPointType) {
+                                                  geometry = geometry?.copyWith(coordinates: [0.0,0.0]);
+                                                  currentValue = currentValue?.copyWith(geometry: geometry);
+                                                  updateTextControllers();
+                                                } else if (isLineStringType) {
+                                                  geometry?.coordinates
+                                                    .removeAt(index);
+                                                  currentValue = currentValue?.copyWith(geometry: geometry);
+                                                  updateTextControllers();
+                                                } else if (isPolygonType) {
+
+                                                } else if (isMultiPointType) {
+
+                                                } else if (isMultiLineStringType) {
+
+                                                } else if (isMultiPolygonType) {
+                                                  
+                                                }
+                                                if (currentValue != initialValue) {
+                                                  isValueChanged = true;
+                                                } else {
+                                                  isValueChanged = false;
+                                                }
+                                              });
                                         },
                                       ),
                                     )
@@ -273,16 +379,23 @@ class MapWidgetState extends State<MapWidget> {
                       )
                     : Text(widget.value.toString()),
                     if (widget.editable)
+                    if (isLineStringType)
                       IconButton(
                         icon: const Icon(Icons.add),
                         onPressed: () {
                           setState(() {
                             if (isLineStringType) {
-                              geometry.coordinates.add(<double>[]);
+                              geometry?.coordinates.add(<double>[]);
+                              updateTextControllers();
+                            }
+                            if (currentValue != initialValue) {
+                              isValueChanged = true;
+                            } else {
+                              isValueChanged = false;
                             }
                           });
                         },
-                      ),
+                      )
                 ],
               ),
             ],
