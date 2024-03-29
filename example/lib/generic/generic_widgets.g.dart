@@ -140,14 +140,18 @@ class MapWidget extends StatefulWidget {
 
 class MapWidgetState extends State<MapWidget> {
   bool isValueChanged = false;
-  late dynamic initialValue;
-  late dynamic currentValue;
+  late Feature? initialValue;
+  late Feature? currentValue;
+  dynamic geometry;
 
   @override
   void initState() {
     super.initState();
     initialValue = widget.value;
-    currentValue = initialValue.toString();
+    currentValue = initialValue;
+    if (widget.value != null && widget.value?.geometry != null) {
+      geometry = widget.value?.geometry;
+    }
   }
 
   dynamic getUpdatedValue() {
@@ -156,8 +160,8 @@ class MapWidgetState extends State<MapWidget> {
 
   @override
   Widget build(BuildContext context) {
-    bool isPointType = widget.value?.geometry.type == 'Point';
-    bool isLineStringType = widget.value?.geometry.type == 'LineString';
+    bool isPointType = widget.value!.geometry.type == 'Point';
+    bool isLineStringType = widget.value!.geometry.type == 'LineString';
 
     return Stack(
       children: [
@@ -190,52 +194,84 @@ class MapWidgetState extends State<MapWidget> {
                 children: [
                   widget.editable
                       ? Expanded(
-                        child: DataTable(
-                          columns: const [
-                            DataColumn(label: Text('Coordinates')),
-                            DataColumn(
-                              label: SizedBox(),
-                              numeric: true,
-                            ), 
-                          ],
-                          rows: List<DataRow>.generate(
-                            widget.value?.geometry.coordinates.length,
-                            (index) => DataRow(
-                              cells: [
-                                DataCell(
-                                  TextFormField(
-                                    keyboardType: TextInputType.number,
-                                    inputFormatters: <TextInputFormatter>[
-                                      FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                                    ],
-                                    decoration: InputDecoration(
-                                      hintText: widget.placeholder,
+                          child: ConstrainedBox(
+                              constraints: const BoxConstraints(
+                                maxHeight: 300,
+                              ),
+                              child: SingleChildScrollView(
+                                scrollDirection: Axis.vertical,
+                                child: DataTable(
+                                  columns: const [
+                                    DataColumn(label: Text('Coordinates')),
+                                    DataColumn(
+                                      label: SizedBox(),
+                                      numeric: true,
                                     ),
-                                    initialValue: widget.value?.geometry.coordinates[index]?.toString(),
-                                    onChanged: (newValue) {
-                                      setState(() {
-                                        isValueChanged = newValue != initialValue?.toString();
-                                        currentValue = newValue;
-                                      });
-                                    },
+                                  ],
+                                  rows: List<DataRow>.generate(
+                                    geometry?.coordinates.length ?? 0,
+                                    (index) => DataRow(
+                                      cells: [
+                                        DataCell(
+                                          TextFormField(
+                                            decoration: InputDecoration(
+                                              hintText: widget.placeholder,
+                                            ),
+                                            initialValue: geometry
+                                                ?.coordinates[index]
+                                                .toString(),
+                                            onChanged: (newValue) {
+                                              setState(() {
+                                                if (isLineStringType) {
+                                                  List<String> coordinateStrings = newValue
+                                                    .replaceAll('[', '') 
+                                                    .replaceAll(']', '')
+                                                    .split(','); 
+                                                  List<double> coordinates =
+                                                      coordinateStrings
+                                                          .map((str) =>
+                                                              double.parse(str))
+                                                          .toList();
+
+                                                  geometry?.coordinates[index] =
+                                                      coordinates;
+                                                }
+                                                currentValue =
+                                                    currentValue?.copyWith(
+                                                        geometry: geometry);
+                                              });
+                                            },
+                                          ),
+                                        ),
+                                        DataCell(
+                                          IconButton(
+                                            icon: const Icon(
+                                                Icons.delete_outline),
+                                            onPressed: () {
+                                              setState(() {
+                                                geometry?.coordinates
+                                                    .removeAt(index);
+                                              });
+                                            },
+                                          ),
+                                        )
+                                      ],
+                                    ),
                                   ),
                                 ),
-                                DataCell(
-                                  IconButton(
-                                    icon: Icon(Icons.delete),
-                                    onPressed: () {
-                                      setState(() {
-                                        widget.value?.geometry.coordinates.removeAt(index);
-                                      });
-                                    },
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                      )
-                    : Text(widget.value?.toString() ?? widget.placeholder),
+                              )))
+                      : Text(widget.value?.toString() ?? widget.placeholder),
+                  if (widget.editable)
+                    IconButton(
+                      icon: const Icon(Icons.add),
+                      onPressed: () {
+                        setState(() {
+                          if (isLineStringType) {
+                            geometry?.coordinates.add(<double>[]);
+                          }
+                        });
+                      },
+                    ),
                 ],
               ),
             ],
@@ -283,7 +319,7 @@ class MapWidgetState extends State<MapWidget> {
   void showPointView(BuildContext context, Feature? point) {
     List<double> doubleCoordinates = point?.geometry.coordinates;
     dynamic properties = point?.properties;
-  
+
     Navigator.of(context).push(MaterialPageRoute(
       builder: (context) => PointView(doubleCoordinates, properties),
     ));
@@ -332,18 +368,17 @@ class PointView extends StatelessWidget {
           MarkerLayer(
             markers: [
               Marker(
-                width: 56,
-                height: 56,
-                point: LatLng(coordinates[1], coordinates[0]),
-                child: Tooltip(
-                  message: formatProperties(properties),
-                  child: const Icon(
-                    Icons.location_on_outlined,
-                    color: Color.fromARGB(255, 214, 166, 146),
-                    size: 35,
-                  ),
-                )
-              )
+                  width: 56,
+                  height: 56,
+                  point: LatLng(coordinates[1], coordinates[0]),
+                  child: Tooltip(
+                    message: formatProperties(properties),
+                    child: const Icon(
+                      Icons.location_on_outlined,
+                      color: Color.fromARGB(255, 214, 166, 146),
+                      size: 35,
+                    ),
+                  ))
             ],
           )
         ],
@@ -361,7 +396,7 @@ class LineStringView extends StatelessWidget {
   String formatProperties(Map<String, dynamic> properties) {
     String message = '';
     properties.forEach((key, value) {
-      message += '$key: $value\n';
+      message += '\$key: \$value\n';
     });
     return message;
   }
@@ -396,18 +431,17 @@ class LineStringView extends StatelessWidget {
           MarkerLayer(
             markers: routeCoordinates
                 .map((coord) => Marker(
-                      width: 56,
-                      height: 56,
-                      point: LatLng(coord[1], coord[0]),
-                      child: Tooltip(
-                        message: formatProperties(properties),
-                        child: const Icon(
-                          Icons.location_on_outlined,
-                          color: Color.fromARGB(255, 214, 166, 146),
-                          size: 35,
-                        ),
-                      )
-                    ))
+                    width: 56,
+                    height: 56,
+                    point: LatLng(coord[1], coord[0]),
+                    child: Tooltip(
+                      message: formatProperties(properties),
+                      child: const Icon(
+                        Icons.location_on_outlined,
+                        color: Color.fromARGB(255, 214, 166, 146),
+                        size: 35,
+                      ),
+                    )))
                 .toList(),
           ),
         ],
