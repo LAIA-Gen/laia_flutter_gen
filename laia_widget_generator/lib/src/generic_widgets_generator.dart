@@ -144,7 +144,7 @@ class MapWidget extends StatefulWidget {
   final String fieldDescription;
   final bool editable;
   final String placeholder;
-  final Feature? value;
+  final Feature value;
 
   const MapWidget({
     Key? key,
@@ -161,14 +161,16 @@ class MapWidget extends StatefulWidget {
 
 class MapWidgetState extends State<MapWidget> {
   bool isValueChanged = false;
-  late dynamic initialValue;
-  late dynamic currentValue;
+  late Feature? initialValue;
+  late Feature? currentValue;
+  late Geometry geometry;
 
   @override
   void initState() {
     super.initState();
     initialValue = widget.value;
-    currentValue = initialValue.toString();
+    currentValue = initialValue;
+    geometry = widget.value.geometry;
   }
 
   dynamic getUpdatedValue() {
@@ -177,8 +179,8 @@ class MapWidgetState extends State<MapWidget> {
 
   @override
   Widget build(BuildContext context) {
-    bool isPointType =  widget.value!.geometry.type == 'Point';
-    bool isLineStringType = widget.value!.geometry.type == 'LineString';
+    bool isPointType = widget.value.geometry.type == 'Point';
+    bool isLineStringType = widget.value.geometry.type == 'LineString';
 
     return Stack(
       children: [
@@ -212,24 +214,75 @@ class MapWidgetState extends State<MapWidget> {
                 children: [
                   widget.editable
                       ? Expanded(
-                          child: TextFormField(
-                            keyboardType: TextInputType.number,
-                            inputFormatters: <TextInputFormatter>[
-                              FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                            ],
-                            decoration: InputDecoration(
-                              hintText: widget.placeholder,
-                            ),
-                            initialValue: widget.value.toString(),
-                            onChanged: (newValue) {
-                              setState(() {
-                                isValueChanged = newValue != initialValue.toString();
-                                currentValue = newValue;
-                              });
-                            },
+                          child: ConstrainedBox(
+                          constraints: const BoxConstraints(
+                            maxHeight: 300, 
                           ),
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.vertical,
+                            child: DataTable(
+                              columns: const [
+                                DataColumn(label: Text('Coordinates')),
+                                DataColumn(
+                                  label: SizedBox(),
+                                  numeric: true,
+                                ), 
+                              ],
+                              rows: List<DataRow>.generate(
+                                geometry.coordinates?.length ?? 0,
+                                (index) => DataRow(
+                                  cells: [
+                                    DataCell(
+                                      TextFormField(
+                                        decoration: InputDecoration(
+                                          hintText: widget.placeholder,
+                                        ),
+                                        initialValue: geometry.coordinates[index].toString(),
+                                        onChanged: (newValue) {
+                                          setState(() {
+                                            if (isLineStringType) {
+                                              List<String> coordinateStrings = newValue
+                                                    .replaceAll('[', '') 
+                                                    .replaceAll(']', '')
+                                                    .split(','); 
+                                              List<double> coordinates = coordinateStrings.map((str) => double.parse(str)).toList();
+
+                                              geometry.coordinates[index] = coordinates;
+                                            }
+                                            currentValue = currentValue?.copyWith(geometry: geometry);
+                                          });
+                                        },
+                                      ),
+                                    ),
+                                    DataCell(
+                                      IconButton(
+                                        icon: const Icon(Icons.delete_outline),
+                                        onPressed: () {
+                                          setState(() {
+                                            geometry.coordinates.removeAt(index);
+                                          });
+                                        },
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                          )
                         )
-                      : Text(widget.value?.toString() ?? widget.placeholder),
+                      )
+                    : Text(widget.value.toString()),
+                    if (widget.editable)
+                      IconButton(
+                        icon: const Icon(Icons.add),
+                        onPressed: () {
+                          setState(() {
+                            if (isLineStringType) {
+                              geometry.coordinates.add(<double>[]);
+                            }
+                          });
+                        },
+                      ),
                 ],
               ),
             ],
@@ -254,7 +307,7 @@ class MapWidgetState extends State<MapWidget> {
             right: 0,
             child: ElevatedButton(
               onPressed: () {
-                showPointView(context, widget.value!.geometry.coordinates);
+                showPointView(context, widget.value);
               },
               child: const Text('Map'),
             ),
@@ -265,7 +318,7 @@ class MapWidgetState extends State<MapWidget> {
             right: 0,
             child: ElevatedButton(
               onPressed: () {
-                showRouteView(context, widget.value!.geometry.coordinates);
+                showLineStringView(context, widget.value);
               },
               child: const Text('Show Route'),
             ),
@@ -274,26 +327,38 @@ class MapWidgetState extends State<MapWidget> {
     );
   }
 
- void showPointView(BuildContext context, List<dynamic> coordinates) {
-    List<double> doubleCoordinates = coordinates.cast<double>();
+ void showPointView(BuildContext context, Feature? point) {
+    List<double> doubleCoordinates = point?.geometry.coordinates;
+    dynamic properties = point?.properties;
+  
     Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => MapView(doubleCoordinates),
+      builder: (context) => PointView(doubleCoordinates, properties),
     ));
   }
 
-  void showRouteView(BuildContext context, List<List<double>> points) {
-    List<List<double>> routeCoordinates = points;
+  void showLineStringView(BuildContext context, Feature? points) {
+    List<List<double>> routeCoordinates = points?.geometry.coordinates;
+    dynamic properties = points?.properties;
 
     Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => RouteView(routeCoordinates),
+      builder: (context) => LineStringView(routeCoordinates, properties),
     ));
   }
 }
 
-class MapView extends StatelessWidget {
+class PointView extends StatelessWidget {
   final List<double> coordinates;
+  final dynamic properties;
 
-  const MapView(this.coordinates, {super.key});
+  const PointView(this.coordinates, this.properties, {super.key});
+
+  String formatProperties(Map<String, dynamic> properties) {
+    String message = '';
+    properties.forEach((key, value) {
+      message += '\$key: \$value'''r'''\n'''r'''';
+    });
+    return message;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -302,39 +367,51 @@ class MapView extends StatelessWidget {
         title: const Text('Map View'),
       ),
       body: FlutterMap(
-          options: MapOptions(
-            center: LatLng(coordinates[1], coordinates[0]),
-            zoom: 10,
+        options: MapOptions(
+          center: LatLng(coordinates[1], coordinates[0]),
+          zoom: 10,
+        ),
+        children: [
+          TileLayer(
+            urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+            subdomains: const ['a', 'b', 'c'],
           ),
-          children: [
-            TileLayer(
-              urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-              subdomains: const ['a', 'b', 'c'],
-            ),
-            MarkerLayer(
-              markers: [
-                Marker(
-                  width: 56,
-                  height: 56,
-                  point: LatLng(coordinates[1], coordinates[0]),
+          MarkerLayer(
+            markers: [
+              Marker(
+                width: 56,
+                height: 56,
+                point: LatLng(coordinates[1], coordinates[0]),
+                child: Tooltip(
+                  message: formatProperties(properties),
                   child: const Icon(
                     Icons.location_on_outlined,
-                    color: Color.fromARGB(255, 214,166,146),
+                    color: Color.fromARGB(255, 214, 166, 146),
                     size: 35,
                   ),
                 )
-              ],
-            )
-          ],
-        ),
+              )
+            ],
+          )
+        ],
+      ),
     );
   }
 }
 
-class RouteView extends StatelessWidget {
+class LineStringView extends StatelessWidget {
   final List<List<double>> routeCoordinates;
+  final dynamic properties;
 
-  const RouteView(this.routeCoordinates, {super.key});
+  const LineStringView(this.routeCoordinates, this.properties, {super.key});
+
+  String formatProperties(Map<String, dynamic> properties) {
+    String message = '';
+    properties.forEach((key, value) {
+      message += '\$key: \$value'''r'''\n'''r'''';
+    });
+    return message;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -355,23 +432,30 @@ class RouteView extends StatelessWidget {
           PolylineLayer(
             polylines: [
               Polyline(
-                points: routeCoordinates.map((coord) => LatLng(coord[1], coord[0])).toList(),
+                points: routeCoordinates
+                    .map((coord) => LatLng(coord[1], coord[0]))
+                    .toList(),
                 strokeWidth: 4.0,
                 color: const Color.fromARGB(255, 227, 224, 164),
               ),
             ],
           ),
           MarkerLayer(
-            markers: routeCoordinates.map((coord) => Marker(
-              width: 56,
-              height: 56,
-              point: LatLng(coord[1], coord[0]),
-              child: const Icon(
-                Icons.location_on_outlined,
-                color: Color.fromARGB(255, 103, 146, 144),
-                size: 35,
-              ),
-            )).toList(),
+            markers: routeCoordinates
+                .map((coord) => Marker(
+                      width: 56,
+                      height: 56,
+                      point: LatLng(coord[1], coord[0]),
+                      child: Tooltip(
+                        message: formatProperties(properties),
+                        child: const Icon(
+                          Icons.location_on_outlined,
+                          color: Color.fromARGB(255, 214, 166, 146),
+                          size: 35,
+                        ),
+                      )
+                    ))
+                .toList(),
           ),
         ],
       ),

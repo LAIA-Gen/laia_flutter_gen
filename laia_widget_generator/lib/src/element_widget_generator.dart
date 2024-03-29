@@ -229,10 +229,18 @@ class _${visitor.className}WidgetState extends State<${visitor.className}Widget>
           ),
       ''');
       } else {
-        buffer.writeln('''
+        if (widget == "MapWidget") {
+          buffer.writeln('''
+            value: $fieldAccessor  ?? $fieldType(type: "type", geometry: Geometry$fieldType(coordinates: [], type: "$fieldType"), properties: {}),
+          ),
+      ''');
+        } else {
+          buffer.writeln('''
             value: $fieldAccessor,
           ),
       ''');
+        }
+        
       }
     }
     buffer.writeln('],');
