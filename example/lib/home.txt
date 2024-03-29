@@ -1,2 +1,3 @@
 DroneHomeWidget
 Drones2HomeWidget
+Drones3HomeWidget

@@ -6,4 +6,5 @@ class Styles {
   static const buttonPrimaryColor = Color.fromARGB(255, 210, 223, 224);
   static const buttonPrimaryColorHover = Color.fromARGB(255, 165, 194, 191);
   static const dashboardBlock = Color.fromARGB(255, 196, 209, 208);
+  static const polygonColor = Color.fromARGB(118, 104, 161, 51);
 }

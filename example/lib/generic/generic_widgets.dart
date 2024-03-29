@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:flutter_map/src/layer/polygon_layer/polygon_layer.dart' as flutter_map;
 
 part 'generic_widgets.g.dart';
 

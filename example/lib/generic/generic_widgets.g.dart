@@ -169,7 +169,7 @@ class MapWidgetState extends State<MapWidget> {
   void updateTextControllers() {
     textControllers = List.generate(
       isPointType
-          ? 1 //only one row for a point
+          ? 1
           : isLineStringType
               ? (geometry?.coordinates?.length ?? 0)
               : isPolygonType
@@ -252,27 +252,27 @@ class MapWidgetState extends State<MapWidget> {
                                   ],
                                   rows: List<DataRow>.generate(
                                     isPointType
-                                        ? 1 //only one row for a point
+                                        ? 1
                                         : isLineStringType
                                             ? (geometry?.coordinates?.length ??
-                                                0) //a row for each point
+                                                0)
                                             : isPolygonType
                                                 ? (geometry
                                                         ?.coordinates?.length ??
-                                                    0) //a row for each polygon
+                                                    0)
                                                 : isMultiPointType
                                                     ? (geometry?.coordinates
                                                             ?.length ??
-                                                        0) //a row for each point
+                                                        0)
                                                     : isMultiLineStringType
                                                         ? (geometry?.coordinates
                                                                 ?.length ??
-                                                            0) //a row for each line
+                                                            0)
                                                         : isMultiPolygonType
                                                             ? (geometry
                                                                     ?.coordinates
                                                                     ?.length ??
-                                                                0) //a row for each polygon
+                                                                0)
                                                             : 0,
                                     (index) => DataRow(
                                       cells: [
@@ -387,9 +387,16 @@ class MapWidgetState extends State<MapWidget> {
                             }
                           });
                         },
-                      )
+                      ),
                 ],
               ),
+              if (geometry != null && currentValue != null)
+                if (isPointType)
+                  PointView(currentValue?.geometry.coordinates,
+                      currentValue?.properties, 200),
+              if (isLineStringType)
+                LineStringView(currentValue?.geometry.coordinates,
+                    currentValue?.properties, 200),
             ],
           ),
         ),
@@ -428,6 +435,17 @@ class MapWidgetState extends State<MapWidget> {
               child: const Text('Show Route'),
             ),
           ),
+        if (isPolygonType)
+          Positioned(
+            top: 0,
+            right: 0,
+            child: ElevatedButton(
+              onPressed: () {
+                showPolygonView(context, widget.value);
+              },
+              child: const Text('Show Area'),
+            ),
+          ),
       ],
     );
   }
@@ -437,7 +455,8 @@ class MapWidgetState extends State<MapWidget> {
     dynamic properties = point?.properties;
 
     Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => PointView(doubleCoordinates, properties),
+      builder: (context) => MapScreenView(PointView(
+          doubleCoordinates, properties, MediaQuery.of(context).size.height)),
     ));
   }
 
@@ -446,16 +465,43 @@ class MapWidgetState extends State<MapWidget> {
     dynamic properties = points?.properties;
 
     Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => LineStringView(routeCoordinates, properties),
+      builder: (context) => MapScreenView(LineStringView(
+          routeCoordinates, properties, MediaQuery.of(context).size.height)),
     ));
+  }
+
+  void showPolygonView(BuildContext context, Feature? points) {
+    List<List<List<double>>> polygonCoordinates = points?.geometry.coordinates;
+    dynamic properties = points?.properties;
+
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => MapScreenView(PolygonView(
+          polygonCoordinates, properties, MediaQuery.of(context).size.height)),
+    ));
+  }
+}
+
+class MapScreenView extends StatelessWidget {
+  final StatelessWidget widget;
+
+  const MapScreenView(this.widget, {super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+          title: const Text('Map View'),
+        ),
+        body: widget);
   }
 }
 
 class PointView extends StatelessWidget {
   final List<double> coordinates;
   final dynamic properties;
+  final double height;
 
-  const PointView(this.coordinates, this.properties, {super.key});
+  const PointView(this.coordinates, this.properties, this.height, {super.key});
 
   String formatProperties(Map<String, dynamic> properties) {
     String message = '';
@@ -467,37 +513,45 @@ class PointView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Map View'),
-      ),
-      body: FlutterMap(
-        options: MapOptions(
-          center: LatLng(coordinates[1], coordinates[0]),
-          zoom: 10,
-        ),
-        children: [
-          TileLayer(
-            urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-            subdomains: const ['a', 'b', 'c'],
+    List<double> adjustedCoordinates = [...coordinates];
+
+    if (coordinates.length < 2) {
+      adjustedCoordinates.addAll([0, 0]);
+    }
+
+    return Container(
+      height: height,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(15),
+        child: FlutterMap(
+          options: MapOptions(
+            center: LatLng(adjustedCoordinates[1], adjustedCoordinates[0]),
+            zoom: 10,
           ),
-          MarkerLayer(
-            markers: [
-              Marker(
-                  width: 56,
-                  height: 56,
-                  point: LatLng(coordinates[1], coordinates[0]),
-                  child: Tooltip(
-                    message: formatProperties(properties),
-                    child: const Icon(
-                      Icons.location_on_outlined,
-                      color: Color.fromARGB(255, 214, 166, 146),
-                      size: 35,
-                    ),
-                  ))
-            ],
-          )
-        ],
+          children: [
+            TileLayer(
+              urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+              subdomains: const ['a', 'b', 'c'],
+            ),
+            MarkerLayer(
+              markers: [
+                Marker(
+                    width: 56,
+                    height: 56,
+                    point:
+                        LatLng(adjustedCoordinates[1], adjustedCoordinates[0]),
+                    child: Tooltip(
+                      message: formatProperties(properties),
+                      child: const Icon(
+                        Icons.location_on_outlined,
+                        color: Color.fromARGB(255, 214, 166, 146),
+                        size: 35,
+                      ),
+                    ))
+              ],
+            )
+          ],
+        ),
       ),
     );
   }
@@ -506,8 +560,10 @@ class PointView extends StatelessWidget {
 class LineStringView extends StatelessWidget {
   final List<List<double>> routeCoordinates;
   final dynamic properties;
+  final double height;
 
-  const LineStringView(this.routeCoordinates, this.properties, {super.key});
+  const LineStringView(this.routeCoordinates, this.properties, this.height,
+      {super.key});
 
   String formatProperties(Map<String, dynamic> properties) {
     String message = '';
@@ -519,50 +575,141 @@ class LineStringView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Route View'),
-      ),
-      body: FlutterMap(
-        options: MapOptions(
-          center: LatLng(routeCoordinates[0][1], routeCoordinates[0][0]),
-          zoom: 10,
-        ),
-        children: [
-          TileLayer(
-            urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-            subdomains: const ['a', 'b', 'c'],
-          ),
-          PolylineLayer(
-            polylines: [
-              Polyline(
-                points: routeCoordinates
-                    .map((coord) => LatLng(coord[1], coord[0]))
+    List<List<double>> adjustedRouteCoordinates =
+        routeCoordinates.where((coord) => coord.length >= 2).toList();
+
+    if (adjustedRouteCoordinates.isEmpty) {
+      adjustedRouteCoordinates = [
+        [0, 0]
+      ];
+    }
+
+    return Container(
+        height: height,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(15),
+          child: FlutterMap(
+            options: MapOptions(
+              center: LatLng(adjustedRouteCoordinates[0][1],
+                  adjustedRouteCoordinates[0][0]),
+              zoom: 10,
+            ),
+            children: [
+              TileLayer(
+                urlTemplate:
+                    "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                subdomains: const ['a', 'b', 'c'],
+              ),
+              PolylineLayer(
+                polylines: [
+                  Polyline(
+                    points: adjustedRouteCoordinates
+                        .map((coord) => LatLng(coord[1], coord[0]))
+                        .toList(),
+                    strokeWidth: 4.0,
+                    color: const Color.fromARGB(255, 227, 224, 164),
+                  ),
+                ],
+              ),
+              MarkerLayer(
+                markers: adjustedRouteCoordinates
+                    .map((coord) => Marker(
+                        width: 56,
+                        height: 56,
+                        point: LatLng(coord[1], coord[0]),
+                        child: Tooltip(
+                          message: formatProperties(properties),
+                          child: const Icon(
+                            Icons.location_on_outlined,
+                            color: Color.fromARGB(255, 214, 166, 146),
+                            size: 35,
+                          ),
+                        )))
                     .toList(),
-                strokeWidth: 4.0,
-                color: const Color.fromARGB(255, 227, 224, 164),
               ),
             ],
           ),
-          MarkerLayer(
-            markers: routeCoordinates
-                .map((coord) => Marker(
-                    width: 56,
-                    height: 56,
-                    point: LatLng(coord[1], coord[0]),
-                    child: Tooltip(
-                      message: formatProperties(properties),
-                      child: const Icon(
-                        Icons.location_on_outlined,
-                        color: Color.fromARGB(255, 214, 166, 146),
-                        size: 35,
-                      ),
-                    )))
-                .toList(),
+        ));
+  }
+}
+
+class PolygonView extends StatelessWidget {
+  final List<List<List<double>>> routeCoordinates;
+  final dynamic properties;
+  final double height;
+
+  const PolygonView(this.routeCoordinates, this.properties, this.height,
+      {super.key});
+
+  String formatProperties(Map<String, dynamic> properties) {
+    String message = '';
+    properties.forEach((key, value) {
+      message += '\$key: \$value\n';
+    });
+    return message;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    List<List<List<double>>> adjustedRouteCoordinates =
+        routeCoordinates.isNotEmpty
+            ? routeCoordinates
+            : [
+                [
+                  [0, 0]
+                ]
+              ];
+
+    var centroid = _calculateCentroid(adjustedRouteCoordinates[0]);
+
+    return Container(
+        height: height,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(15),
+          child: FlutterMap(
+            options: MapOptions(
+              center: LatLng(
+                centroid.latitude,
+                centroid.longitude,
+              ),
+              zoom: 10,
+            ),
+            children: [
+              TileLayer(
+                urlTemplate:
+                    "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                subdomains: const ['a', 'b', 'c'],
+              ),
+              PolygonLayer(
+                polygons: [
+                  flutter_map.Polygon(
+                    points: adjustedRouteCoordinates
+                        .expand((polygon) =>
+                            polygon.map((coord) => LatLng(coord[0], coord[1])))
+                        .toList(),
+                    color: Styles.polygonColor,
+                    isFilled: true,
+                  ),
+                ],
+              ),
+            ],
           ),
-        ],
-      ),
-    );
+        ));
+  }
+
+  LatLng _calculateCentroid(List<List<double>> polygon) {
+    double cx = 0, cy = 0;
+    int pointsCount = polygon.length;
+
+    for (var point in polygon) {
+      cx += point[0];
+      cy += point[1];
+    }
+
+    cx /= pointsCount;
+    cy /= pointsCount;
+
+    return LatLng(cy, cx);
   }
 }
 
