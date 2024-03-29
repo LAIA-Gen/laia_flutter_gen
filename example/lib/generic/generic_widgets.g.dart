@@ -351,6 +351,12 @@ class MapWidgetState extends State<MapWidget> {
                                                           geometry: geometry);
                                                   updateTextControllers();
                                                 } else if (isPolygonType) {
+                                                  geometry?.coordinates
+                                                      .removeAt(index);
+                                                  currentValue =
+                                                      currentValue?.copyWith(
+                                                          geometry: geometry);
+                                                  updateTextControllers();
                                                 } else if (isMultiPointType) {
                                                 } else if (isMultiLineStringType) {
                                                 } else if (isMultiPolygonType) {}
@@ -371,13 +377,16 @@ class MapWidgetState extends State<MapWidget> {
                               )))
                       : Text(widget.value.toString()),
                   if (widget.editable)
-                    if (isLineStringType)
+                    if (isLineStringType || isPolygonType)
                       IconButton(
                         icon: const Icon(Icons.add),
                         onPressed: () {
                           setState(() {
                             if (isLineStringType) {
                               geometry?.coordinates.add(<double>[]);
+                              updateTextControllers();
+                            } else if (isPolygonType) {
+                              geometry?.coordinates.add(<List<double>>[]);
                               updateTextControllers();
                             }
                             if (currentValue != initialValue) {
@@ -396,6 +405,9 @@ class MapWidgetState extends State<MapWidget> {
                       currentValue?.properties, 200),
               if (isLineStringType)
                 LineStringView(currentValue?.geometry.coordinates,
+                    currentValue?.properties, 200),
+              if (isPolygonType)
+                PolygonView(currentValue?.geometry.coordinates,
                     currentValue?.properties, 200),
             ],
           ),
