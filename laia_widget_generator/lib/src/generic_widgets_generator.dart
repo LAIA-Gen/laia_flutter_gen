@@ -310,7 +310,7 @@ class MapWidgetState extends State<MapWidget> {
                                                               double.parse(str))
                                                           .toList();
                                                   geometry = geometry?.copyWith(coordinates: coordinates);
-                                                } else if (isLineStringType) {
+                                                } else if (isLineStringType || isMultiPointType) {
                                                   List<String> coordinateStrings = newValue
                                                         .replaceAll('[', '') 
                                                         .replaceAll(']', '')
@@ -319,7 +319,7 @@ class MapWidgetState extends State<MapWidget> {
 
                                                   geometry?.coordinates[index] =
                                                       coordinates;
-                                                } else if (isPolygonType) {
+                                                } else if (isPolygonType || isMultiLineStringType) {
                                                   List<String> ringStrings = newValue.split(RegExp(r'\\\s*\\\],\\\s*\\\[')); 
                                                   List<List<double>> polygonCoordinates = [];
                                                   for (String ringString in ringStrings) {
@@ -328,9 +328,6 @@ class MapWidgetState extends State<MapWidget> {
                                                       polygonCoordinates.add(coordinates);
                                                   }
                                                   geometry?.coordinates[index] = polygonCoordinates;
-                                                } else if (isMultiPointType) {
-
-                                                } else if (isMultiLineStringType) {
 
                                                 } else if (isMultiPolygonType) {
 
@@ -354,21 +351,18 @@ class MapWidgetState extends State<MapWidget> {
                                                   geometry = geometry?.copyWith(coordinates: [0.0,0.0]);
                                                   currentValue = currentValue?.copyWith(geometry: geometry);
                                                   updateTextControllers();
-                                                } else if (isLineStringType) {
+                                                } else if (isLineStringType || isMultiPointType) {
                                                   geometry?.coordinates
                                                     .removeAt(index);
                                                   currentValue = currentValue?.copyWith(geometry: geometry);
                                                   updateTextControllers();
-                                                } else if (isPolygonType) {
+                                                } else if (isPolygonType || isMultiLineStringType) {
                                                   geometry?.coordinates
                                                       .removeAt(index);
                                                   currentValue =
                                                       currentValue?.copyWith(
                                                           geometry: geometry);
                                                   updateTextControllers();
-                                                } else if (isMultiPointType) {
-
-                                                } else if (isMultiLineStringType) {
 
                                                 } else if (isMultiPolygonType) {
                                                   
@@ -391,15 +385,15 @@ class MapWidgetState extends State<MapWidget> {
                       )
                     : Text(widget.value.toString()),
                     if (widget.editable)
-                    if (isLineStringType || isPolygonType)
+                    if (isLineStringType || isPolygonType || isMultiPointType || isMultiLineStringType)
                       IconButton(
                         icon: const Icon(Icons.add),
                         onPressed: () {
                           setState(() {
-                            if (isLineStringType) {
+                            if (isLineStringType || isMultiPointType) {
                               geometry?.coordinates.add(<double>[]);
                               updateTextControllers();
-                            } else if (isPolygonType) {
+                            } else if (isPolygonType || isMultiLineStringType) {
                               geometry?.coordinates.add(<List<double>>[]);
                               updateTextControllers();
                             }
@@ -417,9 +411,16 @@ class MapWidgetState extends State<MapWidget> {
                 if (isPointType)
                   PointView(currentValue?.geometry.coordinates, currentValue?.properties, 200),
                 if (isLineStringType)
-                  LineStringView(currentValue?.geometry.coordinates, currentValue?.properties, 200),
+                  LineStringView(currentValue?.geometry.coordinates,
+                      currentValue?.properties, 200),
                 if (isPolygonType)
                   PolygonView(currentValue?.geometry.coordinates,
+                      currentValue?.properties, 200),
+                if (isMultiPointType) 
+                  MultiPointView(currentValue?.geometry.coordinates,
+                      currentValue?.properties, 200),
+                if (isMultiLineStringType) 
+                  MultiLineStringView(currentValue?.geometry.coordinates,
                       currentValue?.properties, 200),
             ],
           ),
@@ -470,6 +471,28 @@ class MapWidgetState extends State<MapWidget> {
               child: const Text('Show Area'),
             ),
           ),
+        if (isMultiPointType)
+          Positioned(
+            top: 0,
+            right: 0,
+            child: ElevatedButton(
+              onPressed: () {
+                showMultiPointView(context, widget.value);
+              },
+              child: const Text('Show Points'),
+            ),
+          ),
+        if (isMultiLineStringType)
+          Positioned(
+            top: 0,
+            right: 0,
+            child: ElevatedButton(
+              onPressed: () {
+                showMultiLineStringView(context, widget.value);
+              },
+              child: const Text('Show Lines'),
+            ),
+          ),
       ],
     );
   }
@@ -501,6 +524,26 @@ class MapWidgetState extends State<MapWidget> {
           polygonCoordinates, properties, MediaQuery.of(context).size.height)),
     ));
   }
+
+  void showMultiPointView(BuildContext context, Feature? points) {
+    List<List<double>> routeCoordinates = points?.geometry.coordinates;
+    dynamic properties = points?.properties;
+
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => MapScreenView(MultiPointView(
+          routeCoordinates, properties, MediaQuery.of(context).size.height)),
+    ));
+  }
+
+  void showMultiLineStringView(BuildContext context, Feature? points) {
+    List<List<List<double>>> routeCoordinates = points?.geometry.coordinates;
+    dynamic properties = points?.properties;
+
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => MapScreenView(MultiLineStringView(
+          routeCoordinates, properties, MediaQuery.of(context).size.height)),
+    ));
+  }
 }
 
 class MapScreenView extends StatelessWidget {
@@ -526,7 +569,7 @@ class PointView extends StatelessWidget {
 
   const PointView(this.coordinates, this.properties, this.height, {super.key});
 
-  String formatProperties(Map<String, dynamic> properties) {
+  String formatProperties(dynamic properties) {
     String message = '';
     properties.forEach((key, value) {
       message += '\$key: \$value'''r'''\n'''r'''';
@@ -579,6 +622,71 @@ class PointView extends StatelessWidget {
   }
 }
 
+class MultiPointView extends StatelessWidget {
+  final List<List<double>> routeCoordinates;
+  final dynamic properties;
+  final double height;
+
+  const MultiPointView(this.routeCoordinates, this.properties, this.height,
+      {super.key});
+
+  String formatProperties(dynamic properties) {
+    String message = '';
+    properties.forEach((key, value) {
+      message += '\$key: \$value\n';
+    });
+    return message;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    List<List<double>> adjustedRouteCoordinates =
+        routeCoordinates.where((coord) => coord.length >= 2).toList();
+
+    if (adjustedRouteCoordinates.isEmpty) {
+      adjustedRouteCoordinates = [
+        [0, 0]
+      ];
+    }
+
+    return Container(
+        height: height,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(15),
+          child: FlutterMap(
+            options: MapOptions(
+              center: LatLng(adjustedRouteCoordinates[0][1],
+                  adjustedRouteCoordinates[0][0]),
+              zoom: 10,
+            ),
+            children: [
+              TileLayer(
+                urlTemplate:
+                    "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                subdomains: const ['a', 'b', 'c'],
+              ),
+              MarkerLayer(
+                markers: adjustedRouteCoordinates
+                    .map((coord) => Marker(
+                        width: 56,
+                        height: 56,
+                        point: LatLng(coord[1], coord[0]),
+                        child: Tooltip(
+                          message: formatProperties(properties),
+                          child: const Icon(
+                            Icons.location_on_outlined,
+                            color: Color.fromARGB(255, 214, 166, 146),
+                            size: 35,
+                          ),
+                        )))
+                    .toList(),
+              ),
+            ],
+          ),
+        ));
+  }
+}
+
 class LineStringView extends StatelessWidget {
   final List<List<double>> routeCoordinates;
   final dynamic properties;
@@ -586,7 +694,7 @@ class LineStringView extends StatelessWidget {
 
   const LineStringView(this.routeCoordinates, this.properties, this.height, {super.key});
 
-  String formatProperties(Map<String, dynamic> properties) {
+  String formatProperties(dynamic properties) {
     String message = '';
     properties.forEach((key, value) {
       message += '\$key: \$value'''r'''\n'''r'''';
@@ -652,6 +760,111 @@ class LineStringView extends StatelessWidget {
   }
 }
 
+class MultiLineStringView extends StatelessWidget {
+  final List<List<List<double>>> routeCoordinates;
+  final dynamic properties;
+  final double height;
+
+  const MultiLineStringView(this.routeCoordinates, this.properties, this.height,
+      {super.key});
+
+  String formatProperties(dynamic properties) {
+    String message = '';
+    properties.forEach((key, value) {
+      message += '\$key: \$value\n';
+    });
+    return message;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    List<List<List<double>>> adjustedRouteCoordinates =
+        routeCoordinates.isNotEmpty
+            ? routeCoordinates
+                .map((sublist) =>
+                    sublist.where((coord) => coord.length >= 2).toList())
+                .toList()
+            : [
+                [
+                  [0, 0]
+                ]
+              ];
+
+    LatLng centroid = const LatLng(0, 0);
+
+    if (adjustedRouteCoordinates.isNotEmpty) {
+      var firstPolygon = adjustedRouteCoordinates[0];
+      if (firstPolygon.isNotEmpty) {
+        centroid = _calculateCentroid(firstPolygon);
+      }
+    }
+
+    return Container(
+        height: height,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(15),
+          child: FlutterMap(
+            options: MapOptions(
+              center: LatLng(
+                centroid.latitude,
+                centroid.longitude,
+              ),
+              zoom: 8,
+            ),
+            children: [
+              TileLayer(
+                urlTemplate:
+                    "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                subdomains: const ['a', 'b', 'c'],
+              ),
+              PolylineLayer(
+                polylines:adjustedRouteCoordinates
+                  .map((line) => Polyline(
+                    points: line
+                            .map((coord) => LatLng(coord[1], coord[0]))
+                            .toList(),
+                    strokeWidth: 4.0,
+                    color: const Color.fromARGB(255, 227, 224, 164),
+                  ),
+              ).toList(),),
+              MarkerLayer(
+                markers: adjustedRouteCoordinates
+                  .expand((line) => line.map((coord) => Marker(
+                        width: 56,
+                        height: 56,
+                        point: LatLng(coord[1], coord[0]),
+                        child: Tooltip(
+                          message: formatProperties(properties),
+                          child: const Icon(
+                            Icons.location_on_outlined,
+                            color: Color.fromARGB(255, 214, 166, 146),
+                            size: 35,
+                          ),
+                        ),
+                      )))
+                  .toList(),
+              ),
+            ],
+          ),
+        ));
+  }
+
+  LatLng _calculateCentroid(List<List<double>> polygon) {
+    double cx = 0, cy = 0;
+    int pointsCount = polygon.length;
+
+    for (var point in polygon) {
+      cx += point[0];
+      cy += point[1];
+    }
+
+    cx /= pointsCount;
+    cy /= pointsCount;
+
+    return LatLng(cy, cx);
+  }
+}
+
 class PolygonView extends StatelessWidget {
   final List<List<List<double>>> routeCoordinates;
   final dynamic properties;
@@ -660,7 +873,7 @@ class PolygonView extends StatelessWidget {
   const PolygonView(this.routeCoordinates, this.properties, this.height,
       {super.key});
 
-  String formatProperties(Map<String, dynamic> properties) {
+  String formatProperties(dynamic properties) {
     String message = '';
     properties.forEach((key, value) {
       message += '\$key: \$value\n';
