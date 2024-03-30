@@ -22,11 +22,15 @@ class ListWidgetGenerator extends GeneratorForAnnotation<ListWidgetGenAnnotation
 
     final pageSize = annotation.read('pageSize').intValue;
     final List<String> defaultFields = annotation.read('defaultFields').listValue.map((element) => element.toStringValue() ?? '').toList();
-    // final widget = annotation.read('widget').stringValue;
+    var widget = annotation.read('widget').stringValue;
 
     var className = visitor.className;
     var classNameLowercase = className.toLowerCase();
     var classNamePlural = '${classNameLowercase}s';
+
+    if (widget == '') {
+      widget = "${className}Widget";
+    }
 
     buffer.writeln('''
 class ${className}ListView extends ConsumerStatefulWidget {
@@ -168,49 +172,90 @@ class _${className}ListViewState extends ConsumerState<${className}ListView> {
                           width: double.infinity,
                           child: DataTable(
                             columns: [''');
-    for (var field in classElement.fields) {
-      if (_fieldChecker.hasAnnotationOfExact(field)) {
-        String nameValue = _fieldChecker
-          .firstAnnotationOfExact(field)
-          ?.getField('fieldName')
-          ?.toStringValue() ?? '';
+    if (defaultFields.isEmpty) {
+      for (var field in classElement.fields) {
+          if (_fieldChecker.hasAnnotationOfExact(field)) {
+              String nameValue = _fieldChecker
+                  .firstAnnotationOfExact(field)
+                  ?.getField('fieldName')
+                  ?.toStringValue() ?? '';
 
-        var fieldName = field.name;
-        if (nameValue.isNotEmpty) {
-          fieldName = nameValue;
-        }
-        if (!(defaultFields.isNotEmpty && !(defaultFields.contains(field.name)))) {
-          buffer.writeln('''
-            DataColumn(
-              label: Expanded(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [ 
-                    const Text('$fieldName', style: TextStyle(fontWeight: FontWeight.bold, color: Color.fromARGB(255, 94, 54, 54)), textAlign: TextAlign.center,),
-                    if (columnSortStates['${field.name}'] != null) ...[
-                      Icon(
-                        columnSortStates['${field.name}'] == 1
-                            ? Icons.arrow_drop_up_rounded 
-                            : Icons.arrow_drop_down_rounded,
-                        color: Colors.black,
-                      ),
-                      Text(
-                        '\${columnSortStates.keys.toList().indexOf('${field.name}') + 1}',
-                        style: const TextStyle(fontSize: 10),
-                      ),
-                    ],
-                  ],
+              var fieldName = field.name;
+              if (nameValue.isNotEmpty) {
+                  fieldName = nameValue;
+              }
+              buffer.writeln('''
+                DataColumn(
+                  label: Expanded(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [ 
+                        const Text('$fieldName', style: TextStyle(fontWeight: FontWeight.bold, color: Color.fromARGB(255, 94, 54, 54)), textAlign: TextAlign.center,),
+                        if (columnSortStates['${field.name}'] != null) ...[
+                          Icon(
+                            columnSortStates['${field.name}'] == 1
+                                ? Icons.arrow_drop_up_rounded 
+                                : Icons.arrow_drop_down_rounded,
+                            color: Colors.black,
+                          ),
+                          Text(
+                            '\${columnSortStates.keys.toList().indexOf('${field.name}') + 1}',
+                            style: const TextStyle(fontSize: 10),
+                          ),
+                        ],
+                      ],
+                    ),
+                  ), 
+                  onSort:(columnIndex, ascending) => {
+                    onSort('${field.name}')
+                  },
                 ),
-              ), 
-              onSort:(columnIndex, ascending) => {
-                onSort('${field.name}')
-              },
-            ),
-          ''');
-        }
+              ''');
+          }
       }
-    }
+  } else {
+      for (var defaultField in defaultFields) {
+          var field = classElement.fields.firstWhere((f) => f.name == defaultField);
+          if (_fieldChecker.hasAnnotationOfExact(field)) {
+              String nameValue = _fieldChecker
+                  .firstAnnotationOfExact(field)
+                  ?.getField('fieldName')
+                  ?.toStringValue() ?? '';
 
+              var fieldName = field.name;
+              if (nameValue.isNotEmpty) {
+                  fieldName = nameValue;
+              }
+              buffer.writeln('''
+                DataColumn(
+                  label: Expanded(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [ 
+                        const Text('$fieldName', style: TextStyle(fontWeight: FontWeight.bold, color: Color.fromARGB(255, 94, 54, 54)), textAlign: TextAlign.center,),
+                        if (columnSortStates['${field.name}'] != null) ...[
+                          Icon(
+                            columnSortStates['${field.name}'] == 1
+                                ? Icons.arrow_drop_up_rounded 
+                                : Icons.arrow_drop_down_rounded,
+                            color: Colors.black,
+                          ),
+                          Text(
+                            '\${columnSortStates.keys.toList().indexOf('${field.name}') + 1}',
+                            style: const TextStyle(fontSize: 10),
+                          ),
+                        ],
+                      ],
+                    ),
+                  ), 
+                  onSort:(columnIndex, ascending) => {
+                    onSort('${field.name}')
+                  },
+                ),
+              ''');
+              }
+      }
+  }
     buffer.writeln('''
         ],
         rows: $classNamePlural.map(($classNameLowercase) {
@@ -433,7 +478,7 @@ DataCell(Center(
                             onSelectChanged: (selected) {
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(builder: (context) => ${className}Widget(element: $classNameLowercase, isEditing: true)),
+                                MaterialPageRoute(builder: (context) => $widget(element: $classNameLowercase, isEditing: true)),
                               );
                             },
                           );

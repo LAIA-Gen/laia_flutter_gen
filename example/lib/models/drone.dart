@@ -18,17 +18,17 @@ part 'drone.g.dart';
 @JsonSerializable()
 @RiverpodGenAnnotation(baseURL)
 @HomeWidgetElementGenAnnotation()
-@ListWidgetGenAnnotation()
+@ListWidgetGenAnnotation(defaultFields: ['name', 'description', 'flightplan'])
 @elementWidgetGen
 @CopyWith()
 class Drone {
-  @Field(fieldName: 'description')
+  @Field(fieldName: 'Description')
   final String? description;
-  @Field(fieldName: 'flightplan', uspaceMap: true)
+  @Field(fieldName: 'Flight Plan')
   final Point flightplan;
   @Field(fieldName: 'id')
   final String? id;
-  @Field(fieldName: 'name')
+  @Field(fieldName: 'Name')
   final String name;
 
   Drone({
