@@ -340,7 +340,46 @@ class MapWidgetState extends State<MapWidget> {
                                                   }
                                                   geometry?.coordinates[index] =
                                                       polygonCoordinates;
-                                                } else if (isMultiPolygonType) {}
+                                                } else if (isMultiPolygonType) {
+                                                  List<String> polygonStrings =
+                                                      newValue.split(RegExp(
+                                                          r'\s*\]\s*\],\s*\[\s*\['));
+                                                  List<List<List<double>>>
+                                                      multiPolygonCoordinates =
+                                                      [];
+                                                  for (String polygonString
+                                                      in polygonStrings) {
+                                                    List<String> ringStrings =
+                                                        polygonString.split(
+                                                            RegExp(
+                                                                r'\s*\],\s*\['));
+                                                    List<List<double>>
+                                                        polygonCoordinates = [];
+                                                    for (String ringString
+                                                        in ringStrings) {
+                                                      List<String>
+                                                          coordinateStrings =
+                                                          ringString
+                                                              .replaceAll(
+                                                                  '[', '')
+                                                              .replaceAll(
+                                                                  ']', '')
+                                                              .split(',');
+                                                      List<double> coordinates =
+                                                          coordinateStrings
+                                                              .map((str) =>
+                                                                  double.parse(
+                                                                      str.trim()))
+                                                              .toList();
+                                                      polygonCoordinates
+                                                          .add(coordinates);
+                                                    }
+                                                    multiPolygonCoordinates.add(
+                                                        polygonCoordinates);
+                                                  }
+                                                  geometry?.coordinates[index] =
+                                                      multiPolygonCoordinates;
+                                                }
                                                 currentValue =
                                                     currentValue?.copyWith(
                                                         geometry: geometry);
@@ -367,23 +406,14 @@ class MapWidgetState extends State<MapWidget> {
                                                       currentValue?.copyWith(
                                                           geometry: geometry);
                                                   updateTextControllers();
-                                                } else if (isLineStringType ||
-                                                    isMultiPointType) {
+                                                } else {
                                                   geometry?.coordinates
                                                       .removeAt(index);
                                                   currentValue =
                                                       currentValue?.copyWith(
                                                           geometry: geometry);
                                                   updateTextControllers();
-                                                } else if (isPolygonType ||
-                                                    isMultiLineStringType) {
-                                                  geometry?.coordinates
-                                                      .removeAt(index);
-                                                  currentValue =
-                                                      currentValue?.copyWith(
-                                                          geometry: geometry);
-                                                  updateTextControllers();
-                                                } else if (isMultiPolygonType) {}
+                                                }
                                                 if (currentValue !=
                                                     initialValue) {
                                                   isValueChanged = true;
@@ -404,7 +434,8 @@ class MapWidgetState extends State<MapWidget> {
                     if (isLineStringType ||
                         isPolygonType ||
                         isMultiPointType ||
-                        isMultiLineStringType)
+                        isMultiLineStringType ||
+                        isMultiPolygonType)
                       IconButton(
                         icon: const Icon(Icons.add),
                         onPressed: () {
@@ -414,6 +445,9 @@ class MapWidgetState extends State<MapWidget> {
                               updateTextControllers();
                             } else if (isPolygonType || isMultiLineStringType) {
                               geometry?.coordinates.add(<List<double>>[]);
+                              updateTextControllers();
+                            } else if (isMultiPolygonType) {
+                              geometry?.coordinates.add(<List<List<double>>>[]);
                               updateTextControllers();
                             }
                             if (currentValue != initialValue) {
@@ -441,6 +475,9 @@ class MapWidgetState extends State<MapWidget> {
                     currentValue?.properties, 200),
               if (isMultiLineStringType)
                 MultiLineStringView(currentValue?.geometry.coordinates,
+                    currentValue?.properties, 200),
+              if (isMultiPolygonType)
+                MultiPolygonView(currentValue?.geometry.coordinates,
                     currentValue?.properties, 200),
             ],
           ),
@@ -513,6 +550,17 @@ class MapWidgetState extends State<MapWidget> {
               child: const Text('Show Lines'),
             ),
           ),
+        if (isMultiPolygonType)
+          Positioned(
+            top: 0,
+            right: 0,
+            child: ElevatedButton(
+              onPressed: () {
+                showMultiPolygonView(context, widget.value);
+              },
+              child: const Text('Show Areas'),
+            ),
+          ),
       ],
     );
   }
@@ -563,6 +611,17 @@ class MapWidgetState extends State<MapWidget> {
 
     Navigator.of(context).push(MaterialPageRoute(
       builder: (context) => MapScreenView(MultiLineStringView(
+          routeCoordinates, properties, MediaQuery.of(context).size.height)),
+    ));
+  }
+
+  void showMultiPolygonView(BuildContext context, Feature? points) {
+    List<List<List<List<double>>>> routeCoordinates =
+        points?.geometry.coordinates;
+    dynamic properties = points?.properties;
+
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => MapScreenView(MultiPolygonView(
           routeCoordinates, properties, MediaQuery.of(context).size.height)),
     ));
   }
@@ -961,6 +1020,102 @@ class PolygonView extends StatelessWidget {
                     isFilled: true,
                   ),
                 ],
+              ),
+            ],
+          ),
+        ));
+  }
+
+  LatLng _calculateCentroid(List<List<double>> polygon) {
+    double cx = 0, cy = 0;
+    int pointsCount = polygon.length;
+
+    for (var point in polygon) {
+      cx += point[0];
+      cy += point[1];
+    }
+
+    cx /= pointsCount;
+    cy /= pointsCount;
+
+    return LatLng(cy, cx);
+  }
+}
+
+class MultiPolygonView extends StatelessWidget {
+  final List<List<List<List<double>>>> routeCoordinates;
+  final dynamic properties;
+  final double height;
+
+  const MultiPolygonView(this.routeCoordinates, this.properties, this.height,
+      {super.key});
+
+  String formatProperties(dynamic properties) {
+    String message = '';
+    properties.forEach((key, value) {
+      message += '\$key: \$value\n';
+    });
+    return message;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    List<List<List<List<double>>>> adjustedRouteCoordinates =
+        routeCoordinates.isNotEmpty
+            ? routeCoordinates
+                .map((polygonList) => polygonList
+                    .map((polygon) =>
+                        polygon.where((coord) => coord.length >= 2).toList())
+                    .toList())
+                .toList()
+            : [
+                [
+                  [
+                    [0, 0]
+                  ]
+                ]
+              ];
+
+    LatLng centroid = const LatLng(0, 0);
+
+    if (adjustedRouteCoordinates.isNotEmpty) {
+      var firstPolygon = adjustedRouteCoordinates[0];
+      if (firstPolygon.isNotEmpty) {
+        centroid = _calculateCentroid(firstPolygon[0]);
+      }
+    }
+
+    return Container(
+        height: height,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(15),
+          child: FlutterMap(
+            options: MapOptions(
+              center: LatLng(
+                centroid.latitude,
+                centroid.longitude,
+              ),
+              zoom: 8,
+            ),
+            children: [
+              TileLayer(
+                urlTemplate:
+                    "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                subdomains: const ['a', 'b', 'c'],
+              ),
+              PolygonLayer(
+                polygons: adjustedRouteCoordinates
+                    .map(
+                      (polygon) => flutter_map.Polygon(
+                        points: polygon
+                            .expand((subPolygon) => subPolygon
+                                .map((coord) => LatLng(coord[0], coord[1])))
+                            .toList(),
+                        color: Styles.polygonColor,
+                        isFilled: true,
+                      ),
+                    )
+                    .toList(),
               ),
             ],
           ),

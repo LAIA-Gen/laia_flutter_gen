@@ -44,4 +44,5 @@ List<Widget> _dashboardWidgets = [
   Drones3HomeWidget(),
   Drones4HomeWidget(),
   Drones5HomeWidget(),
+  Drones6HomeWidget(),
 ];
