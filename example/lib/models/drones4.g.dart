@@ -1,67 +1,67 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'drone.dart';
+part of 'drones4.dart';
 
 // **************************************************************************
 // CopyWithGenerator
 // **************************************************************************
 
-abstract class _$DroneCWProxy {
-  Drone description(String? description);
+abstract class _$Drones4CWProxy {
+  Drones4 description(String? description);
 
-  Drone flightplan(Point flightplan);
+  Drones4 flightplan(MultiPoint flightplan);
 
-  Drone id(String? id);
+  Drones4 id(String? id);
 
-  Drone name(String name);
+  Drones4 name(String name);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Drone(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Drones4(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
   /// Usage
   /// ```dart
-  /// Drone(...).copyWith(id: 12, name: "My name")
+  /// Drones4(...).copyWith(id: 12, name: "My name")
   /// ````
-  Drone call({
+  Drones4 call({
     String? description,
-    Point? flightplan,
+    MultiPoint? flightplan,
     String? id,
     String? name,
   });
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfDrone.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfDrone.copyWith.fieldName(...)`
-class _$DroneCWProxyImpl implements _$DroneCWProxy {
-  final Drone _value;
+/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfDrones4.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfDrones4.copyWith.fieldName(...)`
+class _$Drones4CWProxyImpl implements _$Drones4CWProxy {
+  final Drones4 _value;
 
-  const _$DroneCWProxyImpl(this._value);
-
-  @override
-  Drone description(String? description) => this(description: description);
+  const _$Drones4CWProxyImpl(this._value);
 
   @override
-  Drone flightplan(Point flightplan) => this(flightplan: flightplan);
+  Drones4 description(String? description) => this(description: description);
 
   @override
-  Drone id(String? id) => this(id: id);
+  Drones4 flightplan(MultiPoint flightplan) => this(flightplan: flightplan);
 
   @override
-  Drone name(String name) => this(name: name);
+  Drones4 id(String? id) => this(id: id);
+
+  @override
+  Drones4 name(String name) => this(name: name);
 
   @override
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Drone(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Drones4(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
   /// Usage
   /// ```dart
-  /// Drone(...).copyWith(id: 12, name: "My name")
+  /// Drones4(...).copyWith(id: 12, name: "My name")
   /// ````
-  Drone call({
+  Drones4 call({
     Object? description = const $CopyWithPlaceholder(),
     Object? flightplan = const $CopyWithPlaceholder(),
     Object? id = const $CopyWithPlaceholder(),
     Object? name = const $CopyWithPlaceholder(),
   }) {
-    return Drone(
+    return Drones4(
       description: description == const $CopyWithPlaceholder()
           ? _value.description
           // ignore: cast_nullable_to_non_nullable
@@ -70,7 +70,7 @@ class _$DroneCWProxyImpl implements _$DroneCWProxy {
           flightplan == const $CopyWithPlaceholder() || flightplan == null
               ? _value.flightplan
               // ignore: cast_nullable_to_non_nullable
-              : flightplan as Point,
+              : flightplan as MultiPoint,
       id: id == const $CopyWithPlaceholder()
           ? _value.id
           // ignore: cast_nullable_to_non_nullable
@@ -83,28 +83,28 @@ class _$DroneCWProxyImpl implements _$DroneCWProxy {
   }
 }
 
-extension $DroneCopyWith on Drone {
-  /// Returns a callable class that can be used as follows: `instanceOfDrone.copyWith(...)` or like so:`instanceOfDrone.copyWith.fieldName(...)`.
+extension $Drones4CopyWith on Drones4 {
+  /// Returns a callable class that can be used as follows: `instanceOfDrones4.copyWith(...)` or like so:`instanceOfDrones4.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
-  _$DroneCWProxy get copyWith => _$DroneCWProxyImpl(this);
+  _$Drones4CWProxy get copyWith => _$Drones4CWProxyImpl(this);
 }
 
 // **************************************************************************
 // ElementWidgetGenerator
 // **************************************************************************
 
-class DroneWidget extends StatefulWidget {
-  final Drone? element;
+class Drones4Widget extends StatefulWidget {
+  final Drones4? element;
   final bool isEditing;
 
-  const DroneWidget({this.element, required this.isEditing, Key? key})
+  const Drones4Widget({this.element, required this.isEditing, Key? key})
       : super(key: key);
 
   @override
-  _DroneWidgetState createState() => _DroneWidgetState();
+  _Drones4WidgetState createState() => _Drones4WidgetState();
 }
 
-class _DroneWidgetState extends State<DroneWidget> {
+class _Drones4WidgetState extends State<Drones4Widget> {
   final GlobalKey<StringWidgetState> descriptionWidgetKey =
       GlobalKey<StringWidgetState>();
   final GlobalKey<MapWidgetState> flightplanWidgetKey =
@@ -118,7 +118,7 @@ class _DroneWidgetState extends State<DroneWidget> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Drone'),
+        title: const Text('Drones4'),
       ),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
@@ -139,11 +139,12 @@ class _DroneWidgetState extends State<DroneWidget> {
                 editable: true,
                 placeholder: "Type the flightplan",
                 value: widget.element?.flightplan ??
-                    Point(
+                    MultiPoint(
                         type: "Feature",
-                        geometry: GeometryPoint(coordinates: [], type: "Point"),
+                        geometry: GeometryMultiPoint(
+                            coordinates: [], type: "MultiPoint"),
                         properties: {}),
-                uspaceMap: true),
+                uspaceMap: false),
             StringWidget(
               key: idWidgetKey,
               fieldName: "id",
@@ -171,9 +172,9 @@ class _DroneWidgetState extends State<DroneWidget> {
           dynamic updatedflightplan =
               flightplanWidgetKey.currentState?.getUpdatedValue();
 
-          updatedflightplan = Point(
+          updatedflightplan = MultiPoint(
               type: "Feature",
-              geometry: GeometryPoint(
+              geometry: GeometryMultiPoint(
                   coordinates: updatedflightplan.geometry.coordinates,
                   type: updatedflightplan.geometry.type),
               properties: updatedflightplan.properties);
@@ -182,15 +183,15 @@ class _DroneWidgetState extends State<DroneWidget> {
 
           String? updatedname = nameWidgetKey.currentState?.getUpdatedValue();
 
-          Drone updatedDrone = widget.element ??
-              Drone(
+          Drones4 updatedDrones4 = widget.element ??
+              Drones4(
                 description: updateddescription ?? '',
                 flightplan: updatedflightplan ?? '',
                 id: updatedid ?? '',
                 name: updatedname ?? '',
               );
 
-          updatedDrone = updatedDrone.copyWith(
+          updatedDrones4 = updatedDrones4.copyWith(
               description: updateddescription,
               flightplan: updatedflightplan,
               id: updatedid,
@@ -198,14 +199,14 @@ class _DroneWidgetState extends State<DroneWidget> {
           var container = ProviderContainer();
           try {
             if (widget.isEditing) {
-              await container.read(updateDroneProvider(updatedDrone));
-              print('Drone updated successfully');
+              await container.read(updateDrones4Provider(updatedDrones4));
+              print('Drones4 updated successfully');
             } else {
-              await container.read(createDroneProvider(updatedDrone));
-              print('Drone created successfully');
+              await container.read(createDrones4Provider(updatedDrones4));
+              print('Drones4 created successfully');
             }
           } catch (error) {
-            print('Failed to update Drone: $error');
+            print('Failed to update Drones4: $error');
           }
         },
         child: Icon(Icons.save),
@@ -214,14 +215,14 @@ class _DroneWidgetState extends State<DroneWidget> {
   }
 }
 
-class DroneFieldWidget extends StatefulWidget {
+class Drones4FieldWidget extends StatefulWidget {
   final String fieldName;
   final String fieldDescription;
   final bool editable;
   final String placeholder;
   final String? value;
 
-  const DroneFieldWidget({
+  const Drones4FieldWidget({
     Key? key,
     required this.fieldName,
     required this.fieldDescription,
@@ -231,15 +232,15 @@ class DroneFieldWidget extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  DroneFieldWidgetState createState() => DroneFieldWidgetState();
+  Drones4FieldWidgetState createState() => Drones4FieldWidgetState();
 }
 
-class DroneFieldWidgetState extends State<DroneFieldWidget> {
+class Drones4FieldWidgetState extends State<Drones4FieldWidget> {
   final TextEditingController _typeAheadController = TextEditingController();
   bool isValueChanged = false;
   late String? initialValue;
   late String currentValue;
-  late List<Drone> options;
+  late List<Drones4> options;
 
   @override
   void initState() {
@@ -251,8 +252,9 @@ class DroneFieldWidgetState extends State<DroneFieldWidget> {
     super.initState();
     initialValue = widget.value;
     currentValue = initialValue ?? '';
-    Drone drone = await container.read(getDroneProvider(widget.value!).future);
-    _typeAheadController.text = '${drone.name} <id: ${drone.id}>';
+    Drones4 drones4 =
+        await container.read(getDrones4Provider(widget.value!).future);
+    _typeAheadController.text = '${drones4.name} <id: ${drones4.id}>';
   }
 
   String? getUpdatedValue() {
@@ -294,30 +296,31 @@ class DroneFieldWidgetState extends State<DroneFieldWidget> {
                 children: [
                   widget.editable
                       ? Expanded(
-                          child: TypeAheadField<Drone>(
+                          child: TypeAheadField<Drones4>(
                             controller: _typeAheadController,
                             suggestionsCallback: (String pattern) async {
-                              final dronePaginationData = await container.read(
-                                  getAllDroneProvider(container
-                                          .read(dronePaginationProvider))
+                              final drones4PaginationData = await container
+                                  .read(getAllDrones4Provider(container
+                                          .read(drones4PaginationProvider))
                                       .future);
-                              final options = dronePaginationData.items;
+                              final options = drones4PaginationData.items;
                               return options
-                                  .where((drone) =>
-                                      drone.name
+                                  .where((drones4) =>
+                                      drones4.name
                                           .toLowerCase()
                                           .contains(pattern.toLowerCase()) ||
-                                      drone.id
+                                      drones4.id
                                           .toString()
                                           .contains(pattern.toLowerCase()))
                                   .toList();
                             },
-                            itemBuilder: (context, drone) {
+                            itemBuilder: (context, drones4) {
                               return ListTile(
-                                title: Text('${drone.name} <id: ${drone.id}>'),
+                                title:
+                                    Text('${drones4.name} <id: ${drones4.id}>'),
                               );
                             },
-                            onSelected: (Drone value) {
+                            onSelected: (Drones4 value) {
                               setState(() {
                                 isValueChanged = value.id != initialValue;
                                 currentValue = value.id!;
@@ -352,20 +355,20 @@ class DroneFieldWidgetState extends State<DroneFieldWidget> {
           child: ElevatedButton(
             onPressed: () async {
               try {
-                Drone drone = await container
-                    .read(getDroneProvider(widget.value!).future);
+                Drones4 drones4 = await container
+                    .read(getDrones4Provider(widget.value!).future);
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) =>
-                        DroneWidget(element: drone, isEditing: true),
+                        Drones4Widget(element: drones4, isEditing: true),
                   ),
                 );
               } catch (error) {
-                print('Failed to fetch drone: $error');
+                print('Failed to fetch drones4: $error');
               }
             },
-            child: const Text('View Drone'),
+            child: const Text('View Drones4'),
           ),
         ),
       ],
@@ -373,14 +376,14 @@ class DroneFieldWidgetState extends State<DroneFieldWidget> {
   }
 }
 
-class DroneMultiFieldWidget extends StatefulWidget {
+class Drones4MultiFieldWidget extends StatefulWidget {
   final String fieldName;
   final String fieldDescription;
   final bool editable;
   final String placeholder;
   final List<String>? values;
 
-  const DroneMultiFieldWidget({
+  const Drones4MultiFieldWidget({
     Key? key,
     required this.fieldName,
     required this.fieldDescription,
@@ -390,15 +393,15 @@ class DroneMultiFieldWidget extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  DroneMultiFieldWidgetState createState() => DroneMultiFieldWidgetState();
+  Drones4MultiFieldWidgetState createState() => Drones4MultiFieldWidgetState();
 }
 
-class DroneMultiFieldWidgetState extends State<DroneMultiFieldWidget> {
+class Drones4MultiFieldWidgetState extends State<Drones4MultiFieldWidget> {
   final TextEditingController _typeAheadController = TextEditingController();
   bool isValueChanged = false;
   late List<String> initialValues = [];
   late List<String> currentValues = [];
-  late List<Drone> options = [];
+  late List<Drones4> options = [];
 
   @override
   void initState() {
@@ -411,13 +414,13 @@ class DroneMultiFieldWidgetState extends State<DroneMultiFieldWidget> {
     initialValues = widget.values ?? [];
     currentValues = initialValues;
     if (widget.values != null) {
-      List<Drone> droneList = await Future.wait(
+      List<Drones4> drones4List = await Future.wait(
         (widget.values ?? []).where((value) => value != '').map((value) async {
-          return await container.read(getDroneProvider(value).future);
+          return await container.read(getDrones4Provider(value).future);
         }),
       );
-      String concatenatedText = '${droneList.map((drone) {
-        return '${drone.name} <id: ${drone.id}>';
+      String concatenatedText = '${drones4List.map((drones4) {
+        return '${drones4.name} <id: ${drones4.id}>';
       }).join(', ')}, ';
       _typeAheadController.text = concatenatedText;
     } else {
@@ -464,7 +467,7 @@ class DroneMultiFieldWidgetState extends State<DroneMultiFieldWidget> {
                 children: [
                   widget.editable
                       ? Expanded(
-                          child: TypeAheadField<Drone>(
+                          child: TypeAheadField<Drones4>(
                             controller: _typeAheadController,
                             suggestionsCallback: (String pattern) async {
                               final idRegex =
@@ -491,46 +494,47 @@ class DroneMultiFieldWidgetState extends State<DroneMultiFieldWidget> {
                               }
                               final inputParts = pattern.split(',').last.trim();
                               container
-                                  .read(dronePaginationProvider.notifier)
+                                  .read(drones4PaginationProvider.notifier)
                                   .setFilters({
                                 'id': {'\$nin': currentValues}
                               });
-                              final dronePaginationData = await container.read(
-                                  getAllDroneProvider(container
-                                          .read(dronePaginationProvider))
+                              final drones4PaginationData = await container
+                                  .read(getAllDrones4Provider(container
+                                          .read(drones4PaginationProvider))
                                       .future);
-                              final options = dronePaginationData.items;
+                              final options = drones4PaginationData.items;
                               return options
-                                  .where((drone) =>
-                                      drone.name
+                                  .where((drones4) =>
+                                      drones4.name
                                           .toLowerCase()
                                           .contains(inputParts.toLowerCase()) ||
-                                      drone.id
+                                      drones4.id
                                           .toString()
                                           .toLowerCase()
                                           .contains(inputParts.toLowerCase()))
                                   .toList();
                             },
-                            itemBuilder: (context, drone) {
+                            itemBuilder: (context, drones4) {
                               return ListTile(
-                                title: Text('${drone.name} <id: ${drone.id}>'),
+                                title:
+                                    Text('${drones4.name} <id: ${drones4.id}>'),
                               );
                             },
-                            onSelected: (Drone value) async {
+                            onSelected: (Drones4 value) async {
                               isValueChanged =
                                   !initialValues.contains(value.id);
                               currentValues.add(value.id!);
 
-                              List<Drone> droneList = await Future.wait(
+                              List<Drones4> drones4List = await Future.wait(
                                   (currentValues)
                                       .where((value) => value != '')
                                       .map((value) async {
                                 return await container
-                                    .read(getDroneProvider(value).future);
+                                    .read(getDrones4Provider(value).future);
                               }));
                               String concatenatedText =
-                                  '${droneList.map((drone) {
-                                return '${drone.name} <id: ${drone.id}>';
+                                  '${drones4List.map((drones4) {
+                                return '${drones4.name} <id: ${drones4.id}>';
                               }).join(', ')}, ';
 
                               setState(() {
@@ -574,14 +578,14 @@ class DroneMultiFieldWidgetState extends State<DroneMultiFieldWidget> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => DroneListView(extraFilters: query),
+                    builder: (context) => Drones4ListView(extraFilters: query),
                   ),
                 );
               } catch (error) {
-                print('Failed to fetch drones: $error');
+                print('Failed to fetch drones4s: $error');
               }
             },
-            child: const Text('View Drones'),
+            child: const Text('View Drones4s'),
           ),
         ),
       ],
@@ -593,15 +597,15 @@ class DroneMultiFieldWidgetState extends State<DroneMultiFieldWidget> {
 // HomeWidgetElementGenerator
 // **************************************************************************
 
-class DroneHomeWidget extends StatelessWidget {
-  const DroneHomeWidget({super.key});
+class Drones4HomeWidget extends StatelessWidget {
+  const Drones4HomeWidget({super.key});
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => DroneListView()),
+          MaterialPageRoute(builder: (context) => Drones4ListView()),
         );
       },
       child: Container(
@@ -615,14 +619,14 @@ class DroneHomeWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image.asset(
-              'assets/drone.png',
+              'assets/drones4.png',
               width: 40.0,
               height: 40.0,
               color: Colors.white,
             ),
             const SizedBox(height: 8.0),
             const Text(
-              "Drone",
+              "Drones4",
               style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
@@ -639,14 +643,15 @@ class DroneHomeWidget extends StatelessWidget {
 // JsonSerializableGenerator
 // **************************************************************************
 
-Drone _$DroneFromJson(Map<String, dynamic> json) => Drone(
+Drones4 _$Drones4FromJson(Map<String, dynamic> json) => Drones4(
       description: json['description'] as String?,
-      flightplan: Point.fromJson(json['flightplan'] as Map<String, dynamic>),
+      flightplan:
+          MultiPoint.fromJson(json['flightplan'] as Map<String, dynamic>),
       id: json['id'] as String?,
       name: json['name'] as String,
     );
 
-Map<String, dynamic> _$DroneToJson(Drone instance) => <String, dynamic>{
+Map<String, dynamic> _$Drones4ToJson(Drones4 instance) => <String, dynamic>{
       'description': instance.description,
       'flightplan': instance.flightplan,
       'id': instance.id,
@@ -657,17 +662,17 @@ Map<String, dynamic> _$DroneToJson(Drone instance) => <String, dynamic>{
 // ListWidgetGenerator
 // **************************************************************************
 
-class DroneListView extends ConsumerStatefulWidget {
+class Drones4ListView extends ConsumerStatefulWidget {
   final Map<String, dynamic>? extraFilters;
   final Map<String, dynamic> currentFilters = {};
 
-  DroneListView({Key? key, this.extraFilters}) : super(key: key);
+  Drones4ListView({Key? key, this.extraFilters}) : super(key: key);
 
   @override
-  _DroneListViewState createState() => _DroneListViewState();
+  _Drones4ListViewState createState() => _Drones4ListViewState();
 }
 
-class _DroneListViewState extends ConsumerState<DroneListView> {
+class _Drones4ListViewState extends ConsumerState<Drones4ListView> {
   @override
   void initState() {
     super.initState();
@@ -678,22 +683,23 @@ class _DroneListViewState extends ConsumerState<DroneListView> {
         });
       }
       ref
-          .read(dronePaginationProvider.notifier)
+          .read(drones4PaginationProvider.notifier)
           .setFilters(widget.extraFilters!);
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final paginationState = ref.watch(dronePaginationProvider);
+    final paginationState = ref.watch(drones4PaginationProvider);
 
-    final dronesAsyncValue = ref.watch(getAllDroneProvider(paginationState));
+    final drones4sAsyncValue =
+        ref.watch(getAllDrones4Provider(paginationState));
 
     final Map<String, int> columnSortStates =
-        ref.watch(dronePaginationProvider.notifier).getOrders();
+        ref.watch(drones4PaginationProvider.notifier).getOrders();
 
     final Map<String, dynamic> fieldsFilterStates =
-        ref.watch(dronePaginationProvider.notifier).getFilters();
+        ref.watch(drones4PaginationProvider.notifier).getFilters();
 
     void onSort(String columnName) {
       var state = columnSortStates[columnName];
@@ -704,13 +710,13 @@ class _DroneListViewState extends ConsumerState<DroneListView> {
       } else if (state == -1) {
         columnSortStates.remove(columnName);
       }
-      ref.read(dronePaginationProvider.notifier).setOrders(columnSortStates);
+      ref.read(drones4PaginationProvider.notifier).setOrders(columnSortStates);
     }
 
     void onFilter(String fieldName, dynamic filterValue) {
       widget.currentFilters[fieldName] = filterValue;
       ref
-          .read(dronePaginationProvider.notifier)
+          .read(drones4PaginationProvider.notifier)
           .setFilters(widget.currentFilters);
     }
 
@@ -722,14 +728,14 @@ class _DroneListViewState extends ConsumerState<DroneListView> {
 
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Drone List'),
+          title: const Text('Drones4 List'),
           actions: [
             IconButton(
               onPressed: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const DroneWidget(
+                    builder: (context) => const Drones4Widget(
                       isEditing: false,
                     ),
                   ),
@@ -739,18 +745,18 @@ class _DroneListViewState extends ConsumerState<DroneListView> {
             ),
           ],
         ),
-        body: dronesAsyncValue.when(
+        body: drones4sAsyncValue.when(
           loading: () => const CircularProgressIndicator(),
           error: (error, stackTrace) => Text('Error: $error'),
-          data: (DronePaginationData data) {
-            final drones = data.items;
+          data: (Drones4PaginationData data) {
+            final drones4s = data.items;
             return Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   CustomSearchBar(
                     fields: const {
                       'description': 'String?',
-                      'flightplan': 'Point',
+                      'flightplan': 'MultiPoint',
                       'id': 'String?',
                       'name': 'String'
                     },
@@ -921,12 +927,12 @@ class _DroneListViewState extends ConsumerState<DroneListView> {
                                           {onSort('name')},
                                     ),
                                   ],
-                                  rows: drones.map((drone) {
+                                  rows: drones4s.map((drones4) {
                                     return DataRow(
                                       cells: [
                                         DataCell(Center(
-                                            child: Text(
-                                                drone.description.toString()))),
+                                            child: Text(drones4.description
+                                                .toString()))),
                                         DataCell(Center(
                                             child: ElevatedButton(
                                           onPressed: () {
@@ -934,17 +940,19 @@ class _DroneListViewState extends ConsumerState<DroneListView> {
                                               context,
                                               MaterialPageRoute(
                                                 builder: (context) =>
-                                                    MapScreenView(PointView(
-                                                        drone
-                                                            .flightplan
-                                                            .geometry
-                                                            .coordinates,
-                                                        drone.flightplan
-                                                            .properties,
-                                                        MediaQuery.of(context)
-                                                            .size
-                                                            .height,
-                                                        true)),
+                                                    MapScreenView(
+                                                        MultiPointView(
+                                                            drones4
+                                                                .flightplan
+                                                                .geometry
+                                                                .coordinates,
+                                                            drones4.flightplan
+                                                                .properties,
+                                                            MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .height,
+                                                            false)),
                                               ),
                                             );
                                           },
@@ -989,24 +997,26 @@ class _DroneListViewState extends ConsumerState<DroneListView> {
                                             }),
                                           ),
                                           child: const Text(
-                                            "Point",
+                                            "MultiPoint",
                                             style:
                                                 TextStyle(color: Colors.white),
                                           ),
                                         ))),
                                         DataCell(Center(
-                                            child: Text(drone.id.toString()))),
+                                            child:
+                                                Text(drones4.id.toString()))),
                                         DataCell(Center(
                                             child:
-                                                Text(drone.name.toString()))),
+                                                Text(drones4.name.toString()))),
                                       ],
                                       onSelectChanged: (selected) {
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                              builder: (context) => DroneWidget(
-                                                  element: drone,
-                                                  isEditing: true)),
+                                              builder: (context) =>
+                                                  Drones4Widget(
+                                                      element: drones4,
+                                                      isEditing: true)),
                                         );
                                       },
                                     );
@@ -1033,35 +1043,35 @@ class _DroneListViewState extends ConsumerState<DroneListView> {
   }
 
   void _onPageButtonPressed(int pageNumber, WidgetRef ref,
-      DronePaginationState paginationState, int maxPages) {
+      Drones4PaginationState paginationState, int maxPages) {
     if (pageNumber <= maxPages) {
-      ref.read(dronePaginationProvider.notifier).setPage(pageNumber);
+      ref.read(drones4PaginationProvider.notifier).setPage(pageNumber);
     }
   }
 }
 
-class DronePaginationState {
+class Drones4PaginationState {
   final Tuple2<int, int> pagination;
   final Map<String, int> orders;
   final Map<String, dynamic> filters;
 
-  DronePaginationState({
+  Drones4PaginationState({
     required this.pagination,
     required this.orders,
     required this.filters,
   });
 }
 
-class DronePaginationNotifier extends StateNotifier<DronePaginationState> {
-  DronePaginationNotifier()
-      : super(DronePaginationState(
+class Drones4PaginationNotifier extends StateNotifier<Drones4PaginationState> {
+  Drones4PaginationNotifier()
+      : super(Drones4PaginationState(
           pagination: const Tuple2<int, int>(0, 10),
           orders: {},
           filters: {},
         ));
 
   void setPage(int page) {
-    state = DronePaginationState(
+    state = Drones4PaginationState(
       pagination: Tuple2(page * state.pagination.item2 - state.pagination.item2,
           state.pagination.item2),
       orders: state.orders,
@@ -1070,7 +1080,7 @@ class DronePaginationNotifier extends StateNotifier<DronePaginationState> {
   }
 
   void setOrders(Map<String, int> newOrders) {
-    state = DronePaginationState(
+    state = Drones4PaginationState(
       pagination: Tuple2(state.pagination.item1, state.pagination.item2),
       orders: newOrders,
       filters: state.filters,
@@ -1078,7 +1088,7 @@ class DronePaginationNotifier extends StateNotifier<DronePaginationState> {
   }
 
   void setFilters(Map<String, dynamic> newFilters) {
-    state = DronePaginationState(
+    state = Drones4PaginationState(
       pagination: Tuple2(state.pagination.item1, state.pagination.item2),
       orders: state.orders,
       filters: newFilters,
@@ -1094,70 +1104,70 @@ class DronePaginationNotifier extends StateNotifier<DronePaginationState> {
   }
 }
 
-final dronePaginationProvider =
-    StateNotifierProvider<DronePaginationNotifier, DronePaginationState>(
-  (ref) => DronePaginationNotifier(),
+final drones4PaginationProvider =
+    StateNotifierProvider<Drones4PaginationNotifier, Drones4PaginationState>(
+  (ref) => Drones4PaginationNotifier(),
 );
 
 // **************************************************************************
 // RiverpodCustomGenerator
 // **************************************************************************
 
-final getDroneProvider =
-    FutureProvider.autoDispose.family<Drone, String>((ref, droneId) async {
-  final json = await http.get(Uri.parse('$baseURL/drone/$droneId'));
+final getDrones4Provider =
+    FutureProvider.autoDispose.family<Drones4, String>((ref, drones4Id) async {
+  final json = await http.get(Uri.parse('$baseURL/drones4/$drones4Id'));
   final jsonData = jsonDecode(json.body);
-  return Drone.fromJson(jsonData);
+  return Drones4.fromJson(jsonData);
 });
 
-final createDroneProvider =
-    FutureProvider.autoDispose.family<void, Drone>((ref, droneInstance) async {
+final createDrones4Provider = FutureProvider.autoDispose
+    .family<void, Drones4>((ref, drones4Instance) async {
   final response = await http.post(
-    Uri.parse('$baseURL/drone'),
+    Uri.parse('$baseURL/drones4'),
     headers: {'Content-Type': 'application/json'},
-    body: jsonEncode(droneInstance.toJson()),
+    body: jsonEncode(drones4Instance.toJson()),
   );
   if (response.statusCode != 201) {
-    throw Exception('Failed to create Drone');
+    throw Exception('Failed to create Drones4');
   }
 });
 
-final updateDroneProvider =
-    FutureProvider.autoDispose.family<void, Drone>((ref, droneInstance) async {
+final updateDrones4Provider = FutureProvider.autoDispose
+    .family<void, Drones4>((ref, drones4Instance) async {
   final response = await http.put(
-    Uri.parse('$baseURL/drone/${droneInstance.id}'),
+    Uri.parse('$baseURL/drones4/${drones4Instance.id}'),
     headers: {'Content-Type': 'application/json'},
-    body: jsonEncode(droneInstance.toJson()),
+    body: jsonEncode(drones4Instance.toJson()),
   );
   if (response.statusCode != 200) {
-    throw Exception('Failed to update Drone');
+    throw Exception('Failed to update Drones4');
   }
 });
 
-final deleteDroneProvider =
-    FutureProvider.autoDispose.family<void, int>((ref, droneId) async {
+final deleteDrones4Provider =
+    FutureProvider.autoDispose.family<void, int>((ref, drones4Id) async {
   final response = await http.delete(
-    Uri.parse('$baseURL/drone/$droneId'),
+    Uri.parse('$baseURL/drones4/$drones4Id'),
   );
   if (response.statusCode != 204) {
-    throw Exception('Failed to delete Drone');
+    throw Exception('Failed to delete Drones4');
   }
 });
 
-class DronePaginationData {
-  final List<Drone> items;
+class Drones4PaginationData {
+  final List<Drones4> items;
   final int currentPage;
   final int maxPages;
 
-  DronePaginationData({
+  Drones4PaginationData({
     required this.items,
     required this.currentPage,
     required this.maxPages,
   });
 }
 
-final getAllDroneProvider = FutureProvider.autoDispose
-    .family<DronePaginationData, DronePaginationState>((ref, state) async {
+final getAllDrones4Provider = FutureProvider.autoDispose
+    .family<Drones4PaginationData, Drones4PaginationState>((ref, state) async {
   final fixedQuery = {
     if (state.orders.isNotEmpty) 'orders': state.orders,
     if (state.filters.isNotEmpty)
@@ -1167,14 +1177,14 @@ final getAllDroneProvider = FutureProvider.autoDispose
 
   final json = await http.post(
       Uri.parse(
-          '$baseURL/drones?skip=${state.pagination.item1}&limit=${state.pagination.item2}'),
+          '$baseURL/drones4s?skip=${state.pagination.item1}&limit=${state.pagination.item2}'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode(fixedQuery));
   final jsonData = jsonDecode(json.body);
 
-  return DronePaginationData(
+  return Drones4PaginationData(
     items: (jsonData['items'] as List)
-        .map((data) => Drone.fromJson(data))
+        .map((data) => Drones4.fromJson(data))
         .toList(),
     currentPage: jsonData['current_page'],
     maxPages: jsonData['max_pages'],

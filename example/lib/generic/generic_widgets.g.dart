@@ -123,31 +123,82 @@ class MapWidget extends StatefulWidget {
   final String fieldDescription;
   final bool editable;
   final String placeholder;
-  final Feature? value;
+  final Feature value;
+  final bool uspaceMap;
 
-  const MapWidget({
-    Key? key,
-    required this.fieldName,
-    required this.fieldDescription,
-    required this.editable,
-    required this.placeholder,
-    required this.value,
-  }) : super(key: key);
+  const MapWidget(
+      {Key? key,
+      required this.fieldName,
+      required this.fieldDescription,
+      required this.editable,
+      required this.placeholder,
+      required this.value,
+      this.uspaceMap = false})
+      : super(key: key);
 
   @override
   MapWidgetState createState() => MapWidgetState();
 }
 
 class MapWidgetState extends State<MapWidget> {
+  late List<TextEditingController> textControllers;
+  late bool isPointType;
+  late bool isLineStringType;
+  late bool isPolygonType;
+  late bool isMultiPointType;
+  late bool isMultiLineStringType;
+  late bool isMultiPolygonType;
   bool isValueChanged = false;
-  late dynamic initialValue;
-  late dynamic currentValue;
+  Feature? initialValue;
+  Feature? currentValue;
+  Geometry? geometry;
 
   @override
   void initState() {
     super.initState();
     initialValue = widget.value;
-    currentValue = initialValue.toString();
+    currentValue = initialValue;
+    geometry = widget.value.geometry;
+    isPointType = widget.value.geometry.type == 'Point';
+    isLineStringType = widget.value.geometry.type == 'LineString';
+    isPolygonType = widget.value.geometry.type == 'Polygon';
+    isMultiPointType = widget.value.geometry.type == 'MultiPoint';
+    isMultiLineStringType = widget.value.geometry.type == 'MultiLineString';
+    isMultiPolygonType = widget.value.geometry.type == 'MultiPolygon';
+    updateTextControllers();
+  }
+
+  void updateTextControllers() {
+    textControllers = List.generate(
+      isPointType
+          ? 1
+          : isLineStringType
+              ? (geometry?.coordinates?.length ?? 0)
+              : isPolygonType
+                  ? (geometry?.coordinates?.length ?? 0)
+                  : isMultiPointType
+                      ? (geometry?.coordinates?.length ?? 0)
+                      : isMultiLineStringType
+                          ? (geometry?.coordinates?.length ?? 0)
+                          : isMultiPolygonType
+                              ? (geometry?.coordinates?.length ?? 0)
+                              : 0,
+      (index) => TextEditingController(
+        text: isPointType
+            ? geometry?.coordinates.toString()
+            : isLineStringType
+                ? geometry?.coordinates[index].toString()
+                : isPolygonType
+                    ? geometry?.coordinates[index].toString()
+                    : isMultiPointType
+                        ? geometry?.coordinates[index].toString()
+                        : isMultiLineStringType
+                            ? geometry?.coordinates[index].toString()
+                            : isMultiPolygonType
+                                ? geometry?.coordinates[index].toString()
+                                : "",
+      ),
+    );
   }
 
   dynamic getUpdatedValue() {
@@ -156,9 +207,6 @@ class MapWidgetState extends State<MapWidget> {
 
   @override
   Widget build(BuildContext context) {
-    bool isPointType = widget.value?.geometry.type == 'Point';
-    bool isLineStringType = widget.value?.geometry.type == 'LineString';
-
     return Stack(
       children: [
         Container(
@@ -190,54 +238,249 @@ class MapWidgetState extends State<MapWidget> {
                 children: [
                   widget.editable
                       ? Expanded(
-                        child: DataTable(
-                          columns: const [
-                            DataColumn(label: Text('Coordinates')),
-                            DataColumn(
-                              label: SizedBox(),
-                              numeric: true,
-                            ), 
-                          ],
-                          rows: List<DataRow>.generate(
-                            widget.value?.geometry.coordinates.length,
-                            (index) => DataRow(
-                              cells: [
-                                DataCell(
-                                  TextFormField(
-                                    keyboardType: TextInputType.number,
-                                    inputFormatters: <TextInputFormatter>[
-                                      FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                                    ],
-                                    decoration: InputDecoration(
-                                      hintText: widget.placeholder,
+                          child: ConstrainedBox(
+                              constraints: const BoxConstraints(
+                                maxHeight: 300,
+                              ),
+                              child: SingleChildScrollView(
+                                scrollDirection: Axis.vertical,
+                                child: DataTable(
+                                  columns: const [
+                                    DataColumn(label: Text('Coordinates')),
+                                    DataColumn(
+                                      label: SizedBox(),
+                                      numeric: true,
                                     ),
-                                    initialValue: widget.value?.geometry.coordinates[index]?.toString(),
-                                    onChanged: (newValue) {
-                                      setState(() {
-                                        isValueChanged = newValue != initialValue?.toString();
-                                        currentValue = newValue;
-                                      });
-                                    },
+                                  ],
+                                  rows: List<DataRow>.generate(
+                                    isPointType
+                                        ? 1
+                                        : isLineStringType
+                                            ? (geometry?.coordinates?.length ??
+                                                0)
+                                            : isPolygonType
+                                                ? (geometry
+                                                        ?.coordinates?.length ??
+                                                    0)
+                                                : isMultiPointType
+                                                    ? (geometry?.coordinates
+                                                            ?.length ??
+                                                        0)
+                                                    : isMultiLineStringType
+                                                        ? (geometry?.coordinates
+                                                                ?.length ??
+                                                            0)
+                                                        : isMultiPolygonType
+                                                            ? (geometry
+                                                                    ?.coordinates
+                                                                    ?.length ??
+                                                                0)
+                                                            : 0,
+                                    (index) => DataRow(
+                                      cells: [
+                                        DataCell(
+                                          TextFormField(
+                                            decoration: InputDecoration(
+                                              hintText: widget.placeholder,
+                                            ),
+                                            controller: textControllers[index],
+                                            onChanged: (newValue) {
+                                              setState(() {
+                                                if (isPointType) {
+                                                  List<String>
+                                                      coordinateStrings =
+                                                      newValue
+                                                          .replaceAll('[', '')
+                                                          .replaceAll(']', '')
+                                                          .split(',');
+                                                  List<double> coordinates =
+                                                      coordinateStrings
+                                                          .map((str) =>
+                                                              double.parse(str))
+                                                          .toList();
+                                                  geometry = geometry?.copyWith(
+                                                      coordinates: coordinates);
+                                                } else if (isLineStringType ||
+                                                    isMultiPointType) {
+                                                  List<String>
+                                                      coordinateStrings =
+                                                      newValue
+                                                          .replaceAll('[', '')
+                                                          .replaceAll(']', '')
+                                                          .split(',');
+                                                  List<double> coordinates =
+                                                      coordinateStrings
+                                                          .map((str) =>
+                                                              double.parse(str))
+                                                          .toList();
+
+                                                  geometry?.coordinates[index] =
+                                                      coordinates;
+                                                } else if (isPolygonType ||
+                                                    isMultiLineStringType) {
+                                                  List<String> ringStrings =
+                                                      newValue.split(RegExp(
+                                                          r'\s*\],\s*\['));
+                                                  List<List<double>>
+                                                      polygonCoordinates = [];
+                                                  for (String ringString
+                                                      in ringStrings) {
+                                                    List<String>
+                                                        coordinateStrings =
+                                                        ringString
+                                                            .replaceAll('[', '')
+                                                            .replaceAll(']', '')
+                                                            .split(',');
+                                                    List<double> coordinates =
+                                                        coordinateStrings
+                                                            .map((str) =>
+                                                                double.parse(
+                                                                    str.trim()))
+                                                            .toList();
+                                                    polygonCoordinates
+                                                        .add(coordinates);
+                                                  }
+                                                  geometry?.coordinates[index] =
+                                                      polygonCoordinates;
+                                                } else if (isMultiPolygonType) {
+                                                  List<String> polygonStrings =
+                                                      newValue.split(RegExp(
+                                                          r'\s*\]\s*\],\s*\[\s*\['));
+                                                  List<List<List<double>>>
+                                                      multiPolygonCoordinates =
+                                                      [];
+                                                  for (String polygonString
+                                                      in polygonStrings) {
+                                                    List<String> ringStrings =
+                                                        polygonString.split(
+                                                            RegExp(
+                                                                r'\s*\],\s*\['));
+                                                    List<List<double>>
+                                                        polygonCoordinates = [];
+                                                    for (String ringString
+                                                        in ringStrings) {
+                                                      List<String>
+                                                          coordinateStrings =
+                                                          ringString
+                                                              .replaceAll(
+                                                                  '[', '')
+                                                              .replaceAll(
+                                                                  ']', '')
+                                                              .split(',');
+                                                      List<double> coordinates =
+                                                          coordinateStrings
+                                                              .map((str) =>
+                                                                  double.parse(
+                                                                      str.trim()))
+                                                              .toList();
+                                                      polygonCoordinates
+                                                          .add(coordinates);
+                                                    }
+                                                    multiPolygonCoordinates.add(
+                                                        polygonCoordinates);
+                                                  }
+                                                  geometry?.coordinates[index] =
+                                                      multiPolygonCoordinates;
+                                                }
+                                                currentValue =
+                                                    currentValue?.copyWith(
+                                                        geometry: geometry);
+                                                if (currentValue !=
+                                                    initialValue) {
+                                                  isValueChanged = true;
+                                                } else {
+                                                  isValueChanged = false;
+                                                }
+                                              });
+                                            },
+                                          ),
+                                        ),
+                                        DataCell(
+                                          IconButton(
+                                            icon: const Icon(
+                                                Icons.delete_outline),
+                                            onPressed: () {
+                                              setState(() {
+                                                if (isPointType) {
+                                                  geometry = geometry?.copyWith(
+                                                      coordinates: [0.0, 0.0]);
+                                                  currentValue =
+                                                      currentValue?.copyWith(
+                                                          geometry: geometry);
+                                                  updateTextControllers();
+                                                } else {
+                                                  geometry?.coordinates
+                                                      .removeAt(index);
+                                                  currentValue =
+                                                      currentValue?.copyWith(
+                                                          geometry: geometry);
+                                                  updateTextControllers();
+                                                }
+                                                if (currentValue !=
+                                                    initialValue) {
+                                                  isValueChanged = true;
+                                                } else {
+                                                  isValueChanged = false;
+                                                }
+                                              });
+                                            },
+                                          ),
+                                        )
+                                      ],
+                                    ),
                                   ),
                                 ),
-                                DataCell(
-                                  IconButton(
-                                    icon: Icon(Icons.delete),
-                                    onPressed: () {
-                                      setState(() {
-                                        widget.value?.geometry.coordinates.removeAt(index);
-                                      });
-                                    },
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                      )
-                    : Text(widget.value?.toString() ?? widget.placeholder),
+                              )))
+                      : Text(widget.value.toString()),
+                  if (widget.editable)
+                    if (isLineStringType ||
+                        isPolygonType ||
+                        isMultiPointType ||
+                        isMultiLineStringType ||
+                        isMultiPolygonType)
+                      IconButton(
+                        icon: const Icon(Icons.add),
+                        onPressed: () {
+                          setState(() {
+                            if (isLineStringType || isMultiPointType) {
+                              geometry?.coordinates.add(<double>[]);
+                              updateTextControllers();
+                            } else if (isPolygonType || isMultiLineStringType) {
+                              geometry?.coordinates.add(<List<double>>[]);
+                              updateTextControllers();
+                            } else if (isMultiPolygonType) {
+                              geometry?.coordinates.add(<List<List<double>>>[]);
+                              updateTextControllers();
+                            }
+                            if (currentValue != initialValue) {
+                              isValueChanged = true;
+                            } else {
+                              isValueChanged = false;
+                            }
+                          });
+                        },
+                      ),
                 ],
               ),
+              if (geometry != null && currentValue != null)
+                if (isPointType)
+                  PointView(currentValue?.geometry.coordinates,
+                      currentValue?.properties, 200, widget.uspaceMap),
+              if (isLineStringType)
+                LineStringView(currentValue?.geometry.coordinates,
+                    currentValue?.properties, 200, widget.uspaceMap),
+              if (isPolygonType)
+                PolygonView(currentValue?.geometry.coordinates,
+                    currentValue?.properties, 200, widget.uspaceMap),
+              if (isMultiPointType)
+                MultiPointView(currentValue?.geometry.coordinates,
+                    currentValue?.properties, 200, widget.uspaceMap),
+              if (isMultiLineStringType)
+                MultiLineStringView(currentValue?.geometry.coordinates,
+                    currentValue?.properties, 200, widget.uspaceMap),
+              if (isMultiPolygonType)
+                MultiPolygonView(currentValue?.geometry.coordinates,
+                    currentValue?.properties, 200, widget.uspaceMap),
             ],
           ),
         ),
@@ -276,6 +519,50 @@ class MapWidgetState extends State<MapWidget> {
               child: const Text('Show Route'),
             ),
           ),
+        if (isPolygonType)
+          Positioned(
+            top: 0,
+            right: 0,
+            child: ElevatedButton(
+              onPressed: () {
+                showPolygonView(context, widget.value);
+              },
+              child: const Text('Show Area'),
+            ),
+          ),
+        if (isMultiPointType)
+          Positioned(
+            top: 0,
+            right: 0,
+            child: ElevatedButton(
+              onPressed: () {
+                showMultiPointView(context, widget.value);
+              },
+              child: const Text('Show Points'),
+            ),
+          ),
+        if (isMultiLineStringType)
+          Positioned(
+            top: 0,
+            right: 0,
+            child: ElevatedButton(
+              onPressed: () {
+                showMultiLineStringView(context, widget.value);
+              },
+              child: const Text('Show Lines'),
+            ),
+          ),
+        if (isMultiPolygonType)
+          Positioned(
+            top: 0,
+            right: 0,
+            child: ElevatedButton(
+              onPressed: () {
+                showMultiPolygonView(context, widget.value);
+              },
+              child: const Text('Show Areas'),
+            ),
+          ),
       ],
     );
   }
@@ -283,9 +570,10 @@ class MapWidgetState extends State<MapWidget> {
   void showPointView(BuildContext context, Feature? point) {
     List<double> doubleCoordinates = point?.geometry.coordinates;
     dynamic properties = point?.properties;
-  
+
     Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => PointView(doubleCoordinates, properties),
+      builder: (context) => MapScreenView(PointView(doubleCoordinates,
+          properties, MediaQuery.of(context).size.height, widget.uspaceMap)),
     ));
   }
 
@@ -294,18 +582,131 @@ class MapWidgetState extends State<MapWidget> {
     dynamic properties = points?.properties;
 
     Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => LineStringView(routeCoordinates, properties),
+      builder: (context) => MapScreenView(LineStringView(routeCoordinates,
+          properties, MediaQuery.of(context).size.height, widget.uspaceMap)),
     ));
+  }
+
+  void showPolygonView(BuildContext context, Feature? points) {
+    List<List<List<double>>> polygonCoordinates = points?.geometry.coordinates;
+    dynamic properties = points?.properties;
+
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => MapScreenView(PolygonView(polygonCoordinates,
+          properties, MediaQuery.of(context).size.height, widget.uspaceMap)),
+    ));
+  }
+
+  void showMultiPointView(BuildContext context, Feature? points) {
+    List<List<double>> routeCoordinates = points?.geometry.coordinates;
+    dynamic properties = points?.properties;
+
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => MapScreenView(MultiPointView(routeCoordinates,
+          properties, MediaQuery.of(context).size.height, widget.uspaceMap)),
+    ));
+  }
+
+  void showMultiLineStringView(BuildContext context, Feature? points) {
+    List<List<List<double>>> routeCoordinates = points?.geometry.coordinates;
+    dynamic properties = points?.properties;
+
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => MapScreenView(MultiLineStringView(routeCoordinates,
+          properties, MediaQuery.of(context).size.height, widget.uspaceMap)),
+    ));
+  }
+
+  void showMultiPolygonView(BuildContext context, Feature? points) {
+    List<List<List<List<double>>>> routeCoordinates =
+        points?.geometry.coordinates;
+    dynamic properties = points?.properties;
+
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => MapScreenView(MultiPolygonView(routeCoordinates,
+          properties, MediaQuery.of(context).size.height, widget.uspaceMap)),
+    ));
+  }
+}
+
+class MapScreenView extends StatelessWidget {
+  final StatelessWidget widget;
+
+  const MapScreenView(this.widget, {super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+          title: const Text('Map View'),
+        ),
+        body: widget);
+  }
+}
+
+class EnaireMapLayers {
+  static List<FeatureLayer> getLayers() {
+    return [
+      FeatureLayer(
+        FeatureLayerOptions(
+          "https://servais.enaire.es/insigniad/rest/services/NOTAM/NOTAM_DRONES_APP_nacw0113_V1/MapServer/0",
+          "polygon",
+          render: (dynamic attributes) {
+            return PolygonOptions(
+              borderColor: Colors.green.withOpacity(0.5),
+              color: Colors.green.withOpacity(0.2),
+              borderStrokeWidth: 2,
+              isFilled: true,
+            );
+          },
+          onTap: (attributes, LatLng location) {},
+        ),
+      ),
+      FeatureLayer(
+        FeatureLayerOptions(
+          "https://servais.enaire.es/insigniad/rest/services/NSF_APP/Drones_APP_V1/MapServer/1",
+          "polygon",
+          render: (dynamic attributes) {
+            return PolygonOptions(
+              borderColor: Colors.red.withOpacity(0.5),
+              color: Colors.red.withOpacity(0.1),
+              borderStrokeWidth: 2,
+              isFilled: true,
+            );
+          },
+          onTap: (attributes, LatLng location) {},
+        ),
+      ),
+      FeatureLayer(
+        FeatureLayerOptions(
+          "https://servais.enaire.es/insigniad/rest/services/NSF_APP/Drones_APP_V1/MapServer/2",
+          "polygon",
+          render: (dynamic attributes) {
+            return PolygonOptions(
+              borderColor: Colors.yellow.withOpacity(0.5),
+              color: Colors.yellow.withOpacity(0.2),
+              borderStrokeWidth: 2,
+              isFilled: true,
+            );
+          },
+          onTap: (attributes, LatLng location) {},
+        ),
+      ),
+    ];
   }
 }
 
 class PointView extends StatelessWidget {
   final List<double> coordinates;
   final dynamic properties;
+  final double height;
+  final bool uspaceMap;
 
-  const PointView(this.coordinates, this.properties, {super.key});
+  const PointView(
+      this.coordinates, this.properties, this.height, this.uspaceMap,
+      {super.key});
 
-  String formatProperties(Map<String, dynamic> properties) {
+  String formatProperties(dynamic properties) {
     String message = '';
     properties.forEach((key, value) {
       message += '$key: $value\n';
@@ -315,104 +716,498 @@ class PointView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Map View'),
-      ),
-      body: FlutterMap(
-        options: MapOptions(
-          center: LatLng(coordinates[1], coordinates[0]),
-          zoom: 10,
-        ),
-        children: [
-          TileLayer(
-            urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-            subdomains: const ['a', 'b', 'c'],
+    List<double> adjustedCoordinates = [...coordinates];
+
+    if (coordinates.length < 2) {
+      adjustedCoordinates.addAll([0, 0]);
+    }
+
+    return Container(
+      height: height,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(15),
+        child: FlutterMap(
+          options: MapOptions(
+            center: LatLng(adjustedCoordinates[1], adjustedCoordinates[0]),
+            zoom: 10,
           ),
-          MarkerLayer(
-            markers: [
-              Marker(
-                width: 56,
-                height: 56,
-                point: LatLng(coordinates[1], coordinates[0]),
-                child: Tooltip(
-                  message: formatProperties(properties),
-                  child: const Icon(
-                    Icons.location_on_outlined,
-                    color: Color.fromARGB(255, 214, 166, 146),
-                    size: 35,
-                  ),
-                )
-              )
-            ],
-          )
-        ],
+          children: [
+            TileLayer(
+              urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+              subdomains: const ['a', 'b', 'c'],
+            ),
+            if (uspaceMap) ...EnaireMapLayers.getLayers(),
+            MarkerLayer(
+              markers: [
+                Marker(
+                    width: 56,
+                    height: 56,
+                    point:
+                        LatLng(adjustedCoordinates[1], adjustedCoordinates[0]),
+                    child: Tooltip(
+                      message: formatProperties(properties),
+                      child: const Icon(
+                        Icons.location_on_outlined,
+                        color: Color.fromARGB(255, 214, 166, 146),
+                        size: 35,
+                      ),
+                    ))
+              ],
+            )
+          ],
+        ),
       ),
     );
+  }
+}
+
+class MultiPointView extends StatelessWidget {
+  final List<List<double>> routeCoordinates;
+  final dynamic properties;
+  final double height;
+  final bool uspaceMap;
+
+  const MultiPointView(
+      this.routeCoordinates, this.properties, this.height, this.uspaceMap,
+      {super.key});
+
+  String formatProperties(dynamic properties) {
+    String message = '';
+    properties.forEach((key, value) {
+      message += '\$key: \$value\n';
+    });
+    return message;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    List<List<double>> adjustedRouteCoordinates =
+        routeCoordinates.where((coord) => coord.length >= 2).toList();
+
+    if (adjustedRouteCoordinates.isEmpty) {
+      adjustedRouteCoordinates = [
+        [0, 0]
+      ];
+    }
+
+    return Container(
+        height: height,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(15),
+          child: FlutterMap(
+            options: MapOptions(
+              center: LatLng(adjustedRouteCoordinates[0][1],
+                  adjustedRouteCoordinates[0][0]),
+              zoom: 10,
+            ),
+            children: [
+              TileLayer(
+                urlTemplate:
+                    "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                subdomains: const ['a', 'b', 'c'],
+              ),
+              if (uspaceMap) ...EnaireMapLayers.getLayers(),
+              MarkerLayer(
+                markers: adjustedRouteCoordinates
+                    .map((coord) => Marker(
+                        width: 56,
+                        height: 56,
+                        point: LatLng(coord[1], coord[0]),
+                        child: Tooltip(
+                          message: formatProperties(properties),
+                          child: const Icon(
+                            Icons.location_on_outlined,
+                            color: Color.fromARGB(255, 214, 166, 146),
+                            size: 35,
+                          ),
+                        )))
+                    .toList(),
+              ),
+            ],
+          ),
+        ));
   }
 }
 
 class LineStringView extends StatelessWidget {
   final List<List<double>> routeCoordinates;
   final dynamic properties;
+  final double height;
+  final bool uspaceMap;
 
-  const LineStringView(this.routeCoordinates, this.properties, {super.key});
+  const LineStringView(
+      this.routeCoordinates, this.properties, this.height, this.uspaceMap,
+      {super.key});
 
-  String formatProperties(Map<String, dynamic> properties) {
+  String formatProperties(dynamic properties) {
     String message = '';
     properties.forEach((key, value) {
-      message += '$key: $value\n';
+      message += '\$key: \$value\n';
     });
     return message;
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Route View'),
-      ),
-      body: FlutterMap(
-        options: MapOptions(
-          center: LatLng(routeCoordinates[0][1], routeCoordinates[0][0]),
-          zoom: 10,
-        ),
-        children: [
-          TileLayer(
-            urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-            subdomains: const ['a', 'b', 'c'],
-          ),
-          PolylineLayer(
-            polylines: [
-              Polyline(
-                points: routeCoordinates
-                    .map((coord) => LatLng(coord[1], coord[0]))
+    List<List<double>> adjustedRouteCoordinates =
+        routeCoordinates.where((coord) => coord.length >= 2).toList();
+
+    if (adjustedRouteCoordinates.isEmpty) {
+      adjustedRouteCoordinates = [
+        [0, 0]
+      ];
+    }
+
+    return Container(
+        height: height,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(15),
+          child: FlutterMap(
+            options: MapOptions(
+              center: LatLng(adjustedRouteCoordinates[0][1],
+                  adjustedRouteCoordinates[0][0]),
+              zoom: 10,
+            ),
+            children: [
+              TileLayer(
+                urlTemplate:
+                    "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                subdomains: const ['a', 'b', 'c'],
+              ),
+              if (uspaceMap) ...EnaireMapLayers.getLayers(),
+              PolylineLayer(
+                polylines: [
+                  Polyline(
+                    points: adjustedRouteCoordinates
+                        .map((coord) => LatLng(coord[1], coord[0]))
+                        .toList(),
+                    strokeWidth: 4.0,
+                    color: const Color.fromARGB(255, 227, 224, 164),
+                  ),
+                ],
+              ),
+              MarkerLayer(
+                markers: adjustedRouteCoordinates
+                    .map((coord) => Marker(
+                        width: 56,
+                        height: 56,
+                        point: LatLng(coord[1], coord[0]),
+                        child: Tooltip(
+                          message: formatProperties(properties),
+                          child: const Icon(
+                            Icons.location_on_outlined,
+                            color: Color.fromARGB(255, 214, 166, 146),
+                            size: 35,
+                          ),
+                        )))
                     .toList(),
-                strokeWidth: 4.0,
-                color: const Color.fromARGB(255, 227, 224, 164),
               ),
             ],
           ),
-          MarkerLayer(
-            markers: routeCoordinates
-                .map((coord) => Marker(
-                      width: 56,
-                      height: 56,
-                      point: LatLng(coord[1], coord[0]),
-                      child: Tooltip(
-                        message: formatProperties(properties),
-                        child: const Icon(
-                          Icons.location_on_outlined,
-                          color: Color.fromARGB(255, 214, 166, 146),
-                          size: 35,
-                        ),
-                      )
-                    ))
-                .toList(),
+        ));
+  }
+}
+
+class MultiLineStringView extends StatelessWidget {
+  final List<List<List<double>>> routeCoordinates;
+  final dynamic properties;
+  final double height;
+  final bool uspaceMap;
+
+  const MultiLineStringView(
+      this.routeCoordinates, this.properties, this.height, this.uspaceMap,
+      {super.key});
+
+  String formatProperties(dynamic properties) {
+    String message = '';
+    properties.forEach((key, value) {
+      message += '\$key: \$value\n';
+    });
+    return message;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    List<List<List<double>>> adjustedRouteCoordinates =
+        routeCoordinates.isNotEmpty
+            ? routeCoordinates
+                .map((sublist) =>
+                    sublist.where((coord) => coord.length >= 2).toList())
+                .toList()
+            : [
+                [
+                  [0, 0]
+                ]
+              ];
+
+    LatLng centroid = const LatLng(0, 0);
+
+    if (adjustedRouteCoordinates.isNotEmpty) {
+      var firstPolygon = adjustedRouteCoordinates[0];
+      if (firstPolygon.isNotEmpty) {
+        centroid = _calculateCentroid(firstPolygon);
+      }
+    }
+
+    return Container(
+        height: height,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(15),
+          child: FlutterMap(
+            options: MapOptions(
+              center: LatLng(
+                centroid.latitude,
+                centroid.longitude,
+              ),
+              zoom: 8,
+            ),
+            children: [
+              TileLayer(
+                urlTemplate:
+                    "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                subdomains: const ['a', 'b', 'c'],
+              ),
+              if (uspaceMap) ...EnaireMapLayers.getLayers(),
+              PolylineLayer(
+                polylines: adjustedRouteCoordinates
+                    .map(
+                      (line) => Polyline(
+                        points: line
+                            .map((coord) => LatLng(coord[1], coord[0]))
+                            .toList(),
+                        strokeWidth: 4.0,
+                        color: const Color.fromARGB(255, 227, 224, 164),
+                      ),
+                    )
+                    .toList(),
+              ),
+              MarkerLayer(
+                markers: adjustedRouteCoordinates
+                    .expand((line) => line.map((coord) => Marker(
+                          width: 56,
+                          height: 56,
+                          point: LatLng(coord[1], coord[0]),
+                          child: Tooltip(
+                            message: formatProperties(properties),
+                            child: const Icon(
+                              Icons.location_on_outlined,
+                              color: Color.fromARGB(255, 214, 166, 146),
+                              size: 35,
+                            ),
+                          ),
+                        )))
+                    .toList(),
+              ),
+            ],
           ),
-        ],
-      ),
-    );
+        ));
+  }
+
+  LatLng _calculateCentroid(List<List<double>> polygon) {
+    double cx = 0, cy = 0;
+    int pointsCount = polygon.length;
+
+    for (var point in polygon) {
+      cx += point[0];
+      cy += point[1];
+    }
+
+    cx /= pointsCount;
+    cy /= pointsCount;
+
+    return LatLng(cy, cx);
+  }
+}
+
+class PolygonView extends StatelessWidget {
+  final List<List<List<double>>> routeCoordinates;
+  final dynamic properties;
+  final double height;
+  final bool uspaceMap;
+
+  const PolygonView(
+      this.routeCoordinates, this.properties, this.height, this.uspaceMap,
+      {super.key});
+
+  String formatProperties(dynamic properties) {
+    String message = '';
+    properties.forEach((key, value) {
+      message += '\$key: \$value\n';
+    });
+    return message;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    List<List<List<double>>> adjustedRouteCoordinates =
+        routeCoordinates.isNotEmpty
+            ? routeCoordinates
+                .map((sublist) =>
+                    sublist.where((coord) => coord.length >= 2).toList())
+                .toList()
+            : [
+                [
+                  [0, 0]
+                ]
+              ];
+
+    LatLng centroid = const LatLng(0, 0);
+
+    if (adjustedRouteCoordinates.isNotEmpty) {
+      var firstPolygon = adjustedRouteCoordinates[0];
+      if (firstPolygon.isNotEmpty) {
+        centroid = _calculateCentroid(firstPolygon);
+      }
+    }
+
+    return Container(
+        height: height,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(15),
+          child: FlutterMap(
+            options: MapOptions(
+              center: LatLng(
+                centroid.latitude,
+                centroid.longitude,
+              ),
+              zoom: 8,
+            ),
+            children: [
+              TileLayer(
+                urlTemplate:
+                    "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                subdomains: const ['a', 'b', 'c'],
+              ),
+              if (uspaceMap) ...EnaireMapLayers.getLayers(),
+              PolygonLayer(
+                polygons: [
+                  flutter_map.Polygon(
+                    points: adjustedRouteCoordinates
+                        .expand((polygon) =>
+                            polygon.map((coord) => LatLng(coord[0], coord[1])))
+                        .toList(),
+                    color: Styles.polygonColor,
+                    isFilled: true,
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ));
+  }
+
+  LatLng _calculateCentroid(List<List<double>> polygon) {
+    double cx = 0, cy = 0;
+    int pointsCount = polygon.length;
+
+    for (var point in polygon) {
+      cx += point[0];
+      cy += point[1];
+    }
+
+    cx /= pointsCount;
+    cy /= pointsCount;
+
+    return LatLng(cy, cx);
+  }
+}
+
+class MultiPolygonView extends StatelessWidget {
+  final List<List<List<List<double>>>> routeCoordinates;
+  final dynamic properties;
+  final double height;
+  final bool uspaceMap;
+
+  const MultiPolygonView(
+      this.routeCoordinates, this.properties, this.height, this.uspaceMap,
+      {super.key});
+
+  String formatProperties(dynamic properties) {
+    String message = '';
+    properties.forEach((key, value) {
+      message += '\$key: \$value\n';
+    });
+    return message;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    List<List<List<List<double>>>> adjustedRouteCoordinates =
+        routeCoordinates.isNotEmpty
+            ? routeCoordinates
+                .map((polygonList) => polygonList
+                    .map((polygon) =>
+                        polygon.where((coord) => coord.length >= 2).toList())
+                    .toList())
+                .toList()
+            : [
+                [
+                  [
+                    [0, 0]
+                  ]
+                ]
+              ];
+
+    LatLng centroid = const LatLng(0, 0);
+
+    if (adjustedRouteCoordinates.isNotEmpty) {
+      var firstPolygon = adjustedRouteCoordinates[0];
+      if (firstPolygon.isNotEmpty) {
+        centroid = _calculateCentroid(firstPolygon[0]);
+      }
+    }
+
+    return Container(
+        height: height,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(15),
+          child: FlutterMap(
+            options: MapOptions(
+              center: LatLng(
+                centroid.latitude,
+                centroid.longitude,
+              ),
+              zoom: 8,
+            ),
+            children: [
+              TileLayer(
+                urlTemplate:
+                    "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                subdomains: const ['a', 'b', 'c'],
+              ),
+              if (uspaceMap) ...EnaireMapLayers.getLayers(),
+              PolygonLayer(
+                polygons: adjustedRouteCoordinates
+                    .map(
+                      (polygon) => flutter_map.Polygon(
+                        points: polygon
+                            .expand((subPolygon) => subPolygon
+                                .map((coord) => LatLng(coord[0], coord[1])))
+                            .toList(),
+                        color: Styles.polygonColor,
+                        isFilled: true,
+                      ),
+                    )
+                    .toList(),
+              ),
+            ],
+          ),
+        ));
+  }
+
+  LatLng _calculateCentroid(List<List<double>> polygon) {
+    double cx = 0, cy = 0;
+    int pointsCount = polygon.length;
+
+    for (var point in polygon) {
+      cx += point[0];
+      cy += point[1];
+    }
+
+    cx /= pointsCount;
+    cy /= pointsCount;
+
+    return LatLng(cy, cx);
   }
 }
 

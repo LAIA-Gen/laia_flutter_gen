@@ -13,7 +13,7 @@ import 'dart:convert';
 import 'package:collection/collection.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 
-part 'drone.g.dart';
+part 'drones3.g.dart';
 
 @JsonSerializable()
 @RiverpodGenAnnotation(baseURL)
@@ -21,24 +21,24 @@ part 'drone.g.dart';
 @ListWidgetGenAnnotation()
 @elementWidgetGen
 @CopyWith()
-class Drone {
+class Drones3 {
   @Field(fieldName: 'description')
   final String? description;
-  @Field(fieldName: 'flightplan', uspaceMap: true)
-  final Point flightplan;
+  @Field(fieldName: 'flightplan')
+  final Polygon flightplan;
   @Field(fieldName: 'id')
   final String? id;
   @Field(fieldName: 'name')
   final String name;
 
-  Drone({
+  Drones3({
     required this.description,
     required this.flightplan,
     required this.id,
     required this.name
   });
 
-  factory Drone.fromJson(Map<String, dynamic> json) => _$DroneFromJson(json);
+  factory Drones3.fromJson(Map<String, dynamic> json) => _$Drones3FromJson(json);
 
-  Map<String, dynamic> toJson() => _$DroneToJson(this);
+  Map<String, dynamic> toJson() => _$Drones3ToJson(this);
 }

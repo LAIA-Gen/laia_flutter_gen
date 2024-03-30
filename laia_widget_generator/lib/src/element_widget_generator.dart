@@ -120,6 +120,7 @@ class _${visitor.className}WidgetState extends State<${visitor.className}Widget>
       String widget = 'defaultWidget';
       String fieldDescription = "This is the $fieldName";
       String placeholder = 'Type the $fieldName';
+      bool uspaceMap = false;
       bool editable = true;
       String relation = '';
 
@@ -142,6 +143,10 @@ class _${visitor.className}WidgetState extends State<${visitor.className}Widget>
               .firstAnnotationOfExact(field)
               ?.getField('editable')
               ?.toBoolValue() ?? editable;
+        uspaceMap = _fieldChecker
+              .firstAnnotationOfExact(field)
+              ?.getField('uspaceMap')
+              ?.toBoolValue() ?? uspaceMap;
         String placeholderValue = _fieldChecker
               .firstAnnotationOfExact(field)
               ?.getField('placeholder')
@@ -229,10 +234,19 @@ class _${visitor.className}WidgetState extends State<${visitor.className}Widget>
           ),
       ''');
       } else {
-        buffer.writeln('''
+        if (widget == "MapWidget") {
+          buffer.writeln('''
+            value: $fieldAccessor  ?? $fieldType(type: "Feature", geometry: Geometry$fieldType(coordinates: [], type: "$fieldType"), properties: {}),
+            uspaceMap: $uspaceMap
+          ),
+      ''');
+        } else {
+          buffer.writeln('''
             value: $fieldAccessor,
           ),
       ''');
+        }
+        
       }
     }
     buffer.writeln('],');
@@ -283,12 +297,22 @@ class _${visitor.className}WidgetState extends State<${visitor.className}Widget>
           bool? updated$fieldName = ${fieldName}WidgetKey.currentState?.getUpdatedValue();
 ''');         updatedFields.add('$fieldName: updated$fieldName');
               break;
-            case 'Map<String, dynamic>':
-            case 'Map<String, dynamic>?':
-            case 'List<Map<String, dynamic>>':
-            case 'List<Map<String, dynamic>>?':
+            case 'LineString':
+            case 'MultiLineString':
+            case 'MultiPoint':
+            case 'MultiPolygon':
+            case 'Point':
+            case 'Polygon':
+            case 'LineString?':
+            case 'MultiLineString?':
+            case 'MultiPoint?':
+            case 'MultiPolygon?':
+            case 'Point?':
+            case 'Polygon?':
               buffer.writeln('''
           dynamic updated$fieldName = ${fieldName}WidgetKey.currentState?.getUpdatedValue();
+
+          updated$fieldName = $fieldType(type: "Feature", geometry: Geometry$fieldType(coordinates:updated$fieldName.geometry.coordinates, type: updated$fieldName.geometry.type), properties: updated$fieldName.properties);
 ''');         updatedFields.add('$fieldName: updated$fieldName');
               break;
             default:

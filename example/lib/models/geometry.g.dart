@@ -6,6 +6,67 @@ part of 'geometry.dart';
 // CopyWithGenerator
 // **************************************************************************
 
+abstract class _$GeometryCWProxy {
+  Geometry coordinates(dynamic coordinates);
+
+  Geometry type(String type);
+
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Geometry(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  ///
+  /// Usage
+  /// ```dart
+  /// Geometry(...).copyWith(id: 12, name: "My name")
+  /// ````
+  Geometry call({
+    dynamic? coordinates,
+    String? type,
+  });
+}
+
+/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfGeometry.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfGeometry.copyWith.fieldName(...)`
+class _$GeometryCWProxyImpl implements _$GeometryCWProxy {
+  final Geometry _value;
+
+  const _$GeometryCWProxyImpl(this._value);
+
+  @override
+  Geometry coordinates(dynamic coordinates) => this(coordinates: coordinates);
+
+  @override
+  Geometry type(String type) => this(type: type);
+
+  @override
+
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Geometry(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  ///
+  /// Usage
+  /// ```dart
+  /// Geometry(...).copyWith(id: 12, name: "My name")
+  /// ````
+  Geometry call({
+    Object? coordinates = const $CopyWithPlaceholder(),
+    Object? type = const $CopyWithPlaceholder(),
+  }) {
+    return Geometry(
+      coordinates:
+          coordinates == const $CopyWithPlaceholder() || coordinates == null
+              ? _value.coordinates
+              // ignore: cast_nullable_to_non_nullable
+              : coordinates as dynamic,
+      type: type == const $CopyWithPlaceholder() || type == null
+          ? _value.type
+          // ignore: cast_nullable_to_non_nullable
+          : type as String,
+    );
+  }
+}
+
+extension $GeometryCopyWith on Geometry {
+  /// Returns a callable class that can be used as follows: `instanceOfGeometry.copyWith(...)` or like so:`instanceOfGeometry.copyWith.fieldName(...)`.
+  // ignore: library_private_types_in_public_api
+  _$GeometryCWProxy get copyWith => _$GeometryCWProxyImpl(this);
+}
+
 abstract class _$FeatureCWProxy {
   Feature geometry(dynamic geometry);
 
@@ -895,6 +956,16 @@ extension $PolygonCopyWith on Polygon {
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
+
+Geometry _$GeometryFromJson(Map<String, dynamic> json) => Geometry(
+      type: json['type'] as String,
+      coordinates: json['coordinates'],
+    );
+
+Map<String, dynamic> _$GeometryToJson(Geometry instance) => <String, dynamic>{
+      'type': instance.type,
+      'coordinates': instance.coordinates,
+    };
 
 Feature _$FeatureFromJson(Map<String, dynamic> json) => Feature(
       type: json['type'] as String,
