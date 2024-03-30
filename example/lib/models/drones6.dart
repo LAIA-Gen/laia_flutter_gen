@@ -24,7 +24,7 @@ part 'drones6.g.dart';
 class Drones6 {
   @Field(fieldName: 'description')
   final String? description;
-  @Field(fieldName: 'flightplan')
+  @Field(fieldName: 'flightplan', uspaceMap: true)
   final MultiPolygon flightplan;
   @Field(fieldName: 'id')
   final String? id;

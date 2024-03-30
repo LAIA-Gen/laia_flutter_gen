@@ -124,15 +124,17 @@ class MapWidget extends StatefulWidget {
   final bool editable;
   final String placeholder;
   final Feature value;
+  final bool uspaceMap;
 
-  const MapWidget({
-    Key? key,
-    required this.fieldName,
-    required this.fieldDescription,
-    required this.editable,
-    required this.placeholder,
-    required this.value,
-  }) : super(key: key);
+  const MapWidget(
+      {Key? key,
+      required this.fieldName,
+      required this.fieldDescription,
+      required this.editable,
+      required this.placeholder,
+      required this.value,
+      this.uspaceMap = false})
+      : super(key: key);
 
   @override
   MapWidgetState createState() => MapWidgetState();
@@ -463,22 +465,22 @@ class MapWidgetState extends State<MapWidget> {
               if (geometry != null && currentValue != null)
                 if (isPointType)
                   PointView(currentValue?.geometry.coordinates,
-                      currentValue?.properties, 200),
+                      currentValue?.properties, 200, widget.uspaceMap),
               if (isLineStringType)
                 LineStringView(currentValue?.geometry.coordinates,
-                    currentValue?.properties, 200),
+                    currentValue?.properties, 200, widget.uspaceMap),
               if (isPolygonType)
                 PolygonView(currentValue?.geometry.coordinates,
-                    currentValue?.properties, 200),
+                    currentValue?.properties, 200, widget.uspaceMap),
               if (isMultiPointType)
                 MultiPointView(currentValue?.geometry.coordinates,
-                    currentValue?.properties, 200),
+                    currentValue?.properties, 200, widget.uspaceMap),
               if (isMultiLineStringType)
                 MultiLineStringView(currentValue?.geometry.coordinates,
-                    currentValue?.properties, 200),
+                    currentValue?.properties, 200, widget.uspaceMap),
               if (isMultiPolygonType)
                 MultiPolygonView(currentValue?.geometry.coordinates,
-                    currentValue?.properties, 200),
+                    currentValue?.properties, 200, widget.uspaceMap),
             ],
           ),
         ),
@@ -570,8 +572,8 @@ class MapWidgetState extends State<MapWidget> {
     dynamic properties = point?.properties;
 
     Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => MapScreenView(PointView(
-          doubleCoordinates, properties, MediaQuery.of(context).size.height)),
+      builder: (context) => MapScreenView(PointView(doubleCoordinates,
+          properties, MediaQuery.of(context).size.height, widget.uspaceMap)),
     ));
   }
 
@@ -580,8 +582,8 @@ class MapWidgetState extends State<MapWidget> {
     dynamic properties = points?.properties;
 
     Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => MapScreenView(LineStringView(
-          routeCoordinates, properties, MediaQuery.of(context).size.height)),
+      builder: (context) => MapScreenView(LineStringView(routeCoordinates,
+          properties, MediaQuery.of(context).size.height, widget.uspaceMap)),
     ));
   }
 
@@ -590,8 +592,8 @@ class MapWidgetState extends State<MapWidget> {
     dynamic properties = points?.properties;
 
     Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => MapScreenView(PolygonView(
-          polygonCoordinates, properties, MediaQuery.of(context).size.height)),
+      builder: (context) => MapScreenView(PolygonView(polygonCoordinates,
+          properties, MediaQuery.of(context).size.height, widget.uspaceMap)),
     ));
   }
 
@@ -600,8 +602,8 @@ class MapWidgetState extends State<MapWidget> {
     dynamic properties = points?.properties;
 
     Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => MapScreenView(MultiPointView(
-          routeCoordinates, properties, MediaQuery.of(context).size.height)),
+      builder: (context) => MapScreenView(MultiPointView(routeCoordinates,
+          properties, MediaQuery.of(context).size.height, widget.uspaceMap)),
     ));
   }
 
@@ -610,8 +612,8 @@ class MapWidgetState extends State<MapWidget> {
     dynamic properties = points?.properties;
 
     Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => MapScreenView(MultiLineStringView(
-          routeCoordinates, properties, MediaQuery.of(context).size.height)),
+      builder: (context) => MapScreenView(MultiLineStringView(routeCoordinates,
+          properties, MediaQuery.of(context).size.height, widget.uspaceMap)),
     ));
   }
 
@@ -621,8 +623,8 @@ class MapWidgetState extends State<MapWidget> {
     dynamic properties = points?.properties;
 
     Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => MapScreenView(MultiPolygonView(
-          routeCoordinates, properties, MediaQuery.of(context).size.height)),
+      builder: (context) => MapScreenView(MultiPolygonView(routeCoordinates,
+          properties, MediaQuery.of(context).size.height, widget.uspaceMap)),
     ));
   }
 }
@@ -642,12 +644,67 @@ class MapScreenView extends StatelessWidget {
   }
 }
 
+class EnaireMapLayers {
+  static List<FeatureLayer> getLayers() {
+    return [
+      FeatureLayer(
+        FeatureLayerOptions(
+          "https://servais.enaire.es/insigniad/rest/services/NOTAM/NOTAM_DRONES_APP_nacw0113_V1/MapServer/0",
+          "polygon",
+          render: (dynamic attributes) {
+            return PolygonOptions(
+              borderColor: Colors.green.withOpacity(0.5),
+              color: Colors.green.withOpacity(0.2),
+              borderStrokeWidth: 2,
+              isFilled: true,
+            );
+          },
+          onTap: (attributes, LatLng location) {},
+        ),
+      ),
+      FeatureLayer(
+        FeatureLayerOptions(
+          "https://servais.enaire.es/insigniad/rest/services/NSF_APP/Drones_APP_V1/MapServer/1",
+          "polygon",
+          render: (dynamic attributes) {
+            return PolygonOptions(
+              borderColor: Colors.red.withOpacity(0.5),
+              color: Colors.red.withOpacity(0.1),
+              borderStrokeWidth: 2,
+              isFilled: true,
+            );
+          },
+          onTap: (attributes, LatLng location) {},
+        ),
+      ),
+      FeatureLayer(
+        FeatureLayerOptions(
+          "https://servais.enaire.es/insigniad/rest/services/NSF_APP/Drones_APP_V1/MapServer/2",
+          "polygon",
+          render: (dynamic attributes) {
+            return PolygonOptions(
+              borderColor: Colors.yellow.withOpacity(0.5),
+              color: Colors.yellow.withOpacity(0.2),
+              borderStrokeWidth: 2,
+              isFilled: true,
+            );
+          },
+          onTap: (attributes, LatLng location) {},
+        ),
+      ),
+    ];
+  }
+}
+
 class PointView extends StatelessWidget {
   final List<double> coordinates;
   final dynamic properties;
   final double height;
+  final bool uspaceMap;
 
-  const PointView(this.coordinates, this.properties, this.height, {super.key});
+  const PointView(
+      this.coordinates, this.properties, this.height, this.uspaceMap,
+      {super.key});
 
   String formatProperties(dynamic properties) {
     String message = '';
@@ -679,6 +736,7 @@ class PointView extends StatelessWidget {
               urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
               subdomains: const ['a', 'b', 'c'],
             ),
+            if (uspaceMap) ...EnaireMapLayers.getLayers(),
             MarkerLayer(
               markers: [
                 Marker(
@@ -707,8 +765,10 @@ class MultiPointView extends StatelessWidget {
   final List<List<double>> routeCoordinates;
   final dynamic properties;
   final double height;
+  final bool uspaceMap;
 
-  const MultiPointView(this.routeCoordinates, this.properties, this.height,
+  const MultiPointView(
+      this.routeCoordinates, this.properties, this.height, this.uspaceMap,
       {super.key});
 
   String formatProperties(dynamic properties) {
@@ -746,6 +806,7 @@ class MultiPointView extends StatelessWidget {
                     "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
                 subdomains: const ['a', 'b', 'c'],
               ),
+              if (uspaceMap) ...EnaireMapLayers.getLayers(),
               MarkerLayer(
                 markers: adjustedRouteCoordinates
                     .map((coord) => Marker(
@@ -772,8 +833,10 @@ class LineStringView extends StatelessWidget {
   final List<List<double>> routeCoordinates;
   final dynamic properties;
   final double height;
+  final bool uspaceMap;
 
-  const LineStringView(this.routeCoordinates, this.properties, this.height,
+  const LineStringView(
+      this.routeCoordinates, this.properties, this.height, this.uspaceMap,
       {super.key});
 
   String formatProperties(dynamic properties) {
@@ -811,6 +874,7 @@ class LineStringView extends StatelessWidget {
                     "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
                 subdomains: const ['a', 'b', 'c'],
               ),
+              if (uspaceMap) ...EnaireMapLayers.getLayers(),
               PolylineLayer(
                 polylines: [
                   Polyline(
@@ -848,8 +912,10 @@ class MultiLineStringView extends StatelessWidget {
   final List<List<List<double>>> routeCoordinates;
   final dynamic properties;
   final double height;
+  final bool uspaceMap;
 
-  const MultiLineStringView(this.routeCoordinates, this.properties, this.height,
+  const MultiLineStringView(
+      this.routeCoordinates, this.properties, this.height, this.uspaceMap,
       {super.key});
 
   String formatProperties(dynamic properties) {
@@ -901,6 +967,7 @@ class MultiLineStringView extends StatelessWidget {
                     "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
                 subdomains: const ['a', 'b', 'c'],
               ),
+              if (uspaceMap) ...EnaireMapLayers.getLayers(),
               PolylineLayer(
                 polylines: adjustedRouteCoordinates
                     .map(
@@ -956,8 +1023,10 @@ class PolygonView extends StatelessWidget {
   final List<List<List<double>>> routeCoordinates;
   final dynamic properties;
   final double height;
+  final bool uspaceMap;
 
-  const PolygonView(this.routeCoordinates, this.properties, this.height,
+  const PolygonView(
+      this.routeCoordinates, this.properties, this.height, this.uspaceMap,
       {super.key});
 
   String formatProperties(dynamic properties) {
@@ -1009,6 +1078,7 @@ class PolygonView extends StatelessWidget {
                     "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
                 subdomains: const ['a', 'b', 'c'],
               ),
+              if (uspaceMap) ...EnaireMapLayers.getLayers(),
               PolygonLayer(
                 polygons: [
                   flutter_map.Polygon(
@@ -1046,8 +1116,10 @@ class MultiPolygonView extends StatelessWidget {
   final List<List<List<List<double>>>> routeCoordinates;
   final dynamic properties;
   final double height;
+  final bool uspaceMap;
 
-  const MultiPolygonView(this.routeCoordinates, this.properties, this.height,
+  const MultiPolygonView(
+      this.routeCoordinates, this.properties, this.height, this.uspaceMap,
       {super.key});
 
   String formatProperties(dynamic properties) {
@@ -1103,6 +1175,7 @@ class MultiPolygonView extends StatelessWidget {
                     "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
                 subdomains: const ['a', 'b', 'c'],
               ),
+              if (uspaceMap) ...EnaireMapLayers.getLayers(),
               PolygonLayer(
                 polygons: adjustedRouteCoordinates
                     .map(

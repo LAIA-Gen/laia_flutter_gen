@@ -226,6 +226,10 @@ class _${className}ListViewState extends ConsumerState<${className}ListView> {
               .firstAnnotationOfExact(field_info)
               ?.getField('relation')
               ?.toStringValue() ?? relation;
+      bool uspaceMap = false;
+      uspaceMap = _fieldChecker
+              .firstAnnotationOfExact(field_info)
+              !.getField('uspaceMap')?.toBoolValue() ?? uspaceMap;
       if (relation != '') {
         if (fieldType == 'String' || fieldType == 'String?') {
             buffer.writeln('''
@@ -376,7 +380,7 @@ DataCell(Center(
                       context,
                       MaterialPageRoute(
                         builder: (context) => MapScreenView(${fieldType}View(
-                          $classNameLowercase.$field.geometry.coordinates, $classNameLowercase.$field.properties, MediaQuery.of(context).size.height)),
+                          $classNameLowercase.$field.geometry.coordinates, $classNameLowercase.$field.properties, MediaQuery.of(context).size.height, $uspaceMap)),
                       ),
                     );
                   },

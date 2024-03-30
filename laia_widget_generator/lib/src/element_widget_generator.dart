@@ -120,6 +120,7 @@ class _${visitor.className}WidgetState extends State<${visitor.className}Widget>
       String widget = 'defaultWidget';
       String fieldDescription = "This is the $fieldName";
       String placeholder = 'Type the $fieldName';
+      bool uspaceMap = false;
       bool editable = true;
       String relation = '';
 
@@ -142,6 +143,10 @@ class _${visitor.className}WidgetState extends State<${visitor.className}Widget>
               .firstAnnotationOfExact(field)
               ?.getField('editable')
               ?.toBoolValue() ?? editable;
+        uspaceMap = _fieldChecker
+              .firstAnnotationOfExact(field)
+              ?.getField('uspaceMap')
+              ?.toBoolValue() ?? uspaceMap;
         String placeholderValue = _fieldChecker
               .firstAnnotationOfExact(field)
               ?.getField('placeholder')
@@ -232,6 +237,7 @@ class _${visitor.className}WidgetState extends State<${visitor.className}Widget>
         if (widget == "MapWidget") {
           buffer.writeln('''
             value: $fieldAccessor  ?? $fieldType(type: "Feature", geometry: Geometry$fieldType(coordinates: [], type: "$fieldType"), properties: {}),
+            uspaceMap: $uspaceMap
           ),
       ''');
         } else {

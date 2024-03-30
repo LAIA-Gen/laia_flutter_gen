@@ -133,18 +133,18 @@ class _Drones2WidgetState extends State<Drones2Widget> {
               value: widget.element?.description,
             ),
             MapWidget(
-              key: flightplanWidgetKey,
-              fieldName: "flightplan",
-              fieldDescription: "This is the flightplan",
-              editable: true,
-              placeholder: "Type the flightplan",
-              value: widget.element?.flightplan ??
-                  LineString(
-                      type: "Feature",
-                      geometry: GeometryLineString(
-                          coordinates: [], type: "LineString"),
-                      properties: {}),
-            ),
+                key: flightplanWidgetKey,
+                fieldName: "flightplan",
+                fieldDescription: "This is the flightplan",
+                editable: true,
+                placeholder: "Type the flightplan",
+                value: widget.element?.flightplan ??
+                    LineString(
+                        type: "Feature",
+                        geometry: GeometryLineString(
+                            coordinates: [], type: "LineString"),
+                        properties: {}),
+                uspaceMap: false),
             StringWidget(
               key: idWidgetKey,
               fieldName: "id",
@@ -951,7 +951,8 @@ class _Drones2ListViewState extends ConsumerState<Drones2ListView> {
                                                             MediaQuery.of(
                                                                     context)
                                                                 .size
-                                                                .height)),
+                                                                .height,
+                                                            false)),
                                               ),
                                             );
                                           },

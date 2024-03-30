@@ -11,6 +11,7 @@ class Field {
   final bool editable;
   final String placeholder;
   final String relation;
+  final bool uspaceMap;
 
-  const Field({this.widget = '', this.fieldName = '', this.fieldDescription = '', this.editable = true, this.placeholder = '', this.relation = ''});
+  const Field({this.widget = '', this.fieldName = '', this.fieldDescription = '', this.editable = true, this.placeholder = '', this.relation = '', this.uspaceMap = false});
 }

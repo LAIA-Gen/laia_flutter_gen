@@ -134,18 +134,18 @@ class _Drones5WidgetState extends State<Drones5Widget> {
               value: widget.element?.description,
             ),
             MapWidget(
-              key: flightplanWidgetKey,
-              fieldName: "flightplan",
-              fieldDescription: "This is the flightplan",
-              editable: true,
-              placeholder: "Type the flightplan",
-              value: widget.element?.flightplan ??
-                  MultiLineString(
-                      type: "Feature",
-                      geometry: GeometryMultiLineString(
-                          coordinates: [], type: "MultiLineString"),
-                      properties: {}),
-            ),
+                key: flightplanWidgetKey,
+                fieldName: "flightplan",
+                fieldDescription: "This is the flightplan",
+                editable: true,
+                placeholder: "Type the flightplan",
+                value: widget.element?.flightplan ??
+                    MultiLineString(
+                        type: "Feature",
+                        geometry: GeometryMultiLineString(
+                            coordinates: [], type: "MultiLineString"),
+                        properties: {}),
+                uspaceMap: false),
             StringWidget(
               key: idWidgetKey,
               fieldName: "id",
@@ -952,7 +952,8 @@ class _Drones5ListViewState extends ConsumerState<Drones5ListView> {
                                                             MediaQuery.of(
                                                                     context)
                                                                 .size
-                                                                .height)),
+                                                                .height,
+                                                            false)),
                                               ),
                                             );
                                           },

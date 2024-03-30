@@ -133,18 +133,18 @@ class _Drones4WidgetState extends State<Drones4Widget> {
               value: widget.element?.description,
             ),
             MapWidget(
-              key: flightplanWidgetKey,
-              fieldName: "flightplan",
-              fieldDescription: "This is the flightplan",
-              editable: true,
-              placeholder: "Type the flightplan",
-              value: widget.element?.flightplan ??
-                  MultiPoint(
-                      type: "Feature",
-                      geometry: GeometryMultiPoint(
-                          coordinates: [], type: "MultiPoint"),
-                      properties: {}),
-            ),
+                key: flightplanWidgetKey,
+                fieldName: "flightplan",
+                fieldDescription: "This is the flightplan",
+                editable: true,
+                placeholder: "Type the flightplan",
+                value: widget.element?.flightplan ??
+                    MultiPoint(
+                        type: "Feature",
+                        geometry: GeometryMultiPoint(
+                            coordinates: [], type: "MultiPoint"),
+                        properties: {}),
+                uspaceMap: false),
             StringWidget(
               key: idWidgetKey,
               fieldName: "id",
@@ -951,7 +951,8 @@ class _Drones4ListViewState extends ConsumerState<Drones4ListView> {
                                                             MediaQuery.of(
                                                                     context)
                                                                 .size
-                                                                .height)),
+                                                                .height,
+                                                            false)),
                                               ),
                                             );
                                           },

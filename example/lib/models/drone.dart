@@ -24,7 +24,7 @@ part 'drone.g.dart';
 class Drone {
   @Field(fieldName: 'description')
   final String? description;
-  @Field(fieldName: 'flightplan')
+  @Field(fieldName: 'flightplan', uspaceMap: true)
   final Point flightplan;
   @Field(fieldName: 'id')
   final String? id;
