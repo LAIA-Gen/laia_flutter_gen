@@ -320,7 +320,14 @@ class MapWidgetState extends State<MapWidget> {
                                                   geometry?.coordinates[index] =
                                                       coordinates;
                                                 } else if (isPolygonType) {
-
+                                                  List<String> ringStrings = newValue.split(RegExp(r'\\\s*\\\],\\\s*\\\[')); 
+                                                  List<List<double>> polygonCoordinates = [];
+                                                  for (String ringString in ringStrings) {
+                                                      List<String> coordinateStrings = ringString.replaceAll('[', '').replaceAll(']', '').split(',');
+                                                      List<double> coordinates = coordinateStrings.map((str) => double.parse(str.trim())).toList();
+                                                      polygonCoordinates.add(coordinates);
+                                                  }
+                                                  geometry?.coordinates[index] = polygonCoordinates;
                                                 } else if (isMultiPointType) {
 
                                                 } else if (isMultiLineStringType) {
@@ -664,9 +671,25 @@ class PolygonView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<List<List<double>>> adjustedRouteCoordinates =
-        routeCoordinates.isNotEmpty ? routeCoordinates : [[[0, 0]]];
+        routeCoordinates.isNotEmpty
+            ? routeCoordinates
+              .map((sublist) =>
+                  sublist.where((coord) => coord.length >= 2).toList())
+              .toList()
+            : [
+                [
+                  [0, 0]
+                ]
+              ];
 
-    var centroid = _calculateCentroid(adjustedRouteCoordinates[0]);
+    LatLng centroid = const LatLng(0, 0);
+
+    if (adjustedRouteCoordinates.isNotEmpty) {
+      var firstPolygon = adjustedRouteCoordinates[0];
+      if (firstPolygon.isNotEmpty) {
+        centroid = _calculateCentroid(firstPolygon);
+      }
+    }
 
     return Container(
         height: height,
@@ -678,7 +701,7 @@ class PolygonView extends StatelessWidget {
                 centroid.latitude,
                 centroid.longitude,
               ),
-              zoom: 10,
+              zoom: 8,
             ),
             children: [
               TileLayer(

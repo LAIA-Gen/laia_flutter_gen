@@ -366,9 +366,61 @@ DataCell(Center(
 ''');
           }
       } else {
-        buffer.writeln('''
+        if ( fieldType == "LineString" || fieldType == "MultiLineString" || fieldType == "MultiPoint" || fieldType == "MultiPolygon" || fieldType == "Point" || fieldType == "Polygon" ||
+            fieldType == "LineString?" || fieldType == "MultiLineString?" || fieldType == "MultiPoint?" || fieldType == "MultiPolygon?" || fieldType == "Point?" || fieldType == "Polygon?" ) {
+          buffer.writeln('''
+          DataCell(Center(
+                    child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => MapScreenView(${fieldType}View(
+                          $classNameLowercase.$field.geometry.coordinates, $classNameLowercase.$field.properties, MediaQuery.of(context).size.height)),
+                      ),
+                    );
+                  },
+                  style: ButtonStyle(
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                    ),
+                    padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+                      const EdgeInsets.symmetric(horizontal: 1, vertical: 1),
+                    ),
+                    backgroundColor: MaterialStateProperty.all<Color>(
+                        Styles.buttonPrimaryColor),
+                    elevation:
+                        MaterialStateProperty.resolveWith<double>((states) {
+                      if (states.contains(MaterialState.hovered) ||
+                          states.contains(MaterialState.pressed)) {
+                        return 0;
+                      }
+                      return 0;
+                    }),
+                    foregroundColor:
+                        MaterialStateProperty.all<Color>(Colors.white),
+                    overlayColor:
+                        MaterialStateProperty.resolveWith<Color>((states) {
+                      if (states.contains(MaterialState.hovered)) {
+                        return Styles.buttonPrimaryColorHover;
+                      }
+                      return Colors.transparent;
+                    }),
+                  ),
+                  child: const Text(
+                    "$fieldType",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ))),
+        ''');
+        }
+        else {
+          buffer.writeln('''
           DataCell(Center(child: Text($classNameLowercase.$field.toString()))),
         ''');
+        }
       }
     }
 
