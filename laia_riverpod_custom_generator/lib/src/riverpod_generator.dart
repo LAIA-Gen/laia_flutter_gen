@@ -16,11 +16,38 @@ class RiverpodCustomGenerator extends GeneratorForAnnotation<RiverpodGenAnnotati
     final visitor = ModelVisitor();
     element.visitChildren(visitor);
 
-    // TODO - go to openapi from baseURL and define the routes
-    // final baseURL = annotation.read('baseURL').stringValue;
+    var getPath = annotation.read('getPath').stringValue;
+    var createPath = annotation.read('createPath').stringValue;
+    var updatePath = annotation.read('updatePath').stringValue;
+    var deletePath = annotation.read('deletePath').stringValue;
+    var getAllPath = annotation.read('getAllPath').stringValue;
+    final auth = annotation.read('auth').boolValue;
+  
     var className = visitor.className;
     var classNameLowercase = className.toLowerCase();
     var classNamePlural = '${classNameLowercase}s';
+
+    if (getPath == '') {
+      getPath = '/$classNameLowercase/\$${classNameLowercase}Id';
+    } else {
+      getPath = getPath.replaceAll('{element_id}', '\$${classNameLowercase}Id');
+    }
+    if (deletePath == '') {
+      deletePath = '/$classNameLowercase/\$${classNameLowercase}Id';
+    } else {
+      deletePath = deletePath.replaceAll('{element_id}', '\$${classNameLowercase}Id');
+    }
+    if (updatePath == '') {
+      updatePath = '/$classNameLowercase/\$${classNameLowercase}Id';
+    } else {
+      updatePath = updatePath.replaceAll('{element_id}', '\$${classNameLowercase}Id');
+    }
+    if (createPath == '') {
+      createPath = '/$classNameLowercase';
+    }
+    if (getAllPath == '') {
+      createPath = '/$classNamePlural';
+    }
 
     final buffer = StringBuffer();
     buffer.writeln('''
@@ -93,6 +120,62 @@ class RiverpodCustomGenerator extends GeneratorForAnnotation<RiverpodGenAnnotati
         );
       });
 ''');
+    
+    if (auth) {
+      buffer.writeln('''
+class Auth {
+  final String username;
+  final String password;
+
+  Auth({required this.username, required this.password});
+
+  Map<String, dynamic> toJson() {
+    return {
+      'username': username,
+      'password': password,
+    };
+  }
+}
+
+final login${className}Provider = FutureProvider.autoDispose.family<$className, Auth>((ref, auth) async {
+  final response = await http.post(
+    Uri.parse('\$baseURL/auth/login/$classNameLowercase/'),
+    headers: {'Content-Type': 'application/json'},
+    body: jsonEncode(auth.toJson()),
+  );
+  if (response.statusCode != 200) {
+    throw Exception('Failed to login');
+  }
+
+  final responseData = jsonDecode(response.body);
+  final token = responseData['token'];
+
+  final prefs = await SharedPreferences.getInstance();
+  await prefs.setString('token', token);
+
+  return responseData['user'];
+});
+
+final register${className}Provider = FutureProvider.autoDispose.family<$className, $className>((ref, $classNameLowercase) async {
+  final response = await http.post(
+    Uri.parse('\$baseURL/auth/register/$classNameLowercase/'),
+    headers: {'Content-Type': 'application/json'},
+    body: jsonEncode($classNameLowercase.toJson()),
+  );
+  if (response.statusCode != 200) {
+    throw Exception('Failed to register');
+  }
+
+  final responseData = jsonDecode(response.body);
+  final token = responseData['token'];
+
+  final prefs = await SharedPreferences.getInstance();
+  await prefs.setString('token', token);
+
+  return responseData['user'];
+});
+''');
+    }
 
     return buffer.toString();
   }

@@ -12,33 +12,40 @@ import 'package:example/config/styles.dart';
 import 'dart:convert';
 import 'package:collection/collection.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-part 'drones4.g.dart';
+part 'person.g.dart';
 
 @JsonSerializable()
-@RiverpodGenAnnotation(baseURL)
+@RiverpodGenAnnotation(auth: true)
 @HomeWidgetElementGenAnnotation()
 @ListWidgetGenAnnotation()
 @elementWidgetGen
 @CopyWith()
-class Drones4 {
-  @Field(fieldName: 'description')
-  final String? description;
-  @Field(fieldName: 'flightplan')
-  final MultiPoint flightplan;
+class Person {
+  @Field(fieldName: "Description", fieldDescription: "This is the Description", editable: true, placeholder: "Write the Description")
+  final String description;
+  @Field(fieldName: 'email')
+  final String email;
   @Field(fieldName: 'id')
   final String? id;
-  @Field(fieldName: 'name')
+  @Field(fieldName: "Name", fieldDescription: "This is the Name", editable: true, placeholder: "Write the Name")
   final String name;
+  @Field(fieldName: 'password')
+  final String password;
+  @Field(fieldName: 'roles')
+  final List<String>? roles;
 
-  Drones4({
+  Person({
     required this.description,
-    required this.flightplan,
+    required this.email,
     required this.id,
-    required this.name
+    required this.name,
+    required this.password,
+    required this.roles
   });
 
-  factory Drones4.fromJson(Map<String, dynamic> json) => _$Drones4FromJson(json);
+  factory Person.fromJson(Map<String, dynamic> json) => _$PersonFromJson(json);
 
-  Map<String, dynamic> toJson() => _$Drones4ToJson(this);
+  Map<String, dynamic> toJson() => _$PersonToJson(this);
 }

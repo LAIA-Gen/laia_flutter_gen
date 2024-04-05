@@ -13,32 +13,26 @@ import 'dart:convert';
 import 'package:collection/collection.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 
-part 'drones3.g.dart';
+part 'role.g.dart';
 
 @JsonSerializable()
-@RiverpodGenAnnotation(baseURL)
+@RiverpodGenAnnotation()
 @HomeWidgetElementGenAnnotation()
 @ListWidgetGenAnnotation()
 @elementWidgetGen
 @CopyWith()
-class Drones3 {
-  @Field(fieldName: 'description')
-  final String? description;
-  @Field(fieldName: 'flightplan')
-  final Polygon flightplan;
-  @Field(fieldName: 'id')
-  final String? id;
+class Role {
   @Field(fieldName: 'name')
   final String name;
+  @Field(fieldName: 'id')
+  final String id;
 
-  Drones3({
-    required this.description,
-    required this.flightplan,
-    required this.id,
-    required this.name
+  Role({
+    required this.name,
+    required this.id
   });
 
-  factory Drones3.fromJson(Map<String, dynamic> json) => _$Drones3FromJson(json);
+  factory Role.fromJson(Map<String, dynamic> json) => _$RoleFromJson(json);
 
-  Map<String, dynamic> toJson() => _$Drones3ToJson(this);
+  Map<String, dynamic> toJson() => _$RoleToJson(this);
 }

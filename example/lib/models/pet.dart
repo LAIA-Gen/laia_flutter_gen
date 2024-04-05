@@ -12,33 +12,37 @@ import 'package:example/config/styles.dart';
 import 'dart:convert';
 import 'package:collection/collection.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:example/models/person.dart';
 
-part 'drones.g.dart';
+part 'pet.g.dart';
 
 @JsonSerializable()
-@RiverpodGenAnnotation(baseURL)
+@RiverpodGenAnnotation()
 @HomeWidgetElementGenAnnotation()
 @ListWidgetGenAnnotation()
 @elementWidgetGen
 @CopyWith()
-class Drones2 {
-  @Field(fieldName: 'description')
-  final String? description;
-  @Field(fieldName: 'flightplan')
-  final LineString flightplan;
+class Pet {
+  @Field(fieldName: "Age", fieldDescription: "This is the Age", editable: true, placeholder: "Write the Age")
+  final String? age;
+  @Field(fieldName: "Description", fieldDescription: "This is the Description", editable: true, placeholder: "Write the Description")
+  final String description;
   @Field(fieldName: 'id')
   final String? id;
-  @Field(fieldName: 'name')
+  @Field(fieldName: "Name", fieldDescription: "This is the Name", editable: true, placeholder: "Write the Name")
   final String name;
+  @Field(fieldName: "Owner", fieldDescription: "This is the Owner", editable: true, placeholder: "Write the Owner", relation: "Person")
+  final String? ownerid;
 
-  Drones2({
+  Pet({
+    required this.age,
     required this.description,
-    required this.flightplan,
     required this.id,
-    required this.name
+    required this.name,
+    required this.ownerid
   });
 
-  factory Drones2.fromJson(Map<String, dynamic> json) => _$Drones2FromJson(json);
+  factory Pet.fromJson(Map<String, dynamic> json) => _$PetFromJson(json);
 
-  Map<String, dynamic> toJson() => _$Drones2ToJson(this);
+  Map<String, dynamic> toJson() => _$PetToJson(this);
 }

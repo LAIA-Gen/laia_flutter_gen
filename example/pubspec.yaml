@@ -10,7 +10,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  laia_annotations: ^0.0.2
+  laia_annotations: ^0.0.3
   cupertino_icons: ^1.0.2
   json_annotation: ^4.8.1
   json_serializable: ^6.7.1
@@ -25,6 +25,7 @@ dependencies:
   flutter_typeahead: ^5.0.0
   dart_amqp: ^0.2.5
   geocoding: ^3.0.0
+  shared_preferences: ^2.2.2
 
 dev_dependencies:
   flutter_test:

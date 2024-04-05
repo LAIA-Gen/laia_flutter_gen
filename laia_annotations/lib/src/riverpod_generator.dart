@@ -1,5 +1,11 @@
 class RiverpodGenAnnotation {
-  final String baseURL;
+  final String getPath;
+  final String createPath;
+  final String updatePath;
+  final String deletePath;
+  final String getAllPath;
+  final bool auth;
 
-  const RiverpodGenAnnotation(this.baseURL);
+
+  const RiverpodGenAnnotation({ this.getAllPath = '', this.createPath = '', this.updatePath = '', this.deletePath = '', this.getPath = '', this.auth = false });
 }

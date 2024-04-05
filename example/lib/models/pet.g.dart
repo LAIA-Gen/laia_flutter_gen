@@ -1,76 +1,83 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'drone.dart';
+part of 'pet.dart';
 
 // **************************************************************************
 // CopyWithGenerator
 // **************************************************************************
 
-abstract class _$DroneCWProxy {
-  Drone description(String? description);
+abstract class _$PetCWProxy {
+  Pet age(String? age);
 
-  Drone flightplan(Point flightplan);
+  Pet description(String description);
 
-  Drone id(String? id);
+  Pet id(String? id);
 
-  Drone name(String name);
+  Pet name(String name);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Drone(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  Pet ownerid(String? ownerid);
+
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Pet(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
   /// Usage
   /// ```dart
-  /// Drone(...).copyWith(id: 12, name: "My name")
+  /// Pet(...).copyWith(id: 12, name: "My name")
   /// ````
-  Drone call({
+  Pet call({
+    String? age,
     String? description,
-    Point? flightplan,
     String? id,
     String? name,
+    String? ownerid,
   });
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfDrone.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfDrone.copyWith.fieldName(...)`
-class _$DroneCWProxyImpl implements _$DroneCWProxy {
-  final Drone _value;
+/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfPet.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfPet.copyWith.fieldName(...)`
+class _$PetCWProxyImpl implements _$PetCWProxy {
+  final Pet _value;
 
-  const _$DroneCWProxyImpl(this._value);
-
-  @override
-  Drone description(String? description) => this(description: description);
+  const _$PetCWProxyImpl(this._value);
 
   @override
-  Drone flightplan(Point flightplan) => this(flightplan: flightplan);
+  Pet age(String? age) => this(age: age);
 
   @override
-  Drone id(String? id) => this(id: id);
+  Pet description(String description) => this(description: description);
 
   @override
-  Drone name(String name) => this(name: name);
+  Pet id(String? id) => this(id: id);
+
+  @override
+  Pet name(String name) => this(name: name);
+
+  @override
+  Pet ownerid(String? ownerid) => this(ownerid: ownerid);
 
   @override
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Drone(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Pet(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
   /// Usage
   /// ```dart
-  /// Drone(...).copyWith(id: 12, name: "My name")
+  /// Pet(...).copyWith(id: 12, name: "My name")
   /// ````
-  Drone call({
+  Pet call({
+    Object? age = const $CopyWithPlaceholder(),
     Object? description = const $CopyWithPlaceholder(),
-    Object? flightplan = const $CopyWithPlaceholder(),
     Object? id = const $CopyWithPlaceholder(),
     Object? name = const $CopyWithPlaceholder(),
+    Object? ownerid = const $CopyWithPlaceholder(),
   }) {
-    return Drone(
-      description: description == const $CopyWithPlaceholder()
-          ? _value.description
+    return Pet(
+      age: age == const $CopyWithPlaceholder()
+          ? _value.age
           // ignore: cast_nullable_to_non_nullable
-          : description as String?,
-      flightplan:
-          flightplan == const $CopyWithPlaceholder() || flightplan == null
-              ? _value.flightplan
+          : age as String?,
+      description:
+          description == const $CopyWithPlaceholder() || description == null
+              ? _value.description
               // ignore: cast_nullable_to_non_nullable
-              : flightplan as Point,
+              : description as String,
       id: id == const $CopyWithPlaceholder()
           ? _value.id
           // ignore: cast_nullable_to_non_nullable
@@ -79,71 +86,73 @@ class _$DroneCWProxyImpl implements _$DroneCWProxy {
           ? _value.name
           // ignore: cast_nullable_to_non_nullable
           : name as String,
+      ownerid: ownerid == const $CopyWithPlaceholder()
+          ? _value.ownerid
+          // ignore: cast_nullable_to_non_nullable
+          : ownerid as String?,
     );
   }
 }
 
-extension $DroneCopyWith on Drone {
-  /// Returns a callable class that can be used as follows: `instanceOfDrone.copyWith(...)` or like so:`instanceOfDrone.copyWith.fieldName(...)`.
+extension $PetCopyWith on Pet {
+  /// Returns a callable class that can be used as follows: `instanceOfPet.copyWith(...)` or like so:`instanceOfPet.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
-  _$DroneCWProxy get copyWith => _$DroneCWProxyImpl(this);
+  _$PetCWProxy get copyWith => _$PetCWProxyImpl(this);
 }
 
 // **************************************************************************
 // ElementWidgetGenerator
 // **************************************************************************
 
-class DroneWidget extends StatefulWidget {
-  final Drone? element;
+class PetWidget extends StatefulWidget {
+  final Pet? element;
   final bool isEditing;
 
-  const DroneWidget({this.element, required this.isEditing, Key? key})
+  const PetWidget({this.element, required this.isEditing, Key? key})
       : super(key: key);
 
   @override
-  _DroneWidgetState createState() => _DroneWidgetState();
+  _PetWidgetState createState() => _PetWidgetState();
 }
 
-class _DroneWidgetState extends State<DroneWidget> {
+class _PetWidgetState extends State<PetWidget> {
+  final GlobalKey<StringWidgetState> ageWidgetKey =
+      GlobalKey<StringWidgetState>();
   final GlobalKey<StringWidgetState> descriptionWidgetKey =
       GlobalKey<StringWidgetState>();
-  final GlobalKey<MapWidgetState> flightplanWidgetKey =
-      GlobalKey<MapWidgetState>();
   final GlobalKey<StringWidgetState> idWidgetKey =
       GlobalKey<StringWidgetState>();
   final GlobalKey<StringWidgetState> nameWidgetKey =
       GlobalKey<StringWidgetState>();
+  final GlobalKey<PersonFieldWidgetState> owneridWidgetKey =
+      GlobalKey<PersonFieldWidgetState>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Drone'),
+        title: const Text('Pet'),
       ),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: Column(
           children: [
             StringWidget(
+              key: ageWidgetKey,
+              fieldName: "Age",
+              fieldDescription: "This is the Age",
+              editable: true,
+              placeholder: "Write the Age",
+              value: widget.element?.age,
+            ),
+            StringWidget(
               key: descriptionWidgetKey,
               fieldName: "Description",
-              fieldDescription: "This is the description",
+              fieldDescription: "This is the Description",
               editable: true,
-              placeholder: "Type the description",
+              placeholder: "Write the Description",
               value: widget.element?.description,
             ),
-            MapWidget(
-                key: flightplanWidgetKey,
-                fieldName: "Flight Plan",
-                fieldDescription: "This is the flightplan",
-                editable: true,
-                placeholder: "Type the flightplan",
-                value: widget.element?.flightplan ??
-                    Point(
-                        type: "Feature",
-                        geometry: GeometryPoint(coordinates: [], type: "Point"),
-                        properties: {}),
-                uspaceMap: false),
             StringWidget(
               key: idWidgetKey,
               fieldName: "id",
@@ -155,57 +164,62 @@ class _DroneWidgetState extends State<DroneWidget> {
             StringWidget(
               key: nameWidgetKey,
               fieldName: "Name",
-              fieldDescription: "This is the name",
+              fieldDescription: "This is the Name",
               editable: true,
-              placeholder: "Type the name",
+              placeholder: "Write the Name",
               value: widget.element?.name,
+            ),
+            PersonFieldWidget(
+              key: owneridWidgetKey,
+              fieldName: "Owner",
+              fieldDescription: "This is the Owner",
+              editable: true,
+              placeholder: "Write the Owner",
+              value: widget.element?.ownerid,
             ),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
+          String? updatedage = ageWidgetKey.currentState?.getUpdatedValue();
+
           String? updateddescription =
               descriptionWidgetKey.currentState?.getUpdatedValue();
-
-          dynamic updatedflightplan =
-              flightplanWidgetKey.currentState?.getUpdatedValue();
-
-          updatedflightplan = Point(
-              type: "Feature",
-              geometry: GeometryPoint(
-                  coordinates: updatedflightplan.geometry.coordinates,
-                  type: updatedflightplan.geometry.type),
-              properties: updatedflightplan.properties);
 
           String? updatedid = idWidgetKey.currentState?.getUpdatedValue();
 
           String? updatedname = nameWidgetKey.currentState?.getUpdatedValue();
 
-          Drone updatedDrone = widget.element ??
-              Drone(
+          String? updatedownerid =
+              owneridWidgetKey.currentState?.getUpdatedValue();
+
+          Pet updatedPet = widget.element ??
+              Pet(
+                age: updatedage ?? '',
                 description: updateddescription ?? '',
-                flightplan: updatedflightplan ?? '',
                 id: updatedid ?? '',
                 name: updatedname ?? '',
+                ownerid: updatedownerid ?? '',
               );
 
-          updatedDrone = updatedDrone.copyWith(
+          updatedPet = updatedPet.copyWith(
+              age: updatedage,
               description: updateddescription,
-              flightplan: updatedflightplan,
               id: updatedid,
-              name: updatedname);
+              name: updatedname,
+              ownerid: updatedownerid);
           var container = ProviderContainer();
           try {
             if (widget.isEditing) {
-              await container.read(updateDroneProvider(updatedDrone));
-              print('Drone updated successfully');
+              await container.read(updatePetProvider(updatedPet));
+              print('Pet updated successfully');
             } else {
-              await container.read(createDroneProvider(updatedDrone));
-              print('Drone created successfully');
+              await container.read(createPetProvider(updatedPet));
+              print('Pet created successfully');
             }
           } catch (error) {
-            print('Failed to update Drone: $error');
+            print('Failed to update Pet: $error');
           }
         },
         child: Icon(Icons.save),
@@ -214,14 +228,14 @@ class _DroneWidgetState extends State<DroneWidget> {
   }
 }
 
-class DroneFieldWidget extends StatefulWidget {
+class PetFieldWidget extends StatefulWidget {
   final String fieldName;
   final String fieldDescription;
   final bool editable;
   final String placeholder;
   final String? value;
 
-  const DroneFieldWidget({
+  const PetFieldWidget({
     Key? key,
     required this.fieldName,
     required this.fieldDescription,
@@ -231,15 +245,15 @@ class DroneFieldWidget extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  DroneFieldWidgetState createState() => DroneFieldWidgetState();
+  PetFieldWidgetState createState() => PetFieldWidgetState();
 }
 
-class DroneFieldWidgetState extends State<DroneFieldWidget> {
+class PetFieldWidgetState extends State<PetFieldWidget> {
   final TextEditingController _typeAheadController = TextEditingController();
   bool isValueChanged = false;
   late String? initialValue;
   late String currentValue;
-  late List<Drone> options;
+  late List<Pet> options;
 
   @override
   void initState() {
@@ -251,8 +265,8 @@ class DroneFieldWidgetState extends State<DroneFieldWidget> {
     super.initState();
     initialValue = widget.value;
     currentValue = initialValue ?? '';
-    Drone drone = await container.read(getDroneProvider(widget.value!).future);
-    _typeAheadController.text = '${drone.name} <id: ${drone.id}>';
+    Pet pet = await container.read(getPetProvider(widget.value!).future);
+    _typeAheadController.text = '${pet.name} <id: ${pet.id}>';
   }
 
   String? getUpdatedValue() {
@@ -294,30 +308,30 @@ class DroneFieldWidgetState extends State<DroneFieldWidget> {
                 children: [
                   widget.editable
                       ? Expanded(
-                          child: TypeAheadField<Drone>(
+                          child: TypeAheadField<Pet>(
                             controller: _typeAheadController,
                             suggestionsCallback: (String pattern) async {
-                              final dronePaginationData = await container.read(
-                                  getAllDroneProvider(container
-                                          .read(dronePaginationProvider))
+                              final petPaginationData = await container.read(
+                                  getAllPetProvider(
+                                          container.read(petPaginationProvider))
                                       .future);
-                              final options = dronePaginationData.items;
+                              final options = petPaginationData.items;
                               return options
-                                  .where((drone) =>
-                                      drone.name
+                                  .where((pet) =>
+                                      pet.name
                                           .toLowerCase()
                                           .contains(pattern.toLowerCase()) ||
-                                      drone.id
+                                      pet.id
                                           .toString()
                                           .contains(pattern.toLowerCase()))
                                   .toList();
                             },
-                            itemBuilder: (context, drone) {
+                            itemBuilder: (context, pet) {
                               return ListTile(
-                                title: Text('${drone.name} <id: ${drone.id}>'),
+                                title: Text('${pet.name} <id: ${pet.id}>'),
                               );
                             },
-                            onSelected: (Drone value) {
+                            onSelected: (Pet value) {
                               setState(() {
                                 isValueChanged = value.id != initialValue;
                                 currentValue = value.id!;
@@ -352,20 +366,20 @@ class DroneFieldWidgetState extends State<DroneFieldWidget> {
           child: ElevatedButton(
             onPressed: () async {
               try {
-                Drone drone = await container
-                    .read(getDroneProvider(widget.value!).future);
+                Pet pet =
+                    await container.read(getPetProvider(widget.value!).future);
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) =>
-                        DroneWidget(element: drone, isEditing: true),
+                        PetWidget(element: pet, isEditing: true),
                   ),
                 );
               } catch (error) {
-                print('Failed to fetch drone: $error');
+                print('Failed to fetch pet: $error');
               }
             },
-            child: const Text('View Drone'),
+            child: const Text('View Pet'),
           ),
         ),
       ],
@@ -373,14 +387,14 @@ class DroneFieldWidgetState extends State<DroneFieldWidget> {
   }
 }
 
-class DroneMultiFieldWidget extends StatefulWidget {
+class PetMultiFieldWidget extends StatefulWidget {
   final String fieldName;
   final String fieldDescription;
   final bool editable;
   final String placeholder;
   final List<String>? values;
 
-  const DroneMultiFieldWidget({
+  const PetMultiFieldWidget({
     Key? key,
     required this.fieldName,
     required this.fieldDescription,
@@ -390,15 +404,15 @@ class DroneMultiFieldWidget extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  DroneMultiFieldWidgetState createState() => DroneMultiFieldWidgetState();
+  PetMultiFieldWidgetState createState() => PetMultiFieldWidgetState();
 }
 
-class DroneMultiFieldWidgetState extends State<DroneMultiFieldWidget> {
+class PetMultiFieldWidgetState extends State<PetMultiFieldWidget> {
   final TextEditingController _typeAheadController = TextEditingController();
   bool isValueChanged = false;
   late List<String> initialValues = [];
   late List<String> currentValues = [];
-  late List<Drone> options = [];
+  late List<Pet> options = [];
 
   @override
   void initState() {
@@ -411,13 +425,13 @@ class DroneMultiFieldWidgetState extends State<DroneMultiFieldWidget> {
     initialValues = widget.values ?? [];
     currentValues = initialValues;
     if (widget.values != null) {
-      List<Drone> droneList = await Future.wait(
+      List<Pet> petList = await Future.wait(
         (widget.values ?? []).where((value) => value != '').map((value) async {
-          return await container.read(getDroneProvider(value).future);
+          return await container.read(getPetProvider(value).future);
         }),
       );
-      String concatenatedText = '${droneList.map((drone) {
-        return '${drone.name} <id: ${drone.id}>';
+      String concatenatedText = '${petList.map((pet) {
+        return '${pet.name} <id: ${pet.id}>';
       }).join(', ')}, ';
       _typeAheadController.text = concatenatedText;
     } else {
@@ -464,7 +478,7 @@ class DroneMultiFieldWidgetState extends State<DroneMultiFieldWidget> {
                 children: [
                   widget.editable
                       ? Expanded(
-                          child: TypeAheadField<Drone>(
+                          child: TypeAheadField<Pet>(
                             controller: _typeAheadController,
                             suggestionsCallback: (String pattern) async {
                               final idRegex =
@@ -491,46 +505,45 @@ class DroneMultiFieldWidgetState extends State<DroneMultiFieldWidget> {
                               }
                               final inputParts = pattern.split(',').last.trim();
                               container
-                                  .read(dronePaginationProvider.notifier)
+                                  .read(petPaginationProvider.notifier)
                                   .setFilters({
                                 'id': {'\$nin': currentValues}
                               });
-                              final dronePaginationData = await container.read(
-                                  getAllDroneProvider(container
-                                          .read(dronePaginationProvider))
+                              final petPaginationData = await container.read(
+                                  getAllPetProvider(
+                                          container.read(petPaginationProvider))
                                       .future);
-                              final options = dronePaginationData.items;
+                              final options = petPaginationData.items;
                               return options
-                                  .where((drone) =>
-                                      drone.name
+                                  .where((pet) =>
+                                      pet.name
                                           .toLowerCase()
                                           .contains(inputParts.toLowerCase()) ||
-                                      drone.id
+                                      pet.id
                                           .toString()
                                           .toLowerCase()
                                           .contains(inputParts.toLowerCase()))
                                   .toList();
                             },
-                            itemBuilder: (context, drone) {
+                            itemBuilder: (context, pet) {
                               return ListTile(
-                                title: Text('${drone.name} <id: ${drone.id}>'),
+                                title: Text('${pet.name} <id: ${pet.id}>'),
                               );
                             },
-                            onSelected: (Drone value) async {
+                            onSelected: (Pet value) async {
                               isValueChanged =
                                   !initialValues.contains(value.id);
                               currentValues.add(value.id!);
 
-                              List<Drone> droneList = await Future.wait(
+                              List<Pet> petList = await Future.wait(
                                   (currentValues)
                                       .where((value) => value != '')
                                       .map((value) async {
                                 return await container
-                                    .read(getDroneProvider(value).future);
+                                    .read(getPetProvider(value).future);
                               }));
-                              String concatenatedText =
-                                  '${droneList.map((drone) {
-                                return '${drone.name} <id: ${drone.id}>';
+                              String concatenatedText = '${petList.map((pet) {
+                                return '${pet.name} <id: ${pet.id}>';
                               }).join(', ')}, ';
 
                               setState(() {
@@ -574,14 +587,14 @@ class DroneMultiFieldWidgetState extends State<DroneMultiFieldWidget> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => DroneListView(extraFilters: query),
+                    builder: (context) => PetListView(extraFilters: query),
                   ),
                 );
               } catch (error) {
-                print('Failed to fetch drones: $error');
+                print('Failed to fetch pets: $error');
               }
             },
-            child: const Text('View Drones'),
+            child: const Text('View Pets'),
           ),
         ),
       ],
@@ -593,15 +606,15 @@ class DroneMultiFieldWidgetState extends State<DroneMultiFieldWidget> {
 // HomeWidgetElementGenerator
 // **************************************************************************
 
-class DroneHomeWidget extends StatelessWidget {
-  const DroneHomeWidget({super.key});
+class PetHomeWidget extends StatelessWidget {
+  const PetHomeWidget({super.key});
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => DroneListView()),
+          MaterialPageRoute(builder: (context) => PetListView()),
         );
       },
       child: Container(
@@ -615,14 +628,14 @@ class DroneHomeWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image.asset(
-              'assets/drone.png',
+              'assets/pet.png',
               width: 40.0,
               height: 40.0,
               color: Colors.white,
             ),
             const SizedBox(height: 8.0),
             const Text(
-              "Drone",
+              "Pet",
               style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
@@ -639,35 +652,37 @@ class DroneHomeWidget extends StatelessWidget {
 // JsonSerializableGenerator
 // **************************************************************************
 
-Drone _$DroneFromJson(Map<String, dynamic> json) => Drone(
-      description: json['description'] as String?,
-      flightplan: Point.fromJson(json['flightplan'] as Map<String, dynamic>),
+Pet _$PetFromJson(Map<String, dynamic> json) => Pet(
+      age: json['age'] as String?,
+      description: json['description'] as String,
       id: json['id'] as String?,
       name: json['name'] as String,
+      ownerid: json['ownerid'] as String?,
     );
 
-Map<String, dynamic> _$DroneToJson(Drone instance) => <String, dynamic>{
+Map<String, dynamic> _$PetToJson(Pet instance) => <String, dynamic>{
+      'age': instance.age,
       'description': instance.description,
-      'flightplan': instance.flightplan,
       'id': instance.id,
       'name': instance.name,
+      'ownerid': instance.ownerid,
     };
 
 // **************************************************************************
 // ListWidgetGenerator
 // **************************************************************************
 
-class DroneListView extends ConsumerStatefulWidget {
+class PetListView extends ConsumerStatefulWidget {
   final Map<String, dynamic>? extraFilters;
   final Map<String, dynamic> currentFilters = {};
 
-  DroneListView({Key? key, this.extraFilters}) : super(key: key);
+  PetListView({Key? key, this.extraFilters}) : super(key: key);
 
   @override
-  _DroneListViewState createState() => _DroneListViewState();
+  _PetListViewState createState() => _PetListViewState();
 }
 
-class _DroneListViewState extends ConsumerState<DroneListView> {
+class _PetListViewState extends ConsumerState<PetListView> {
   @override
   void initState() {
     super.initState();
@@ -677,23 +692,21 @@ class _DroneListViewState extends ConsumerState<DroneListView> {
           widget.currentFilters[key] = value;
         });
       }
-      ref
-          .read(dronePaginationProvider.notifier)
-          .setFilters(widget.extraFilters!);
+      ref.read(petPaginationProvider.notifier).setFilters(widget.extraFilters!);
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final paginationState = ref.watch(dronePaginationProvider);
+    final paginationState = ref.watch(petPaginationProvider);
 
-    final dronesAsyncValue = ref.watch(getAllDroneProvider(paginationState));
+    final petsAsyncValue = ref.watch(getAllPetProvider(paginationState));
 
     final Map<String, int> columnSortStates =
-        ref.watch(dronePaginationProvider.notifier).getOrders();
+        ref.watch(petPaginationProvider.notifier).getOrders();
 
     final Map<String, dynamic> fieldsFilterStates =
-        ref.watch(dronePaginationProvider.notifier).getFilters();
+        ref.watch(petPaginationProvider.notifier).getFilters();
 
     void onSort(String columnName) {
       var state = columnSortStates[columnName];
@@ -704,13 +717,13 @@ class _DroneListViewState extends ConsumerState<DroneListView> {
       } else if (state == -1) {
         columnSortStates.remove(columnName);
       }
-      ref.read(dronePaginationProvider.notifier).setOrders(columnSortStates);
+      ref.read(petPaginationProvider.notifier).setOrders(columnSortStates);
     }
 
     void onFilter(String fieldName, dynamic filterValue) {
       widget.currentFilters[fieldName] = filterValue;
       ref
-          .read(dronePaginationProvider.notifier)
+          .read(petPaginationProvider.notifier)
           .setFilters(widget.currentFilters);
     }
 
@@ -720,16 +733,29 @@ class _DroneListViewState extends ConsumerState<DroneListView> {
       }
     }
 
+    Future<List<Person>> fetchPersonList(List<String>? ids) async {
+      if (ids == null || ids.isEmpty) {
+        return [];
+      }
+      final nonEmptyIds = ids.where((id) => id.isNotEmpty).toList();
+      List<Person> personList = await Future.wait(
+        nonEmptyIds.map((id) async {
+          return await ref.read(getPersonProvider(id).future);
+        }),
+      );
+      return personList;
+    }
+
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Drone List'),
+          title: const Text('Pet List'),
           actions: [
             IconButton(
               onPressed: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const DroneWidget(
+                    builder: (context) => const PetWidget(
                       isEditing: false,
                     ),
                   ),
@@ -739,20 +765,21 @@ class _DroneListViewState extends ConsumerState<DroneListView> {
             ),
           ],
         ),
-        body: dronesAsyncValue.when(
+        body: petsAsyncValue.when(
           loading: () => const CircularProgressIndicator(),
           error: (error, stackTrace) => Text('Error: $error'),
-          data: (DronePaginationData data) {
-            final drones = data.items;
+          data: (PetPaginationData data) {
+            final pets = data.items;
             return Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   CustomSearchBar(
                     fields: const {
-                      'description': 'String?',
-                      'flightplan': 'Point',
+                      'age': 'String?',
+                      'description': 'String',
                       'id': 'String?',
-                      'name': 'String'
+                      'name': 'String',
+                      'ownerid': 'String?'
                     },
                     filters: fieldsFilterStates,
                     onFilterChanged: onFilter,
@@ -777,17 +804,17 @@ class _DroneListViewState extends ConsumerState<DroneListView> {
                                               MainAxisAlignment.center,
                                           children: [
                                             const Text(
-                                              'Name',
+                                              'Age',
                                               style: TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   color: Color.fromARGB(
                                                       255, 94, 54, 54)),
                                               textAlign: TextAlign.center,
                                             ),
-                                            if (columnSortStates['name'] !=
+                                            if (columnSortStates['age'] !=
                                                 null) ...[
                                               Icon(
-                                                columnSortStates['name'] == 1
+                                                columnSortStates['age'] == 1
                                                     ? Icons
                                                         .arrow_drop_up_rounded
                                                     : Icons
@@ -795,7 +822,7 @@ class _DroneListViewState extends ConsumerState<DroneListView> {
                                                 color: Colors.black,
                                               ),
                                               Text(
-                                                '${columnSortStates.keys.toList().indexOf('name') + 1}',
+                                                '${columnSortStates.keys.toList().indexOf('age') + 1}',
                                                 style: const TextStyle(
                                                     fontSize: 10),
                                               ),
@@ -804,7 +831,7 @@ class _DroneListViewState extends ConsumerState<DroneListView> {
                                         ),
                                       ),
                                       onSort: (columnIndex, ascending) =>
-                                          {onSort('name')},
+                                          {onSort('age')},
                                     ),
                                     DataColumn(
                                       label: Expanded(
@@ -852,20 +879,17 @@ class _DroneListViewState extends ConsumerState<DroneListView> {
                                               MainAxisAlignment.center,
                                           children: [
                                             const Text(
-                                              'Flight Plan',
+                                              'id',
                                               style: TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   color: Color.fromARGB(
                                                       255, 94, 54, 54)),
                                               textAlign: TextAlign.center,
                                             ),
-                                            if (columnSortStates[
-                                                    'flightplan'] !=
+                                            if (columnSortStates['id'] !=
                                                 null) ...[
                                               Icon(
-                                                columnSortStates[
-                                                            'flightplan'] ==
-                                                        1
+                                                columnSortStates['id'] == 1
                                                     ? Icons
                                                         .arrow_drop_up_rounded
                                                     : Icons
@@ -873,7 +897,7 @@ class _DroneListViewState extends ConsumerState<DroneListView> {
                                                 color: Colors.black,
                                               ),
                                               Text(
-                                                '${columnSortStates.keys.toList().indexOf('flightplan') + 1}',
+                                                '${columnSortStates.keys.toList().indexOf('id') + 1}',
                                                 style: const TextStyle(
                                                     fontSize: 10),
                                               ),
@@ -882,92 +906,204 @@ class _DroneListViewState extends ConsumerState<DroneListView> {
                                         ),
                                       ),
                                       onSort: (columnIndex, ascending) =>
-                                          {onSort('flightplan')},
+                                          {onSort('id')},
+                                    ),
+                                    DataColumn(
+                                      label: Expanded(
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            const Text(
+                                              'Name',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Color.fromARGB(
+                                                      255, 94, 54, 54)),
+                                              textAlign: TextAlign.center,
+                                            ),
+                                            if (columnSortStates['name'] !=
+                                                null) ...[
+                                              Icon(
+                                                columnSortStates['name'] == 1
+                                                    ? Icons
+                                                        .arrow_drop_up_rounded
+                                                    : Icons
+                                                        .arrow_drop_down_rounded,
+                                                color: Colors.black,
+                                              ),
+                                              Text(
+                                                '${columnSortStates.keys.toList().indexOf('name') + 1}',
+                                                style: const TextStyle(
+                                                    fontSize: 10),
+                                              ),
+                                            ],
+                                          ],
+                                        ),
+                                      ),
+                                      onSort: (columnIndex, ascending) =>
+                                          {onSort('name')},
+                                    ),
+                                    DataColumn(
+                                      label: Expanded(
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            const Text(
+                                              'Owner',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Color.fromARGB(
+                                                      255, 94, 54, 54)),
+                                              textAlign: TextAlign.center,
+                                            ),
+                                            if (columnSortStates['ownerid'] !=
+                                                null) ...[
+                                              Icon(
+                                                columnSortStates['ownerid'] == 1
+                                                    ? Icons
+                                                        .arrow_drop_up_rounded
+                                                    : Icons
+                                                        .arrow_drop_down_rounded,
+                                                color: Colors.black,
+                                              ),
+                                              Text(
+                                                '${columnSortStates.keys.toList().indexOf('ownerid') + 1}',
+                                                style: const TextStyle(
+                                                    fontSize: 10),
+                                              ),
+                                            ],
+                                          ],
+                                        ),
+                                      ),
+                                      onSort: (columnIndex, ascending) =>
+                                          {onSort('ownerid')},
                                     ),
                                   ],
-                                  rows: drones.map((drone) {
+                                  rows: pets.map((pet) {
                                     return DataRow(
                                       cells: [
                                         DataCell(Center(
-                                            child:
-                                                Text(drone.name.toString()))),
+                                            child: Text(pet.age.toString()))),
                                         DataCell(Center(
                                             child: Text(
-                                                drone.description.toString()))),
+                                                pet.description.toString()))),
                                         DataCell(Center(
-                                            child: ElevatedButton(
-                                          onPressed: () {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    MapScreenView(PointView(
-                                                        drone
-                                                            .flightplan
-                                                            .geometry
-                                                            .coordinates,
-                                                        drone.flightplan
-                                                            .properties,
-                                                        MediaQuery.of(context)
-                                                            .size
-                                                            .height,
-                                                        false)),
-                                              ),
-                                            );
-                                          },
-                                          style: ButtonStyle(
-                                            shape: MaterialStateProperty.all<
-                                                RoundedRectangleBorder>(
-                                              RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(5),
-                                              ),
+                                            child: Text(pet.id.toString()))),
+                                        DataCell(Center(
+                                            child: Text(pet.name.toString()))),
+                                        DataCell(
+                                          Center(
+                                            child: FutureBuilder<List<Person>>(
+                                              future: fetchPersonList(
+                                                  [pet.ownerid ?? '']),
+                                              builder: (context, snapshot) {
+                                                if (snapshot.connectionState ==
+                                                        ConnectionState
+                                                            .waiting ||
+                                                    snapshot.data == null) {
+                                                  return const CircularProgressIndicator();
+                                                } else {
+                                                  return Wrap(
+                                                    spacing: 4,
+                                                    children: snapshot.data!
+                                                        .map((person) {
+                                                      return ElevatedButton(
+                                                        onPressed: () {
+                                                          Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  PersonWidget(
+                                                                element: person,
+                                                                isEditing: true,
+                                                              ),
+                                                            ),
+                                                          );
+                                                        },
+                                                        style: ButtonStyle(
+                                                          shape: MaterialStateProperty
+                                                              .all<
+                                                                  RoundedRectangleBorder>(
+                                                            RoundedRectangleBorder(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          5),
+                                                            ),
+                                                          ),
+                                                          padding:
+                                                              MaterialStateProperty
+                                                                  .all<
+                                                                      EdgeInsetsGeometry>(
+                                                            EdgeInsets
+                                                                .symmetric(
+                                                                    horizontal:
+                                                                        1,
+                                                                    vertical:
+                                                                        1),
+                                                          ),
+                                                          backgroundColor:
+                                                              MaterialStateProperty
+                                                                  .all<Color>(Styles
+                                                                      .buttonPrimaryColor),
+                                                          elevation:
+                                                              MaterialStateProperty
+                                                                  .resolveWith<
+                                                                          double>(
+                                                                      (states) {
+                                                            if (states.contains(
+                                                                    MaterialState
+                                                                        .hovered) ||
+                                                                states.contains(
+                                                                    MaterialState
+                                                                        .pressed)) {
+                                                              return 0;
+                                                            }
+                                                            return 0;
+                                                          }),
+                                                          foregroundColor:
+                                                              MaterialStateProperty
+                                                                  .all<Color>(
+                                                                      Colors
+                                                                          .white),
+                                                          overlayColor:
+                                                              MaterialStateProperty
+                                                                  .resolveWith<
+                                                                          Color>(
+                                                                      (states) {
+                                                            if (states.contains(
+                                                                MaterialState
+                                                                    .hovered)) {
+                                                              return Styles
+                                                                  .buttonPrimaryColorHover;
+                                                            }
+                                                            return Colors
+                                                                .transparent;
+                                                          }),
+                                                        ),
+                                                        child: Text(
+                                                          person.name,
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.white),
+                                                        ),
+                                                      );
+                                                    }).toList(),
+                                                  );
+                                                }
+                                              },
                                             ),
-                                            padding: MaterialStateProperty.all<
-                                                EdgeInsetsGeometry>(
-                                              const EdgeInsets.symmetric(
-                                                  horizontal: 1, vertical: 1),
-                                            ),
-                                            backgroundColor:
-                                                MaterialStateProperty.all<
-                                                        Color>(
-                                                    Styles.buttonPrimaryColor),
-                                            elevation: MaterialStateProperty
-                                                .resolveWith<double>((states) {
-                                              if (states.contains(
-                                                      MaterialState.hovered) ||
-                                                  states.contains(
-                                                      MaterialState.pressed)) {
-                                                return 0;
-                                              }
-                                              return 0;
-                                            }),
-                                            foregroundColor:
-                                                MaterialStateProperty.all<
-                                                    Color>(Colors.white),
-                                            overlayColor: MaterialStateProperty
-                                                .resolveWith<Color>((states) {
-                                              if (states.contains(
-                                                  MaterialState.hovered)) {
-                                                return Styles
-                                                    .buttonPrimaryColorHover;
-                                              }
-                                              return Colors.transparent;
-                                            }),
                                           ),
-                                          child: const Text(
-                                            "Point",
-                                            style:
-                                                TextStyle(color: Colors.white),
-                                          ),
-                                        ))),
+                                        ),
                                       ],
                                       onSelectChanged: (selected) {
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                              builder: (context) => DroneWidget(
-                                                  element: drone,
+                                              builder: (context) => PetWidget(
+                                                  element: pet,
                                                   isEditing: true)),
                                         );
                                       },
@@ -995,35 +1131,35 @@ class _DroneListViewState extends ConsumerState<DroneListView> {
   }
 
   void _onPageButtonPressed(int pageNumber, WidgetRef ref,
-      DronePaginationState paginationState, int maxPages) {
+      PetPaginationState paginationState, int maxPages) {
     if (pageNumber <= maxPages) {
-      ref.read(dronePaginationProvider.notifier).setPage(pageNumber);
+      ref.read(petPaginationProvider.notifier).setPage(pageNumber);
     }
   }
 }
 
-class DronePaginationState {
+class PetPaginationState {
   final Tuple2<int, int> pagination;
   final Map<String, int> orders;
   final Map<String, dynamic> filters;
 
-  DronePaginationState({
+  PetPaginationState({
     required this.pagination,
     required this.orders,
     required this.filters,
   });
 }
 
-class DronePaginationNotifier extends StateNotifier<DronePaginationState> {
-  DronePaginationNotifier()
-      : super(DronePaginationState(
+class PetPaginationNotifier extends StateNotifier<PetPaginationState> {
+  PetPaginationNotifier()
+      : super(PetPaginationState(
           pagination: const Tuple2<int, int>(0, 10),
           orders: {},
           filters: {},
         ));
 
   void setPage(int page) {
-    state = DronePaginationState(
+    state = PetPaginationState(
       pagination: Tuple2(page * state.pagination.item2 - state.pagination.item2,
           state.pagination.item2),
       orders: state.orders,
@@ -1032,7 +1168,7 @@ class DronePaginationNotifier extends StateNotifier<DronePaginationState> {
   }
 
   void setOrders(Map<String, int> newOrders) {
-    state = DronePaginationState(
+    state = PetPaginationState(
       pagination: Tuple2(state.pagination.item1, state.pagination.item2),
       orders: newOrders,
       filters: state.filters,
@@ -1040,7 +1176,7 @@ class DronePaginationNotifier extends StateNotifier<DronePaginationState> {
   }
 
   void setFilters(Map<String, dynamic> newFilters) {
-    state = DronePaginationState(
+    state = PetPaginationState(
       pagination: Tuple2(state.pagination.item1, state.pagination.item2),
       orders: state.orders,
       filters: newFilters,
@@ -1056,70 +1192,70 @@ class DronePaginationNotifier extends StateNotifier<DronePaginationState> {
   }
 }
 
-final dronePaginationProvider =
-    StateNotifierProvider<DronePaginationNotifier, DronePaginationState>(
-  (ref) => DronePaginationNotifier(),
+final petPaginationProvider =
+    StateNotifierProvider<PetPaginationNotifier, PetPaginationState>(
+  (ref) => PetPaginationNotifier(),
 );
 
 // **************************************************************************
 // RiverpodCustomGenerator
 // **************************************************************************
 
-final getDroneProvider =
-    FutureProvider.autoDispose.family<Drone, String>((ref, droneId) async {
-  final json = await http.get(Uri.parse('$baseURL/drone/$droneId'));
+final getPetProvider =
+    FutureProvider.autoDispose.family<Pet, String>((ref, petId) async {
+  final json = await http.get(Uri.parse('$baseURL/pet/$petId'));
   final jsonData = jsonDecode(json.body);
-  return Drone.fromJson(jsonData);
+  return Pet.fromJson(jsonData);
 });
 
-final createDroneProvider =
-    FutureProvider.autoDispose.family<void, Drone>((ref, droneInstance) async {
+final createPetProvider =
+    FutureProvider.autoDispose.family<void, Pet>((ref, petInstance) async {
   final response = await http.post(
-    Uri.parse('$baseURL/drone'),
+    Uri.parse('$baseURL/pet'),
     headers: {'Content-Type': 'application/json'},
-    body: jsonEncode(droneInstance.toJson()),
+    body: jsonEncode(petInstance.toJson()),
   );
   if (response.statusCode != 201) {
-    throw Exception('Failed to create Drone');
+    throw Exception('Failed to create Pet');
   }
 });
 
-final updateDroneProvider =
-    FutureProvider.autoDispose.family<void, Drone>((ref, droneInstance) async {
+final updatePetProvider =
+    FutureProvider.autoDispose.family<void, Pet>((ref, petInstance) async {
   final response = await http.put(
-    Uri.parse('$baseURL/drone/${droneInstance.id}'),
+    Uri.parse('$baseURL/pet/${petInstance.id}'),
     headers: {'Content-Type': 'application/json'},
-    body: jsonEncode(droneInstance.toJson()),
+    body: jsonEncode(petInstance.toJson()),
   );
   if (response.statusCode != 200) {
-    throw Exception('Failed to update Drone');
+    throw Exception('Failed to update Pet');
   }
 });
 
-final deleteDroneProvider =
-    FutureProvider.autoDispose.family<void, int>((ref, droneId) async {
+final deletePetProvider =
+    FutureProvider.autoDispose.family<void, int>((ref, petId) async {
   final response = await http.delete(
-    Uri.parse('$baseURL/drone/$droneId'),
+    Uri.parse('$baseURL/pet/$petId'),
   );
   if (response.statusCode != 204) {
-    throw Exception('Failed to delete Drone');
+    throw Exception('Failed to delete Pet');
   }
 });
 
-class DronePaginationData {
-  final List<Drone> items;
+class PetPaginationData {
+  final List<Pet> items;
   final int currentPage;
   final int maxPages;
 
-  DronePaginationData({
+  PetPaginationData({
     required this.items,
     required this.currentPage,
     required this.maxPages,
   });
 }
 
-final getAllDroneProvider = FutureProvider.autoDispose
-    .family<DronePaginationData, DronePaginationState>((ref, state) async {
+final getAllPetProvider = FutureProvider.autoDispose
+    .family<PetPaginationData, PetPaginationState>((ref, state) async {
   final fixedQuery = {
     if (state.orders.isNotEmpty) 'orders': state.orders,
     if (state.filters.isNotEmpty)
@@ -1129,15 +1265,14 @@ final getAllDroneProvider = FutureProvider.autoDispose
 
   final json = await http.post(
       Uri.parse(
-          '$baseURL/drones?skip=${state.pagination.item1}&limit=${state.pagination.item2}'),
+          '$baseURL/pets?skip=${state.pagination.item1}&limit=${state.pagination.item2}'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode(fixedQuery));
   final jsonData = jsonDecode(json.body);
 
-  return DronePaginationData(
-    items: (jsonData['items'] as List)
-        .map((data) => Drone.fromJson(data))
-        .toList(),
+  return PetPaginationData(
+    items:
+        (jsonData['items'] as List).map((data) => Pet.fromJson(data)).toList(),
     currentPage: jsonData['current_page'],
     maxPages: jsonData['max_pages'],
   );
