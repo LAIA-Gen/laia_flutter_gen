@@ -1211,7 +1211,7 @@ final getPetProvider =
 final createPetProvider =
     FutureProvider.autoDispose.family<void, Pet>((ref, petInstance) async {
   final response = await http.post(
-    Uri.parse('$baseURL/pet'),
+    Uri.parse('$baseURL/pets'),
     headers: {'Content-Type': 'application/json'},
     body: jsonEncode(petInstance.toJson()),
   );
@@ -1265,7 +1265,7 @@ final getAllPetProvider = FutureProvider.autoDispose
 
   final json = await http.post(
       Uri.parse(
-          '$baseURL/pets?skip=${state.pagination.item1}&limit=${state.pagination.item2}'),
+          '$baseURL?skip=${state.pagination.item1}&limit=${state.pagination.item2}'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode(fixedQuery));
   final jsonData = jsonDecode(json.body);

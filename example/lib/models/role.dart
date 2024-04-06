@@ -19,7 +19,7 @@ part 'role.g.dart';
 @RiverpodGenAnnotation()
 @HomeWidgetElementGenAnnotation()
 @ListWidgetGenAnnotation()
-@elementWidgetGen
+@ElementWidgetGen()
 @CopyWith()
 class Role {
   @Field(fieldName: 'name')

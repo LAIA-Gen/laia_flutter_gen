@@ -20,7 +20,7 @@ part 'pet.g.dart';
 @RiverpodGenAnnotation()
 @HomeWidgetElementGenAnnotation()
 @ListWidgetGenAnnotation()
-@elementWidgetGen
+@ElementWidgetGen()
 @CopyWith()
 class Pet {
   @Field(fieldName: "Age", fieldDescription: "This is the Age", editable: true, placeholder: "Write the Age")

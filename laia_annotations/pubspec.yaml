@@ -1,6 +1,6 @@
 name: laia_annotations
 description: It is the annotations package required for the laia code generation packages to work.
-version: 0.0.3
+version: 0.0.4
 homepage:
 
 environment:

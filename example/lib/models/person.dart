@@ -1,4 +1,5 @@
 import 'package:example/models/geometry.dart';
+import 'package:example/screens/home.dart';
 import 'package:laia_annotations/laia_annotations.dart';
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
@@ -17,10 +18,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 part 'person.g.dart';
 
 @JsonSerializable()
-@RiverpodGenAnnotation(auth: true)
+@RiverpodGenAnnotation(auth: true, getPath: '/heytest/{element_id}')
 @HomeWidgetElementGenAnnotation()
 @ListWidgetGenAnnotation()
-@elementWidgetGen
+@ElementWidgetGen(auth: true)
 @CopyWith()
 class Person {
   @Field(fieldName: "Description", fieldDescription: "This is the Description", editable: true, placeholder: "Write the Description")
@@ -39,10 +40,10 @@ class Person {
   Person({
     required this.description,
     required this.email,
-    required this.id,
+    this.id,
     required this.name,
     required this.password,
-    required this.roles
+    this.roles
   });
 
   factory Person.fromJson(Map<String, dynamic> json) => _$PersonFromJson(json);

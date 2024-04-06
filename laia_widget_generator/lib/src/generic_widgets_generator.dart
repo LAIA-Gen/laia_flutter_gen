@@ -18,6 +18,22 @@ class GenericWidgetsGenerator extends GeneratorForAnnotation<GenericWidgetsGenAn
     element.visitChildren(visitor);
 
 // **************************************************************************
+// General
+// **************************************************************************
+
+    buffer.writeln('''
+class CustomSnackBar {
+  static void show(BuildContext context, String? message) {
+    final snackBar = SnackBar(
+      content: Text(message ?? ''),
+      backgroundColor: Styles.buttonPrimaryColorHover,
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+}
+''');
+
+// **************************************************************************
 // IntWidget
 // **************************************************************************
 

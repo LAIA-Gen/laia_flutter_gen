@@ -8,7 +8,7 @@ import 'package:source_gen/source_gen.dart';
 
 const _fieldChecker = TypeChecker.fromRuntime(Field);
 
-class ElementWidgetGenerator extends GeneratorForAnnotation<ElementWidgetGenAnnotation> {
+class ElementWidgetGenerator extends GeneratorForAnnotation<ElementWidgetGen> {
   @override
   String generateForAnnotatedElement(
     Element element, 
@@ -19,6 +19,7 @@ class ElementWidgetGenerator extends GeneratorForAnnotation<ElementWidgetGenAnno
     final visitor = ModelVisitor();
     element.visitChildren(visitor);
     ClassElement classElement = element as ClassElement;
+    final auth = annotation.read('auth').boolValue;
 
     buffer.writeln('''
 class ${visitor.className}Widget extends StatefulWidget {
@@ -739,6 +740,304 @@ class ${visitor.className}MultiFieldWidgetState extends State<${visitor.classNam
   }
 }
 ''');
+
+    if (auth) {
+      buffer.writeln('''
+class ${visitor.className}LoginWidget extends StatefulWidget {
+  final ${visitor.className}? element;
+
+  const ${visitor.className}LoginWidget({this.element, Key? key})
+      : super(key: key);
+
+  @override
+  _${visitor.className}LoginWidgetState createState() => _${visitor.className}LoginWidgetState();
+}
+
+class _${visitor.className}LoginWidgetState extends State<${visitor.className}LoginWidget> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  bool _isPasswordVisible = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Log In'),
+        centerTitle: true,
+      ),
+      body: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SizedBox(height: MediaQuery.of(context).size.height*0.2),
+            _buildTextField(
+              controller: _emailController,
+              labelText: 'Email',
+            ),
+            _buildTextField(
+              controller: _passwordController,
+              labelText: 'Password',
+              isPassword: true,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 16.0),
+              child: ElevatedButton(
+                onPressed: () async {
+                  var container = ProviderContainer();
+                  var loginData = Auth(
+                    email: _emailController.text,
+                    password: _passwordController.text
+                  );
+                  try {
+                    AuthResult loginResult = await container.read(login${visitor.className}Provider(loginData).future);
+                    if (loginResult.success) {
+                      Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(builder: (context) => Home()),
+                      );
+                    } else {
+                      CustomSnackBar.show(context, loginResult.errorMessage);
+                    }
+                  } catch (error) {
+                    print(error);
+                  }
+                },
+                child: const Text('Login'),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (context) => ${visitor.className}RegisterWidget()),
+                );
+              },
+              child: const Text("I don't have an account: Register"),
+            ),
+          ],
+        ),
+      ),
+    ),);
+  }
+
+  Widget _buildTextField({
+    required TextEditingController controller,
+    required String labelText,
+    bool isPassword = false,
+  }) {
+    return Container(
+      padding: const EdgeInsets.all(8.0),
+      margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10.0),
+        color: Styles.secondaryColor,
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: TextField(
+          controller: controller,
+          obscureText: isPassword && !_isPasswordVisible,
+          decoration: InputDecoration(
+            labelText: labelText,
+            suffixIcon: isPassword
+                ? IconButton(
+                    icon: Icon(
+                      _isPasswordVisible
+                          ? Icons.visibility
+                          : Icons.visibility_off,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _isPasswordVisible = !_isPasswordVisible;
+                      });
+                    },
+                  )
+                : null,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class ${visitor.className}RegisterWidget extends StatefulWidget {
+  final ${visitor.className}? element;
+
+  const ${visitor.className}RegisterWidget({this.element, Key? key})
+      : super(key: key);
+
+  @override
+  _${visitor.className}RegisterWidgetState createState() => _${visitor.className}RegisterWidgetState();
+}
+
+class _${visitor.className}RegisterWidgetState extends State<${visitor.className}RegisterWidget> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController = TextEditingController();
+  ''');
+
+  for (var fieldName in visitor.fields.keys) {
+    String fieldType = visitor.fields[fieldName];
+
+    if (fieldType == "String" && fieldName != 'email' && fieldName != 'password') {
+      buffer.writeln('''final TextEditingController _${fieldName}Controller = TextEditingController();''');
+    }
+  }
+
+  buffer.writeln('''
+  bool _isPasswordVisible = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Register'),
+        centerTitle: true,
+      ),
+      body: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SizedBox(height: MediaQuery.of(context).size.height*0.2),
+            _buildTextField(
+              controller: _emailController,
+              labelText: 'Email',
+            ),
+            _buildTextField(
+              controller: _passwordController,
+              labelText: 'Password',
+              isPassword: true,
+            ),
+            _buildTextField(
+              controller: _confirmPasswordController,
+              labelText: 'Confirm password',
+              isPassword: true,
+            ),
+            ''');
+
+  for (var fieldName in visitor.fields.keys) {
+    String fieldType = visitor.fields[fieldName];
+
+    if (fieldType == "String" && fieldName != 'email' && fieldName != 'password') {
+      buffer.writeln('''
+            _buildTextField(
+              controller: _${fieldName}Controller,
+              labelText: '$fieldName',
+            ),
+''');
+    }
+  }
+  buffer.writeln('''
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 16.0),
+              child: ElevatedButton(
+                onPressed: () async {
+                  if (_passwordController.text != _confirmPasswordController.text) {
+                    CustomSnackBar.show(context, "Passwords do not match");
+                    return;
+                  }
+                  var container = ProviderContainer();
+                  var registerData = ${visitor.className}(
+                    email: _emailController.text,
+                    password: _passwordController.text,''');
+  for (var fieldName in visitor.fields.keys) {
+    String fieldType = visitor.fields[fieldName];
+
+    if (fieldType == "String" && fieldName != 'email' && fieldName != 'password') {
+      buffer.writeln('''$fieldName: _${fieldName}Controller.text,''');
+    } else if (fieldType == "int") {
+      buffer.writeln('''$fieldName: 0,''');
+    } else if (fieldType == "double") {
+      buffer.writeln('''$fieldName: 0.0,''');
+    } else if (fieldType == "DateTime") {
+      buffer.writeln('''$fieldName: DateTime.now(),''');
+    } else if (fieldType == "bool") {
+      buffer.writeln('''$fieldName: false,''');
+    } else if (fieldType == "Map<String, dynamic>" || fieldType == "Map<String, dynamic>" || fieldType == "List<Map<String, dynamic>>") {
+      buffer.writeln('''$fieldName: {},''');
+    } else if (fieldType.contains('List') && !fieldType.contains('?')) {
+      buffer.writeln('''$fieldName: [],''');
+    }
+  }
+
+  buffer.writeln('''
+                  );
+                  try {
+                    AuthResult registerResult = await container.read(register${visitor.className}Provider(registerData).future);
+                    if (registerResult.success) {
+                      Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(builder: (context) => Home()),
+                      );
+                    } else {
+                      CustomSnackBar.show(context, registerResult.errorMessage);
+                    }
+                  } catch (error) {
+                    print(error);
+                  }
+                },
+                child: Text('Register'),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (context) => ${visitor.className}LoginWidget()),
+                );
+              },
+              child: Text("I already have an account: LogIn"),
+            ),
+          ],
+        ),
+      ),
+    ),);
+  }
+
+  Widget _buildTextField({
+    required TextEditingController controller,
+    required String labelText,
+    bool isPassword = false,
+  }) {
+    return Container(
+      padding: const EdgeInsets.all(8.0),
+      margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10.0),
+        color: Styles.secondaryColor,
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: TextField(
+          controller: controller,
+          obscureText: isPassword && !_isPasswordVisible,
+          decoration: InputDecoration(
+            labelText: labelText,
+            suffixIcon: isPassword
+                ? IconButton(
+                    icon: Icon(
+                      _isPasswordVisible
+                          ? Icons.visibility
+                          : Icons.visibility_off,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _isPasswordVisible = !_isPasswordVisible;
+                      });
+                    },
+                  )
+                : null,
+          ),
+        ),
+      ),
+    );
+  }
+}
+''');
+    }
 
     return buffer.toString();
   }

@@ -1,8 +1,7 @@
-class ElementWidgetGenAnnotation {
-  const ElementWidgetGenAnnotation();
+class ElementWidgetGen {
+  final bool auth;
+  const ElementWidgetGen({ this.auth = false});
 }
-
-const elementWidgetGen = ElementWidgetGenAnnotation();
 
 class Field {
   final String widget;

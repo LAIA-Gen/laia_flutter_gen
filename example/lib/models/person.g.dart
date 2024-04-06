@@ -632,6 +632,272 @@ class PersonMultiFieldWidgetState extends State<PersonMultiFieldWidget> {
   }
 }
 
+class PersonLoginWidget extends StatefulWidget {
+  final Person? element;
+
+  const PersonLoginWidget({this.element, Key? key}) : super(key: key);
+
+  @override
+  _PersonLoginWidgetState createState() => _PersonLoginWidgetState();
+}
+
+class _PersonLoginWidgetState extends State<PersonLoginWidget> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  bool _isPasswordVisible = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Log In'),
+        centerTitle: true,
+      ),
+      body: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(height: MediaQuery.of(context).size.height * 0.2),
+              _buildTextField(
+                controller: _emailController,
+                labelText: 'Email',
+              ),
+              _buildTextField(
+                controller: _passwordController,
+                labelText: 'Password',
+                isPassword: true,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 16.0),
+                child: ElevatedButton(
+                  onPressed: () async {
+                    var container = ProviderContainer();
+                    var loginData = Auth(
+                        email: _emailController.text,
+                        password: _passwordController.text);
+                    try {
+                      AuthResult loginResult = await container
+                          .read(loginPersonProvider(loginData).future);
+                      if (loginResult.success) {
+                        Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(builder: (context) => Home()),
+                        );
+                      } else {
+                        CustomSnackBar.show(context, loginResult.errorMessage);
+                      }
+                    } catch (error) {
+                      print(error);
+                    }
+                  },
+                  child: const Text('Login'),
+                ),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                        builder: (context) => PersonRegisterWidget()),
+                  );
+                },
+                child: const Text("I don't have an account: Register"),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTextField({
+    required TextEditingController controller,
+    required String labelText,
+    bool isPassword = false,
+  }) {
+    return Container(
+      padding: const EdgeInsets.all(8.0),
+      margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10.0),
+        color: Styles.secondaryColor,
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: TextField(
+          controller: controller,
+          obscureText: isPassword && !_isPasswordVisible,
+          decoration: InputDecoration(
+            labelText: labelText,
+            suffixIcon: isPassword
+                ? IconButton(
+                    icon: Icon(
+                      _isPasswordVisible
+                          ? Icons.visibility
+                          : Icons.visibility_off,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _isPasswordVisible = !_isPasswordVisible;
+                      });
+                    },
+                  )
+                : null,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class PersonRegisterWidget extends StatefulWidget {
+  final Person? element;
+
+  const PersonRegisterWidget({this.element, Key? key}) : super(key: key);
+
+  @override
+  _PersonRegisterWidgetState createState() => _PersonRegisterWidgetState();
+}
+
+class _PersonRegisterWidgetState extends State<PersonRegisterWidget> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
+
+  final TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
+  bool _isPasswordVisible = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Register'),
+        centerTitle: true,
+      ),
+      body: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(height: MediaQuery.of(context).size.height * 0.2),
+              _buildTextField(
+                controller: _emailController,
+                labelText: 'Email',
+              ),
+              _buildTextField(
+                controller: _passwordController,
+                labelText: 'Password',
+                isPassword: true,
+              ),
+              _buildTextField(
+                controller: _confirmPasswordController,
+                labelText: 'Confirm password',
+                isPassword: true,
+              ),
+              _buildTextField(
+                controller: _descriptionController,
+                labelText: 'description',
+              ),
+              _buildTextField(
+                controller: _nameController,
+                labelText: 'name',
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 16.0),
+                child: ElevatedButton(
+                  onPressed: () async {
+                    if (_passwordController.text !=
+                        _confirmPasswordController.text) {
+                      CustomSnackBar.show(context, "Passwords do not match");
+                      return;
+                    }
+                    var container = ProviderContainer();
+                    var registerData = Person(
+                      email: _emailController.text,
+                      password: _passwordController.text,
+                      description: _descriptionController.text,
+                      name: _nameController.text,
+                    );
+                    try {
+                      AuthResult registerResult = await container
+                          .read(registerPersonProvider(registerData).future);
+                      if (registerResult.success) {
+                        Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(builder: (context) => Home()),
+                        );
+                      } else {
+                        CustomSnackBar.show(
+                            context, registerResult.errorMessage);
+                      }
+                    } catch (error) {
+                      print(error);
+                    }
+                  },
+                  child: Text('Register'),
+                ),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                        builder: (context) => PersonLoginWidget()),
+                  );
+                },
+                child: Text("I already have an account: LogIn"),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTextField({
+    required TextEditingController controller,
+    required String labelText,
+    bool isPassword = false,
+  }) {
+    return Container(
+      padding: const EdgeInsets.all(8.0),
+      margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10.0),
+        color: Styles.secondaryColor,
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: TextField(
+          controller: controller,
+          obscureText: isPassword && !_isPasswordVisible,
+          decoration: InputDecoration(
+            labelText: labelText,
+            suffixIcon: isPassword
+                ? IconButton(
+                    icon: Icon(
+                      _isPasswordVisible
+                          ? Icons.visibility
+                          : Icons.visibility_off,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _isPasswordVisible = !_isPasswordVisible;
+                      });
+                    },
+                  )
+                : null,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 // **************************************************************************
 // HomeWidgetElementGenerator
 // **************************************************************************
@@ -1169,7 +1435,7 @@ final personPaginationProvider =
 
 final getPersonProvider =
     FutureProvider.autoDispose.family<Person, String>((ref, personId) async {
-  final json = await http.get(Uri.parse('$baseURL/person/$personId'));
+  final json = await http.get(Uri.parse('$baseURL/heytest/$personId'));
   final jsonData = jsonDecode(json.body);
   return Person.fromJson(jsonData);
 });
@@ -1177,7 +1443,7 @@ final getPersonProvider =
 final createPersonProvider = FutureProvider.autoDispose
     .family<void, Person>((ref, personInstance) async {
   final response = await http.post(
-    Uri.parse('$baseURL/person'),
+    Uri.parse('$baseURL/persons'),
     headers: {'Content-Type': 'application/json'},
     body: jsonEncode(personInstance.toJson()),
   );
@@ -1231,7 +1497,7 @@ final getAllPersonProvider = FutureProvider.autoDispose
 
   final json = await http.post(
       Uri.parse(
-          '$baseURL/persons?skip=${state.pagination.item1}&limit=${state.pagination.item2}'),
+          '$baseURL?skip=${state.pagination.item1}&limit=${state.pagination.item2}'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode(fixedQuery));
   final jsonData = jsonDecode(json.body);
@@ -1246,28 +1512,36 @@ final getAllPersonProvider = FutureProvider.autoDispose
 });
 
 class Auth {
-  final String username;
+  final String email;
   final String password;
 
-  Auth({required this.username, required this.password});
+  Auth({required this.email, required this.password});
 
   Map<String, dynamic> toJson() {
     return {
-      'username': username,
+      'email': email,
       'password': password,
     };
   }
 }
 
+class AuthResult {
+  final bool success;
+  final String? errorMessage;
+  final Person? person;
+
+  AuthResult(this.success, {this.errorMessage, this.person});
+}
+
 final loginPersonProvider =
-    FutureProvider.autoDispose.family<Person, Auth>((ref, auth) async {
+    FutureProvider.autoDispose.family<AuthResult, Auth>((ref, auth) async {
   final response = await http.post(
     Uri.parse('$baseURL/auth/login/person/'),
     headers: {'Content-Type': 'application/json'},
     body: jsonEncode(auth.toJson()),
   );
   if (response.statusCode != 200) {
-    throw Exception('Failed to login');
+    return AuthResult(false, errorMessage: 'Incorrect email or password.');
   }
 
   final responseData = jsonDecode(response.body);
@@ -1276,18 +1550,18 @@ final loginPersonProvider =
   final prefs = await SharedPreferences.getInstance();
   await prefs.setString('token', token);
 
-  return responseData['user'];
+  return AuthResult(true, person: Person.fromJson(responseData['user']));
 });
 
 final registerPersonProvider =
-    FutureProvider.autoDispose.family<Person, Person>((ref, person) async {
+    FutureProvider.autoDispose.family<AuthResult, Person>((ref, person) async {
   final response = await http.post(
     Uri.parse('$baseURL/auth/register/person/'),
     headers: {'Content-Type': 'application/json'},
     body: jsonEncode(person.toJson()),
   );
   if (response.statusCode != 200) {
-    throw Exception('Failed to register');
+    return AuthResult(false, errorMessage: jsonDecode(response.body)['detail']);
   }
 
   final responseData = jsonDecode(response.body);
@@ -1296,5 +1570,29 @@ final registerPersonProvider =
   final prefs = await SharedPreferences.getInstance();
   await prefs.setString('token', token);
 
-  return responseData['user'];
+  return AuthResult(true, person: Person.fromJson(responseData['user']));
+});
+
+final verifyTokenPersonProvider = FutureProvider.autoDispose<bool>((ref) async {
+  try {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+
+    if (token == null) {
+      return false;
+    }
+
+    final response = await http.get(
+      Uri.parse('$baseURL/auth/verify/person/$token'),
+      headers: {'Authorization': 'Bearer $token'},
+    );
+
+    if (response.statusCode == 200) {
+      return true; 
+    } else {
+      return false;
+    }
+  } catch (e) {
+    return false; 
+  }
 });

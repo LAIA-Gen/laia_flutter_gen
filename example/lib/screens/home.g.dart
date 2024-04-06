@@ -44,3 +44,47 @@ List<Widget> _dashboardWidgets = [
   RoleHomeWidget(),
   PetHomeWidget(),
 ];
+
+class DynamicLogInScreen extends StatelessWidget {
+  final Map<String, StatefulWidget> widgetMap;
+
+  DynamicLogInScreen({required this.widgetMap});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('LAIA'),
+        centerTitle: true,
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: widgetMap.entries
+              .map((entry) => ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => entry.value,
+                        ),
+                      );
+                    },
+                    style: ButtonStyle(
+                      padding: MaterialStateProperty.all<EdgeInsets>(
+                          const EdgeInsets.symmetric(vertical: 16, horizontal: 32)),
+                      backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                          (Set<MaterialState> states) {
+                        if (states.contains(MaterialState.hovered)) {
+                          return Styles.buttonPrimaryColorHover;
+                        }
+                        return Styles.buttonPrimaryColor; 
+                      }),
+                    ),
+                    child: Text(entry.key),
+                  ))
+              .toList(),
+        ),
+      ),
+    );
+  }
+}

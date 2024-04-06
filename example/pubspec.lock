@@ -532,10 +532,10 @@ packages:
     dependency: "direct main"
     description:
       name: laia_annotations
-      sha256: "110d46ce90960faad59aec0a44316d058896ac83a3592990d74b11ffd2785696"
+      sha256: fe9d8400d51448358b81919e83fa052dc84d86f430e8830baaaaddb102abffeb
       url: "https://pub.dev"
     source: hosted
-    version: "0.0.3"
+    version: "0.0.4"
   laia_riverpod_custom_generator:
     dependency: "direct dev"
     description:

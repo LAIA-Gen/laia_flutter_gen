@@ -19,7 +19,7 @@ part 'accessright.g.dart';
 @RiverpodGenAnnotation()
 @HomeWidgetElementGenAnnotation()
 @ListWidgetGenAnnotation()
-@elementWidgetGen
+@ElementWidgetGen()
 @CopyWith()
 class AccessRight {
   @Field(fieldName: 'name')

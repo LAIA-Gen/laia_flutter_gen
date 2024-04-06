@@ -38,9 +38,9 @@ class RiverpodCustomGenerator extends GeneratorForAnnotation<RiverpodGenAnnotati
       deletePath = deletePath.replaceAll('{element_id}', '\$${classNameLowercase}Id');
     }
     if (updatePath == '') {
-      updatePath = '/$classNameLowercase/\$${classNameLowercase}Id';
+      updatePath = '/$classNameLowercase/\${${classNameLowercase}Instance.id}';
     } else {
-      updatePath = updatePath.replaceAll('{element_id}', '\$${classNameLowercase}Id');
+      updatePath = updatePath.replaceAll('{element_id}', '\${${classNameLowercase}Instance.id}');
     }
     if (createPath == '') {
       createPath = '/$classNameLowercase';
@@ -52,14 +52,14 @@ class RiverpodCustomGenerator extends GeneratorForAnnotation<RiverpodGenAnnotati
     final buffer = StringBuffer();
     buffer.writeln('''
       final get${className}Provider = FutureProvider.autoDispose.family<$className, String>((ref, ${classNameLowercase}Id) async {
-        final json = await http.get(Uri.parse('\$baseURL/$classNameLowercase/\$${classNameLowercase}Id'));
+        final json = await http.get(Uri.parse('\$baseURL$getPath'));
         final jsonData = jsonDecode(json.body);
         return $className.fromJson(jsonData);
       });
 
       final create${className}Provider = FutureProvider.autoDispose.family<void, $className>((ref, ${classNameLowercase}Instance) async {
         final response = await http.post(
-          Uri.parse('\$baseURL/$classNameLowercase'),
+          Uri.parse('\$baseURL$createPath'),
           headers: {'Content-Type': 'application/json'},
           body: jsonEncode(${classNameLowercase}Instance.toJson()),
         );
@@ -70,7 +70,7 @@ class RiverpodCustomGenerator extends GeneratorForAnnotation<RiverpodGenAnnotati
 
       final update${className}Provider = FutureProvider.autoDispose.family<void, $className>((ref, ${classNameLowercase}Instance) async {
         final response = await http.put(
-          Uri.parse('\$baseURL/$classNameLowercase/\${${classNameLowercase}Instance.id}'),
+          Uri.parse('\$baseURL$updatePath'),
           headers: {'Content-Type': 'application/json'},
           body: jsonEncode(${classNameLowercase}Instance.toJson()),
         );
@@ -81,7 +81,7 @@ class RiverpodCustomGenerator extends GeneratorForAnnotation<RiverpodGenAnnotati
 
       final delete${className}Provider = FutureProvider.autoDispose.family<void, int>((ref, ${classNameLowercase}Id) async {
         final response = await http.delete(
-          Uri.parse('\$baseURL/$classNameLowercase/\$${classNameLowercase}Id'),
+          Uri.parse('\$baseURL$deletePath'),
         );
         if (response.statusCode != 204) {
           throw Exception('Failed to delete $className');
@@ -108,7 +108,7 @@ class RiverpodCustomGenerator extends GeneratorForAnnotation<RiverpodGenAnnotati
         };
 
         final json = await http.post(Uri.parse(
-          '\$baseURL/$classNamePlural?skip=\${state.pagination.item1}&limit=\${state.pagination.item2}'),
+          '\$baseURL$getAllPath?skip=\${state.pagination.item1}&limit=\${state.pagination.item2}'),
           headers: {'Content-Type': 'application/json'},
           body: jsonEncode(fixedQuery));
         final jsonData = jsonDecode(json.body);
@@ -124,27 +124,35 @@ class RiverpodCustomGenerator extends GeneratorForAnnotation<RiverpodGenAnnotati
     if (auth) {
       buffer.writeln('''
 class Auth {
-  final String username;
+  final String email;
   final String password;
 
-  Auth({required this.username, required this.password});
+  Auth({required this.email, required this.password});
 
   Map<String, dynamic> toJson() {
     return {
-      'username': username,
+      'email': email,
       'password': password,
     };
   }
 }
 
-final login${className}Provider = FutureProvider.autoDispose.family<$className, Auth>((ref, auth) async {
+class AuthResult {
+  final bool success;
+  final String? errorMessage;
+  final $className? $classNameLowercase;
+
+  AuthResult(this.success, {this.errorMessage, this.$classNameLowercase});
+}
+
+final login${className}Provider = FutureProvider.autoDispose.family<AuthResult, Auth>((ref, auth) async {
   final response = await http.post(
     Uri.parse('\$baseURL/auth/login/$classNameLowercase/'),
     headers: {'Content-Type': 'application/json'},
     body: jsonEncode(auth.toJson()),
   );
   if (response.statusCode != 200) {
-    throw Exception('Failed to login');
+    return AuthResult(false, errorMessage: 'Incorrect email or password.');
   }
 
   final responseData = jsonDecode(response.body);
@@ -153,17 +161,17 @@ final login${className}Provider = FutureProvider.autoDispose.family<$className, 
   final prefs = await SharedPreferences.getInstance();
   await prefs.setString('token', token);
 
-  return responseData['user'];
+  return AuthResult(true, $classNameLowercase: $className.fromJson(responseData['user']));
 });
 
-final register${className}Provider = FutureProvider.autoDispose.family<$className, $className>((ref, $classNameLowercase) async {
+final register${className}Provider = FutureProvider.autoDispose.family<AuthResult, $className>((ref, $classNameLowercase) async {
   final response = await http.post(
     Uri.parse('\$baseURL/auth/register/$classNameLowercase/'),
     headers: {'Content-Type': 'application/json'},
     body: jsonEncode($classNameLowercase.toJson()),
   );
   if (response.statusCode != 200) {
-    throw Exception('Failed to register');
+    return AuthResult(false, errorMessage: jsonDecode(response.body)['detail']);
   }
 
   final responseData = jsonDecode(response.body);
@@ -172,7 +180,31 @@ final register${className}Provider = FutureProvider.autoDispose.family<$classNam
   final prefs = await SharedPreferences.getInstance();
   await prefs.setString('token', token);
 
-  return responseData['user'];
+  return AuthResult(true, $classNameLowercase: $className.fromJson(responseData['user']));
+});
+
+final verifyToken${className}Provider = FutureProvider.autoDispose<bool>((ref) async {
+  try {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+
+    if (token == null) {
+      return false;
+    }
+
+    final response = await http.get(
+      Uri.parse('\$baseURL/auth/verify/$classNameLowercase/\$token'),
+      headers: {'Authorization': 'Bearer \$token'},
+    );
+
+    if (response.statusCode == 200) {
+      return true; 
+    } else {
+      return false;
+    }
+  } catch (e) {
+    return false; 
+  }
 });
 ''');
     }

@@ -6,6 +6,16 @@ part of 'generic_widgets.dart';
 // GenericWidgetsGenerator
 // **************************************************************************
 
+class CustomSnackBar {
+  static void show(BuildContext context, String? message) {
+    final snackBar = SnackBar(
+      content: Text(message ?? ''),
+      backgroundColor: Styles.buttonPrimaryColorHover,
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+}
+
 class IntWidget extends StatefulWidget {
   final String fieldName;
   final String fieldDescription;

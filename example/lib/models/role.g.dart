@@ -888,7 +888,7 @@ final getRoleProvider =
 final createRoleProvider =
     FutureProvider.autoDispose.family<void, Role>((ref, roleInstance) async {
   final response = await http.post(
-    Uri.parse('$baseURL/role'),
+    Uri.parse('$baseURL/roles'),
     headers: {'Content-Type': 'application/json'},
     body: jsonEncode(roleInstance.toJson()),
   );
@@ -942,7 +942,7 @@ final getAllRoleProvider = FutureProvider.autoDispose
 
   final json = await http.post(
       Uri.parse(
-          '$baseURL/roles?skip=${state.pagination.item1}&limit=${state.pagination.item2}'),
+          '$baseURL?skip=${state.pagination.item1}&limit=${state.pagination.item2}'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode(fixedQuery));
   final jsonData = jsonDecode(json.body);
