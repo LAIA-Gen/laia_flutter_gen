@@ -1435,7 +1435,7 @@ final personPaginationProvider =
 
 final getPersonProvider =
     FutureProvider.autoDispose.family<Person, String>((ref, personId) async {
-  final json = await http.get(Uri.parse('$baseURL/heytest/$personId'));
+  final json = await http.get(Uri.parse('$baseURL/person/$personId'));
   final jsonData = jsonDecode(json.body);
   return Person.fromJson(jsonData);
 });
@@ -1443,7 +1443,7 @@ final getPersonProvider =
 final createPersonProvider = FutureProvider.autoDispose
     .family<void, Person>((ref, personInstance) async {
   final response = await http.post(
-    Uri.parse('$baseURL/persons'),
+    Uri.parse('$baseURL/person'),
     headers: {'Content-Type': 'application/json'},
     body: jsonEncode(personInstance.toJson()),
   );
@@ -1497,7 +1497,7 @@ final getAllPersonProvider = FutureProvider.autoDispose
 
   final json = await http.post(
       Uri.parse(
-          '$baseURL?skip=${state.pagination.item1}&limit=${state.pagination.item2}'),
+          '$baseURL/persons?skip=${state.pagination.item1}&limit=${state.pagination.item2}'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode(fixedQuery));
   final jsonData = jsonDecode(json.body);
@@ -1588,11 +1588,11 @@ final verifyTokenPersonProvider = FutureProvider.autoDispose<bool>((ref) async {
     );
 
     if (response.statusCode == 200) {
-      return true; 
+      return true;
     } else {
       return false;
     }
   } catch (e) {
-    return false; 
+    return false;
   }
 });

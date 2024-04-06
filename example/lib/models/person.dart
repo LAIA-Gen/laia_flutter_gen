@@ -1,5 +1,4 @@
 import 'package:example/models/geometry.dart';
-import 'package:example/screens/home.dart';
 import 'package:laia_annotations/laia_annotations.dart';
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
@@ -14,23 +13,24 @@ import 'dart:convert';
 import 'package:collection/collection.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:example/screens/home.dart';
 
 part 'person.g.dart';
 
 @JsonSerializable()
-@RiverpodGenAnnotation(auth: true, getPath: '/heytest/{element_id}')
+@RiverpodGenAnnotation(auth: true)
 @HomeWidgetElementGenAnnotation()
 @ListWidgetGenAnnotation()
 @ElementWidgetGen(auth: true)
 @CopyWith()
 class Person {
-  @Field(fieldName: "Description", fieldDescription: "This is the Description", editable: true, placeholder: "Write the Description")
+  @Field(editable: true, fieldDescription: "This is the Description", fieldName: "Description", placeholder: "Write the Description")
   final String description;
   @Field(fieldName: 'email')
   final String email;
   @Field(fieldName: 'id')
   final String? id;
-  @Field(fieldName: "Name", fieldDescription: "This is the Name", editable: true, placeholder: "Write the Name")
+  @Field(editable: true, fieldDescription: "This is the Name", fieldName: "Name", placeholder: "Write the Name")
   final String name;
   @Field(fieldName: 'password')
   final String password;

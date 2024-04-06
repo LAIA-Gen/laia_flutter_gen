@@ -1,4 +1,4 @@
+RoleHomeWidget
 AccessRightHomeWidget
 PersonHomeWidget
-RoleHomeWidget
 PetHomeWidget

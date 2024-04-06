@@ -13,33 +13,44 @@ import 'dart:convert';
 import 'package:collection/collection.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:example/models/person.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:example/screens/home.dart';
 
 part 'pet.g.dart';
 
 @JsonSerializable()
-@RiverpodGenAnnotation()
+@RiverpodGenAnnotation(auth: true)
 @HomeWidgetElementGenAnnotation()
 @ListWidgetGenAnnotation()
-@ElementWidgetGen()
+@ElementWidgetGen(auth: true)
 @CopyWith()
 class Pet {
-  @Field(fieldName: "Age", fieldDescription: "This is the Age", editable: true, placeholder: "Write the Age")
+  @Field(editable: true, fieldDescription: "This is the Age", fieldName: "Age", placeholder: "Write the Age")
   final String? age;
-  @Field(fieldName: "Description", fieldDescription: "This is the Description", editable: true, placeholder: "Write the Description")
+  @Field(editable: true, fieldDescription: "This is the Description", fieldName: "Description", placeholder: "Write the Description")
   final String description;
+  @Field(fieldName: 'email')
+  final String email;
   @Field(fieldName: 'id')
   final String? id;
-  @Field(fieldName: "Name", fieldDescription: "This is the Name", editable: true, placeholder: "Write the Name")
+  @Field(editable: true, fieldDescription: "This is the Name", fieldName: "Name", placeholder: "Write the Name")
   final String name;
-  @Field(fieldName: "Owner", fieldDescription: "This is the Owner", editable: true, placeholder: "Write the Owner", relation: "Person")
+  @Field(editable: true, fieldDescription: "This is the Owner", fieldName: "Owner", placeholder: "Write the Owner", relation: "Person")
   final String? ownerid;
+  @Field(fieldName: 'password')
+  final String password;
+  @Field(fieldName: 'roles')
+  final List<String>? roles;
 
   Pet({
-    required this.age,
+    this.age,
     required this.description,
-    required this.id,
+    required this.email,
+    this.id,
     required this.name,
-    required this.ownerid
+    this.ownerid,
+    required this.password,
+    this.roles
   });
 
   factory Pet.fromJson(Map<String, dynamic> json) => _$PetFromJson(json);

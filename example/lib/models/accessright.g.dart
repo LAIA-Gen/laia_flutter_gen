@@ -1336,7 +1336,7 @@ final getAccessRightProvider = FutureProvider.autoDispose
 final createAccessRightProvider = FutureProvider.autoDispose
     .family<void, AccessRight>((ref, accessrightInstance) async {
   final response = await http.post(
-    Uri.parse('$baseURL/accessrights'),
+    Uri.parse('$baseURL/accessright'),
     headers: {'Content-Type': 'application/json'},
     body: jsonEncode(accessrightInstance.toJson()),
   );
@@ -1391,7 +1391,7 @@ final getAllAccessRightProvider = FutureProvider.autoDispose
 
   final json = await http.post(
       Uri.parse(
-          '$baseURL?skip=${state.pagination.item1}&limit=${state.pagination.item2}'),
+          '$baseURL/accessrights?skip=${state.pagination.item1}&limit=${state.pagination.item2}'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode(fixedQuery));
   final jsonData = jsonDecode(json.body);
