@@ -810,7 +810,7 @@ class _${visitor.className}LoginWidgetState extends State<${visitor.className}Lo
             ),
             TextButton(
               onPressed: () {
-                Navigator.of(context).pushReplacement(
+                Navigator.of(context).push(
                   MaterialPageRoute(builder: (context) => ${visitor.className}RegisterWidget()),
                 );
               },
@@ -985,7 +985,7 @@ class _${visitor.className}RegisterWidgetState extends State<${visitor.className
             ),
             TextButton(
               onPressed: () {
-                Navigator.of(context).pushReplacement(
+                Navigator.of(context).push(
                   MaterialPageRoute(builder: (context) => ${visitor.className}LoginWidget()),
                 );
               },
