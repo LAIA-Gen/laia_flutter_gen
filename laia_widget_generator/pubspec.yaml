@@ -1,6 +1,6 @@
 name: laia_widget_generator
 description: It is a code generation package that generates widgets for a given dart class model. Including individual widget, editing, and list widgets.
-version: 0.0.7
+version: 0.0.8
 homepage:
 
 environment:
