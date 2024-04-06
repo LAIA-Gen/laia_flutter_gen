@@ -46,7 +46,7 @@ class RiverpodCustomGenerator extends GeneratorForAnnotation<RiverpodGenAnnotati
       createPath = '/$classNameLowercase';
     }
     if (getAllPath == '') {
-      createPath = '/$classNamePlural';
+      getAllPath = '/$classNamePlural';
     }
 
     final buffer = StringBuffer();
