@@ -39,10 +39,10 @@ bool _isMobile(MediaQueryData mediaQuery) {
 }
 
 List<Widget> _dashboardWidgets = [
-  AccessRightHomeWidget(),
-  PersonHomeWidget(),
-  RoleHomeWidget(),
   PetHomeWidget(),
+  PersonHomeWidget(),
+  AccessRightHomeWidget(),
+  RoleHomeWidget(),
 ];
 
 class DynamicLogInScreen extends StatelessWidget {
@@ -61,26 +61,31 @@ class DynamicLogInScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: widgetMap.entries
-              .map((entry) => ElevatedButton(
-                    onPressed: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => entry.value,
-                        ),
-                      );
-                    },
-                    style: ButtonStyle(
-                      padding: MaterialStateProperty.all<EdgeInsets>(
-                          const EdgeInsets.symmetric(vertical: 16, horizontal: 32)),
-                      backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                          (Set<MaterialState> states) {
-                        if (states.contains(MaterialState.hovered)) {
-                          return Styles.buttonPrimaryColorHover;
-                        }
-                        return Styles.buttonPrimaryColor; 
-                      }),
+              .map((entry) => Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => entry.value,
+                          ),
+                        );
+                      },
+                      style: ButtonStyle(
+                        padding: MaterialStateProperty.all<EdgeInsets>(
+                            const EdgeInsets.symmetric(
+                                vertical: 16, horizontal: 32)),
+                        backgroundColor:
+                            MaterialStateProperty.resolveWith<Color>(
+                                (Set<MaterialState> states) {
+                          if (states.contains(MaterialState.hovered)) {
+                            return Styles.buttonPrimaryColorHover;
+                          }
+                          return Styles.buttonPrimaryColor;
+                        }),
+                      ),
+                      child: Text(entry.key),
                     ),
-                    child: Text(entry.key),
                   ))
               .toList(),
         ),

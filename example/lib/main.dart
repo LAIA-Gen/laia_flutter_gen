@@ -44,7 +44,7 @@ class SplashScreen extends ConsumerWidget {
           if (isValid) {
             return Home();
           } else {
-            return DynamicLogInScreen(widgetMap: const {'Person': PersonLoginWidget()});
+            return PersonLoginWidget();
           }
         },
         loading: () => Center(

@@ -137,8 +137,8 @@ class _PersonWidgetState extends State<PersonWidget> {
       GlobalKey<StringWidgetState>();
   final GlobalKey<StringWidgetState> passwordWidgetKey =
       GlobalKey<StringWidgetState>();
-  final GlobalKey<DefaultWidgetState> rolesWidgetKey =
-      GlobalKey<DefaultWidgetState>();
+  final GlobalKey<RoleMultiFieldWidgetState> rolesWidgetKey =
+      GlobalKey<RoleMultiFieldWidgetState>();
 
   @override
   Widget build(BuildContext context) {
@@ -190,13 +190,13 @@ class _PersonWidgetState extends State<PersonWidget> {
               placeholder: "Type the password",
               value: widget.element?.password,
             ),
-            DefaultWidget(
+            RoleMultiFieldWidget(
               key: rolesWidgetKey,
               fieldName: "roles",
               fieldDescription: "This is the roles",
               editable: true,
               placeholder: "Type the roles",
-              value: widget.element?.roles,
+              values: widget.element?.roles,
             ),
           ],
         ),
@@ -238,10 +238,12 @@ class _PersonWidgetState extends State<PersonWidget> {
           var container = ProviderContainer();
           try {
             if (widget.isEditing) {
-              await container.read(updatePersonProvider(updatedPerson));
+              await container
+                  .read(updatePersonProvider(Tuple2(updatedPerson, context)));
               print('Person updated successfully');
             } else {
-              await container.read(createPersonProvider(updatedPerson));
+              await container
+                  .read(createPersonProvider(Tuple2(updatedPerson, context)));
               print('Person created successfully');
             }
           } catch (error) {
@@ -1034,6 +1036,19 @@ class _PersonListViewState extends ConsumerState<PersonListView> {
       }
     }
 
+    Future<List<Role>> fetchRoleList(List<String>? ids) async {
+      if (ids == null || ids.isEmpty) {
+        return [];
+      }
+      final nonEmptyIds = ids.where((id) => id.isNotEmpty).toList();
+      List<Role> roleList = await Future.wait(
+        nonEmptyIds.map((id) async {
+          return await ref.read(getRoleProvider(id).future);
+        }),
+      );
+      return roleList;
+    }
+
     return Scaffold(
         appBar: AppBar(
           title: const Text('Person List'),
@@ -1082,266 +1097,377 @@ class _PersonListViewState extends ConsumerState<PersonListView> {
                           children: [
                             SingleChildScrollView(
                               scrollDirection: Axis.vertical,
-                              child: SizedBox(
-                                width: double.infinity,
-                                child: DataTable(
-                                  columns: [
-                                    DataColumn(
-                                      label: Expanded(
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            const Text(
-                                              'Description',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Color.fromARGB(
-                                                      255, 94, 54, 54)),
-                                              textAlign: TextAlign.center,
-                                            ),
-                                            if (columnSortStates[
-                                                    'description'] !=
-                                                null) ...[
-                                              Icon(
-                                                columnSortStates[
-                                                            'description'] ==
-                                                        1
-                                                    ? Icons
-                                                        .arrow_drop_up_rounded
-                                                    : Icons
-                                                        .arrow_drop_down_rounded,
-                                                color: Colors.black,
+                              child: SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: SizedBox(
+                                  width:
+                                      MediaQuery.of(context).size.width > 1500
+                                          ? MediaQuery.of(context).size.width
+                                          : 1500,
+                                  child: DataTable(
+                                    columns: [
+                                      DataColumn(
+                                        label: Expanded(
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              const Text(
+                                                'Description',
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Color.fromARGB(
+                                                        255, 94, 54, 54)),
+                                                textAlign: TextAlign.center,
                                               ),
-                                              Text(
-                                                '${columnSortStates.keys.toList().indexOf('description') + 1}',
-                                                style: const TextStyle(
-                                                    fontSize: 10),
-                                              ),
+                                              if (columnSortStates[
+                                                      'description'] !=
+                                                  null) ...[
+                                                Icon(
+                                                  columnSortStates[
+                                                              'description'] ==
+                                                          1
+                                                      ? Icons
+                                                          .arrow_drop_up_rounded
+                                                      : Icons
+                                                          .arrow_drop_down_rounded,
+                                                  color: Colors.black,
+                                                ),
+                                                Text(
+                                                  '${columnSortStates.keys.toList().indexOf('description') + 1}',
+                                                  style: const TextStyle(
+                                                      fontSize: 10),
+                                                ),
+                                              ],
                                             ],
-                                          ],
+                                          ),
                                         ),
+                                        onSort: (columnIndex, ascending) =>
+                                            {onSort('description')},
                                       ),
-                                      onSort: (columnIndex, ascending) =>
-                                          {onSort('description')},
-                                    ),
-                                    DataColumn(
-                                      label: Expanded(
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            const Text(
-                                              'email',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Color.fromARGB(
-                                                      255, 94, 54, 54)),
-                                              textAlign: TextAlign.center,
-                                            ),
-                                            if (columnSortStates['email'] !=
-                                                null) ...[
-                                              Icon(
-                                                columnSortStates['email'] == 1
-                                                    ? Icons
-                                                        .arrow_drop_up_rounded
-                                                    : Icons
-                                                        .arrow_drop_down_rounded,
-                                                color: Colors.black,
+                                      DataColumn(
+                                        label: Expanded(
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              const Text(
+                                                'email',
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Color.fromARGB(
+                                                        255, 94, 54, 54)),
+                                                textAlign: TextAlign.center,
                                               ),
-                                              Text(
-                                                '${columnSortStates.keys.toList().indexOf('email') + 1}',
-                                                style: const TextStyle(
-                                                    fontSize: 10),
-                                              ),
+                                              if (columnSortStates['email'] !=
+                                                  null) ...[
+                                                Icon(
+                                                  columnSortStates['email'] == 1
+                                                      ? Icons
+                                                          .arrow_drop_up_rounded
+                                                      : Icons
+                                                          .arrow_drop_down_rounded,
+                                                  color: Colors.black,
+                                                ),
+                                                Text(
+                                                  '${columnSortStates.keys.toList().indexOf('email') + 1}',
+                                                  style: const TextStyle(
+                                                      fontSize: 10),
+                                                ),
+                                              ],
                                             ],
-                                          ],
+                                          ),
                                         ),
+                                        onSort: (columnIndex, ascending) =>
+                                            {onSort('email')},
                                       ),
-                                      onSort: (columnIndex, ascending) =>
-                                          {onSort('email')},
-                                    ),
-                                    DataColumn(
-                                      label: Expanded(
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            const Text(
-                                              'id',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Color.fromARGB(
-                                                      255, 94, 54, 54)),
-                                              textAlign: TextAlign.center,
-                                            ),
-                                            if (columnSortStates['id'] !=
-                                                null) ...[
-                                              Icon(
-                                                columnSortStates['id'] == 1
-                                                    ? Icons
-                                                        .arrow_drop_up_rounded
-                                                    : Icons
-                                                        .arrow_drop_down_rounded,
-                                                color: Colors.black,
+                                      DataColumn(
+                                        label: Expanded(
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              const Text(
+                                                'id',
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Color.fromARGB(
+                                                        255, 94, 54, 54)),
+                                                textAlign: TextAlign.center,
                                               ),
-                                              Text(
-                                                '${columnSortStates.keys.toList().indexOf('id') + 1}',
-                                                style: const TextStyle(
-                                                    fontSize: 10),
-                                              ),
+                                              if (columnSortStates['id'] !=
+                                                  null) ...[
+                                                Icon(
+                                                  columnSortStates['id'] == 1
+                                                      ? Icons
+                                                          .arrow_drop_up_rounded
+                                                      : Icons
+                                                          .arrow_drop_down_rounded,
+                                                  color: Colors.black,
+                                                ),
+                                                Text(
+                                                  '${columnSortStates.keys.toList().indexOf('id') + 1}',
+                                                  style: const TextStyle(
+                                                      fontSize: 10),
+                                                ),
+                                              ],
                                             ],
-                                          ],
+                                          ),
                                         ),
+                                        onSort: (columnIndex, ascending) =>
+                                            {onSort('id')},
                                       ),
-                                      onSort: (columnIndex, ascending) =>
-                                          {onSort('id')},
-                                    ),
-                                    DataColumn(
-                                      label: Expanded(
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            const Text(
-                                              'Name',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Color.fromARGB(
-                                                      255, 94, 54, 54)),
-                                              textAlign: TextAlign.center,
-                                            ),
-                                            if (columnSortStates['name'] !=
-                                                null) ...[
-                                              Icon(
-                                                columnSortStates['name'] == 1
-                                                    ? Icons
-                                                        .arrow_drop_up_rounded
-                                                    : Icons
-                                                        .arrow_drop_down_rounded,
-                                                color: Colors.black,
+                                      DataColumn(
+                                        label: Expanded(
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              const Text(
+                                                'Name',
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Color.fromARGB(
+                                                        255, 94, 54, 54)),
+                                                textAlign: TextAlign.center,
                                               ),
-                                              Text(
-                                                '${columnSortStates.keys.toList().indexOf('name') + 1}',
-                                                style: const TextStyle(
-                                                    fontSize: 10),
-                                              ),
+                                              if (columnSortStates['name'] !=
+                                                  null) ...[
+                                                Icon(
+                                                  columnSortStates['name'] == 1
+                                                      ? Icons
+                                                          .arrow_drop_up_rounded
+                                                      : Icons
+                                                          .arrow_drop_down_rounded,
+                                                  color: Colors.black,
+                                                ),
+                                                Text(
+                                                  '${columnSortStates.keys.toList().indexOf('name') + 1}',
+                                                  style: const TextStyle(
+                                                      fontSize: 10),
+                                                ),
+                                              ],
                                             ],
-                                          ],
+                                          ),
                                         ),
+                                        onSort: (columnIndex, ascending) =>
+                                            {onSort('name')},
                                       ),
-                                      onSort: (columnIndex, ascending) =>
-                                          {onSort('name')},
-                                    ),
-                                    DataColumn(
-                                      label: Expanded(
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            const Text(
-                                              'password',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Color.fromARGB(
-                                                      255, 94, 54, 54)),
-                                              textAlign: TextAlign.center,
-                                            ),
-                                            if (columnSortStates['password'] !=
-                                                null) ...[
-                                              Icon(
-                                                columnSortStates[
-                                                            'password'] ==
-                                                        1
-                                                    ? Icons
-                                                        .arrow_drop_up_rounded
-                                                    : Icons
-                                                        .arrow_drop_down_rounded,
-                                                color: Colors.black,
+                                      DataColumn(
+                                        label: Expanded(
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              const Text(
+                                                'password',
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Color.fromARGB(
+                                                        255, 94, 54, 54)),
+                                                textAlign: TextAlign.center,
                                               ),
-                                              Text(
-                                                '${columnSortStates.keys.toList().indexOf('password') + 1}',
-                                                style: const TextStyle(
-                                                    fontSize: 10),
-                                              ),
+                                              if (columnSortStates[
+                                                      'password'] !=
+                                                  null) ...[
+                                                Icon(
+                                                  columnSortStates[
+                                                              'password'] ==
+                                                          1
+                                                      ? Icons
+                                                          .arrow_drop_up_rounded
+                                                      : Icons
+                                                          .arrow_drop_down_rounded,
+                                                  color: Colors.black,
+                                                ),
+                                                Text(
+                                                  '${columnSortStates.keys.toList().indexOf('password') + 1}',
+                                                  style: const TextStyle(
+                                                      fontSize: 10),
+                                                ),
+                                              ],
                                             ],
-                                          ],
+                                          ),
                                         ),
+                                        onSort: (columnIndex, ascending) =>
+                                            {onSort('password')},
                                       ),
-                                      onSort: (columnIndex, ascending) =>
-                                          {onSort('password')},
-                                    ),
-                                    DataColumn(
-                                      label: Expanded(
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            const Text(
-                                              'roles',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Color.fromARGB(
-                                                      255, 94, 54, 54)),
-                                              textAlign: TextAlign.center,
-                                            ),
-                                            if (columnSortStates['roles'] !=
-                                                null) ...[
-                                              Icon(
-                                                columnSortStates['roles'] == 1
-                                                    ? Icons
-                                                        .arrow_drop_up_rounded
-                                                    : Icons
-                                                        .arrow_drop_down_rounded,
-                                                color: Colors.black,
+                                      DataColumn(
+                                        label: Expanded(
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              const Text(
+                                                'roles',
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Color.fromARGB(
+                                                        255, 94, 54, 54)),
+                                                textAlign: TextAlign.center,
                                               ),
-                                              Text(
-                                                '${columnSortStates.keys.toList().indexOf('roles') + 1}',
-                                                style: const TextStyle(
-                                                    fontSize: 10),
-                                              ),
+                                              if (columnSortStates['roles'] !=
+                                                  null) ...[
+                                                Icon(
+                                                  columnSortStates['roles'] == 1
+                                                      ? Icons
+                                                          .arrow_drop_up_rounded
+                                                      : Icons
+                                                          .arrow_drop_down_rounded,
+                                                  color: Colors.black,
+                                                ),
+                                                Text(
+                                                  '${columnSortStates.keys.toList().indexOf('roles') + 1}',
+                                                  style: const TextStyle(
+                                                      fontSize: 10),
+                                                ),
+                                              ],
                                             ],
-                                          ],
+                                          ),
                                         ),
+                                        onSort: (columnIndex, ascending) =>
+                                            {onSort('roles')},
                                       ),
-                                      onSort: (columnIndex, ascending) =>
-                                          {onSort('roles')},
-                                    ),
-                                  ],
-                                  rows: persons.map((person) {
-                                    return DataRow(
-                                      cells: [
-                                        DataCell(Center(
-                                            child: Text(person.description
-                                                .toString()))),
-                                        DataCell(Center(
-                                            child:
-                                                Text(person.email.toString()))),
-                                        DataCell(Center(
-                                            child: Text(person.id.toString()))),
-                                        DataCell(Center(
-                                            child:
-                                                Text(person.name.toString()))),
-                                        DataCell(Center(
-                                            child: Text(
-                                                person.password.toString()))),
-                                        DataCell(Center(
-                                            child:
-                                                Text(person.roles.toString()))),
-                                      ],
-                                      onSelectChanged: (selected) {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  PersonWidget(
-                                                      element: person,
-                                                      isEditing: true)),
-                                        );
-                                      },
-                                    );
-                                  }).toList(),
-                                  showCheckboxColumn: false,
+                                    ],
+                                    rows: persons.map((person) {
+                                      return DataRow(
+                                        cells: [
+                                          DataCell(Center(
+                                              child: Text(person.description
+                                                  .toString()))),
+                                          DataCell(Center(
+                                              child: Text(
+                                                  person.email.toString()))),
+                                          DataCell(Center(
+                                              child:
+                                                  Text(person.id.toString()))),
+                                          DataCell(Center(
+                                              child: Text(
+                                                  person.name.toString()))),
+                                          DataCell(Center(
+                                              child: Text(
+                                                  person.password.toString()))),
+                                          DataCell(
+                                            Center(
+                                              child: FutureBuilder<List<Role>>(
+                                                future:
+                                                    fetchRoleList(person.roles),
+                                                builder: (context, snapshot) {
+                                                  if (snapshot.connectionState ==
+                                                          ConnectionState
+                                                              .waiting ||
+                                                      snapshot.data == null) {
+                                                    return const CircularProgressIndicator();
+                                                  } else {
+                                                    return Wrap(
+                                                      spacing: 4,
+                                                      children: snapshot.data!
+                                                          .map((role) {
+                                                        return ElevatedButton(
+                                                          onPressed: () {
+                                                            Navigator.push(
+                                                              context,
+                                                              MaterialPageRoute(
+                                                                builder:
+                                                                    (context) =>
+                                                                        RoleWidget(
+                                                                  element: role,
+                                                                  isEditing:
+                                                                      true,
+                                                                ),
+                                                              ),
+                                                            );
+                                                          },
+                                                          style: ButtonStyle(
+                                                            shape: MaterialStateProperty
+                                                                .all<
+                                                                    RoundedRectangleBorder>(
+                                                              RoundedRectangleBorder(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            5),
+                                                              ),
+                                                            ),
+                                                            padding:
+                                                                MaterialStateProperty
+                                                                    .all<
+                                                                        EdgeInsetsGeometry>(
+                                                              EdgeInsets
+                                                                  .symmetric(
+                                                                      horizontal:
+                                                                          1,
+                                                                      vertical:
+                                                                          1),
+                                                            ),
+                                                            backgroundColor:
+                                                                MaterialStateProperty
+                                                                    .all<Color>(
+                                                                        Styles
+                                                                            .buttonPrimaryColor),
+                                                            elevation: MaterialStateProperty
+                                                                .resolveWith<
+                                                                        double>(
+                                                                    (states) {
+                                                              if (states.contains(
+                                                                      MaterialState
+                                                                          .hovered) ||
+                                                                  states.contains(
+                                                                      MaterialState
+                                                                          .pressed)) {
+                                                                return 0;
+                                                              }
+                                                              return 0;
+                                                            }),
+                                                            foregroundColor:
+                                                                MaterialStateProperty
+                                                                    .all<Color>(
+                                                                        Colors
+                                                                            .white),
+                                                            overlayColor:
+                                                                MaterialStateProperty
+                                                                    .resolveWith<
+                                                                            Color>(
+                                                                        (states) {
+                                                              if (states.contains(
+                                                                  MaterialState
+                                                                      .hovered)) {
+                                                                return Styles
+                                                                    .buttonPrimaryColorHover;
+                                                              }
+                                                              return Colors
+                                                                  .transparent;
+                                                            }),
+                                                          ),
+                                                          child: Text(
+                                                            role.name,
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .white),
+                                                          ),
+                                                        );
+                                                      }).toList(),
+                                                    );
+                                                  }
+                                                },
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                        onSelectChanged: (selected) {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    PersonWidget(
+                                                        element: person,
+                                                        isEditing: true)),
+                                          );
+                                        },
+                                      );
+                                    }).toList(),
+                                    showCheckboxColumn: false,
+                                  ),
                                 ),
                               ),
                             ),
@@ -1435,32 +1561,38 @@ final personPaginationProvider =
 
 final getPersonProvider =
     FutureProvider.autoDispose.family<Person, String>((ref, personId) async {
-  final json = await http.get(Uri.parse('$baseURL/heytest/$personId'));
+  final json = await http.get(Uri.parse('$baseURL/person/$personId'));
   final jsonData = jsonDecode(json.body);
   return Person.fromJson(jsonData);
 });
 
 final createPersonProvider = FutureProvider.autoDispose
-    .family<void, Person>((ref, personInstance) async {
+    .family<void, Tuple2<Person, BuildContext>>((ref, tuple) async {
+  Person personInstance = tuple.item1;
+  BuildContext context = tuple.item2;
+
   final response = await http.post(
-    Uri.parse('$baseURL/persons'),
+    Uri.parse('$baseURL/person'),
     headers: {'Content-Type': 'application/json'},
     body: jsonEncode(personInstance.toJson()),
   );
   if (response.statusCode != 201) {
-    throw Exception('Failed to create Person');
+    CustomSnackBar.show(context, jsonDecode(response.body)['detail']);
   }
 });
 
 final updatePersonProvider = FutureProvider.autoDispose
-    .family<void, Person>((ref, personInstance) async {
+    .family<void, Tuple2<Person, BuildContext>>((ref, tuple) async {
+  Person personInstance = tuple.item1;
+  BuildContext context = tuple.item2;
+
   final response = await http.put(
     Uri.parse('$baseURL/person/${personInstance.id}'),
     headers: {'Content-Type': 'application/json'},
     body: jsonEncode(personInstance.toJson()),
   );
   if (response.statusCode != 200) {
-    throw Exception('Failed to update Person');
+    CustomSnackBar.show(context, jsonDecode(response.body)['detail']);
   }
 });
 
@@ -1497,7 +1629,7 @@ final getAllPersonProvider = FutureProvider.autoDispose
 
   final json = await http.post(
       Uri.parse(
-          '$baseURL?skip=${state.pagination.item1}&limit=${state.pagination.item2}'),
+          '$baseURL/persons?skip=${state.pagination.item1}&limit=${state.pagination.item2}'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode(fixedQuery));
   final jsonData = jsonDecode(json.body);
@@ -1588,11 +1720,11 @@ final verifyTokenPersonProvider = FutureProvider.autoDispose<bool>((ref) async {
     );
 
     if (response.statusCode == 200) {
-      return true; 
+      return true;
     } else {
       return false;
     }
   } catch (e) {
-    return false; 
+    return false;
   }
 });

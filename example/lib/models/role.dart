@@ -16,10 +16,10 @@ import 'package:flutter_typeahead/flutter_typeahead.dart';
 part 'role.g.dart';
 
 @JsonSerializable()
-@RiverpodGenAnnotation()
+@RiverpodGenAnnotation(auth: false)
 @HomeWidgetElementGenAnnotation()
 @ListWidgetGenAnnotation()
-@ElementWidgetGen()
+@ElementWidgetGen(auth: false)
 @CopyWith()
 class Role {
   @Field(fieldName: 'name')

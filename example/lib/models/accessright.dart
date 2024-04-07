@@ -12,30 +12,31 @@ import 'package:example/config/styles.dart';
 import 'dart:convert';
 import 'package:collection/collection.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:example/models/role.dart';
 
 part 'accessright.g.dart';
 
 @JsonSerializable()
-@RiverpodGenAnnotation()
+@RiverpodGenAnnotation(auth: false)
 @HomeWidgetElementGenAnnotation()
 @ListWidgetGenAnnotation()
-@ElementWidgetGen()
+@ElementWidgetGen(auth: false)
 @CopyWith()
 class AccessRight {
   @Field(fieldName: 'name')
   final String name;
-  @Field(fieldName: 'role')
+  @Field(relation: "Role")
   final String role;
-  @Field(fieldName: 'model')
+  @Field(fieldName: 'model', widget: "ModelsSelectableWidget",)
   final String model;
-  @Field(fieldName: 'operations')
-  final String operations;
-  @Field(fieldName: 'fields_create')
-  final String fields_create;
-  @Field(fieldName: 'fields_edit')
-  final String fields_edit;
-  @Field(fieldName: 'fields_visible')
-  final String fields_visible;
+  @Field(fieldName: 'operations', placeholder: "{'create': 1, 'read': 1, 'update': 0, 'delete': 0, 'search': 1}")
+  final dynamic operations;
+  @Field(fieldName: 'fields_create', placeholder: "{'field_1': 1, 'field_2': 1, 'field_3': 0, ...}")
+  final dynamic fields_create;
+  @Field(fieldName: 'fields_edit', placeholder: "{'field_1': 1, 'field_2': 1, 'field_3': 0, ...}")
+  final dynamic fields_edit;
+  @Field(fieldName: 'fields_visible', placeholder: "{'field_1': 1, 'field_2': 1, 'field_3': 0, ...}")
+  final dynamic fields_visible;
   @Field(fieldName: 'id')
   final String id;
 

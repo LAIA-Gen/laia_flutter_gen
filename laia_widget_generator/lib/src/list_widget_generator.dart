@@ -168,8 +168,10 @@ class _${className}ListViewState extends ConsumerState<${className}ListView> {
                     children: [
                       SingleChildScrollView(
                         scrollDirection: Axis.vertical,
-                        child: SizedBox(
-                          width: double.infinity,
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: SizedBox(
+                          width: MediaQuery.of(context).size.width > 1500 ? MediaQuery.of(context).size.width : 1500,
                           child: DataTable(
                             columns: [''');
     if (defaultFields.isEmpty) {
@@ -486,7 +488,7 @@ DataCell(Center(
                         showCheckboxColumn: false,
                       ),
                     ),
-                  ),
+                  ),),
                   const SizedBox(height: 8),
                 ],
               ),
