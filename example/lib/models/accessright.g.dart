@@ -159,8 +159,8 @@ class _AccessRightWidgetState extends State<AccessRightWidget> {
       GlobalKey<StringWidgetState>();
   final GlobalKey<RoleFieldWidgetState> roleWidgetKey =
       GlobalKey<RoleFieldWidgetState>();
-  final GlobalKey<StringWidgetState> modelWidgetKey =
-      GlobalKey<StringWidgetState>();
+  final GlobalKey<ModelsSelectableWidgetState> modelWidgetKey =
+      GlobalKey<ModelsSelectableWidgetState>();
   final GlobalKey<DefaultWidgetState> operationsWidgetKey =
       GlobalKey<DefaultWidgetState>();
   final GlobalKey<DefaultWidgetState> fields_createWidgetKey =
@@ -198,7 +198,7 @@ class _AccessRightWidgetState extends State<AccessRightWidget> {
               placeholder: "Type the role",
               value: widget.element?.role,
             ),
-            StringWidget(
+            ModelsSelectableWidget(
               key: modelWidgetKey,
               fieldName: "model",
               fieldDescription: "This is the model",
@@ -211,7 +211,8 @@ class _AccessRightWidgetState extends State<AccessRightWidget> {
               fieldName: "operations",
               fieldDescription: "This is the operations",
               editable: true,
-              placeholder: "Type the operations",
+              placeholder:
+                  "{'create': 1, 'read': 1, 'update': 0, 'delete': 0, 'search': 1}",
               value: widget.element?.operations,
             ),
             DefaultWidget(
@@ -219,7 +220,7 @@ class _AccessRightWidgetState extends State<AccessRightWidget> {
               fieldName: "fields_create",
               fieldDescription: "This is the fields_create",
               editable: true,
-              placeholder: "Type the fields_create",
+              placeholder: "{'field_1': 1, 'field_2': 1, 'field_3': 0, ...}",
               value: widget.element?.fields_create,
             ),
             DefaultWidget(
@@ -227,7 +228,7 @@ class _AccessRightWidgetState extends State<AccessRightWidget> {
               fieldName: "fields_edit",
               fieldDescription: "This is the fields_edit",
               editable: true,
-              placeholder: "Type the fields_edit",
+              placeholder: "{'field_1': 1, 'field_2': 1, 'field_3': 0, ...}",
               value: widget.element?.fields_edit,
             ),
             DefaultWidget(
@@ -235,7 +236,7 @@ class _AccessRightWidgetState extends State<AccessRightWidget> {
               fieldName: "fields_visible",
               fieldDescription: "This is the fields_visible",
               editable: true,
-              placeholder: "Type the fields_visible",
+              placeholder: "{'field_1': 1, 'field_2': 1, 'field_3': 0, ...}",
               value: widget.element?.fields_visible,
             ),
             StringWidget(
@@ -295,12 +296,12 @@ class _AccessRightWidgetState extends State<AccessRightWidget> {
           var container = ProviderContainer();
           try {
             if (widget.isEditing) {
-              await container
-                  .read(updateAccessRightProvider(Tuple2(updatedAccessRight, context)));
+              await container.read(updateAccessRightProvider(
+                  Tuple2(updatedAccessRight, context)));
               print('AccessRight updated successfully');
             } else {
-              await container
-                  .read(createAccessRightProvider(Tuple2(updatedAccessRight, context)));
+              await container.read(createAccessRightProvider(
+                  Tuple2(updatedAccessRight, context)));
               print('AccessRight created successfully');
             }
           } catch (error) {
@@ -900,456 +901,464 @@ class _AccessRightListViewState extends ConsumerState<AccessRightListView> {
                           children: [
                             SingleChildScrollView(
                               scrollDirection: Axis.vertical,
-                              child: SizedBox(
-                                width: double.infinity,
-                                child: DataTable(
-                                  columns: [
-                                    DataColumn(
-                                      label: Expanded(
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            const Text(
-                                              'name',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Color.fromARGB(
-                                                      255, 94, 54, 54)),
-                                              textAlign: TextAlign.center,
-                                            ),
-                                            if (columnSortStates['name'] !=
-                                                null) ...[
-                                              Icon(
-                                                columnSortStates['name'] == 1
-                                                    ? Icons
-                                                        .arrow_drop_up_rounded
-                                                    : Icons
-                                                        .arrow_drop_down_rounded,
-                                                color: Colors.black,
+                              child: SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: SizedBox(
+                                  width:
+                                      MediaQuery.of(context).size.width > 1500
+                                          ? MediaQuery.of(context).size.width
+                                          : 1500,
+                                  child: DataTable(
+                                    columns: [
+                                      DataColumn(
+                                        label: Expanded(
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              const Text(
+                                                'name',
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Color.fromARGB(
+                                                        255, 94, 54, 54)),
+                                                textAlign: TextAlign.center,
                                               ),
-                                              Text(
-                                                '${columnSortStates.keys.toList().indexOf('name') + 1}',
-                                                style: const TextStyle(
-                                                    fontSize: 10),
-                                              ),
+                                              if (columnSortStates['name'] !=
+                                                  null) ...[
+                                                Icon(
+                                                  columnSortStates['name'] == 1
+                                                      ? Icons
+                                                          .arrow_drop_up_rounded
+                                                      : Icons
+                                                          .arrow_drop_down_rounded,
+                                                  color: Colors.black,
+                                                ),
+                                                Text(
+                                                  '${columnSortStates.keys.toList().indexOf('name') + 1}',
+                                                  style: const TextStyle(
+                                                      fontSize: 10),
+                                                ),
+                                              ],
                                             ],
-                                          ],
-                                        ),
-                                      ),
-                                      onSort: (columnIndex, ascending) =>
-                                          {onSort('name')},
-                                    ),
-                                    DataColumn(
-                                      label: Expanded(
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            const Text(
-                                              'role',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Color.fromARGB(
-                                                      255, 94, 54, 54)),
-                                              textAlign: TextAlign.center,
-                                            ),
-                                            if (columnSortStates['role'] !=
-                                                null) ...[
-                                              Icon(
-                                                columnSortStates['role'] == 1
-                                                    ? Icons
-                                                        .arrow_drop_up_rounded
-                                                    : Icons
-                                                        .arrow_drop_down_rounded,
-                                                color: Colors.black,
-                                              ),
-                                              Text(
-                                                '${columnSortStates.keys.toList().indexOf('role') + 1}',
-                                                style: const TextStyle(
-                                                    fontSize: 10),
-                                              ),
-                                            ],
-                                          ],
-                                        ),
-                                      ),
-                                      onSort: (columnIndex, ascending) =>
-                                          {onSort('role')},
-                                    ),
-                                    DataColumn(
-                                      label: Expanded(
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            const Text(
-                                              'model',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Color.fromARGB(
-                                                      255, 94, 54, 54)),
-                                              textAlign: TextAlign.center,
-                                            ),
-                                            if (columnSortStates['model'] !=
-                                                null) ...[
-                                              Icon(
-                                                columnSortStates['model'] == 1
-                                                    ? Icons
-                                                        .arrow_drop_up_rounded
-                                                    : Icons
-                                                        .arrow_drop_down_rounded,
-                                                color: Colors.black,
-                                              ),
-                                              Text(
-                                                '${columnSortStates.keys.toList().indexOf('model') + 1}',
-                                                style: const TextStyle(
-                                                    fontSize: 10),
-                                              ),
-                                            ],
-                                          ],
-                                        ),
-                                      ),
-                                      onSort: (columnIndex, ascending) =>
-                                          {onSort('model')},
-                                    ),
-                                    DataColumn(
-                                      label: Expanded(
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            const Text(
-                                              'operations',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Color.fromARGB(
-                                                      255, 94, 54, 54)),
-                                              textAlign: TextAlign.center,
-                                            ),
-                                            if (columnSortStates[
-                                                    'operations'] !=
-                                                null) ...[
-                                              Icon(
-                                                columnSortStates[
-                                                            'operations'] ==
-                                                        1
-                                                    ? Icons
-                                                        .arrow_drop_up_rounded
-                                                    : Icons
-                                                        .arrow_drop_down_rounded,
-                                                color: Colors.black,
-                                              ),
-                                              Text(
-                                                '${columnSortStates.keys.toList().indexOf('operations') + 1}',
-                                                style: const TextStyle(
-                                                    fontSize: 10),
-                                              ),
-                                            ],
-                                          ],
-                                        ),
-                                      ),
-                                      onSort: (columnIndex, ascending) =>
-                                          {onSort('operations')},
-                                    ),
-                                    DataColumn(
-                                      label: Expanded(
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            const Text(
-                                              'fields_create',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Color.fromARGB(
-                                                      255, 94, 54, 54)),
-                                              textAlign: TextAlign.center,
-                                            ),
-                                            if (columnSortStates[
-                                                    'fields_create'] !=
-                                                null) ...[
-                                              Icon(
-                                                columnSortStates[
-                                                            'fields_create'] ==
-                                                        1
-                                                    ? Icons
-                                                        .arrow_drop_up_rounded
-                                                    : Icons
-                                                        .arrow_drop_down_rounded,
-                                                color: Colors.black,
-                                              ),
-                                              Text(
-                                                '${columnSortStates.keys.toList().indexOf('fields_create') + 1}',
-                                                style: const TextStyle(
-                                                    fontSize: 10),
-                                              ),
-                                            ],
-                                          ],
-                                        ),
-                                      ),
-                                      onSort: (columnIndex, ascending) =>
-                                          {onSort('fields_create')},
-                                    ),
-                                    DataColumn(
-                                      label: Expanded(
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            const Text(
-                                              'fields_edit',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Color.fromARGB(
-                                                      255, 94, 54, 54)),
-                                              textAlign: TextAlign.center,
-                                            ),
-                                            if (columnSortStates[
-                                                    'fields_edit'] !=
-                                                null) ...[
-                                              Icon(
-                                                columnSortStates[
-                                                            'fields_edit'] ==
-                                                        1
-                                                    ? Icons
-                                                        .arrow_drop_up_rounded
-                                                    : Icons
-                                                        .arrow_drop_down_rounded,
-                                                color: Colors.black,
-                                              ),
-                                              Text(
-                                                '${columnSortStates.keys.toList().indexOf('fields_edit') + 1}',
-                                                style: const TextStyle(
-                                                    fontSize: 10),
-                                              ),
-                                            ],
-                                          ],
-                                        ),
-                                      ),
-                                      onSort: (columnIndex, ascending) =>
-                                          {onSort('fields_edit')},
-                                    ),
-                                    DataColumn(
-                                      label: Expanded(
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            const Text(
-                                              'fields_visible',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Color.fromARGB(
-                                                      255, 94, 54, 54)),
-                                              textAlign: TextAlign.center,
-                                            ),
-                                            if (columnSortStates[
-                                                    'fields_visible'] !=
-                                                null) ...[
-                                              Icon(
-                                                columnSortStates[
-                                                            'fields_visible'] ==
-                                                        1
-                                                    ? Icons
-                                                        .arrow_drop_up_rounded
-                                                    : Icons
-                                                        .arrow_drop_down_rounded,
-                                                color: Colors.black,
-                                              ),
-                                              Text(
-                                                '${columnSortStates.keys.toList().indexOf('fields_visible') + 1}',
-                                                style: const TextStyle(
-                                                    fontSize: 10),
-                                              ),
-                                            ],
-                                          ],
-                                        ),
-                                      ),
-                                      onSort: (columnIndex, ascending) =>
-                                          {onSort('fields_visible')},
-                                    ),
-                                    DataColumn(
-                                      label: Expanded(
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            const Text(
-                                              'id',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Color.fromARGB(
-                                                      255, 94, 54, 54)),
-                                              textAlign: TextAlign.center,
-                                            ),
-                                            if (columnSortStates['id'] !=
-                                                null) ...[
-                                              Icon(
-                                                columnSortStates['id'] == 1
-                                                    ? Icons
-                                                        .arrow_drop_up_rounded
-                                                    : Icons
-                                                        .arrow_drop_down_rounded,
-                                                color: Colors.black,
-                                              ),
-                                              Text(
-                                                '${columnSortStates.keys.toList().indexOf('id') + 1}',
-                                                style: const TextStyle(
-                                                    fontSize: 10),
-                                              ),
-                                            ],
-                                          ],
-                                        ),
-                                      ),
-                                      onSort: (columnIndex, ascending) =>
-                                          {onSort('id')},
-                                    ),
-                                  ],
-                                  rows: accessrights.map((accessright) {
-                                    return DataRow(
-                                      cells: [
-                                        DataCell(Center(
-                                            child: Text(
-                                                accessright.name.toString()))),
-                                        DataCell(
-                                          Center(
-                                            child: FutureBuilder<List<Role>>(
-                                              future: fetchRoleList(
-                                                  [accessright.role ?? '']),
-                                              builder: (context, snapshot) {
-                                                if (snapshot.connectionState ==
-                                                        ConnectionState
-                                                            .waiting ||
-                                                    snapshot.data == null) {
-                                                  return const CircularProgressIndicator();
-                                                } else {
-                                                  return Wrap(
-                                                    spacing: 4,
-                                                    children: snapshot.data!
-                                                        .map((role) {
-                                                      return ElevatedButton(
-                                                        onPressed: () {
-                                                          Navigator.push(
-                                                            context,
-                                                            MaterialPageRoute(
-                                                              builder:
-                                                                  (context) =>
-                                                                      RoleWidget(
-                                                                element: role,
-                                                                isEditing: true,
-                                                              ),
-                                                            ),
-                                                          );
-                                                        },
-                                                        style: ButtonStyle(
-                                                          shape: MaterialStateProperty
-                                                              .all<
-                                                                  RoundedRectangleBorder>(
-                                                            RoundedRectangleBorder(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          5),
-                                                            ),
-                                                          ),
-                                                          padding:
-                                                              MaterialStateProperty
-                                                                  .all<
-                                                                      EdgeInsetsGeometry>(
-                                                            EdgeInsets
-                                                                .symmetric(
-                                                                    horizontal:
-                                                                        1,
-                                                                    vertical:
-                                                                        1),
-                                                          ),
-                                                          backgroundColor:
-                                                              MaterialStateProperty
-                                                                  .all<Color>(Styles
-                                                                      .buttonPrimaryColor),
-                                                          elevation:
-                                                              MaterialStateProperty
-                                                                  .resolveWith<
-                                                                          double>(
-                                                                      (states) {
-                                                            if (states.contains(
-                                                                    MaterialState
-                                                                        .hovered) ||
-                                                                states.contains(
-                                                                    MaterialState
-                                                                        .pressed)) {
-                                                              return 0;
-                                                            }
-                                                            return 0;
-                                                          }),
-                                                          foregroundColor:
-                                                              MaterialStateProperty
-                                                                  .all<Color>(
-                                                                      Colors
-                                                                          .white),
-                                                          overlayColor:
-                                                              MaterialStateProperty
-                                                                  .resolveWith<
-                                                                          Color>(
-                                                                      (states) {
-                                                            if (states.contains(
-                                                                MaterialState
-                                                                    .hovered)) {
-                                                              return Styles
-                                                                  .buttonPrimaryColorHover;
-                                                            }
-                                                            return Colors
-                                                                .transparent;
-                                                          }),
-                                                        ),
-                                                        child: Text(
-                                                          role.name,
-                                                          style: TextStyle(
-                                                              color:
-                                                                  Colors.white),
-                                                        ),
-                                                      );
-                                                    }).toList(),
-                                                  );
-                                                }
-                                              },
-                                            ),
                                           ),
                                         ),
-                                        DataCell(Center(
-                                            child: Text(
-                                                accessright.model.toString()))),
-                                        DataCell(Center(
-                                            child: Text(accessright.operations
-                                                .toString()))),
-                                        DataCell(Center(
-                                            child: Text(accessright
-                                                .fields_create
-                                                .toString()))),
-                                        DataCell(Center(
-                                            child: Text(accessright.fields_edit
-                                                .toString()))),
-                                        DataCell(Center(
-                                            child: Text(accessright
-                                                .fields_visible
-                                                .toString()))),
-                                        DataCell(Center(
-                                            child: Text(
-                                                accessright.id.toString()))),
-                                      ],
-                                      onSelectChanged: (selected) {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  AccessRightWidget(
-                                                      element: accessright,
-                                                      isEditing: true)),
-                                        );
-                                      },
-                                    );
-                                  }).toList(),
-                                  showCheckboxColumn: false,
+                                        onSort: (columnIndex, ascending) =>
+                                            {onSort('name')},
+                                      ),
+                                      DataColumn(
+                                        label: Expanded(
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              const Text(
+                                                'role',
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Color.fromARGB(
+                                                        255, 94, 54, 54)),
+                                                textAlign: TextAlign.center,
+                                              ),
+                                              if (columnSortStates['role'] !=
+                                                  null) ...[
+                                                Icon(
+                                                  columnSortStates['role'] == 1
+                                                      ? Icons
+                                                          .arrow_drop_up_rounded
+                                                      : Icons
+                                                          .arrow_drop_down_rounded,
+                                                  color: Colors.black,
+                                                ),
+                                                Text(
+                                                  '${columnSortStates.keys.toList().indexOf('role') + 1}',
+                                                  style: const TextStyle(
+                                                      fontSize: 10),
+                                                ),
+                                              ],
+                                            ],
+                                          ),
+                                        ),
+                                        onSort: (columnIndex, ascending) =>
+                                            {onSort('role')},
+                                      ),
+                                      DataColumn(
+                                        label: Expanded(
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              const Text(
+                                                'model',
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Color.fromARGB(
+                                                        255, 94, 54, 54)),
+                                                textAlign: TextAlign.center,
+                                              ),
+                                              if (columnSortStates['model'] !=
+                                                  null) ...[
+                                                Icon(
+                                                  columnSortStates['model'] == 1
+                                                      ? Icons
+                                                          .arrow_drop_up_rounded
+                                                      : Icons
+                                                          .arrow_drop_down_rounded,
+                                                  color: Colors.black,
+                                                ),
+                                                Text(
+                                                  '${columnSortStates.keys.toList().indexOf('model') + 1}',
+                                                  style: const TextStyle(
+                                                      fontSize: 10),
+                                                ),
+                                              ],
+                                            ],
+                                          ),
+                                        ),
+                                        onSort: (columnIndex, ascending) =>
+                                            {onSort('model')},
+                                      ),
+                                      DataColumn(
+                                        label: Expanded(
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              const Text(
+                                                'operations',
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Color.fromARGB(
+                                                        255, 94, 54, 54)),
+                                                textAlign: TextAlign.center,
+                                              ),
+                                              if (columnSortStates[
+                                                      'operations'] !=
+                                                  null) ...[
+                                                Icon(
+                                                  columnSortStates[
+                                                              'operations'] ==
+                                                          1
+                                                      ? Icons
+                                                          .arrow_drop_up_rounded
+                                                      : Icons
+                                                          .arrow_drop_down_rounded,
+                                                  color: Colors.black,
+                                                ),
+                                                Text(
+                                                  '${columnSortStates.keys.toList().indexOf('operations') + 1}',
+                                                  style: const TextStyle(
+                                                      fontSize: 10),
+                                                ),
+                                              ],
+                                            ],
+                                          ),
+                                        ),
+                                        onSort: (columnIndex, ascending) =>
+                                            {onSort('operations')},
+                                      ),
+                                      DataColumn(
+                                        label: Expanded(
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              const Text(
+                                                'fields_create',
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Color.fromARGB(
+                                                        255, 94, 54, 54)),
+                                                textAlign: TextAlign.center,
+                                              ),
+                                              if (columnSortStates[
+                                                      'fields_create'] !=
+                                                  null) ...[
+                                                Icon(
+                                                  columnSortStates[
+                                                              'fields_create'] ==
+                                                          1
+                                                      ? Icons
+                                                          .arrow_drop_up_rounded
+                                                      : Icons
+                                                          .arrow_drop_down_rounded,
+                                                  color: Colors.black,
+                                                ),
+                                                Text(
+                                                  '${columnSortStates.keys.toList().indexOf('fields_create') + 1}',
+                                                  style: const TextStyle(
+                                                      fontSize: 10),
+                                                ),
+                                              ],
+                                            ],
+                                          ),
+                                        ),
+                                        onSort: (columnIndex, ascending) =>
+                                            {onSort('fields_create')},
+                                      ),
+                                      DataColumn(
+                                        label: Expanded(
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              const Text(
+                                                'fields_edit',
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Color.fromARGB(
+                                                        255, 94, 54, 54)),
+                                                textAlign: TextAlign.center,
+                                              ),
+                                              if (columnSortStates[
+                                                      'fields_edit'] !=
+                                                  null) ...[
+                                                Icon(
+                                                  columnSortStates[
+                                                              'fields_edit'] ==
+                                                          1
+                                                      ? Icons
+                                                          .arrow_drop_up_rounded
+                                                      : Icons
+                                                          .arrow_drop_down_rounded,
+                                                  color: Colors.black,
+                                                ),
+                                                Text(
+                                                  '${columnSortStates.keys.toList().indexOf('fields_edit') + 1}',
+                                                  style: const TextStyle(
+                                                      fontSize: 10),
+                                                ),
+                                              ],
+                                            ],
+                                          ),
+                                        ),
+                                        onSort: (columnIndex, ascending) =>
+                                            {onSort('fields_edit')},
+                                      ),
+                                      DataColumn(
+                                        label: Expanded(
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              const Text(
+                                                'fields_visible',
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Color.fromARGB(
+                                                        255, 94, 54, 54)),
+                                                textAlign: TextAlign.center,
+                                              ),
+                                              if (columnSortStates[
+                                                      'fields_visible'] !=
+                                                  null) ...[
+                                                Icon(
+                                                  columnSortStates[
+                                                              'fields_visible'] ==
+                                                          1
+                                                      ? Icons
+                                                          .arrow_drop_up_rounded
+                                                      : Icons
+                                                          .arrow_drop_down_rounded,
+                                                  color: Colors.black,
+                                                ),
+                                                Text(
+                                                  '${columnSortStates.keys.toList().indexOf('fields_visible') + 1}',
+                                                  style: const TextStyle(
+                                                      fontSize: 10),
+                                                ),
+                                              ],
+                                            ],
+                                          ),
+                                        ),
+                                        onSort: (columnIndex, ascending) =>
+                                            {onSort('fields_visible')},
+                                      ),
+                                      DataColumn(
+                                        label: Expanded(
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              const Text(
+                                                'id',
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Color.fromARGB(
+                                                        255, 94, 54, 54)),
+                                                textAlign: TextAlign.center,
+                                              ),
+                                              if (columnSortStates['id'] !=
+                                                  null) ...[
+                                                Icon(
+                                                  columnSortStates['id'] == 1
+                                                      ? Icons
+                                                          .arrow_drop_up_rounded
+                                                      : Icons
+                                                          .arrow_drop_down_rounded,
+                                                  color: Colors.black,
+                                                ),
+                                                Text(
+                                                  '${columnSortStates.keys.toList().indexOf('id') + 1}',
+                                                  style: const TextStyle(
+                                                      fontSize: 10),
+                                                ),
+                                              ],
+                                            ],
+                                          ),
+                                        ),
+                                        onSort: (columnIndex, ascending) =>
+                                            {onSort('id')},
+                                      ),
+                                    ],
+                                    rows: accessrights.map((accessright) {
+                                      return DataRow(
+                                        cells: [
+                                          DataCell(Center(
+                                              child: Text(accessright.name
+                                                  .toString()))),
+                                          DataCell(
+                                            Center(
+                                              child: FutureBuilder<List<Role>>(
+                                                future: fetchRoleList(
+                                                    [accessright.role ?? '']),
+                                                builder: (context, snapshot) {
+                                                  if (snapshot.connectionState ==
+                                                          ConnectionState
+                                                              .waiting ||
+                                                      snapshot.data == null) {
+                                                    return const CircularProgressIndicator();
+                                                  } else {
+                                                    return Wrap(
+                                                      spacing: 4,
+                                                      children: snapshot.data!
+                                                          .map((role) {
+                                                        return ElevatedButton(
+                                                          onPressed: () {
+                                                            Navigator.push(
+                                                              context,
+                                                              MaterialPageRoute(
+                                                                builder:
+                                                                    (context) =>
+                                                                        RoleWidget(
+                                                                  element: role,
+                                                                  isEditing:
+                                                                      true,
+                                                                ),
+                                                              ),
+                                                            );
+                                                          },
+                                                          style: ButtonStyle(
+                                                            shape: MaterialStateProperty
+                                                                .all<
+                                                                    RoundedRectangleBorder>(
+                                                              RoundedRectangleBorder(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            5),
+                                                              ),
+                                                            ),
+                                                            padding:
+                                                                MaterialStateProperty
+                                                                    .all<
+                                                                        EdgeInsetsGeometry>(
+                                                              EdgeInsets
+                                                                  .symmetric(
+                                                                      horizontal:
+                                                                          1,
+                                                                      vertical:
+                                                                          1),
+                                                            ),
+                                                            backgroundColor:
+                                                                MaterialStateProperty
+                                                                    .all<Color>(
+                                                                        Styles
+                                                                            .buttonPrimaryColor),
+                                                            elevation: MaterialStateProperty
+                                                                .resolveWith<
+                                                                        double>(
+                                                                    (states) {
+                                                              if (states.contains(
+                                                                      MaterialState
+                                                                          .hovered) ||
+                                                                  states.contains(
+                                                                      MaterialState
+                                                                          .pressed)) {
+                                                                return 0;
+                                                              }
+                                                              return 0;
+                                                            }),
+                                                            foregroundColor:
+                                                                MaterialStateProperty
+                                                                    .all<Color>(
+                                                                        Colors
+                                                                            .white),
+                                                            overlayColor:
+                                                                MaterialStateProperty
+                                                                    .resolveWith<
+                                                                            Color>(
+                                                                        (states) {
+                                                              if (states.contains(
+                                                                  MaterialState
+                                                                      .hovered)) {
+                                                                return Styles
+                                                                    .buttonPrimaryColorHover;
+                                                              }
+                                                              return Colors
+                                                                  .transparent;
+                                                            }),
+                                                          ),
+                                                          child: Text(
+                                                            role.name,
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .white),
+                                                          ),
+                                                        );
+                                                      }).toList(),
+                                                    );
+                                                  }
+                                                },
+                                              ),
+                                            ),
+                                          ),
+                                          DataCell(Center(
+                                              child: Text(accessright.model
+                                                  .toString()))),
+                                          DataCell(Center(
+                                              child: Text(accessright.operations
+                                                  .toString()))),
+                                          DataCell(Center(
+                                              child: Text(accessright
+                                                  .fields_create
+                                                  .toString()))),
+                                          DataCell(Center(
+                                              child: Text(accessright
+                                                  .fields_edit
+                                                  .toString()))),
+                                          DataCell(Center(
+                                              child: Text(accessright
+                                                  .fields_visible
+                                                  .toString()))),
+                                          DataCell(Center(
+                                              child: Text(
+                                                  accessright.id.toString()))),
+                                        ],
+                                        onSelectChanged: (selected) {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    AccessRightWidget(
+                                                        element: accessright,
+                                                        isEditing: true)),
+                                          );
+                                        },
+                                      );
+                                    }).toList(),
+                                    showCheckboxColumn: false,
+                                  ),
                                 ),
                               ),
                             ),

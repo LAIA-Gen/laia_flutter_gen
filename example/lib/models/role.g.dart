@@ -132,10 +132,12 @@ class _RoleWidgetState extends State<RoleWidget> {
           var container = ProviderContainer();
           try {
             if (widget.isEditing) {
-              await container.read(updateRoleProvider(updatedRole));
+              await container
+                  .read(updateRoleProvider(Tuple2(updatedRole, context)));
               print('Role updated successfully');
             } else {
-              await container.read(createRoleProvider(updatedRole));
+              await container
+                  .read(createRoleProvider(Tuple2(updatedRole, context)));
               print('Role created successfully');
             }
           } catch (error) {
@@ -690,103 +692,111 @@ class _RoleListViewState extends ConsumerState<RoleListView> {
                           children: [
                             SingleChildScrollView(
                               scrollDirection: Axis.vertical,
-                              child: SizedBox(
-                                width: double.infinity,
-                                child: DataTable(
-                                  columns: [
-                                    DataColumn(
-                                      label: Expanded(
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            const Text(
-                                              'name',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Color.fromARGB(
-                                                      255, 94, 54, 54)),
-                                              textAlign: TextAlign.center,
-                                            ),
-                                            if (columnSortStates['name'] !=
-                                                null) ...[
-                                              Icon(
-                                                columnSortStates['name'] == 1
-                                                    ? Icons
-                                                        .arrow_drop_up_rounded
-                                                    : Icons
-                                                        .arrow_drop_down_rounded,
-                                                color: Colors.black,
+                              child: SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: SizedBox(
+                                  width:
+                                      MediaQuery.of(context).size.width > 1500
+                                          ? MediaQuery.of(context).size.width
+                                          : 1500,
+                                  child: DataTable(
+                                    columns: [
+                                      DataColumn(
+                                        label: Expanded(
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              const Text(
+                                                'name',
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Color.fromARGB(
+                                                        255, 94, 54, 54)),
+                                                textAlign: TextAlign.center,
                                               ),
-                                              Text(
-                                                '${columnSortStates.keys.toList().indexOf('name') + 1}',
-                                                style: const TextStyle(
-                                                    fontSize: 10),
-                                              ),
+                                              if (columnSortStates['name'] !=
+                                                  null) ...[
+                                                Icon(
+                                                  columnSortStates['name'] == 1
+                                                      ? Icons
+                                                          .arrow_drop_up_rounded
+                                                      : Icons
+                                                          .arrow_drop_down_rounded,
+                                                  color: Colors.black,
+                                                ),
+                                                Text(
+                                                  '${columnSortStates.keys.toList().indexOf('name') + 1}',
+                                                  style: const TextStyle(
+                                                      fontSize: 10),
+                                                ),
+                                              ],
                                             ],
-                                          ],
+                                          ),
                                         ),
+                                        onSort: (columnIndex, ascending) =>
+                                            {onSort('name')},
                                       ),
-                                      onSort: (columnIndex, ascending) =>
-                                          {onSort('name')},
-                                    ),
-                                    DataColumn(
-                                      label: Expanded(
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            const Text(
-                                              'id',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Color.fromARGB(
-                                                      255, 94, 54, 54)),
-                                              textAlign: TextAlign.center,
-                                            ),
-                                            if (columnSortStates['id'] !=
-                                                null) ...[
-                                              Icon(
-                                                columnSortStates['id'] == 1
-                                                    ? Icons
-                                                        .arrow_drop_up_rounded
-                                                    : Icons
-                                                        .arrow_drop_down_rounded,
-                                                color: Colors.black,
+                                      DataColumn(
+                                        label: Expanded(
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              const Text(
+                                                'id',
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Color.fromARGB(
+                                                        255, 94, 54, 54)),
+                                                textAlign: TextAlign.center,
                                               ),
-                                              Text(
-                                                '${columnSortStates.keys.toList().indexOf('id') + 1}',
-                                                style: const TextStyle(
-                                                    fontSize: 10),
-                                              ),
+                                              if (columnSortStates['id'] !=
+                                                  null) ...[
+                                                Icon(
+                                                  columnSortStates['id'] == 1
+                                                      ? Icons
+                                                          .arrow_drop_up_rounded
+                                                      : Icons
+                                                          .arrow_drop_down_rounded,
+                                                  color: Colors.black,
+                                                ),
+                                                Text(
+                                                  '${columnSortStates.keys.toList().indexOf('id') + 1}',
+                                                  style: const TextStyle(
+                                                      fontSize: 10),
+                                                ),
+                                              ],
                                             ],
-                                          ],
+                                          ),
                                         ),
+                                        onSort: (columnIndex, ascending) =>
+                                            {onSort('id')},
                                       ),
-                                      onSort: (columnIndex, ascending) =>
-                                          {onSort('id')},
-                                    ),
-                                  ],
-                                  rows: roles.map((role) {
-                                    return DataRow(
-                                      cells: [
-                                        DataCell(Center(
-                                            child: Text(role.name.toString()))),
-                                        DataCell(Center(
-                                            child: Text(role.id.toString()))),
-                                      ],
-                                      onSelectChanged: (selected) {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) => RoleWidget(
-                                                  element: role,
-                                                  isEditing: true)),
-                                        );
-                                      },
-                                    );
-                                  }).toList(),
-                                  showCheckboxColumn: false,
+                                    ],
+                                    rows: roles.map((role) {
+                                      return DataRow(
+                                        cells: [
+                                          DataCell(Center(
+                                              child:
+                                                  Text(role.name.toString()))),
+                                          DataCell(Center(
+                                              child: Text(role.id.toString()))),
+                                        ],
+                                        onSelectChanged: (selected) {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    RoleWidget(
+                                                        element: role,
+                                                        isEditing: true)),
+                                          );
+                                        },
+                                      );
+                                    }).toList(),
+                                    showCheckboxColumn: false,
+                                  ),
                                 ),
                               ),
                             ),
@@ -885,27 +895,33 @@ final getRoleProvider =
   return Role.fromJson(jsonData);
 });
 
-final createRoleProvider =
-    FutureProvider.autoDispose.family<void, Role>((ref, roleInstance) async {
+final createRoleProvider = FutureProvider.autoDispose
+    .family<void, Tuple2<Role, BuildContext>>((ref, tuple) async {
+  Role roleInstance = tuple.item1;
+  BuildContext context = tuple.item2;
+
   final response = await http.post(
     Uri.parse('$baseURL/role'),
     headers: {'Content-Type': 'application/json'},
     body: jsonEncode(roleInstance.toJson()),
   );
   if (response.statusCode != 201) {
-    throw Exception('Failed to create Role');
+    CustomSnackBar.show(context, jsonDecode(response.body)['detail']);
   }
 });
 
-final updateRoleProvider =
-    FutureProvider.autoDispose.family<void, Role>((ref, roleInstance) async {
+final updateRoleProvider = FutureProvider.autoDispose
+    .family<void, Tuple2<Role, BuildContext>>((ref, tuple) async {
+  Role roleInstance = tuple.item1;
+  BuildContext context = tuple.item2;
+
   final response = await http.put(
     Uri.parse('$baseURL/role/${roleInstance.id}'),
     headers: {'Content-Type': 'application/json'},
     body: jsonEncode(roleInstance.toJson()),
   );
   if (response.statusCode != 200) {
-    throw Exception('Failed to update Role');
+    CustomSnackBar.show(context, jsonDecode(response.body)['detail']);
   }
 });
 

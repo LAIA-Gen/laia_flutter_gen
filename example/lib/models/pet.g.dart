@@ -212,10 +212,12 @@ class _PetWidgetState extends State<PetWidget> {
           var container = ProviderContainer();
           try {
             if (widget.isEditing) {
-              await container.read(updatePetProvider(updatedPet));
+              await container
+                  .read(updatePetProvider(Tuple2(updatedPet, context)));
               print('Pet updated successfully');
             } else {
-              await container.read(createPetProvider(updatedPet));
+              await container
+                  .read(createPetProvider(Tuple2(updatedPet, context)));
               print('Pet created successfully');
             }
           } catch (error) {
@@ -793,323 +795,335 @@ class _PetListViewState extends ConsumerState<PetListView> {
                           children: [
                             SingleChildScrollView(
                               scrollDirection: Axis.vertical,
-                              child: SizedBox(
-                                width: double.infinity,
-                                child: DataTable(
-                                  columns: [
-                                    DataColumn(
-                                      label: Expanded(
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            const Text(
-                                              'Age',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Color.fromARGB(
-                                                      255, 94, 54, 54)),
-                                              textAlign: TextAlign.center,
-                                            ),
-                                            if (columnSortStates['age'] !=
-                                                null) ...[
-                                              Icon(
-                                                columnSortStates['age'] == 1
-                                                    ? Icons
-                                                        .arrow_drop_up_rounded
-                                                    : Icons
-                                                        .arrow_drop_down_rounded,
-                                                color: Colors.black,
+                              child: SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: SizedBox(
+                                  width:
+                                      MediaQuery.of(context).size.width > 1500
+                                          ? MediaQuery.of(context).size.width
+                                          : 1500,
+                                  child: DataTable(
+                                    columns: [
+                                      DataColumn(
+                                        label: Expanded(
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              const Text(
+                                                'Age',
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Color.fromARGB(
+                                                        255, 94, 54, 54)),
+                                                textAlign: TextAlign.center,
                                               ),
-                                              Text(
-                                                '${columnSortStates.keys.toList().indexOf('age') + 1}',
-                                                style: const TextStyle(
-                                                    fontSize: 10),
-                                              ),
+                                              if (columnSortStates['age'] !=
+                                                  null) ...[
+                                                Icon(
+                                                  columnSortStates['age'] == 1
+                                                      ? Icons
+                                                          .arrow_drop_up_rounded
+                                                      : Icons
+                                                          .arrow_drop_down_rounded,
+                                                  color: Colors.black,
+                                                ),
+                                                Text(
+                                                  '${columnSortStates.keys.toList().indexOf('age') + 1}',
+                                                  style: const TextStyle(
+                                                      fontSize: 10),
+                                                ),
+                                              ],
                                             ],
-                                          ],
-                                        ),
-                                      ),
-                                      onSort: (columnIndex, ascending) =>
-                                          {onSort('age')},
-                                    ),
-                                    DataColumn(
-                                      label: Expanded(
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            const Text(
-                                              'Description',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Color.fromARGB(
-                                                      255, 94, 54, 54)),
-                                              textAlign: TextAlign.center,
-                                            ),
-                                            if (columnSortStates[
-                                                    'description'] !=
-                                                null) ...[
-                                              Icon(
-                                                columnSortStates[
-                                                            'description'] ==
-                                                        1
-                                                    ? Icons
-                                                        .arrow_drop_up_rounded
-                                                    : Icons
-                                                        .arrow_drop_down_rounded,
-                                                color: Colors.black,
-                                              ),
-                                              Text(
-                                                '${columnSortStates.keys.toList().indexOf('description') + 1}',
-                                                style: const TextStyle(
-                                                    fontSize: 10),
-                                              ),
-                                            ],
-                                          ],
-                                        ),
-                                      ),
-                                      onSort: (columnIndex, ascending) =>
-                                          {onSort('description')},
-                                    ),
-                                    DataColumn(
-                                      label: Expanded(
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            const Text(
-                                              'id',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Color.fromARGB(
-                                                      255, 94, 54, 54)),
-                                              textAlign: TextAlign.center,
-                                            ),
-                                            if (columnSortStates['id'] !=
-                                                null) ...[
-                                              Icon(
-                                                columnSortStates['id'] == 1
-                                                    ? Icons
-                                                        .arrow_drop_up_rounded
-                                                    : Icons
-                                                        .arrow_drop_down_rounded,
-                                                color: Colors.black,
-                                              ),
-                                              Text(
-                                                '${columnSortStates.keys.toList().indexOf('id') + 1}',
-                                                style: const TextStyle(
-                                                    fontSize: 10),
-                                              ),
-                                            ],
-                                          ],
-                                        ),
-                                      ),
-                                      onSort: (columnIndex, ascending) =>
-                                          {onSort('id')},
-                                    ),
-                                    DataColumn(
-                                      label: Expanded(
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            const Text(
-                                              'Name',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Color.fromARGB(
-                                                      255, 94, 54, 54)),
-                                              textAlign: TextAlign.center,
-                                            ),
-                                            if (columnSortStates['name'] !=
-                                                null) ...[
-                                              Icon(
-                                                columnSortStates['name'] == 1
-                                                    ? Icons
-                                                        .arrow_drop_up_rounded
-                                                    : Icons
-                                                        .arrow_drop_down_rounded,
-                                                color: Colors.black,
-                                              ),
-                                              Text(
-                                                '${columnSortStates.keys.toList().indexOf('name') + 1}',
-                                                style: const TextStyle(
-                                                    fontSize: 10),
-                                              ),
-                                            ],
-                                          ],
-                                        ),
-                                      ),
-                                      onSort: (columnIndex, ascending) =>
-                                          {onSort('name')},
-                                    ),
-                                    DataColumn(
-                                      label: Expanded(
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            const Text(
-                                              'Owner',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Color.fromARGB(
-                                                      255, 94, 54, 54)),
-                                              textAlign: TextAlign.center,
-                                            ),
-                                            if (columnSortStates['ownerid'] !=
-                                                null) ...[
-                                              Icon(
-                                                columnSortStates['ownerid'] == 1
-                                                    ? Icons
-                                                        .arrow_drop_up_rounded
-                                                    : Icons
-                                                        .arrow_drop_down_rounded,
-                                                color: Colors.black,
-                                              ),
-                                              Text(
-                                                '${columnSortStates.keys.toList().indexOf('ownerid') + 1}',
-                                                style: const TextStyle(
-                                                    fontSize: 10),
-                                              ),
-                                            ],
-                                          ],
-                                        ),
-                                      ),
-                                      onSort: (columnIndex, ascending) =>
-                                          {onSort('ownerid')},
-                                    ),
-                                  ],
-                                  rows: pets.map((pet) {
-                                    return DataRow(
-                                      cells: [
-                                        DataCell(Center(
-                                            child: Text(pet.age.toString()))),
-                                        DataCell(Center(
-                                            child: Text(
-                                                pet.description.toString()))),
-                                        DataCell(Center(
-                                            child: Text(pet.id.toString()))),
-                                        DataCell(Center(
-                                            child: Text(pet.name.toString()))),
-                                        DataCell(
-                                          Center(
-                                            child: FutureBuilder<List<Person>>(
-                                              future: fetchPersonList(
-                                                  [pet.ownerid ?? '']),
-                                              builder: (context, snapshot) {
-                                                if (snapshot.connectionState ==
-                                                        ConnectionState
-                                                            .waiting ||
-                                                    snapshot.data == null) {
-                                                  return const CircularProgressIndicator();
-                                                } else {
-                                                  return Wrap(
-                                                    spacing: 4,
-                                                    children: snapshot.data!
-                                                        .map((person) {
-                                                      return ElevatedButton(
-                                                        onPressed: () {
-                                                          Navigator.push(
-                                                            context,
-                                                            MaterialPageRoute(
-                                                              builder: (context) =>
-                                                                  PersonWidget(
-                                                                element: person,
-                                                                isEditing: true,
-                                                              ),
-                                                            ),
-                                                          );
-                                                        },
-                                                        style: ButtonStyle(
-                                                          shape: MaterialStateProperty
-                                                              .all<
-                                                                  RoundedRectangleBorder>(
-                                                            RoundedRectangleBorder(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          5),
-                                                            ),
-                                                          ),
-                                                          padding:
-                                                              MaterialStateProperty
-                                                                  .all<
-                                                                      EdgeInsetsGeometry>(
-                                                            EdgeInsets
-                                                                .symmetric(
-                                                                    horizontal:
-                                                                        1,
-                                                                    vertical:
-                                                                        1),
-                                                          ),
-                                                          backgroundColor:
-                                                              MaterialStateProperty
-                                                                  .all<Color>(Styles
-                                                                      .buttonPrimaryColor),
-                                                          elevation:
-                                                              MaterialStateProperty
-                                                                  .resolveWith<
-                                                                          double>(
-                                                                      (states) {
-                                                            if (states.contains(
-                                                                    MaterialState
-                                                                        .hovered) ||
-                                                                states.contains(
-                                                                    MaterialState
-                                                                        .pressed)) {
-                                                              return 0;
-                                                            }
-                                                            return 0;
-                                                          }),
-                                                          foregroundColor:
-                                                              MaterialStateProperty
-                                                                  .all<Color>(
-                                                                      Colors
-                                                                          .white),
-                                                          overlayColor:
-                                                              MaterialStateProperty
-                                                                  .resolveWith<
-                                                                          Color>(
-                                                                      (states) {
-                                                            if (states.contains(
-                                                                MaterialState
-                                                                    .hovered)) {
-                                                              return Styles
-                                                                  .buttonPrimaryColorHover;
-                                                            }
-                                                            return Colors
-                                                                .transparent;
-                                                          }),
-                                                        ),
-                                                        child: Text(
-                                                          person.name,
-                                                          style: TextStyle(
-                                                              color:
-                                                                  Colors.white),
-                                                        ),
-                                                      );
-                                                    }).toList(),
-                                                  );
-                                                }
-                                              },
-                                            ),
                                           ),
                                         ),
-                                      ],
-                                      onSelectChanged: (selected) {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) => PetWidget(
-                                                  element: pet,
-                                                  isEditing: true)),
-                                        );
-                                      },
-                                    );
-                                  }).toList(),
-                                  showCheckboxColumn: false,
+                                        onSort: (columnIndex, ascending) =>
+                                            {onSort('age')},
+                                      ),
+                                      DataColumn(
+                                        label: Expanded(
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              const Text(
+                                                'Description',
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Color.fromARGB(
+                                                        255, 94, 54, 54)),
+                                                textAlign: TextAlign.center,
+                                              ),
+                                              if (columnSortStates[
+                                                      'description'] !=
+                                                  null) ...[
+                                                Icon(
+                                                  columnSortStates[
+                                                              'description'] ==
+                                                          1
+                                                      ? Icons
+                                                          .arrow_drop_up_rounded
+                                                      : Icons
+                                                          .arrow_drop_down_rounded,
+                                                  color: Colors.black,
+                                                ),
+                                                Text(
+                                                  '${columnSortStates.keys.toList().indexOf('description') + 1}',
+                                                  style: const TextStyle(
+                                                      fontSize: 10),
+                                                ),
+                                              ],
+                                            ],
+                                          ),
+                                        ),
+                                        onSort: (columnIndex, ascending) =>
+                                            {onSort('description')},
+                                      ),
+                                      DataColumn(
+                                        label: Expanded(
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              const Text(
+                                                'id',
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Color.fromARGB(
+                                                        255, 94, 54, 54)),
+                                                textAlign: TextAlign.center,
+                                              ),
+                                              if (columnSortStates['id'] !=
+                                                  null) ...[
+                                                Icon(
+                                                  columnSortStates['id'] == 1
+                                                      ? Icons
+                                                          .arrow_drop_up_rounded
+                                                      : Icons
+                                                          .arrow_drop_down_rounded,
+                                                  color: Colors.black,
+                                                ),
+                                                Text(
+                                                  '${columnSortStates.keys.toList().indexOf('id') + 1}',
+                                                  style: const TextStyle(
+                                                      fontSize: 10),
+                                                ),
+                                              ],
+                                            ],
+                                          ),
+                                        ),
+                                        onSort: (columnIndex, ascending) =>
+                                            {onSort('id')},
+                                      ),
+                                      DataColumn(
+                                        label: Expanded(
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              const Text(
+                                                'Name',
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Color.fromARGB(
+                                                        255, 94, 54, 54)),
+                                                textAlign: TextAlign.center,
+                                              ),
+                                              if (columnSortStates['name'] !=
+                                                  null) ...[
+                                                Icon(
+                                                  columnSortStates['name'] == 1
+                                                      ? Icons
+                                                          .arrow_drop_up_rounded
+                                                      : Icons
+                                                          .arrow_drop_down_rounded,
+                                                  color: Colors.black,
+                                                ),
+                                                Text(
+                                                  '${columnSortStates.keys.toList().indexOf('name') + 1}',
+                                                  style: const TextStyle(
+                                                      fontSize: 10),
+                                                ),
+                                              ],
+                                            ],
+                                          ),
+                                        ),
+                                        onSort: (columnIndex, ascending) =>
+                                            {onSort('name')},
+                                      ),
+                                      DataColumn(
+                                        label: Expanded(
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              const Text(
+                                                'Owner',
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Color.fromARGB(
+                                                        255, 94, 54, 54)),
+                                                textAlign: TextAlign.center,
+                                              ),
+                                              if (columnSortStates['ownerid'] !=
+                                                  null) ...[
+                                                Icon(
+                                                  columnSortStates['ownerid'] ==
+                                                          1
+                                                      ? Icons
+                                                          .arrow_drop_up_rounded
+                                                      : Icons
+                                                          .arrow_drop_down_rounded,
+                                                  color: Colors.black,
+                                                ),
+                                                Text(
+                                                  '${columnSortStates.keys.toList().indexOf('ownerid') + 1}',
+                                                  style: const TextStyle(
+                                                      fontSize: 10),
+                                                ),
+                                              ],
+                                            ],
+                                          ),
+                                        ),
+                                        onSort: (columnIndex, ascending) =>
+                                            {onSort('ownerid')},
+                                      ),
+                                    ],
+                                    rows: pets.map((pet) {
+                                      return DataRow(
+                                        cells: [
+                                          DataCell(Center(
+                                              child: Text(pet.age.toString()))),
+                                          DataCell(Center(
+                                              child: Text(
+                                                  pet.description.toString()))),
+                                          DataCell(Center(
+                                              child: Text(pet.id.toString()))),
+                                          DataCell(Center(
+                                              child:
+                                                  Text(pet.name.toString()))),
+                                          DataCell(
+                                            Center(
+                                              child:
+                                                  FutureBuilder<List<Person>>(
+                                                future: fetchPersonList(
+                                                    [pet.ownerid ?? '']),
+                                                builder: (context, snapshot) {
+                                                  if (snapshot.connectionState ==
+                                                          ConnectionState
+                                                              .waiting ||
+                                                      snapshot.data == null) {
+                                                    return const CircularProgressIndicator();
+                                                  } else {
+                                                    return Wrap(
+                                                      spacing: 4,
+                                                      children: snapshot.data!
+                                                          .map((person) {
+                                                        return ElevatedButton(
+                                                          onPressed: () {
+                                                            Navigator.push(
+                                                              context,
+                                                              MaterialPageRoute(
+                                                                builder:
+                                                                    (context) =>
+                                                                        PersonWidget(
+                                                                  element:
+                                                                      person,
+                                                                  isEditing:
+                                                                      true,
+                                                                ),
+                                                              ),
+                                                            );
+                                                          },
+                                                          style: ButtonStyle(
+                                                            shape: MaterialStateProperty
+                                                                .all<
+                                                                    RoundedRectangleBorder>(
+                                                              RoundedRectangleBorder(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            5),
+                                                              ),
+                                                            ),
+                                                            padding:
+                                                                MaterialStateProperty
+                                                                    .all<
+                                                                        EdgeInsetsGeometry>(
+                                                              EdgeInsets
+                                                                  .symmetric(
+                                                                      horizontal:
+                                                                          1,
+                                                                      vertical:
+                                                                          1),
+                                                            ),
+                                                            backgroundColor:
+                                                                MaterialStateProperty
+                                                                    .all<Color>(
+                                                                        Styles
+                                                                            .buttonPrimaryColor),
+                                                            elevation: MaterialStateProperty
+                                                                .resolveWith<
+                                                                        double>(
+                                                                    (states) {
+                                                              if (states.contains(
+                                                                      MaterialState
+                                                                          .hovered) ||
+                                                                  states.contains(
+                                                                      MaterialState
+                                                                          .pressed)) {
+                                                                return 0;
+                                                              }
+                                                              return 0;
+                                                            }),
+                                                            foregroundColor:
+                                                                MaterialStateProperty
+                                                                    .all<Color>(
+                                                                        Colors
+                                                                            .white),
+                                                            overlayColor:
+                                                                MaterialStateProperty
+                                                                    .resolveWith<
+                                                                            Color>(
+                                                                        (states) {
+                                                              if (states.contains(
+                                                                  MaterialState
+                                                                      .hovered)) {
+                                                                return Styles
+                                                                    .buttonPrimaryColorHover;
+                                                              }
+                                                              return Colors
+                                                                  .transparent;
+                                                            }),
+                                                          ),
+                                                          child: Text(
+                                                            person.name,
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .white),
+                                                          ),
+                                                        );
+                                                      }).toList(),
+                                                    );
+                                                  }
+                                                },
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                        onSelectChanged: (selected) {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) => PetWidget(
+                                                    element: pet,
+                                                    isEditing: true)),
+                                          );
+                                        },
+                                      );
+                                    }).toList(),
+                                    showCheckboxColumn: false,
+                                  ),
                                 ),
                               ),
                             ),
@@ -1208,27 +1222,33 @@ final getPetProvider =
   return Pet.fromJson(jsonData);
 });
 
-final createPetProvider =
-    FutureProvider.autoDispose.family<void, Pet>((ref, petInstance) async {
+final createPetProvider = FutureProvider.autoDispose
+    .family<void, Tuple2<Pet, BuildContext>>((ref, tuple) async {
+  Pet petInstance = tuple.item1;
+  BuildContext context = tuple.item2;
+
   final response = await http.post(
     Uri.parse('$baseURL/pet'),
     headers: {'Content-Type': 'application/json'},
     body: jsonEncode(petInstance.toJson()),
   );
   if (response.statusCode != 201) {
-    throw Exception('Failed to create Pet');
+    CustomSnackBar.show(context, jsonDecode(response.body)['detail']);
   }
 });
 
-final updatePetProvider =
-    FutureProvider.autoDispose.family<void, Pet>((ref, petInstance) async {
+final updatePetProvider = FutureProvider.autoDispose
+    .family<void, Tuple2<Pet, BuildContext>>((ref, tuple) async {
+  Pet petInstance = tuple.item1;
+  BuildContext context = tuple.item2;
+
   final response = await http.put(
     Uri.parse('$baseURL/pet/${petInstance.id}'),
     headers: {'Content-Type': 'application/json'},
     body: jsonEncode(petInstance.toJson()),
   );
   if (response.statusCode != 200) {
-    throw Exception('Failed to update Pet');
+    CustomSnackBar.show(context, jsonDecode(response.body)['detail']);
   }
 });
 
