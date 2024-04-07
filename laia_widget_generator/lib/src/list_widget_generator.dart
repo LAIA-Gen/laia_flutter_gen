@@ -334,7 +334,7 @@ DataCell(Center(
                 }),
               ),
               child: Text(
-                ${relation.toLowerCase()}.name,
+                ${relation.toLowerCase()}.name!,
                 style: TextStyle(color: Colors.white),
               ),
             );
@@ -403,7 +403,7 @@ DataCell(Center(
                 }),
               ),
               child: Text(
-                ${relation.toLowerCase()}.name,
+                ${relation.toLowerCase()}.name!,
                 style: TextStyle(color: Colors.white),
               ),
             );
@@ -426,8 +426,8 @@ DataCell(Center(
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => MapScreenView(${fieldType}View(
-                          $classNameLowercase.$field.geometry.coordinates, $classNameLowercase.$field.properties, MediaQuery.of(context).size.height, $uspaceMap)),
+                        builder: (context) => MapScreenView(${fieldType.replaceAll("?", "")}View(
+                          $classNameLowercase.$field!.geometry.coordinates, $classNameLowercase.$field!.properties, MediaQuery.of(context).size.height, $uspaceMap)),
                       ),
                     );
                   },

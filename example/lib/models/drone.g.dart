@@ -1,90 +1,76 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'person.dart';
+part of 'drone.dart';
 
 // **************************************************************************
 // CopyWithGenerator
 // **************************************************************************
 
-abstract class _$PersonCWProxy {
-  Person description(String description);
+abstract class _$DroneCWProxy {
+  Drone description(String? description);
 
-  Person email(String email);
+  Drone flightplans(List<String> flightplans);
 
-  Person id(String? id);
+  Drone id(String? id);
 
-  Person name(String name);
+  Drone name(String name);
 
-  Person password(String password);
-
-  Person roles(List<String>? roles);
-
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Person(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Drone(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
   /// Usage
   /// ```dart
-  /// Person(...).copyWith(id: 12, name: "My name")
+  /// Drone(...).copyWith(id: 12, name: "My name")
   /// ````
-  Person call({
+  Drone call({
     String? description,
-    String? email,
+    List<String>? flightplans,
     String? id,
     String? name,
-    String? password,
-    List<String>? roles,
   });
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfPerson.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfPerson.copyWith.fieldName(...)`
-class _$PersonCWProxyImpl implements _$PersonCWProxy {
-  final Person _value;
+/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfDrone.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfDrone.copyWith.fieldName(...)`
+class _$DroneCWProxyImpl implements _$DroneCWProxy {
+  final Drone _value;
 
-  const _$PersonCWProxyImpl(this._value);
-
-  @override
-  Person description(String description) => this(description: description);
+  const _$DroneCWProxyImpl(this._value);
 
   @override
-  Person email(String email) => this(email: email);
+  Drone description(String? description) => this(description: description);
 
   @override
-  Person id(String? id) => this(id: id);
+  Drone flightplans(List<String> flightplans) => this(flightplans: flightplans);
 
   @override
-  Person name(String name) => this(name: name);
+  Drone id(String? id) => this(id: id);
 
   @override
-  Person password(String password) => this(password: password);
-
-  @override
-  Person roles(List<String>? roles) => this(roles: roles);
+  Drone name(String name) => this(name: name);
 
   @override
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Person(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Drone(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
   /// Usage
   /// ```dart
-  /// Person(...).copyWith(id: 12, name: "My name")
+  /// Drone(...).copyWith(id: 12, name: "My name")
   /// ````
-  Person call({
+  Drone call({
     Object? description = const $CopyWithPlaceholder(),
-    Object? email = const $CopyWithPlaceholder(),
+    Object? flightplans = const $CopyWithPlaceholder(),
     Object? id = const $CopyWithPlaceholder(),
     Object? name = const $CopyWithPlaceholder(),
-    Object? password = const $CopyWithPlaceholder(),
-    Object? roles = const $CopyWithPlaceholder(),
   }) {
-    return Person(
-      description:
-          description == const $CopyWithPlaceholder() || description == null
-              ? _value.description
-              // ignore: cast_nullable_to_non_nullable
-              : description as String,
-      email: email == const $CopyWithPlaceholder() || email == null
-          ? _value.email
+    return Drone(
+      description: description == const $CopyWithPlaceholder()
+          ? _value.description
           // ignore: cast_nullable_to_non_nullable
-          : email as String,
+          : description as String?,
+      flightplans:
+          flightplans == const $CopyWithPlaceholder() || flightplans == null
+              ? _value.flightplans
+              // ignore: cast_nullable_to_non_nullable
+              : flightplans as List<String>,
       id: id == const $CopyWithPlaceholder()
           ? _value.id
           // ignore: cast_nullable_to_non_nullable
@@ -93,58 +79,46 @@ class _$PersonCWProxyImpl implements _$PersonCWProxy {
           ? _value.name
           // ignore: cast_nullable_to_non_nullable
           : name as String,
-      password: password == const $CopyWithPlaceholder() || password == null
-          ? _value.password
-          // ignore: cast_nullable_to_non_nullable
-          : password as String,
-      roles: roles == const $CopyWithPlaceholder()
-          ? _value.roles
-          // ignore: cast_nullable_to_non_nullable
-          : roles as List<String>?,
     );
   }
 }
 
-extension $PersonCopyWith on Person {
-  /// Returns a callable class that can be used as follows: `instanceOfPerson.copyWith(...)` or like so:`instanceOfPerson.copyWith.fieldName(...)`.
+extension $DroneCopyWith on Drone {
+  /// Returns a callable class that can be used as follows: `instanceOfDrone.copyWith(...)` or like so:`instanceOfDrone.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
-  _$PersonCWProxy get copyWith => _$PersonCWProxyImpl(this);
+  _$DroneCWProxy get copyWith => _$DroneCWProxyImpl(this);
 }
 
 // **************************************************************************
 // ElementWidgetGenerator
 // **************************************************************************
 
-class PersonWidget extends StatefulWidget {
-  final Person? element;
+class DroneWidget extends StatefulWidget {
+  final Drone? element;
   final bool isEditing;
 
-  const PersonWidget({this.element, required this.isEditing, Key? key})
+  const DroneWidget({this.element, required this.isEditing, Key? key})
       : super(key: key);
 
   @override
-  _PersonWidgetState createState() => _PersonWidgetState();
+  _DroneWidgetState createState() => _DroneWidgetState();
 }
 
-class _PersonWidgetState extends State<PersonWidget> {
+class _DroneWidgetState extends State<DroneWidget> {
   final GlobalKey<StringWidgetState> descriptionWidgetKey =
       GlobalKey<StringWidgetState>();
-  final GlobalKey<StringWidgetState> emailWidgetKey =
-      GlobalKey<StringWidgetState>();
+  final GlobalKey<FlightPlanMultiFieldWidgetState> flightplansWidgetKey =
+      GlobalKey<FlightPlanMultiFieldWidgetState>();
   final GlobalKey<StringWidgetState> idWidgetKey =
       GlobalKey<StringWidgetState>();
   final GlobalKey<StringWidgetState> nameWidgetKey =
       GlobalKey<StringWidgetState>();
-  final GlobalKey<StringWidgetState> passwordWidgetKey =
-      GlobalKey<StringWidgetState>();
-  final GlobalKey<RoleMultiFieldWidgetState> rolesWidgetKey =
-      GlobalKey<RoleMultiFieldWidgetState>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Person'),
+        title: const Text('Drone'),
       ),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
@@ -152,19 +126,19 @@ class _PersonWidgetState extends State<PersonWidget> {
           children: [
             StringWidget(
               key: descriptionWidgetKey,
-              fieldName: "Description",
-              fieldDescription: "This is the Description",
+              fieldName: "description",
+              fieldDescription: "This is the description",
               editable: true,
-              placeholder: "Write the Description",
+              placeholder: "Type the description",
               value: widget.element?.description,
             ),
-            StringWidget(
-              key: emailWidgetKey,
-              fieldName: "email",
-              fieldDescription: "This is the email",
+            FlightPlanMultiFieldWidget(
+              key: flightplansWidgetKey,
+              fieldName: "flightplans",
+              fieldDescription: "This is the flightplans",
               editable: true,
-              placeholder: "Type the email",
-              value: widget.element?.email,
+              placeholder: "Type the flightplans",
+              values: widget.element?.flightplans,
             ),
             StringWidget(
               key: idWidgetKey,
@@ -176,27 +150,11 @@ class _PersonWidgetState extends State<PersonWidget> {
             ),
             StringWidget(
               key: nameWidgetKey,
-              fieldName: "Name",
-              fieldDescription: "This is the Name",
+              fieldName: "name",
+              fieldDescription: "This is the name",
               editable: true,
-              placeholder: "Write the Name",
+              placeholder: "Type the name",
               value: widget.element?.name,
-            ),
-            StringWidget(
-              key: passwordWidgetKey,
-              fieldName: "password",
-              fieldDescription: "This is the password",
-              editable: true,
-              placeholder: "Type the password",
-              value: widget.element?.password,
-            ),
-            RoleMultiFieldWidget(
-              key: rolesWidgetKey,
-              fieldName: "roles",
-              fieldDescription: "This is the roles",
-              editable: true,
-              placeholder: "Type the roles",
-              values: widget.element?.roles,
             ),
           ],
         ),
@@ -206,48 +164,39 @@ class _PersonWidgetState extends State<PersonWidget> {
           String? updateddescription =
               descriptionWidgetKey.currentState?.getUpdatedValue();
 
-          String? updatedemail = emailWidgetKey.currentState?.getUpdatedValue();
+          List<String>? updatedflightplans =
+              flightplansWidgetKey.currentState?.getUpdatedValue();
 
           String? updatedid = idWidgetKey.currentState?.getUpdatedValue();
 
           String? updatedname = nameWidgetKey.currentState?.getUpdatedValue();
 
-          String? updatedpassword =
-              passwordWidgetKey.currentState?.getUpdatedValue();
-
-          List<String>? updatedroles =
-              rolesWidgetKey.currentState?.getUpdatedValue();
-
-          Person updatedPerson = widget.element ??
-              Person(
+          Drone updatedDrone = widget.element ??
+              Drone(
                 description: updateddescription ?? '',
-                email: updatedemail ?? '',
+                flightplans: updatedflightplans ?? [''],
                 id: updatedid ?? '',
                 name: updatedname ?? '',
-                password: updatedpassword ?? '',
-                roles: updatedroles ?? [''],
               );
 
-          updatedPerson = updatedPerson.copyWith(
+          updatedDrone = updatedDrone.copyWith(
               description: updateddescription,
-              email: updatedemail,
+              flightplans: updatedflightplans,
               id: updatedid,
-              name: updatedname,
-              password: updatedpassword,
-              roles: updatedroles);
+              name: updatedname);
           var container = ProviderContainer();
           try {
             if (widget.isEditing) {
               await container
-                  .read(updatePersonProvider(Tuple2(updatedPerson, context)));
-              print('Person updated successfully');
+                  .read(updateDroneProvider(Tuple2(updatedDrone, context)));
+              print('Drone updated successfully');
             } else {
               await container
-                  .read(createPersonProvider(Tuple2(updatedPerson, context)));
-              print('Person created successfully');
+                  .read(createDroneProvider(Tuple2(updatedDrone, context)));
+              print('Drone created successfully');
             }
           } catch (error) {
-            print('Failed to update Person: $error');
+            print('Failed to update Drone: $error');
           }
         },
         child: Icon(Icons.save),
@@ -256,14 +205,14 @@ class _PersonWidgetState extends State<PersonWidget> {
   }
 }
 
-class PersonFieldWidget extends StatefulWidget {
+class DroneFieldWidget extends StatefulWidget {
   final String fieldName;
   final String fieldDescription;
   final bool editable;
   final String placeholder;
   final String? value;
 
-  const PersonFieldWidget({
+  const DroneFieldWidget({
     Key? key,
     required this.fieldName,
     required this.fieldDescription,
@@ -273,15 +222,15 @@ class PersonFieldWidget extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  PersonFieldWidgetState createState() => PersonFieldWidgetState();
+  DroneFieldWidgetState createState() => DroneFieldWidgetState();
 }
 
-class PersonFieldWidgetState extends State<PersonFieldWidget> {
+class DroneFieldWidgetState extends State<DroneFieldWidget> {
   final TextEditingController _typeAheadController = TextEditingController();
   bool isValueChanged = false;
   late String? initialValue;
   late String currentValue;
-  late List<Person> options;
+  late List<Drone> options;
 
   @override
   void initState() {
@@ -293,9 +242,8 @@ class PersonFieldWidgetState extends State<PersonFieldWidget> {
     super.initState();
     initialValue = widget.value;
     currentValue = initialValue ?? '';
-    Person person =
-        await container.read(getPersonProvider(widget.value!).future);
-    _typeAheadController.text = '${person.name} <id: ${person.id}>';
+    Drone drone = await container.read(getDroneProvider(widget.value!).future);
+    _typeAheadController.text = '${drone.name} <id: ${drone.id}>';
   }
 
   String? getUpdatedValue() {
@@ -337,31 +285,30 @@ class PersonFieldWidgetState extends State<PersonFieldWidget> {
                 children: [
                   widget.editable
                       ? Expanded(
-                          child: TypeAheadField<Person>(
+                          child: TypeAheadField<Drone>(
                             controller: _typeAheadController,
                             suggestionsCallback: (String pattern) async {
-                              final personPaginationData = await container.read(
-                                  getAllPersonProvider(container
-                                          .read(personPaginationProvider))
+                              final dronePaginationData = await container.read(
+                                  getAllDroneProvider(container
+                                          .read(dronePaginationProvider))
                                       .future);
-                              final options = personPaginationData.items;
+                              final options = dronePaginationData.items;
                               return options
-                                  .where((person) =>
-                                      person.name
+                                  .where((drone) =>
+                                      drone.name!
                                           .toLowerCase()
                                           .contains(pattern.toLowerCase()) ||
-                                      person.id
+                                      drone.id
                                           .toString()
                                           .contains(pattern.toLowerCase()))
                                   .toList();
                             },
-                            itemBuilder: (context, person) {
+                            itemBuilder: (context, drone) {
                               return ListTile(
-                                title:
-                                    Text('${person.name} <id: ${person.id}>'),
+                                title: Text('${drone.name} <id: ${drone.id}>'),
                               );
                             },
-                            onSelected: (Person value) {
+                            onSelected: (Drone value) {
                               setState(() {
                                 isValueChanged = value.id != initialValue;
                                 currentValue = value.id!;
@@ -396,20 +343,20 @@ class PersonFieldWidgetState extends State<PersonFieldWidget> {
           child: ElevatedButton(
             onPressed: () async {
               try {
-                Person person = await container
-                    .read(getPersonProvider(widget.value!).future);
+                Drone drone = await container
+                    .read(getDroneProvider(widget.value!).future);
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) =>
-                        PersonWidget(element: person, isEditing: true),
+                        DroneWidget(element: drone, isEditing: true),
                   ),
                 );
               } catch (error) {
-                print('Failed to fetch person: $error');
+                print('Failed to fetch drone: $error');
               }
             },
-            child: const Text('View Person'),
+            child: const Text('View Drone'),
           ),
         ),
       ],
@@ -417,14 +364,14 @@ class PersonFieldWidgetState extends State<PersonFieldWidget> {
   }
 }
 
-class PersonMultiFieldWidget extends StatefulWidget {
+class DroneMultiFieldWidget extends StatefulWidget {
   final String fieldName;
   final String fieldDescription;
   final bool editable;
   final String placeholder;
   final List<String>? values;
 
-  const PersonMultiFieldWidget({
+  const DroneMultiFieldWidget({
     Key? key,
     required this.fieldName,
     required this.fieldDescription,
@@ -434,15 +381,15 @@ class PersonMultiFieldWidget extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  PersonMultiFieldWidgetState createState() => PersonMultiFieldWidgetState();
+  DroneMultiFieldWidgetState createState() => DroneMultiFieldWidgetState();
 }
 
-class PersonMultiFieldWidgetState extends State<PersonMultiFieldWidget> {
+class DroneMultiFieldWidgetState extends State<DroneMultiFieldWidget> {
   final TextEditingController _typeAheadController = TextEditingController();
   bool isValueChanged = false;
   late List<String> initialValues = [];
   late List<String> currentValues = [];
-  late List<Person> options = [];
+  late List<Drone> options = [];
 
   @override
   void initState() {
@@ -455,13 +402,13 @@ class PersonMultiFieldWidgetState extends State<PersonMultiFieldWidget> {
     initialValues = widget.values ?? [];
     currentValues = initialValues;
     if (widget.values != null) {
-      List<Person> personList = await Future.wait(
+      List<Drone> droneList = await Future.wait(
         (widget.values ?? []).where((value) => value != '').map((value) async {
-          return await container.read(getPersonProvider(value).future);
+          return await container.read(getDroneProvider(value).future);
         }),
       );
-      String concatenatedText = '${personList.map((person) {
-        return '${person.name} <id: ${person.id}>';
+      String concatenatedText = '${droneList.map((drone) {
+        return '${drone.name} <id: ${drone.id}>';
       }).join(', ')}, ';
       _typeAheadController.text = concatenatedText;
     } else {
@@ -508,7 +455,7 @@ class PersonMultiFieldWidgetState extends State<PersonMultiFieldWidget> {
                 children: [
                   widget.editable
                       ? Expanded(
-                          child: TypeAheadField<Person>(
+                          child: TypeAheadField<Drone>(
                             controller: _typeAheadController,
                             suggestionsCallback: (String pattern) async {
                               final idRegex =
@@ -535,47 +482,46 @@ class PersonMultiFieldWidgetState extends State<PersonMultiFieldWidget> {
                               }
                               final inputParts = pattern.split(',').last.trim();
                               container
-                                  .read(personPaginationProvider.notifier)
+                                  .read(dronePaginationProvider.notifier)
                                   .setFilters({
                                 'id': {'\$nin': currentValues}
                               });
-                              final personPaginationData = await container.read(
-                                  getAllPersonProvider(container
-                                          .read(personPaginationProvider))
+                              final dronePaginationData = await container.read(
+                                  getAllDroneProvider(container
+                                          .read(dronePaginationProvider))
                                       .future);
-                              final options = personPaginationData.items;
+                              final options = dronePaginationData.items;
                               return options
-                                  .where((person) =>
-                                      person.name
+                                  .where((drone) =>
+                                      drone.name!
                                           .toLowerCase()
                                           .contains(inputParts.toLowerCase()) ||
-                                      person.id
+                                      drone.id
                                           .toString()
                                           .toLowerCase()
                                           .contains(inputParts.toLowerCase()))
                                   .toList();
                             },
-                            itemBuilder: (context, person) {
+                            itemBuilder: (context, drone) {
                               return ListTile(
-                                title:
-                                    Text('${person.name} <id: ${person.id}>'),
+                                title: Text('${drone.name} <id: ${drone.id}>'),
                               );
                             },
-                            onSelected: (Person value) async {
+                            onSelected: (Drone value) async {
                               isValueChanged =
                                   !initialValues.contains(value.id);
                               currentValues.add(value.id!);
 
-                              List<Person> personList = await Future.wait(
+                              List<Drone> droneList = await Future.wait(
                                   (currentValues)
                                       .where((value) => value != '')
                                       .map((value) async {
                                 return await container
-                                    .read(getPersonProvider(value).future);
+                                    .read(getDroneProvider(value).future);
                               }));
                               String concatenatedText =
-                                  '${personList.map((person) {
-                                return '${person.name} <id: ${person.id}>';
+                                  '${droneList.map((drone) {
+                                return '${drone.name} <id: ${drone.id}>';
                               }).join(', ')}, ';
 
                               setState(() {
@@ -619,283 +565,17 @@ class PersonMultiFieldWidgetState extends State<PersonMultiFieldWidget> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => PersonListView(extraFilters: query),
+                    builder: (context) => DroneListView(extraFilters: query),
                   ),
                 );
               } catch (error) {
-                print('Failed to fetch persons: $error');
+                print('Failed to fetch drones: $error');
               }
             },
-            child: const Text('View Persons'),
+            child: const Text('View Drones'),
           ),
         ),
       ],
-    );
-  }
-}
-
-class PersonLoginWidget extends StatefulWidget {
-  final Person? element;
-
-  const PersonLoginWidget({this.element, Key? key}) : super(key: key);
-
-  @override
-  _PersonLoginWidgetState createState() => _PersonLoginWidgetState();
-}
-
-class _PersonLoginWidgetState extends State<PersonLoginWidget> {
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-
-  bool _isPasswordVisible = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Log In'),
-        centerTitle: true,
-      ),
-      body: SingleChildScrollView(
-        scrollDirection: Axis.vertical,
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SizedBox(height: MediaQuery.of(context).size.height * 0.2),
-              _buildTextField(
-                controller: _emailController,
-                labelText: 'Email',
-              ),
-              _buildTextField(
-                controller: _passwordController,
-                labelText: 'Password',
-                isPassword: true,
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 16.0),
-                child: ElevatedButton(
-                  onPressed: () async {
-                    var container = ProviderContainer();
-                    var loginData = Auth(
-                        email: _emailController.text,
-                        password: _passwordController.text);
-                    try {
-                      AuthResult loginResult = await container
-                          .read(loginPersonProvider(loginData).future);
-                      if (loginResult.success) {
-                        Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(builder: (context) => Home()),
-                        );
-                      } else {
-                        CustomSnackBar.show(context, loginResult.errorMessage);
-                      }
-                    } catch (error) {
-                      print(error);
-                    }
-                  },
-                  child: const Text('Login'),
-                ),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                        builder: (context) => PersonRegisterWidget()),
-                  );
-                },
-                child: const Text("I don't have an account: Register"),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildTextField({
-    required TextEditingController controller,
-    required String labelText,
-    bool isPassword = false,
-  }) {
-    return Container(
-      padding: const EdgeInsets.all(8.0),
-      margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10.0),
-        color: Styles.secondaryColor,
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: TextField(
-          controller: controller,
-          obscureText: isPassword && !_isPasswordVisible,
-          decoration: InputDecoration(
-            labelText: labelText,
-            suffixIcon: isPassword
-                ? IconButton(
-                    icon: Icon(
-                      _isPasswordVisible
-                          ? Icons.visibility
-                          : Icons.visibility_off,
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        _isPasswordVisible = !_isPasswordVisible;
-                      });
-                    },
-                  )
-                : null,
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class PersonRegisterWidget extends StatefulWidget {
-  final Person? element;
-
-  const PersonRegisterWidget({this.element, Key? key}) : super(key: key);
-
-  @override
-  _PersonRegisterWidgetState createState() => _PersonRegisterWidgetState();
-}
-
-class _PersonRegisterWidgetState extends State<PersonRegisterWidget> {
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController =
-      TextEditingController();
-
-  final TextEditingController _descriptionController = TextEditingController();
-  final TextEditingController _nameController = TextEditingController();
-  bool _isPasswordVisible = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Register'),
-        centerTitle: true,
-      ),
-      body: SingleChildScrollView(
-        scrollDirection: Axis.vertical,
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SizedBox(height: MediaQuery.of(context).size.height * 0.2),
-              _buildTextField(
-                controller: _emailController,
-                labelText: 'Email',
-              ),
-              _buildTextField(
-                controller: _passwordController,
-                labelText: 'Password',
-                isPassword: true,
-              ),
-              _buildTextField(
-                controller: _confirmPasswordController,
-                labelText: 'Confirm password',
-                isPassword: true,
-              ),
-              _buildTextField(
-                controller: _descriptionController,
-                labelText: 'description',
-              ),
-              _buildTextField(
-                controller: _nameController,
-                labelText: 'name',
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 16.0),
-                child: ElevatedButton(
-                  onPressed: () async {
-                    if (_passwordController.text !=
-                        _confirmPasswordController.text) {
-                      CustomSnackBar.show(context, "Passwords do not match");
-                      return;
-                    }
-                    var container = ProviderContainer();
-                    var registerData = Person(
-                      email: _emailController.text,
-                      password: _passwordController.text,
-                      description: _descriptionController.text,
-                      name: _nameController.text,
-                    );
-                    try {
-                      AuthResult registerResult = await container
-                          .read(registerPersonProvider(registerData).future);
-                      if (registerResult.success) {
-                        Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(builder: (context) => Home()),
-                        );
-                      } else {
-                        CustomSnackBar.show(
-                            context, registerResult.errorMessage);
-                      }
-                    } catch (error) {
-                      print(error);
-                    }
-                  },
-                  child: Text('Register'),
-                ),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                        builder: (context) => PersonLoginWidget()),
-                  );
-                },
-                child: Text("I already have an account: LogIn"),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildTextField({
-    required TextEditingController controller,
-    required String labelText,
-    bool isPassword = false,
-  }) {
-    return Container(
-      padding: const EdgeInsets.all(8.0),
-      margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10.0),
-        color: Styles.secondaryColor,
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: TextField(
-          controller: controller,
-          obscureText: isPassword && !_isPasswordVisible,
-          decoration: InputDecoration(
-            labelText: labelText,
-            suffixIcon: isPassword
-                ? IconButton(
-                    icon: Icon(
-                      _isPasswordVisible
-                          ? Icons.visibility
-                          : Icons.visibility_off,
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        _isPasswordVisible = !_isPasswordVisible;
-                      });
-                    },
-                  )
-                : null,
-          ),
-        ),
-      ),
     );
   }
 }
@@ -904,15 +584,15 @@ class _PersonRegisterWidgetState extends State<PersonRegisterWidget> {
 // HomeWidgetElementGenerator
 // **************************************************************************
 
-class PersonHomeWidget extends StatelessWidget {
-  const PersonHomeWidget({super.key});
+class DroneHomeWidget extends StatelessWidget {
+  const DroneHomeWidget({super.key});
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => PersonListView()),
+          MaterialPageRoute(builder: (context) => DroneListView()),
         );
       },
       child: Container(
@@ -926,14 +606,14 @@ class PersonHomeWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image.asset(
-              'assets/person.png',
+              'assets/drone.png',
               width: 40.0,
               height: 40.0,
               color: Colors.white,
             ),
             const SizedBox(height: 8.0),
             const Text(
-              "Person",
+              "Drone",
               style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
@@ -950,40 +630,37 @@ class PersonHomeWidget extends StatelessWidget {
 // JsonSerializableGenerator
 // **************************************************************************
 
-Person _$PersonFromJson(Map<String, dynamic> json) => Person(
-      description: json['description'] as String,
-      email: json['email'] as String,
+Drone _$DroneFromJson(Map<String, dynamic> json) => Drone(
+      description: json['description'] as String?,
+      flightplans: (json['flightplans'] as List<dynamic>)
+          .map((e) => e as String)
+          .toList(),
       id: json['id'] as String?,
       name: json['name'] as String,
-      password: json['password'] as String,
-      roles:
-          (json['roles'] as List<dynamic>?)?.map((e) => e as String).toList(),
     );
 
-Map<String, dynamic> _$PersonToJson(Person instance) => <String, dynamic>{
+Map<String, dynamic> _$DroneToJson(Drone instance) => <String, dynamic>{
       'description': instance.description,
-      'email': instance.email,
+      'flightplans': instance.flightplans,
       'id': instance.id,
       'name': instance.name,
-      'password': instance.password,
-      'roles': instance.roles,
     };
 
 // **************************************************************************
 // ListWidgetGenerator
 // **************************************************************************
 
-class PersonListView extends ConsumerStatefulWidget {
+class DroneListView extends ConsumerStatefulWidget {
   final Map<String, dynamic>? extraFilters;
   final Map<String, dynamic> currentFilters = {};
 
-  PersonListView({Key? key, this.extraFilters}) : super(key: key);
+  DroneListView({Key? key, this.extraFilters}) : super(key: key);
 
   @override
-  _PersonListViewState createState() => _PersonListViewState();
+  _DroneListViewState createState() => _DroneListViewState();
 }
 
-class _PersonListViewState extends ConsumerState<PersonListView> {
+class _DroneListViewState extends ConsumerState<DroneListView> {
   @override
   void initState() {
     super.initState();
@@ -994,22 +671,22 @@ class _PersonListViewState extends ConsumerState<PersonListView> {
         });
       }
       ref
-          .read(personPaginationProvider.notifier)
+          .read(dronePaginationProvider.notifier)
           .setFilters(widget.extraFilters!);
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final paginationState = ref.watch(personPaginationProvider);
+    final paginationState = ref.watch(dronePaginationProvider);
 
-    final personsAsyncValue = ref.watch(getAllPersonProvider(paginationState));
+    final dronesAsyncValue = ref.watch(getAllDroneProvider(paginationState));
 
     final Map<String, int> columnSortStates =
-        ref.watch(personPaginationProvider.notifier).getOrders();
+        ref.watch(dronePaginationProvider.notifier).getOrders();
 
     final Map<String, dynamic> fieldsFilterStates =
-        ref.watch(personPaginationProvider.notifier).getFilters();
+        ref.watch(dronePaginationProvider.notifier).getFilters();
 
     void onSort(String columnName) {
       var state = columnSortStates[columnName];
@@ -1020,13 +697,13 @@ class _PersonListViewState extends ConsumerState<PersonListView> {
       } else if (state == -1) {
         columnSortStates.remove(columnName);
       }
-      ref.read(personPaginationProvider.notifier).setOrders(columnSortStates);
+      ref.read(dronePaginationProvider.notifier).setOrders(columnSortStates);
     }
 
     void onFilter(String fieldName, dynamic filterValue) {
       widget.currentFilters[fieldName] = filterValue;
       ref
-          .read(personPaginationProvider.notifier)
+          .read(dronePaginationProvider.notifier)
           .setFilters(widget.currentFilters);
     }
 
@@ -1036,29 +713,29 @@ class _PersonListViewState extends ConsumerState<PersonListView> {
       }
     }
 
-    Future<List<Role>> fetchRoleList(List<String>? ids) async {
+    Future<List<FlightPlan>> fetchFlightPlanList(List<String>? ids) async {
       if (ids == null || ids.isEmpty) {
         return [];
       }
       final nonEmptyIds = ids.where((id) => id.isNotEmpty).toList();
-      List<Role> roleList = await Future.wait(
+      List<FlightPlan> flightplanList = await Future.wait(
         nonEmptyIds.map((id) async {
-          return await ref.read(getRoleProvider(id).future);
+          return await ref.read(getFlightPlanProvider(id).future);
         }),
       );
-      return roleList;
+      return flightplanList;
     }
 
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Person List'),
+          title: const Text('Drone List'),
           actions: [
             IconButton(
               onPressed: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const PersonWidget(
+                    builder: (context) => const DroneWidget(
                       isEditing: false,
                     ),
                   ),
@@ -1068,22 +745,20 @@ class _PersonListViewState extends ConsumerState<PersonListView> {
             ),
           ],
         ),
-        body: personsAsyncValue.when(
+        body: dronesAsyncValue.when(
           loading: () => const CircularProgressIndicator(),
           error: (error, stackTrace) => Text('Error: $error'),
-          data: (PersonPaginationData data) {
-            final persons = data.items;
+          data: (DronePaginationData data) {
+            final drones = data.items;
             return Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   CustomSearchBar(
                     fields: const {
-                      'description': 'String',
-                      'email': 'String',
+                      'description': 'String?',
+                      'flightplans': 'List<String>',
                       'id': 'String?',
-                      'name': 'String',
-                      'password': 'String',
-                      'roles': 'List<String>?'
+                      'name': 'String'
                     },
                     filters: fieldsFilterStates,
                     onFilterChanged: onFilter,
@@ -1113,7 +788,7 @@ class _PersonListViewState extends ConsumerState<PersonListView> {
                                                 MainAxisAlignment.center,
                                             children: [
                                               const Text(
-                                                'Description',
+                                                'description',
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.bold,
                                                     color: Color.fromARGB(
@@ -1152,17 +827,20 @@ class _PersonListViewState extends ConsumerState<PersonListView> {
                                                 MainAxisAlignment.center,
                                             children: [
                                               const Text(
-                                                'email',
+                                                'flightplans',
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.bold,
                                                     color: Color.fromARGB(
                                                         255, 94, 54, 54)),
                                                 textAlign: TextAlign.center,
                                               ),
-                                              if (columnSortStates['email'] !=
+                                              if (columnSortStates[
+                                                      'flightplans'] !=
                                                   null) ...[
                                                 Icon(
-                                                  columnSortStates['email'] == 1
+                                                  columnSortStates[
+                                                              'flightplans'] ==
+                                                          1
                                                       ? Icons
                                                           .arrow_drop_up_rounded
                                                       : Icons
@@ -1170,7 +848,7 @@ class _PersonListViewState extends ConsumerState<PersonListView> {
                                                   color: Colors.black,
                                                 ),
                                                 Text(
-                                                  '${columnSortStates.keys.toList().indexOf('email') + 1}',
+                                                  '${columnSortStates.keys.toList().indexOf('flightplans') + 1}',
                                                   style: const TextStyle(
                                                       fontSize: 10),
                                                 ),
@@ -1179,7 +857,7 @@ class _PersonListViewState extends ConsumerState<PersonListView> {
                                           ),
                                         ),
                                         onSort: (columnIndex, ascending) =>
-                                            {onSort('email')},
+                                            {onSort('flightplans')},
                                       ),
                                       DataColumn(
                                         label: Expanded(
@@ -1224,7 +902,7 @@ class _PersonListViewState extends ConsumerState<PersonListView> {
                                                 MainAxisAlignment.center,
                                             children: [
                                               const Text(
-                                                'Name',
+                                                'name',
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.bold,
                                                     color: Color.fromARGB(
@@ -1253,105 +931,19 @@ class _PersonListViewState extends ConsumerState<PersonListView> {
                                         onSort: (columnIndex, ascending) =>
                                             {onSort('name')},
                                       ),
-                                      DataColumn(
-                                        label: Expanded(
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              const Text(
-                                                'password',
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Color.fromARGB(
-                                                        255, 94, 54, 54)),
-                                                textAlign: TextAlign.center,
-                                              ),
-                                              if (columnSortStates[
-                                                      'password'] !=
-                                                  null) ...[
-                                                Icon(
-                                                  columnSortStates[
-                                                              'password'] ==
-                                                          1
-                                                      ? Icons
-                                                          .arrow_drop_up_rounded
-                                                      : Icons
-                                                          .arrow_drop_down_rounded,
-                                                  color: Colors.black,
-                                                ),
-                                                Text(
-                                                  '${columnSortStates.keys.toList().indexOf('password') + 1}',
-                                                  style: const TextStyle(
-                                                      fontSize: 10),
-                                                ),
-                                              ],
-                                            ],
-                                          ),
-                                        ),
-                                        onSort: (columnIndex, ascending) =>
-                                            {onSort('password')},
-                                      ),
-                                      DataColumn(
-                                        label: Expanded(
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              const Text(
-                                                'roles',
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Color.fromARGB(
-                                                        255, 94, 54, 54)),
-                                                textAlign: TextAlign.center,
-                                              ),
-                                              if (columnSortStates['roles'] !=
-                                                  null) ...[
-                                                Icon(
-                                                  columnSortStates['roles'] == 1
-                                                      ? Icons
-                                                          .arrow_drop_up_rounded
-                                                      : Icons
-                                                          .arrow_drop_down_rounded,
-                                                  color: Colors.black,
-                                                ),
-                                                Text(
-                                                  '${columnSortStates.keys.toList().indexOf('roles') + 1}',
-                                                  style: const TextStyle(
-                                                      fontSize: 10),
-                                                ),
-                                              ],
-                                            ],
-                                          ),
-                                        ),
-                                        onSort: (columnIndex, ascending) =>
-                                            {onSort('roles')},
-                                      ),
                                     ],
-                                    rows: persons.map((person) {
+                                    rows: drones.map((drone) {
                                       return DataRow(
                                         cells: [
                                           DataCell(Center(
-                                              child: Text(person.description
+                                              child: Text(drone.description
                                                   .toString()))),
-                                          DataCell(Center(
-                                              child: Text(
-                                                  person.email.toString()))),
-                                          DataCell(Center(
-                                              child:
-                                                  Text(person.id.toString()))),
-                                          DataCell(Center(
-                                              child: Text(
-                                                  person.name.toString()))),
-                                          DataCell(Center(
-                                              child: Text(
-                                                  person.password.toString()))),
                                           DataCell(
                                             Center(
-                                              child: FutureBuilder<List<Role>>(
-                                                future:
-                                                    fetchRoleList(person.roles),
+                                              child: FutureBuilder<
+                                                  List<FlightPlan>>(
+                                                future: fetchFlightPlanList(
+                                                    drone.flightplans),
                                                 builder: (context, snapshot) {
                                                   if (snapshot.connectionState ==
                                                           ConnectionState
@@ -1362,7 +954,7 @@ class _PersonListViewState extends ConsumerState<PersonListView> {
                                                     return Wrap(
                                                       spacing: 4,
                                                       children: snapshot.data!
-                                                          .map((role) {
+                                                          .map((flightplan) {
                                                         return ElevatedButton(
                                                           onPressed: () {
                                                             Navigator.push(
@@ -1370,8 +962,9 @@ class _PersonListViewState extends ConsumerState<PersonListView> {
                                                               MaterialPageRoute(
                                                                 builder:
                                                                     (context) =>
-                                                                        RoleWidget(
-                                                                  element: role,
+                                                                        FlightPlanWidget(
+                                                                  element:
+                                                                      flightplan,
                                                                   isEditing:
                                                                       true,
                                                                 ),
@@ -1440,7 +1033,7 @@ class _PersonListViewState extends ConsumerState<PersonListView> {
                                                             }),
                                                           ),
                                                           child: Text(
-                                                            role.name,
+                                                            flightplan.name!,
                                                             style: TextStyle(
                                                                 color: Colors
                                                                     .white),
@@ -1453,14 +1046,20 @@ class _PersonListViewState extends ConsumerState<PersonListView> {
                                               ),
                                             ),
                                           ),
+                                          DataCell(Center(
+                                              child:
+                                                  Text(drone.id.toString()))),
+                                          DataCell(Center(
+                                              child:
+                                                  Text(drone.name.toString()))),
                                         ],
                                         onSelectChanged: (selected) {
                                           Navigator.push(
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) =>
-                                                    PersonWidget(
-                                                        element: person,
+                                                    DroneWidget(
+                                                        element: drone,
                                                         isEditing: true)),
                                           );
                                         },
@@ -1489,35 +1088,35 @@ class _PersonListViewState extends ConsumerState<PersonListView> {
   }
 
   void _onPageButtonPressed(int pageNumber, WidgetRef ref,
-      PersonPaginationState paginationState, int maxPages) {
+      DronePaginationState paginationState, int maxPages) {
     if (pageNumber <= maxPages) {
-      ref.read(personPaginationProvider.notifier).setPage(pageNumber);
+      ref.read(dronePaginationProvider.notifier).setPage(pageNumber);
     }
   }
 }
 
-class PersonPaginationState {
+class DronePaginationState {
   final Tuple2<int, int> pagination;
   final Map<String, int> orders;
   final Map<String, dynamic> filters;
 
-  PersonPaginationState({
+  DronePaginationState({
     required this.pagination,
     required this.orders,
     required this.filters,
   });
 }
 
-class PersonPaginationNotifier extends StateNotifier<PersonPaginationState> {
-  PersonPaginationNotifier()
-      : super(PersonPaginationState(
+class DronePaginationNotifier extends StateNotifier<DronePaginationState> {
+  DronePaginationNotifier()
+      : super(DronePaginationState(
           pagination: const Tuple2<int, int>(0, 10),
           orders: {},
           filters: {},
         ));
 
   void setPage(int page) {
-    state = PersonPaginationState(
+    state = DronePaginationState(
       pagination: Tuple2(page * state.pagination.item2 - state.pagination.item2,
           state.pagination.item2),
       orders: state.orders,
@@ -1526,7 +1125,7 @@ class PersonPaginationNotifier extends StateNotifier<PersonPaginationState> {
   }
 
   void setOrders(Map<String, int> newOrders) {
-    state = PersonPaginationState(
+    state = DronePaginationState(
       pagination: Tuple2(state.pagination.item1, state.pagination.item2),
       orders: newOrders,
       filters: state.filters,
@@ -1534,7 +1133,7 @@ class PersonPaginationNotifier extends StateNotifier<PersonPaginationState> {
   }
 
   void setFilters(Map<String, dynamic> newFilters) {
-    state = PersonPaginationState(
+    state = DronePaginationState(
       pagination: Tuple2(state.pagination.item1, state.pagination.item2),
       orders: state.orders,
       filters: newFilters,
@@ -1550,76 +1149,76 @@ class PersonPaginationNotifier extends StateNotifier<PersonPaginationState> {
   }
 }
 
-final personPaginationProvider =
-    StateNotifierProvider<PersonPaginationNotifier, PersonPaginationState>(
-  (ref) => PersonPaginationNotifier(),
+final dronePaginationProvider =
+    StateNotifierProvider<DronePaginationNotifier, DronePaginationState>(
+  (ref) => DronePaginationNotifier(),
 );
 
 // **************************************************************************
 // RiverpodCustomGenerator
 // **************************************************************************
 
-final getPersonProvider =
-    FutureProvider.autoDispose.family<Person, String>((ref, personId) async {
-  final json = await http.get(Uri.parse('$baseURL/person/$personId'));
+final getDroneProvider =
+    FutureProvider.autoDispose.family<Drone, String>((ref, droneId) async {
+  final json = await http.get(Uri.parse('$baseURL/drone/$droneId'));
   final jsonData = jsonDecode(json.body);
-  return Person.fromJson(jsonData);
+  return Drone.fromJson(jsonData);
 });
 
-final createPersonProvider = FutureProvider.autoDispose
-    .family<void, Tuple2<Person, BuildContext>>((ref, tuple) async {
-  Person personInstance = tuple.item1;
+final createDroneProvider = FutureProvider.autoDispose
+    .family<void, Tuple2<Drone, BuildContext>>((ref, tuple) async {
+  Drone droneInstance = tuple.item1;
   BuildContext context = tuple.item2;
 
   final response = await http.post(
-    Uri.parse('$baseURL/person'),
+    Uri.parse('$baseURL/drone'),
     headers: {'Content-Type': 'application/json'},
-    body: jsonEncode(personInstance.toJson()),
+    body: jsonEncode(droneInstance.toJson()),
   );
   if (response.statusCode != 201) {
     CustomSnackBar.show(context, jsonDecode(response.body)['detail']);
   }
 });
 
-final updatePersonProvider = FutureProvider.autoDispose
-    .family<void, Tuple2<Person, BuildContext>>((ref, tuple) async {
-  Person personInstance = tuple.item1;
+final updateDroneProvider = FutureProvider.autoDispose
+    .family<void, Tuple2<Drone, BuildContext>>((ref, tuple) async {
+  Drone droneInstance = tuple.item1;
   BuildContext context = tuple.item2;
 
   final response = await http.put(
-    Uri.parse('$baseURL/person/${personInstance.id}'),
+    Uri.parse('$baseURL/drone/${droneInstance.id}'),
     headers: {'Content-Type': 'application/json'},
-    body: jsonEncode(personInstance.toJson()),
+    body: jsonEncode(droneInstance.toJson()),
   );
   if (response.statusCode != 200) {
     CustomSnackBar.show(context, jsonDecode(response.body)['detail']);
   }
 });
 
-final deletePersonProvider =
-    FutureProvider.autoDispose.family<void, int>((ref, personId) async {
+final deleteDroneProvider =
+    FutureProvider.autoDispose.family<void, int>((ref, droneId) async {
   final response = await http.delete(
-    Uri.parse('$baseURL/person/$personId'),
+    Uri.parse('$baseURL/drone/$droneId'),
   );
   if (response.statusCode != 204) {
-    throw Exception('Failed to delete Person');
+    throw Exception('Failed to delete Drone');
   }
 });
 
-class PersonPaginationData {
-  final List<Person> items;
+class DronePaginationData {
+  final List<Drone> items;
   final int currentPage;
   final int maxPages;
 
-  PersonPaginationData({
+  DronePaginationData({
     required this.items,
     required this.currentPage,
     required this.maxPages,
   });
 }
 
-final getAllPersonProvider = FutureProvider.autoDispose
-    .family<PersonPaginationData, PersonPaginationState>((ref, state) async {
+final getAllDroneProvider = FutureProvider.autoDispose
+    .family<DronePaginationData, DronePaginationState>((ref, state) async {
   final fixedQuery = {
     if (state.orders.isNotEmpty) 'orders': state.orders,
     if (state.filters.isNotEmpty)
@@ -1629,102 +1228,16 @@ final getAllPersonProvider = FutureProvider.autoDispose
 
   final json = await http.post(
       Uri.parse(
-          '$baseURL/persons?skip=${state.pagination.item1}&limit=${state.pagination.item2}'),
+          '$baseURL/drones?skip=${state.pagination.item1}&limit=${state.pagination.item2}'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode(fixedQuery));
   final jsonData = jsonDecode(json.body);
 
-  return PersonPaginationData(
+  return DronePaginationData(
     items: (jsonData['items'] as List)
-        .map((data) => Person.fromJson(data))
+        .map((data) => Drone.fromJson(data))
         .toList(),
     currentPage: jsonData['current_page'],
     maxPages: jsonData['max_pages'],
   );
-});
-
-class Auth {
-  final String email;
-  final String password;
-
-  Auth({required this.email, required this.password});
-
-  Map<String, dynamic> toJson() {
-    return {
-      'email': email,
-      'password': password,
-    };
-  }
-}
-
-class AuthResult {
-  final bool success;
-  final String? errorMessage;
-  final Person? person;
-
-  AuthResult(this.success, {this.errorMessage, this.person});
-}
-
-final loginPersonProvider =
-    FutureProvider.autoDispose.family<AuthResult, Auth>((ref, auth) async {
-  final response = await http.post(
-    Uri.parse('$baseURL/auth/login/person/'),
-    headers: {'Content-Type': 'application/json'},
-    body: jsonEncode(auth.toJson()),
-  );
-  if (response.statusCode != 200) {
-    return AuthResult(false, errorMessage: 'Incorrect email or password.');
-  }
-
-  final responseData = jsonDecode(response.body);
-  final token = responseData['token'];
-
-  final prefs = await SharedPreferences.getInstance();
-  await prefs.setString('token', token);
-
-  return AuthResult(true, person: Person.fromJson(responseData['user']));
-});
-
-final registerPersonProvider =
-    FutureProvider.autoDispose.family<AuthResult, Person>((ref, person) async {
-  final response = await http.post(
-    Uri.parse('$baseURL/auth/register/person/'),
-    headers: {'Content-Type': 'application/json'},
-    body: jsonEncode(person.toJson()),
-  );
-  if (response.statusCode != 200) {
-    return AuthResult(false, errorMessage: jsonDecode(response.body)['detail']);
-  }
-
-  final responseData = jsonDecode(response.body);
-  final token = responseData['token'];
-
-  final prefs = await SharedPreferences.getInstance();
-  await prefs.setString('token', token);
-
-  return AuthResult(true, person: Person.fromJson(responseData['user']));
-});
-
-final verifyTokenPersonProvider = FutureProvider.autoDispose<bool>((ref) async {
-  try {
-    final prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString('token');
-
-    if (token == null) {
-      return false;
-    }
-
-    final response = await http.get(
-      Uri.parse('$baseURL/auth/verify/person/$token'),
-      headers: {'Authorization': 'Bearer $token'},
-    );
-
-    if (response.statusCode == 200) {
-      return true;
-    } else {
-      return false;
-    }
-  } catch (e) {
-    return false;
-  }
 });

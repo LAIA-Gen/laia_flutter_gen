@@ -240,7 +240,7 @@ class RoleFieldWidgetState extends State<RoleFieldWidget> {
                               final options = rolePaginationData.items;
                               return options
                                   .where((role) =>
-                                      role.name
+                                      role.name!
                                           .toLowerCase()
                                           .contains(pattern.toLowerCase()) ||
                                       role.id
@@ -438,7 +438,7 @@ class RoleMultiFieldWidgetState extends State<RoleMultiFieldWidget> {
                               final options = rolePaginationData.items;
                               return options
                                   .where((role) =>
-                                      role.name
+                                      role.name!
                                           .toLowerCase()
                                           .contains(inputParts.toLowerCase()) ||
                                       role.id

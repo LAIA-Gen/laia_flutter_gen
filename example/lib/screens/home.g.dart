@@ -39,10 +39,10 @@ bool _isMobile(MediaQueryData mediaQuery) {
 }
 
 List<Widget> _dashboardWidgets = [
-  PetHomeWidget(),
-  PersonHomeWidget(),
   AccessRightHomeWidget(),
+  DroneHomeWidget(),
   RoleHomeWidget(),
+  FlightPlanHomeWidget(),
 ];
 
 class DynamicLogInScreen extends StatelessWidget {

@@ -25,17 +25,17 @@ part 'accessright.g.dart';
 class AccessRight {
   @Field(fieldName: 'name')
   final String name;
-  @Field(relation: "Role")
+  @Field(fieldName: "Role", relation: "Role")
   final String role;
-  @Field(fieldName: 'model', widget: "ModelsSelectableWidget",)
+  @Field(fieldName: "Model", widget: "ModelsSelectableWidget")
   final String model;
-  @Field(fieldName: 'operations', placeholder: "{'create': 1, 'read': 1, 'update': 0, 'delete': 0, 'search': 1}")
+  @Field(fieldName: "Operations Permitted", placeholder: "{'create': 1, 'read': 1, 'update': 0, 'delete': 0, 'search': 1}")
   final dynamic operations;
-  @Field(fieldName: 'fields_create', placeholder: "{'field_1': 1, 'field_2': 1, 'field_3': 0, ...}")
+  @Field(fieldName: "Fields Creation", placeholder: "{'field_1': 1, 'field_2': 1, 'field_3': 0, ...}")
   final dynamic fields_create;
-  @Field(fieldName: 'fields_edit', placeholder: "{'field_1': 1, 'field_2': 1, 'field_3': 0, ...}")
+  @Field(fieldName: "Fields Edition", placeholder: "{'field_1': 1, 'field_2': 1, 'field_3': 0, ...}")
   final dynamic fields_edit;
-  @Field(fieldName: 'fields_visible', placeholder: "{'field_1': 1, 'field_2': 1, 'field_3': 0, ...}")
+  @Field(fieldName: "Fields Visibility", placeholder: "{'field_1': 1, 'field_2': 1, 'field_3': 0, ...}")
   final dynamic fields_visible;
   @Field(fieldName: 'id')
   final String id;

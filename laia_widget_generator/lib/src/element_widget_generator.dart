@@ -237,7 +237,7 @@ class _${visitor.className}WidgetState extends State<${visitor.className}Widget>
       } else {
         if (widget == "MapWidget") {
           buffer.writeln('''
-            value: $fieldAccessor  ?? $fieldType(type: "Feature", geometry: Geometry$fieldType(coordinates: [], type: "$fieldType"), properties: {}),
+            value: $fieldAccessor  ?? ${fieldType.replaceAll("?", "")}(type: "Feature", geometry: Geometry${fieldType.replaceAll("?", "")}(coordinates: [], type: "${fieldType.replaceAll("?", "")}"), properties: {}),
             uspaceMap: $uspaceMap
           ),
       ''');
@@ -313,7 +313,7 @@ class _${visitor.className}WidgetState extends State<${visitor.className}Widget>
               buffer.writeln('''
           dynamic updated$fieldName = ${fieldName}WidgetKey.currentState?.getUpdatedValue();
 
-          updated$fieldName = $fieldType(type: "Feature", geometry: Geometry$fieldType(coordinates:updated$fieldName.geometry.coordinates, type: updated$fieldName.geometry.type), properties: updated$fieldName.properties);
+          updated$fieldName = ${fieldType.replaceAll("?", "")}(type: "Feature", geometry: Geometry${fieldType.replaceAll("?", "")}(coordinates:updated$fieldName.geometry.coordinates, type: updated$fieldName.geometry.type), properties: updated$fieldName.properties);
 ''');         updatedFields.add('$fieldName: updated$fieldName');
               break;
             default:
@@ -484,7 +484,7 @@ class ${visitor.className}FieldWidgetState extends State<${visitor.className}Fie
                               final options = ${visitor.className.toLowerCase()}PaginationData.items;
                               return options
                               .where((${visitor.className.toLowerCase()}) =>
-                                  ${visitor.className.toLowerCase()}.name.toLowerCase().contains(pattern.toLowerCase()) ||
+                                  ${visitor.className.toLowerCase()}.name!.toLowerCase().contains(pattern.toLowerCase()) ||
                                   ${visitor.className.toLowerCase()}.id.toString().contains(pattern.toLowerCase()))
                               .toList();
                             },
@@ -666,7 +666,7 @@ class ${visitor.className}MultiFieldWidgetState extends State<${visitor.classNam
                               final options = ${visitor.className.toLowerCase()}PaginationData.items;
                               return options
                               .where((${visitor.className.toLowerCase()}) =>
-                                  ${visitor.className.toLowerCase()}.name.toLowerCase().contains(inputParts.toLowerCase()) ||
+                                  ${visitor.className.toLowerCase()}.name!.toLowerCase().contains(inputParts.toLowerCase()) ||
                                   ${visitor.className.toLowerCase()}.id.toString().toLowerCase().contains(inputParts.toLowerCase()))
                               .toList();
                             },

@@ -1,4 +1,4 @@
-PetHomeWidget
-PersonHomeWidget
 AccessRightHomeWidget
+DroneHomeWidget
 RoleHomeWidget
+FlightPlanHomeWidget

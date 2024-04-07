@@ -192,7 +192,7 @@ class _AccessRightWidgetState extends State<AccessRightWidget> {
             ),
             RoleFieldWidget(
               key: roleWidgetKey,
-              fieldName: "role",
+              fieldName: "Role",
               fieldDescription: "This is the role",
               editable: true,
               placeholder: "Type the role",
@@ -200,7 +200,7 @@ class _AccessRightWidgetState extends State<AccessRightWidget> {
             ),
             ModelsSelectableWidget(
               key: modelWidgetKey,
-              fieldName: "model",
+              fieldName: "Model",
               fieldDescription: "This is the model",
               editable: true,
               placeholder: "Type the model",
@@ -208,7 +208,7 @@ class _AccessRightWidgetState extends State<AccessRightWidget> {
             ),
             DefaultWidget(
               key: operationsWidgetKey,
-              fieldName: "operations",
+              fieldName: "Operations Permitted",
               fieldDescription: "This is the operations",
               editable: true,
               placeholder:
@@ -217,7 +217,7 @@ class _AccessRightWidgetState extends State<AccessRightWidget> {
             ),
             DefaultWidget(
               key: fields_createWidgetKey,
-              fieldName: "fields_create",
+              fieldName: "Fields Creation",
               fieldDescription: "This is the fields_create",
               editable: true,
               placeholder: "{'field_1': 1, 'field_2': 1, 'field_3': 0, ...}",
@@ -225,7 +225,7 @@ class _AccessRightWidgetState extends State<AccessRightWidget> {
             ),
             DefaultWidget(
               key: fields_editWidgetKey,
-              fieldName: "fields_edit",
+              fieldName: "Fields Edition",
               fieldDescription: "This is the fields_edit",
               editable: true,
               placeholder: "{'field_1': 1, 'field_2': 1, 'field_3': 0, ...}",
@@ -233,7 +233,7 @@ class _AccessRightWidgetState extends State<AccessRightWidget> {
             ),
             DefaultWidget(
               key: fields_visibleWidgetKey,
-              fieldName: "fields_visible",
+              fieldName: "Fields Visibility",
               fieldDescription: "This is the fields_visible",
               editable: true,
               placeholder: "{'field_1': 1, 'field_2': 1, 'field_3': 0, ...}",
@@ -405,7 +405,7 @@ class AccessRightFieldWidgetState extends State<AccessRightFieldWidget> {
                               final options = accessrightPaginationData.items;
                               return options
                                   .where((accessright) =>
-                                      accessright.name
+                                      accessright.name!
                                           .toLowerCase()
                                           .contains(pattern.toLowerCase()) ||
                                       accessright.id
@@ -606,7 +606,7 @@ class AccessRightMultiFieldWidgetState
                               final options = accessrightPaginationData.items;
                               return options
                                   .where((accessright) =>
-                                      accessright.name
+                                      accessright.name!
                                           .toLowerCase()
                                           .contains(inputParts.toLowerCase()) ||
                                       accessright.id
@@ -953,7 +953,7 @@ class _AccessRightListViewState extends ConsumerState<AccessRightListView> {
                                                 MainAxisAlignment.center,
                                             children: [
                                               const Text(
-                                                'role',
+                                                'Role',
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.bold,
                                                     color: Color.fromARGB(
@@ -989,7 +989,7 @@ class _AccessRightListViewState extends ConsumerState<AccessRightListView> {
                                                 MainAxisAlignment.center,
                                             children: [
                                               const Text(
-                                                'model',
+                                                'Model',
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.bold,
                                                     color: Color.fromARGB(
@@ -1025,7 +1025,7 @@ class _AccessRightListViewState extends ConsumerState<AccessRightListView> {
                                                 MainAxisAlignment.center,
                                             children: [
                                               const Text(
-                                                'operations',
+                                                'Operations Permitted',
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.bold,
                                                     color: Color.fromARGB(
@@ -1064,7 +1064,7 @@ class _AccessRightListViewState extends ConsumerState<AccessRightListView> {
                                                 MainAxisAlignment.center,
                                             children: [
                                               const Text(
-                                                'fields_create',
+                                                'Fields Creation',
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.bold,
                                                     color: Color.fromARGB(
@@ -1103,7 +1103,7 @@ class _AccessRightListViewState extends ConsumerState<AccessRightListView> {
                                                 MainAxisAlignment.center,
                                             children: [
                                               const Text(
-                                                'fields_edit',
+                                                'Fields Edition',
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.bold,
                                                     color: Color.fromARGB(
@@ -1142,7 +1142,7 @@ class _AccessRightListViewState extends ConsumerState<AccessRightListView> {
                                                 MainAxisAlignment.center,
                                             children: [
                                               const Text(
-                                                'fields_visible',
+                                                'Fields Visibility',
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.bold,
                                                     color: Color.fromARGB(
@@ -1310,7 +1310,7 @@ class _AccessRightListViewState extends ConsumerState<AccessRightListView> {
                                                             }),
                                                           ),
                                                           child: Text(
-                                                            role.name,
+                                                            role.name!,
                                                             style: TextStyle(
                                                                 color: Colors
                                                                     .white),

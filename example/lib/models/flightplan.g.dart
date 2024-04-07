@@ -1,157 +1,148 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'pet.dart';
+part of 'flightplan.dart';
 
 // **************************************************************************
 // CopyWithGenerator
 // **************************************************************************
 
-abstract class _$PetCWProxy {
-  Pet age(String? age);
+abstract class _$FlightPlanCWProxy {
+  FlightPlan date(DateTime? date);
 
-  Pet description(String description);
+  FlightPlan id(String? id);
 
-  Pet id(String? id);
+  FlightPlan mission_details(String? mission_details);
 
-  Pet name(String name);
+  FlightPlan name(String? name);
 
-  Pet ownerid(String? ownerid);
+  FlightPlan route(LineString? route);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Pet(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `FlightPlan(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
   /// Usage
   /// ```dart
-  /// Pet(...).copyWith(id: 12, name: "My name")
+  /// FlightPlan(...).copyWith(id: 12, name: "My name")
   /// ````
-  Pet call({
-    String? age,
-    String? description,
+  FlightPlan call({
+    DateTime? date,
     String? id,
+    String? mission_details,
     String? name,
-    String? ownerid,
+    LineString? route,
   });
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfPet.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfPet.copyWith.fieldName(...)`
-class _$PetCWProxyImpl implements _$PetCWProxy {
-  final Pet _value;
+/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfFlightPlan.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfFlightPlan.copyWith.fieldName(...)`
+class _$FlightPlanCWProxyImpl implements _$FlightPlanCWProxy {
+  final FlightPlan _value;
 
-  const _$PetCWProxyImpl(this._value);
-
-  @override
-  Pet age(String? age) => this(age: age);
+  const _$FlightPlanCWProxyImpl(this._value);
 
   @override
-  Pet description(String description) => this(description: description);
+  FlightPlan date(DateTime? date) => this(date: date);
 
   @override
-  Pet id(String? id) => this(id: id);
+  FlightPlan id(String? id) => this(id: id);
 
   @override
-  Pet name(String name) => this(name: name);
+  FlightPlan mission_details(String? mission_details) =>
+      this(mission_details: mission_details);
 
   @override
-  Pet ownerid(String? ownerid) => this(ownerid: ownerid);
+  FlightPlan name(String? name) => this(name: name);
+
+  @override
+  FlightPlan route(LineString? route) => this(route: route);
 
   @override
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Pet(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `FlightPlan(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
   /// Usage
   /// ```dart
-  /// Pet(...).copyWith(id: 12, name: "My name")
+  /// FlightPlan(...).copyWith(id: 12, name: "My name")
   /// ````
-  Pet call({
-    Object? age = const $CopyWithPlaceholder(),
-    Object? description = const $CopyWithPlaceholder(),
+  FlightPlan call({
+    Object? date = const $CopyWithPlaceholder(),
     Object? id = const $CopyWithPlaceholder(),
+    Object? mission_details = const $CopyWithPlaceholder(),
     Object? name = const $CopyWithPlaceholder(),
-    Object? ownerid = const $CopyWithPlaceholder(),
+    Object? route = const $CopyWithPlaceholder(),
   }) {
-    return Pet(
-      age: age == const $CopyWithPlaceholder()
-          ? _value.age
+    return FlightPlan(
+      date: date == const $CopyWithPlaceholder()
+          ? _value.date
           // ignore: cast_nullable_to_non_nullable
-          : age as String?,
-      description:
-          description == const $CopyWithPlaceholder() || description == null
-              ? _value.description
-              // ignore: cast_nullable_to_non_nullable
-              : description as String,
+          : date as DateTime?,
       id: id == const $CopyWithPlaceholder()
           ? _value.id
           // ignore: cast_nullable_to_non_nullable
           : id as String?,
-      name: name == const $CopyWithPlaceholder() || name == null
+      mission_details: mission_details == const $CopyWithPlaceholder()
+          ? _value.mission_details
+          // ignore: cast_nullable_to_non_nullable
+          : mission_details as String?,
+      name: name == const $CopyWithPlaceholder()
           ? _value.name
           // ignore: cast_nullable_to_non_nullable
-          : name as String,
-      ownerid: ownerid == const $CopyWithPlaceholder()
-          ? _value.ownerid
+          : name as String?,
+      route: route == const $CopyWithPlaceholder()
+          ? _value.route
           // ignore: cast_nullable_to_non_nullable
-          : ownerid as String?,
+          : route as LineString?,
     );
   }
 }
 
-extension $PetCopyWith on Pet {
-  /// Returns a callable class that can be used as follows: `instanceOfPet.copyWith(...)` or like so:`instanceOfPet.copyWith.fieldName(...)`.
+extension $FlightPlanCopyWith on FlightPlan {
+  /// Returns a callable class that can be used as follows: `instanceOfFlightPlan.copyWith(...)` or like so:`instanceOfFlightPlan.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
-  _$PetCWProxy get copyWith => _$PetCWProxyImpl(this);
+  _$FlightPlanCWProxy get copyWith => _$FlightPlanCWProxyImpl(this);
 }
 
 // **************************************************************************
 // ElementWidgetGenerator
 // **************************************************************************
 
-class PetWidget extends StatefulWidget {
-  final Pet? element;
+class FlightPlanWidget extends StatefulWidget {
+  final FlightPlan? element;
   final bool isEditing;
 
-  const PetWidget({this.element, required this.isEditing, Key? key})
+  const FlightPlanWidget({this.element, required this.isEditing, Key? key})
       : super(key: key);
 
   @override
-  _PetWidgetState createState() => _PetWidgetState();
+  _FlightPlanWidgetState createState() => _FlightPlanWidgetState();
 }
 
-class _PetWidgetState extends State<PetWidget> {
-  final GlobalKey<StringWidgetState> ageWidgetKey =
-      GlobalKey<StringWidgetState>();
-  final GlobalKey<StringWidgetState> descriptionWidgetKey =
-      GlobalKey<StringWidgetState>();
+class _FlightPlanWidgetState extends State<FlightPlanWidget> {
+  final GlobalKey<DateTimeWidgetState> dateWidgetKey =
+      GlobalKey<DateTimeWidgetState>();
   final GlobalKey<StringWidgetState> idWidgetKey =
+      GlobalKey<StringWidgetState>();
+  final GlobalKey<StringWidgetState> mission_detailsWidgetKey =
       GlobalKey<StringWidgetState>();
   final GlobalKey<StringWidgetState> nameWidgetKey =
       GlobalKey<StringWidgetState>();
-  final GlobalKey<PersonFieldWidgetState> owneridWidgetKey =
-      GlobalKey<PersonFieldWidgetState>();
+  final GlobalKey<MapWidgetState> routeWidgetKey = GlobalKey<MapWidgetState>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Pet'),
+        title: const Text('FlightPlan'),
       ),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: Column(
           children: [
-            StringWidget(
-              key: ageWidgetKey,
-              fieldName: "Age",
-              fieldDescription: "This is the Age",
+            DateTimeWidget(
+              key: dateWidgetKey,
+              fieldName: "date",
+              fieldDescription: "This is the date",
               editable: true,
-              placeholder: "Write the Age",
-              value: widget.element?.age,
-            ),
-            StringWidget(
-              key: descriptionWidgetKey,
-              fieldName: "Description",
-              fieldDescription: "This is the Description",
-              editable: true,
-              placeholder: "Write the Description",
-              value: widget.element?.description,
+              placeholder: "Type the date",
+              value: widget.element?.date,
             ),
             StringWidget(
               key: idWidgetKey,
@@ -162,66 +153,85 @@ class _PetWidgetState extends State<PetWidget> {
               value: widget.element?.id,
             ),
             StringWidget(
-              key: nameWidgetKey,
-              fieldName: "Name",
-              fieldDescription: "This is the Name",
+              key: mission_detailsWidgetKey,
+              fieldName: "mission_details",
+              fieldDescription: "This is the mission_details",
               editable: true,
-              placeholder: "Write the Name",
+              placeholder: "Type the mission_details",
+              value: widget.element?.mission_details,
+            ),
+            StringWidget(
+              key: nameWidgetKey,
+              fieldName: "name",
+              fieldDescription: "This is the name",
+              editable: true,
+              placeholder: "Type the name",
               value: widget.element?.name,
             ),
-            PersonFieldWidget(
-              key: owneridWidgetKey,
-              fieldName: "Owner",
-              fieldDescription: "This is the Owner",
-              editable: true,
-              placeholder: "Write the Owner",
-              value: widget.element?.ownerid,
-            ),
+            MapWidget(
+                key: routeWidgetKey,
+                fieldName: "route",
+                fieldDescription: "This is the route",
+                editable: true,
+                placeholder: "Type the route",
+                value: widget.element?.route ??
+                    LineString(
+                        type: "Feature",
+                        geometry: GeometryLineString(
+                            coordinates: [], type: "LineString"),
+                        properties: {}),
+                uspaceMap: false),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          String? updatedage = ageWidgetKey.currentState?.getUpdatedValue();
-
-          String? updateddescription =
-              descriptionWidgetKey.currentState?.getUpdatedValue();
+          DateTime? updateddate = dateWidgetKey.currentState?.getUpdatedValue();
 
           String? updatedid = idWidgetKey.currentState?.getUpdatedValue();
 
+          String? updatedmission_details =
+              mission_detailsWidgetKey.currentState?.getUpdatedValue();
+
           String? updatedname = nameWidgetKey.currentState?.getUpdatedValue();
 
-          String? updatedownerid =
-              owneridWidgetKey.currentState?.getUpdatedValue();
+          dynamic updatedroute = routeWidgetKey.currentState?.getUpdatedValue();
 
-          Pet updatedPet = widget.element ??
-              Pet(
-                age: updatedage ?? '',
-                description: updateddescription ?? '',
+          updatedroute = LineString(
+              type: "Feature",
+              geometry: GeometryLineString(
+                  coordinates: updatedroute.geometry.coordinates,
+                  type: updatedroute.geometry.type),
+              properties: updatedroute.properties);
+
+          FlightPlan updatedFlightPlan = widget.element ??
+              FlightPlan(
+                date: updateddate ?? DateTime.now(),
                 id: updatedid ?? '',
+                mission_details: updatedmission_details ?? '',
                 name: updatedname ?? '',
-                ownerid: updatedownerid ?? '',
+                route: updatedroute ?? '',
               );
 
-          updatedPet = updatedPet.copyWith(
-              age: updatedage,
-              description: updateddescription,
+          updatedFlightPlan = updatedFlightPlan.copyWith(
+              date: updateddate,
               id: updatedid,
+              mission_details: updatedmission_details,
               name: updatedname,
-              ownerid: updatedownerid);
+              route: updatedroute);
           var container = ProviderContainer();
           try {
             if (widget.isEditing) {
-              await container
-                  .read(updatePetProvider(Tuple2(updatedPet, context)));
-              print('Pet updated successfully');
+              await container.read(
+                  updateFlightPlanProvider(Tuple2(updatedFlightPlan, context)));
+              print('FlightPlan updated successfully');
             } else {
-              await container
-                  .read(createPetProvider(Tuple2(updatedPet, context)));
-              print('Pet created successfully');
+              await container.read(
+                  createFlightPlanProvider(Tuple2(updatedFlightPlan, context)));
+              print('FlightPlan created successfully');
             }
           } catch (error) {
-            print('Failed to update Pet: $error');
+            print('Failed to update FlightPlan: $error');
           }
         },
         child: Icon(Icons.save),
@@ -230,14 +240,14 @@ class _PetWidgetState extends State<PetWidget> {
   }
 }
 
-class PetFieldWidget extends StatefulWidget {
+class FlightPlanFieldWidget extends StatefulWidget {
   final String fieldName;
   final String fieldDescription;
   final bool editable;
   final String placeholder;
   final String? value;
 
-  const PetFieldWidget({
+  const FlightPlanFieldWidget({
     Key? key,
     required this.fieldName,
     required this.fieldDescription,
@@ -247,15 +257,15 @@ class PetFieldWidget extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  PetFieldWidgetState createState() => PetFieldWidgetState();
+  FlightPlanFieldWidgetState createState() => FlightPlanFieldWidgetState();
 }
 
-class PetFieldWidgetState extends State<PetFieldWidget> {
+class FlightPlanFieldWidgetState extends State<FlightPlanFieldWidget> {
   final TextEditingController _typeAheadController = TextEditingController();
   bool isValueChanged = false;
   late String? initialValue;
   late String currentValue;
-  late List<Pet> options;
+  late List<FlightPlan> options;
 
   @override
   void initState() {
@@ -267,8 +277,9 @@ class PetFieldWidgetState extends State<PetFieldWidget> {
     super.initState();
     initialValue = widget.value;
     currentValue = initialValue ?? '';
-    Pet pet = await container.read(getPetProvider(widget.value!).future);
-    _typeAheadController.text = '${pet.name} <id: ${pet.id}>';
+    FlightPlan flightplan =
+        await container.read(getFlightPlanProvider(widget.value!).future);
+    _typeAheadController.text = '${flightplan.name} <id: ${flightplan.id}>';
   }
 
   String? getUpdatedValue() {
@@ -310,30 +321,31 @@ class PetFieldWidgetState extends State<PetFieldWidget> {
                 children: [
                   widget.editable
                       ? Expanded(
-                          child: TypeAheadField<Pet>(
+                          child: TypeAheadField<FlightPlan>(
                             controller: _typeAheadController,
                             suggestionsCallback: (String pattern) async {
-                              final petPaginationData = await container.read(
-                                  getAllPetProvider(
-                                          container.read(petPaginationProvider))
+                              final flightplanPaginationData = await container
+                                  .read(getAllFlightPlanProvider(container
+                                          .read(flightplanPaginationProvider))
                                       .future);
-                              final options = petPaginationData.items;
+                              final options = flightplanPaginationData.items;
                               return options
-                                  .where((pet) =>
-                                      pet.name
+                                  .where((flightplan) =>
+                                      flightplan.name!
                                           .toLowerCase()
                                           .contains(pattern.toLowerCase()) ||
-                                      pet.id
+                                      flightplan.id
                                           .toString()
                                           .contains(pattern.toLowerCase()))
                                   .toList();
                             },
-                            itemBuilder: (context, pet) {
+                            itemBuilder: (context, flightplan) {
                               return ListTile(
-                                title: Text('${pet.name} <id: ${pet.id}>'),
+                                title: Text(
+                                    '${flightplan.name} <id: ${flightplan.id}>'),
                               );
                             },
-                            onSelected: (Pet value) {
+                            onSelected: (FlightPlan value) {
                               setState(() {
                                 isValueChanged = value.id != initialValue;
                                 currentValue = value.id!;
@@ -368,20 +380,20 @@ class PetFieldWidgetState extends State<PetFieldWidget> {
           child: ElevatedButton(
             onPressed: () async {
               try {
-                Pet pet =
-                    await container.read(getPetProvider(widget.value!).future);
+                FlightPlan flightplan = await container
+                    .read(getFlightPlanProvider(widget.value!).future);
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) =>
-                        PetWidget(element: pet, isEditing: true),
+                        FlightPlanWidget(element: flightplan, isEditing: true),
                   ),
                 );
               } catch (error) {
-                print('Failed to fetch pet: $error');
+                print('Failed to fetch flightplan: $error');
               }
             },
-            child: const Text('View Pet'),
+            child: const Text('View FlightPlan'),
           ),
         ),
       ],
@@ -389,14 +401,14 @@ class PetFieldWidgetState extends State<PetFieldWidget> {
   }
 }
 
-class PetMultiFieldWidget extends StatefulWidget {
+class FlightPlanMultiFieldWidget extends StatefulWidget {
   final String fieldName;
   final String fieldDescription;
   final bool editable;
   final String placeholder;
   final List<String>? values;
 
-  const PetMultiFieldWidget({
+  const FlightPlanMultiFieldWidget({
     Key? key,
     required this.fieldName,
     required this.fieldDescription,
@@ -406,15 +418,17 @@ class PetMultiFieldWidget extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  PetMultiFieldWidgetState createState() => PetMultiFieldWidgetState();
+  FlightPlanMultiFieldWidgetState createState() =>
+      FlightPlanMultiFieldWidgetState();
 }
 
-class PetMultiFieldWidgetState extends State<PetMultiFieldWidget> {
+class FlightPlanMultiFieldWidgetState
+    extends State<FlightPlanMultiFieldWidget> {
   final TextEditingController _typeAheadController = TextEditingController();
   bool isValueChanged = false;
   late List<String> initialValues = [];
   late List<String> currentValues = [];
-  late List<Pet> options = [];
+  late List<FlightPlan> options = [];
 
   @override
   void initState() {
@@ -427,13 +441,13 @@ class PetMultiFieldWidgetState extends State<PetMultiFieldWidget> {
     initialValues = widget.values ?? [];
     currentValues = initialValues;
     if (widget.values != null) {
-      List<Pet> petList = await Future.wait(
+      List<FlightPlan> flightplanList = await Future.wait(
         (widget.values ?? []).where((value) => value != '').map((value) async {
-          return await container.read(getPetProvider(value).future);
+          return await container.read(getFlightPlanProvider(value).future);
         }),
       );
-      String concatenatedText = '${petList.map((pet) {
-        return '${pet.name} <id: ${pet.id}>';
+      String concatenatedText = '${flightplanList.map((flightplan) {
+        return '${flightplan.name} <id: ${flightplan.id}>';
       }).join(', ')}, ';
       _typeAheadController.text = concatenatedText;
     } else {
@@ -480,7 +494,7 @@ class PetMultiFieldWidgetState extends State<PetMultiFieldWidget> {
                 children: [
                   widget.editable
                       ? Expanded(
-                          child: TypeAheadField<Pet>(
+                          child: TypeAheadField<FlightPlan>(
                             controller: _typeAheadController,
                             suggestionsCallback: (String pattern) async {
                               final idRegex =
@@ -507,45 +521,47 @@ class PetMultiFieldWidgetState extends State<PetMultiFieldWidget> {
                               }
                               final inputParts = pattern.split(',').last.trim();
                               container
-                                  .read(petPaginationProvider.notifier)
+                                  .read(flightplanPaginationProvider.notifier)
                                   .setFilters({
                                 'id': {'\$nin': currentValues}
                               });
-                              final petPaginationData = await container.read(
-                                  getAllPetProvider(
-                                          container.read(petPaginationProvider))
+                              final flightplanPaginationData = await container
+                                  .read(getAllFlightPlanProvider(container
+                                          .read(flightplanPaginationProvider))
                                       .future);
-                              final options = petPaginationData.items;
+                              final options = flightplanPaginationData.items;
                               return options
-                                  .where((pet) =>
-                                      pet.name
+                                  .where((flightplan) =>
+                                      flightplan.name!
                                           .toLowerCase()
                                           .contains(inputParts.toLowerCase()) ||
-                                      pet.id
+                                      flightplan.id
                                           .toString()
                                           .toLowerCase()
                                           .contains(inputParts.toLowerCase()))
                                   .toList();
                             },
-                            itemBuilder: (context, pet) {
+                            itemBuilder: (context, flightplan) {
                               return ListTile(
-                                title: Text('${pet.name} <id: ${pet.id}>'),
+                                title: Text(
+                                    '${flightplan.name} <id: ${flightplan.id}>'),
                               );
                             },
-                            onSelected: (Pet value) async {
+                            onSelected: (FlightPlan value) async {
                               isValueChanged =
                                   !initialValues.contains(value.id);
                               currentValues.add(value.id!);
 
-                              List<Pet> petList = await Future.wait(
-                                  (currentValues)
+                              List<FlightPlan> flightplanList =
+                                  await Future.wait((currentValues)
                                       .where((value) => value != '')
                                       .map((value) async {
                                 return await container
-                                    .read(getPetProvider(value).future);
+                                    .read(getFlightPlanProvider(value).future);
                               }));
-                              String concatenatedText = '${petList.map((pet) {
-                                return '${pet.name} <id: ${pet.id}>';
+                              String concatenatedText =
+                                  '${flightplanList.map((flightplan) {
+                                return '${flightplan.name} <id: ${flightplan.id}>';
                               }).join(', ')}, ';
 
                               setState(() {
@@ -589,14 +605,15 @@ class PetMultiFieldWidgetState extends State<PetMultiFieldWidget> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => PetListView(extraFilters: query),
+                    builder: (context) =>
+                        FlightPlanListView(extraFilters: query),
                   ),
                 );
               } catch (error) {
-                print('Failed to fetch pets: $error');
+                print('Failed to fetch flightplans: $error');
               }
             },
-            child: const Text('View Pets'),
+            child: const Text('View FlightPlans'),
           ),
         ),
       ],
@@ -608,15 +625,15 @@ class PetMultiFieldWidgetState extends State<PetMultiFieldWidget> {
 // HomeWidgetElementGenerator
 // **************************************************************************
 
-class PetHomeWidget extends StatelessWidget {
-  const PetHomeWidget({super.key});
+class FlightPlanHomeWidget extends StatelessWidget {
+  const FlightPlanHomeWidget({super.key});
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => PetListView()),
+          MaterialPageRoute(builder: (context) => FlightPlanListView()),
         );
       },
       child: Container(
@@ -630,14 +647,14 @@ class PetHomeWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image.asset(
-              'assets/pet.png',
+              'assets/flightplan.png',
               width: 40.0,
               height: 40.0,
               color: Colors.white,
             ),
             const SizedBox(height: 8.0),
             const Text(
-              "Pet",
+              "FlightPlan",
               style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
@@ -654,37 +671,41 @@ class PetHomeWidget extends StatelessWidget {
 // JsonSerializableGenerator
 // **************************************************************************
 
-Pet _$PetFromJson(Map<String, dynamic> json) => Pet(
-      age: json['age'] as String?,
-      description: json['description'] as String,
+FlightPlan _$FlightPlanFromJson(Map<String, dynamic> json) => FlightPlan(
+      date:
+          json['date'] == null ? null : DateTime.parse(json['date'] as String),
       id: json['id'] as String?,
-      name: json['name'] as String,
-      ownerid: json['ownerid'] as String?,
+      mission_details: json['mission_details'] as String?,
+      name: json['name'] as String?,
+      route: json['route'] == null
+          ? null
+          : LineString.fromJson(json['route'] as Map<String, dynamic>),
     );
 
-Map<String, dynamic> _$PetToJson(Pet instance) => <String, dynamic>{
-      'age': instance.age,
-      'description': instance.description,
+Map<String, dynamic> _$FlightPlanToJson(FlightPlan instance) =>
+    <String, dynamic>{
+      'date': instance.date?.toIso8601String(),
       'id': instance.id,
+      'mission_details': instance.mission_details,
       'name': instance.name,
-      'ownerid': instance.ownerid,
+      'route': instance.route,
     };
 
 // **************************************************************************
 // ListWidgetGenerator
 // **************************************************************************
 
-class PetListView extends ConsumerStatefulWidget {
+class FlightPlanListView extends ConsumerStatefulWidget {
   final Map<String, dynamic>? extraFilters;
   final Map<String, dynamic> currentFilters = {};
 
-  PetListView({Key? key, this.extraFilters}) : super(key: key);
+  FlightPlanListView({Key? key, this.extraFilters}) : super(key: key);
 
   @override
-  _PetListViewState createState() => _PetListViewState();
+  _FlightPlanListViewState createState() => _FlightPlanListViewState();
 }
 
-class _PetListViewState extends ConsumerState<PetListView> {
+class _FlightPlanListViewState extends ConsumerState<FlightPlanListView> {
   @override
   void initState() {
     super.initState();
@@ -694,21 +715,24 @@ class _PetListViewState extends ConsumerState<PetListView> {
           widget.currentFilters[key] = value;
         });
       }
-      ref.read(petPaginationProvider.notifier).setFilters(widget.extraFilters!);
+      ref
+          .read(flightplanPaginationProvider.notifier)
+          .setFilters(widget.extraFilters!);
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final paginationState = ref.watch(petPaginationProvider);
+    final paginationState = ref.watch(flightplanPaginationProvider);
 
-    final petsAsyncValue = ref.watch(getAllPetProvider(paginationState));
+    final flightplansAsyncValue =
+        ref.watch(getAllFlightPlanProvider(paginationState));
 
     final Map<String, int> columnSortStates =
-        ref.watch(petPaginationProvider.notifier).getOrders();
+        ref.watch(flightplanPaginationProvider.notifier).getOrders();
 
     final Map<String, dynamic> fieldsFilterStates =
-        ref.watch(petPaginationProvider.notifier).getFilters();
+        ref.watch(flightplanPaginationProvider.notifier).getFilters();
 
     void onSort(String columnName) {
       var state = columnSortStates[columnName];
@@ -719,13 +743,15 @@ class _PetListViewState extends ConsumerState<PetListView> {
       } else if (state == -1) {
         columnSortStates.remove(columnName);
       }
-      ref.read(petPaginationProvider.notifier).setOrders(columnSortStates);
+      ref
+          .read(flightplanPaginationProvider.notifier)
+          .setOrders(columnSortStates);
     }
 
     void onFilter(String fieldName, dynamic filterValue) {
       widget.currentFilters[fieldName] = filterValue;
       ref
-          .read(petPaginationProvider.notifier)
+          .read(flightplanPaginationProvider.notifier)
           .setFilters(widget.currentFilters);
     }
 
@@ -735,29 +761,16 @@ class _PetListViewState extends ConsumerState<PetListView> {
       }
     }
 
-    Future<List<Person>> fetchPersonList(List<String>? ids) async {
-      if (ids == null || ids.isEmpty) {
-        return [];
-      }
-      final nonEmptyIds = ids.where((id) => id.isNotEmpty).toList();
-      List<Person> personList = await Future.wait(
-        nonEmptyIds.map((id) async {
-          return await ref.read(getPersonProvider(id).future);
-        }),
-      );
-      return personList;
-    }
-
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Pet List'),
+          title: const Text('FlightPlan List'),
           actions: [
             IconButton(
               onPressed: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const PetWidget(
+                    builder: (context) => const FlightPlanWidget(
                       isEditing: false,
                     ),
                   ),
@@ -767,21 +780,21 @@ class _PetListViewState extends ConsumerState<PetListView> {
             ),
           ],
         ),
-        body: petsAsyncValue.when(
+        body: flightplansAsyncValue.when(
           loading: () => const CircularProgressIndicator(),
           error: (error, stackTrace) => Text('Error: $error'),
-          data: (PetPaginationData data) {
-            final pets = data.items;
+          data: (FlightPlanPaginationData data) {
+            final flightplans = data.items;
             return Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   CustomSearchBar(
                     fields: const {
-                      'age': 'String?',
-                      'description': 'String',
+                      'date': 'DateTime?',
                       'id': 'String?',
-                      'name': 'String',
-                      'ownerid': 'String?'
+                      'mission_details': 'String?',
+                      'name': 'String?',
+                      'route': 'LineString?'
                     },
                     filters: fieldsFilterStates,
                     onFilterChanged: onFilter,
@@ -811,17 +824,17 @@ class _PetListViewState extends ConsumerState<PetListView> {
                                                 MainAxisAlignment.center,
                                             children: [
                                               const Text(
-                                                'Age',
+                                                'date',
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.bold,
                                                     color: Color.fromARGB(
                                                         255, 94, 54, 54)),
                                                 textAlign: TextAlign.center,
                                               ),
-                                              if (columnSortStates['age'] !=
+                                              if (columnSortStates['date'] !=
                                                   null) ...[
                                                 Icon(
-                                                  columnSortStates['age'] == 1
+                                                  columnSortStates['date'] == 1
                                                       ? Icons
                                                           .arrow_drop_up_rounded
                                                       : Icons
@@ -829,7 +842,7 @@ class _PetListViewState extends ConsumerState<PetListView> {
                                                   color: Colors.black,
                                                 ),
                                                 Text(
-                                                  '${columnSortStates.keys.toList().indexOf('age') + 1}',
+                                                  '${columnSortStates.keys.toList().indexOf('date') + 1}',
                                                   style: const TextStyle(
                                                       fontSize: 10),
                                                 ),
@@ -838,46 +851,7 @@ class _PetListViewState extends ConsumerState<PetListView> {
                                           ),
                                         ),
                                         onSort: (columnIndex, ascending) =>
-                                            {onSort('age')},
-                                      ),
-                                      DataColumn(
-                                        label: Expanded(
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              const Text(
-                                                'Description',
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Color.fromARGB(
-                                                        255, 94, 54, 54)),
-                                                textAlign: TextAlign.center,
-                                              ),
-                                              if (columnSortStates[
-                                                      'description'] !=
-                                                  null) ...[
-                                                Icon(
-                                                  columnSortStates[
-                                                              'description'] ==
-                                                          1
-                                                      ? Icons
-                                                          .arrow_drop_up_rounded
-                                                      : Icons
-                                                          .arrow_drop_down_rounded,
-                                                  color: Colors.black,
-                                                ),
-                                                Text(
-                                                  '${columnSortStates.keys.toList().indexOf('description') + 1}',
-                                                  style: const TextStyle(
-                                                      fontSize: 10),
-                                                ),
-                                              ],
-                                            ],
-                                          ),
-                                        ),
-                                        onSort: (columnIndex, ascending) =>
-                                            {onSort('description')},
+                                            {onSort('date')},
                                       ),
                                       DataColumn(
                                         label: Expanded(
@@ -922,7 +896,46 @@ class _PetListViewState extends ConsumerState<PetListView> {
                                                 MainAxisAlignment.center,
                                             children: [
                                               const Text(
-                                                'Name',
+                                                'mission_details',
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Color.fromARGB(
+                                                        255, 94, 54, 54)),
+                                                textAlign: TextAlign.center,
+                                              ),
+                                              if (columnSortStates[
+                                                      'mission_details'] !=
+                                                  null) ...[
+                                                Icon(
+                                                  columnSortStates[
+                                                              'mission_details'] ==
+                                                          1
+                                                      ? Icons
+                                                          .arrow_drop_up_rounded
+                                                      : Icons
+                                                          .arrow_drop_down_rounded,
+                                                  color: Colors.black,
+                                                ),
+                                                Text(
+                                                  '${columnSortStates.keys.toList().indexOf('mission_details') + 1}',
+                                                  style: const TextStyle(
+                                                      fontSize: 10),
+                                                ),
+                                              ],
+                                            ],
+                                          ),
+                                        ),
+                                        onSort: (columnIndex, ascending) =>
+                                            {onSort('mission_details')},
+                                      ),
+                                      DataColumn(
+                                        label: Expanded(
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              const Text(
+                                                'name',
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.bold,
                                                     color: Color.fromARGB(
@@ -958,18 +971,17 @@ class _PetListViewState extends ConsumerState<PetListView> {
                                                 MainAxisAlignment.center,
                                             children: [
                                               const Text(
-                                                'Owner',
+                                                'route',
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.bold,
                                                     color: Color.fromARGB(
                                                         255, 94, 54, 54)),
                                                 textAlign: TextAlign.center,
                                               ),
-                                              if (columnSortStates['ownerid'] !=
+                                              if (columnSortStates['route'] !=
                                                   null) ...[
                                                 Icon(
-                                                  columnSortStates['ownerid'] ==
-                                                          1
+                                                  columnSortStates['route'] == 1
                                                       ? Icons
                                                           .arrow_drop_up_rounded
                                                       : Icons
@@ -977,7 +989,7 @@ class _PetListViewState extends ConsumerState<PetListView> {
                                                   color: Colors.black,
                                                 ),
                                                 Text(
-                                                  '${columnSortStates.keys.toList().indexOf('ownerid') + 1}',
+                                                  '${columnSortStates.keys.toList().indexOf('route') + 1}',
                                                   style: const TextStyle(
                                                       fontSize: 10),
                                                 ),
@@ -986,138 +998,108 @@ class _PetListViewState extends ConsumerState<PetListView> {
                                           ),
                                         ),
                                         onSort: (columnIndex, ascending) =>
-                                            {onSort('ownerid')},
+                                            {onSort('route')},
                                       ),
                                     ],
-                                    rows: pets.map((pet) {
+                                    rows: flightplans.map((flightplan) {
                                       return DataRow(
                                         cells: [
                                           DataCell(Center(
-                                              child: Text(pet.age.toString()))),
+                                              child: Text(
+                                                  flightplan.date.toString()))),
                                           DataCell(Center(
                                               child: Text(
-                                                  pet.description.toString()))),
+                                                  flightplan.id.toString()))),
                                           DataCell(Center(
-                                              child: Text(pet.id.toString()))),
+                                              child: Text(flightplan
+                                                  .mission_details
+                                                  .toString()))),
                                           DataCell(Center(
-                                              child:
-                                                  Text(pet.name.toString()))),
-                                          DataCell(
-                                            Center(
-                                              child:
-                                                  FutureBuilder<List<Person>>(
-                                                future: fetchPersonList(
-                                                    [pet.ownerid ?? '']),
-                                                builder: (context, snapshot) {
-                                                  if (snapshot.connectionState ==
-                                                          ConnectionState
-                                                              .waiting ||
-                                                      snapshot.data == null) {
-                                                    return const CircularProgressIndicator();
-                                                  } else {
-                                                    return Wrap(
-                                                      spacing: 4,
-                                                      children: snapshot.data!
-                                                          .map((person) {
-                                                        return ElevatedButton(
-                                                          onPressed: () {
-                                                            Navigator.push(
-                                                              context,
-                                                              MaterialPageRoute(
-                                                                builder:
-                                                                    (context) =>
-                                                                        PersonWidget(
-                                                                  element:
-                                                                      person,
-                                                                  isEditing:
-                                                                      true,
-                                                                ),
-                                                              ),
-                                                            );
-                                                          },
-                                                          style: ButtonStyle(
-                                                            shape: MaterialStateProperty
-                                                                .all<
-                                                                    RoundedRectangleBorder>(
-                                                              RoundedRectangleBorder(
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            5),
-                                                              ),
-                                                            ),
-                                                            padding:
-                                                                MaterialStateProperty
-                                                                    .all<
-                                                                        EdgeInsetsGeometry>(
-                                                              EdgeInsets
-                                                                  .symmetric(
-                                                                      horizontal:
-                                                                          1,
-                                                                      vertical:
-                                                                          1),
-                                                            ),
-                                                            backgroundColor:
-                                                                MaterialStateProperty
-                                                                    .all<Color>(
-                                                                        Styles
-                                                                            .buttonPrimaryColor),
-                                                            elevation: MaterialStateProperty
-                                                                .resolveWith<
-                                                                        double>(
-                                                                    (states) {
-                                                              if (states.contains(
-                                                                      MaterialState
-                                                                          .hovered) ||
-                                                                  states.contains(
-                                                                      MaterialState
-                                                                          .pressed)) {
-                                                                return 0;
-                                                              }
-                                                              return 0;
-                                                            }),
-                                                            foregroundColor:
-                                                                MaterialStateProperty
-                                                                    .all<Color>(
-                                                                        Colors
-                                                                            .white),
-                                                            overlayColor:
-                                                                MaterialStateProperty
-                                                                    .resolveWith<
-                                                                            Color>(
-                                                                        (states) {
-                                                              if (states.contains(
-                                                                  MaterialState
-                                                                      .hovered)) {
-                                                                return Styles
-                                                                    .buttonPrimaryColorHover;
-                                                              }
-                                                              return Colors
-                                                                  .transparent;
-                                                            }),
-                                                          ),
-                                                          child: Text(
-                                                            person.name,
-                                                            style: TextStyle(
-                                                                color: Colors
-                                                                    .white),
-                                                          ),
-                                                        );
-                                                      }).toList(),
-                                                    );
-                                                  }
-                                                },
+                                              child: Text(
+                                                  flightplan.name.toString()))),
+                                          DataCell(Center(
+                                              child: ElevatedButton(
+                                            onPressed: () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      MapScreenView(
+                                                          LineStringView(
+                                                              flightplan
+                                                                  .route!
+                                                                  .geometry
+                                                                  .coordinates,
+                                                              flightplan.route!
+                                                                  .properties,
+                                                              MediaQuery.of(
+                                                                      context)
+                                                                  .size
+                                                                  .height,
+                                                              false)),
+                                                ),
+                                              );
+                                            },
+                                            style: ButtonStyle(
+                                              shape: MaterialStateProperty.all<
+                                                  RoundedRectangleBorder>(
+                                                RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(5),
+                                                ),
                                               ),
+                                              padding: MaterialStateProperty
+                                                  .all<EdgeInsetsGeometry>(
+                                                const EdgeInsets.symmetric(
+                                                    horizontal: 1, vertical: 1),
+                                              ),
+                                              backgroundColor:
+                                                  MaterialStateProperty
+                                                      .all<Color>(Styles
+                                                          .buttonPrimaryColor),
+                                              elevation: MaterialStateProperty
+                                                  .resolveWith<double>(
+                                                      (states) {
+                                                if (states.contains(
+                                                        MaterialState
+                                                            .hovered) ||
+                                                    states.contains(
+                                                        MaterialState
+                                                            .pressed)) {
+                                                  return 0;
+                                                }
+                                                return 0;
+                                              }),
+                                              foregroundColor:
+                                                  MaterialStateProperty.all<
+                                                      Color>(Colors.white),
+                                              overlayColor:
+                                                  MaterialStateProperty
+                                                      .resolveWith<Color>(
+                                                          (states) {
+                                                if (states.contains(
+                                                    MaterialState.hovered)) {
+                                                  return Styles
+                                                      .buttonPrimaryColorHover;
+                                                }
+                                                return Colors.transparent;
+                                              }),
                                             ),
-                                          ),
+                                            child: const Text(
+                                              "LineString?",
+                                              style: TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                          ))),
                                         ],
                                         onSelectChanged: (selected) {
                                           Navigator.push(
                                             context,
                                             MaterialPageRoute(
-                                                builder: (context) => PetWidget(
-                                                    element: pet,
-                                                    isEditing: true)),
+                                                builder: (context) =>
+                                                    FlightPlanWidget(
+                                                        element: flightplan,
+                                                        isEditing: true)),
                                           );
                                         },
                                       );
@@ -1145,35 +1127,36 @@ class _PetListViewState extends ConsumerState<PetListView> {
   }
 
   void _onPageButtonPressed(int pageNumber, WidgetRef ref,
-      PetPaginationState paginationState, int maxPages) {
+      FlightPlanPaginationState paginationState, int maxPages) {
     if (pageNumber <= maxPages) {
-      ref.read(petPaginationProvider.notifier).setPage(pageNumber);
+      ref.read(flightplanPaginationProvider.notifier).setPage(pageNumber);
     }
   }
 }
 
-class PetPaginationState {
+class FlightPlanPaginationState {
   final Tuple2<int, int> pagination;
   final Map<String, int> orders;
   final Map<String, dynamic> filters;
 
-  PetPaginationState({
+  FlightPlanPaginationState({
     required this.pagination,
     required this.orders,
     required this.filters,
   });
 }
 
-class PetPaginationNotifier extends StateNotifier<PetPaginationState> {
-  PetPaginationNotifier()
-      : super(PetPaginationState(
+class FlightPlanPaginationNotifier
+    extends StateNotifier<FlightPlanPaginationState> {
+  FlightPlanPaginationNotifier()
+      : super(FlightPlanPaginationState(
           pagination: const Tuple2<int, int>(0, 10),
           orders: {},
           filters: {},
         ));
 
   void setPage(int page) {
-    state = PetPaginationState(
+    state = FlightPlanPaginationState(
       pagination: Tuple2(page * state.pagination.item2 - state.pagination.item2,
           state.pagination.item2),
       orders: state.orders,
@@ -1182,7 +1165,7 @@ class PetPaginationNotifier extends StateNotifier<PetPaginationState> {
   }
 
   void setOrders(Map<String, int> newOrders) {
-    state = PetPaginationState(
+    state = FlightPlanPaginationState(
       pagination: Tuple2(state.pagination.item1, state.pagination.item2),
       orders: newOrders,
       filters: state.filters,
@@ -1190,7 +1173,7 @@ class PetPaginationNotifier extends StateNotifier<PetPaginationState> {
   }
 
   void setFilters(Map<String, dynamic> newFilters) {
-    state = PetPaginationState(
+    state = FlightPlanPaginationState(
       pagination: Tuple2(state.pagination.item1, state.pagination.item2),
       orders: state.orders,
       filters: newFilters,
@@ -1206,76 +1189,77 @@ class PetPaginationNotifier extends StateNotifier<PetPaginationState> {
   }
 }
 
-final petPaginationProvider =
-    StateNotifierProvider<PetPaginationNotifier, PetPaginationState>(
-  (ref) => PetPaginationNotifier(),
+final flightplanPaginationProvider = StateNotifierProvider<
+    FlightPlanPaginationNotifier, FlightPlanPaginationState>(
+  (ref) => FlightPlanPaginationNotifier(),
 );
 
 // **************************************************************************
 // RiverpodCustomGenerator
 // **************************************************************************
 
-final getPetProvider =
-    FutureProvider.autoDispose.family<Pet, String>((ref, petId) async {
-  final json = await http.get(Uri.parse('$baseURL/pet/$petId'));
+final getFlightPlanProvider = FutureProvider.autoDispose
+    .family<FlightPlan, String>((ref, flightplanId) async {
+  final json = await http.get(Uri.parse('$baseURL/flightplan/$flightplanId'));
   final jsonData = jsonDecode(json.body);
-  return Pet.fromJson(jsonData);
+  return FlightPlan.fromJson(jsonData);
 });
 
-final createPetProvider = FutureProvider.autoDispose
-    .family<void, Tuple2<Pet, BuildContext>>((ref, tuple) async {
-  Pet petInstance = tuple.item1;
+final createFlightPlanProvider = FutureProvider.autoDispose
+    .family<void, Tuple2<FlightPlan, BuildContext>>((ref, tuple) async {
+  FlightPlan flightplanInstance = tuple.item1;
   BuildContext context = tuple.item2;
 
   final response = await http.post(
-    Uri.parse('$baseURL/pet'),
+    Uri.parse('$baseURL/flightplan'),
     headers: {'Content-Type': 'application/json'},
-    body: jsonEncode(petInstance.toJson()),
+    body: jsonEncode(flightplanInstance.toJson()),
   );
   if (response.statusCode != 201) {
     CustomSnackBar.show(context, jsonDecode(response.body)['detail']);
   }
 });
 
-final updatePetProvider = FutureProvider.autoDispose
-    .family<void, Tuple2<Pet, BuildContext>>((ref, tuple) async {
-  Pet petInstance = tuple.item1;
+final updateFlightPlanProvider = FutureProvider.autoDispose
+    .family<void, Tuple2<FlightPlan, BuildContext>>((ref, tuple) async {
+  FlightPlan flightplanInstance = tuple.item1;
   BuildContext context = tuple.item2;
 
   final response = await http.put(
-    Uri.parse('$baseURL/pet/${petInstance.id}'),
+    Uri.parse('$baseURL/flightplan/${flightplanInstance.id}'),
     headers: {'Content-Type': 'application/json'},
-    body: jsonEncode(petInstance.toJson()),
+    body: jsonEncode(flightplanInstance.toJson()),
   );
   if (response.statusCode != 200) {
     CustomSnackBar.show(context, jsonDecode(response.body)['detail']);
   }
 });
 
-final deletePetProvider =
-    FutureProvider.autoDispose.family<void, int>((ref, petId) async {
+final deleteFlightPlanProvider =
+    FutureProvider.autoDispose.family<void, int>((ref, flightplanId) async {
   final response = await http.delete(
-    Uri.parse('$baseURL/pet/$petId'),
+    Uri.parse('$baseURL/flightplan/$flightplanId'),
   );
   if (response.statusCode != 204) {
-    throw Exception('Failed to delete Pet');
+    throw Exception('Failed to delete FlightPlan');
   }
 });
 
-class PetPaginationData {
-  final List<Pet> items;
+class FlightPlanPaginationData {
+  final List<FlightPlan> items;
   final int currentPage;
   final int maxPages;
 
-  PetPaginationData({
+  FlightPlanPaginationData({
     required this.items,
     required this.currentPage,
     required this.maxPages,
   });
 }
 
-final getAllPetProvider = FutureProvider.autoDispose
-    .family<PetPaginationData, PetPaginationState>((ref, state) async {
+final getAllFlightPlanProvider = FutureProvider.autoDispose
+    .family<FlightPlanPaginationData, FlightPlanPaginationState>(
+        (ref, state) async {
   final fixedQuery = {
     if (state.orders.isNotEmpty) 'orders': state.orders,
     if (state.filters.isNotEmpty)
@@ -1285,14 +1269,15 @@ final getAllPetProvider = FutureProvider.autoDispose
 
   final json = await http.post(
       Uri.parse(
-          '$baseURL/pets?skip=${state.pagination.item1}&limit=${state.pagination.item2}'),
+          '$baseURL/flightplans?skip=${state.pagination.item1}&limit=${state.pagination.item2}'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode(fixedQuery));
   final jsonData = jsonDecode(json.body);
 
-  return PetPaginationData(
-    items:
-        (jsonData['items'] as List).map((data) => Pet.fromJson(data)).toList(),
+  return FlightPlanPaginationData(
+    items: (jsonData['items'] as List)
+        .map((data) => FlightPlan.fromJson(data))
+        .toList(),
     currentPage: jsonData['current_page'],
     maxPages: jsonData['max_pages'],
   );
