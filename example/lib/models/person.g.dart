@@ -137,8 +137,8 @@ class _PersonWidgetState extends State<PersonWidget> {
       GlobalKey<StringWidgetState>();
   final GlobalKey<StringWidgetState> passwordWidgetKey =
       GlobalKey<StringWidgetState>();
-  final GlobalKey<DefaultWidgetState> rolesWidgetKey =
-      GlobalKey<DefaultWidgetState>();
+  final GlobalKey<RoleMultiFieldWidgetState> rolesWidgetKey =
+      GlobalKey<RoleMultiFieldWidgetState>();
 
   @override
   Widget build(BuildContext context) {
@@ -190,13 +190,13 @@ class _PersonWidgetState extends State<PersonWidget> {
               placeholder: "Type the password",
               value: widget.element?.password,
             ),
-            DefaultWidget(
+            RoleMultiFieldWidget(
               key: rolesWidgetKey,
               fieldName: "roles",
               fieldDescription: "This is the roles",
               editable: true,
               placeholder: "Type the roles",
-              value: widget.element?.roles,
+              values: widget.element?.roles,
             ),
           ],
         ),
@@ -1034,6 +1034,19 @@ class _PersonListViewState extends ConsumerState<PersonListView> {
       }
     }
 
+    Future<List<Role>> fetchRoleList(List<String>? ids) async {
+      if (ids == null || ids.isEmpty) {
+        return [];
+      }
+      final nonEmptyIds = ids.where((id) => id.isNotEmpty).toList();
+      List<Role> roleList = await Future.wait(
+        nonEmptyIds.map((id) async {
+          return await ref.read(getRoleProvider(id).future);
+        }),
+      );
+      return roleList;
+    }
+
     return Scaffold(
         appBar: AppBar(
           title: const Text('Person List'),
@@ -1325,9 +1338,111 @@ class _PersonListViewState extends ConsumerState<PersonListView> {
                                         DataCell(Center(
                                             child: Text(
                                                 person.password.toString()))),
-                                        DataCell(Center(
-                                            child:
-                                                Text(person.roles.toString()))),
+                                        DataCell(
+                                          Center(
+                                            child: FutureBuilder<List<Role>>(
+                                              future:
+                                                  fetchRoleList(person.roles),
+                                              builder: (context, snapshot) {
+                                                if (snapshot.connectionState ==
+                                                        ConnectionState
+                                                            .waiting ||
+                                                    snapshot.data == null) {
+                                                  return const CircularProgressIndicator();
+                                                } else {
+                                                  return Wrap(
+                                                    spacing: 4,
+                                                    children: snapshot.data!
+                                                        .map((role) {
+                                                      return ElevatedButton(
+                                                        onPressed: () {
+                                                          Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                              builder:
+                                                                  (context) =>
+                                                                      RoleWidget(
+                                                                element: role,
+                                                                isEditing: true,
+                                                              ),
+                                                            ),
+                                                          );
+                                                        },
+                                                        style: ButtonStyle(
+                                                          shape: MaterialStateProperty
+                                                              .all<
+                                                                  RoundedRectangleBorder>(
+                                                            RoundedRectangleBorder(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          5),
+                                                            ),
+                                                          ),
+                                                          padding:
+                                                              MaterialStateProperty
+                                                                  .all<
+                                                                      EdgeInsetsGeometry>(
+                                                            EdgeInsets
+                                                                .symmetric(
+                                                                    horizontal:
+                                                                        1,
+                                                                    vertical:
+                                                                        1),
+                                                          ),
+                                                          backgroundColor:
+                                                              MaterialStateProperty
+                                                                  .all<Color>(Styles
+                                                                      .buttonPrimaryColor),
+                                                          elevation:
+                                                              MaterialStateProperty
+                                                                  .resolveWith<
+                                                                          double>(
+                                                                      (states) {
+                                                            if (states.contains(
+                                                                    MaterialState
+                                                                        .hovered) ||
+                                                                states.contains(
+                                                                    MaterialState
+                                                                        .pressed)) {
+                                                              return 0;
+                                                            }
+                                                            return 0;
+                                                          }),
+                                                          foregroundColor:
+                                                              MaterialStateProperty
+                                                                  .all<Color>(
+                                                                      Colors
+                                                                          .white),
+                                                          overlayColor:
+                                                              MaterialStateProperty
+                                                                  .resolveWith<
+                                                                          Color>(
+                                                                      (states) {
+                                                            if (states.contains(
+                                                                MaterialState
+                                                                    .hovered)) {
+                                                              return Styles
+                                                                  .buttonPrimaryColorHover;
+                                                            }
+                                                            return Colors
+                                                                .transparent;
+                                                          }),
+                                                        ),
+                                                        child: Text(
+                                                          role.name,
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.white),
+                                                        ),
+                                                      );
+                                                    }).toList(),
+                                                  );
+                                                }
+                                              },
+                                            ),
+                                          ),
+                                        ),
                                       ],
                                       onSelectChanged: (selected) {
                                         Navigator.push(

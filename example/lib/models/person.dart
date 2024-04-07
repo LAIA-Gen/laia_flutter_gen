@@ -12,6 +12,7 @@ import 'package:example/config/styles.dart';
 import 'dart:convert';
 import 'package:collection/collection.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:example/models/role.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:example/screens/home.dart';
 
@@ -34,7 +35,7 @@ class Person {
   final String name;
   @Field(fieldName: 'password')
   final String password;
-  @Field(fieldName: 'roles')
+  @Field(relation: "Role")
   final List<String>? roles;
 
   Person({

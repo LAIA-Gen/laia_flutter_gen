@@ -1,5 +1,4 @@
 import 'package:example/models/person.dart';
-import 'package:example/models/pet.dart';
 import 'package:example/screens/home.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -45,7 +44,7 @@ class SplashScreen extends ConsumerWidget {
           if (isValid) {
             return Home();
           } else {
-            return DynamicLogInScreen(widgetMap: const { 'Person': PersonLoginWidget(), 'Pet': PetLoginWidget() });
+            return PersonLoginWidget();
           }
         },
         loading: () => Center(

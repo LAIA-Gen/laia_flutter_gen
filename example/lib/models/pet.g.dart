@@ -11,17 +11,11 @@ abstract class _$PetCWProxy {
 
   Pet description(String description);
 
-  Pet email(String email);
-
   Pet id(String? id);
 
   Pet name(String name);
 
   Pet ownerid(String? ownerid);
-
-  Pet password(String password);
-
-  Pet roles(List<String>? roles);
 
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Pet(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
@@ -32,12 +26,9 @@ abstract class _$PetCWProxy {
   Pet call({
     String? age,
     String? description,
-    String? email,
     String? id,
     String? name,
     String? ownerid,
-    String? password,
-    List<String>? roles,
   });
 }
 
@@ -54,9 +45,6 @@ class _$PetCWProxyImpl implements _$PetCWProxy {
   Pet description(String description) => this(description: description);
 
   @override
-  Pet email(String email) => this(email: email);
-
-  @override
   Pet id(String? id) => this(id: id);
 
   @override
@@ -64,12 +52,6 @@ class _$PetCWProxyImpl implements _$PetCWProxy {
 
   @override
   Pet ownerid(String? ownerid) => this(ownerid: ownerid);
-
-  @override
-  Pet password(String password) => this(password: password);
-
-  @override
-  Pet roles(List<String>? roles) => this(roles: roles);
 
   @override
 
@@ -82,12 +64,9 @@ class _$PetCWProxyImpl implements _$PetCWProxy {
   Pet call({
     Object? age = const $CopyWithPlaceholder(),
     Object? description = const $CopyWithPlaceholder(),
-    Object? email = const $CopyWithPlaceholder(),
     Object? id = const $CopyWithPlaceholder(),
     Object? name = const $CopyWithPlaceholder(),
     Object? ownerid = const $CopyWithPlaceholder(),
-    Object? password = const $CopyWithPlaceholder(),
-    Object? roles = const $CopyWithPlaceholder(),
   }) {
     return Pet(
       age: age == const $CopyWithPlaceholder()
@@ -99,10 +78,6 @@ class _$PetCWProxyImpl implements _$PetCWProxy {
               ? _value.description
               // ignore: cast_nullable_to_non_nullable
               : description as String,
-      email: email == const $CopyWithPlaceholder() || email == null
-          ? _value.email
-          // ignore: cast_nullable_to_non_nullable
-          : email as String,
       id: id == const $CopyWithPlaceholder()
           ? _value.id
           // ignore: cast_nullable_to_non_nullable
@@ -115,14 +90,6 @@ class _$PetCWProxyImpl implements _$PetCWProxy {
           ? _value.ownerid
           // ignore: cast_nullable_to_non_nullable
           : ownerid as String?,
-      password: password == const $CopyWithPlaceholder() || password == null
-          ? _value.password
-          // ignore: cast_nullable_to_non_nullable
-          : password as String,
-      roles: roles == const $CopyWithPlaceholder()
-          ? _value.roles
-          // ignore: cast_nullable_to_non_nullable
-          : roles as List<String>?,
     );
   }
 }
@@ -153,18 +120,12 @@ class _PetWidgetState extends State<PetWidget> {
       GlobalKey<StringWidgetState>();
   final GlobalKey<StringWidgetState> descriptionWidgetKey =
       GlobalKey<StringWidgetState>();
-  final GlobalKey<StringWidgetState> emailWidgetKey =
-      GlobalKey<StringWidgetState>();
   final GlobalKey<StringWidgetState> idWidgetKey =
       GlobalKey<StringWidgetState>();
   final GlobalKey<StringWidgetState> nameWidgetKey =
       GlobalKey<StringWidgetState>();
   final GlobalKey<PersonFieldWidgetState> owneridWidgetKey =
       GlobalKey<PersonFieldWidgetState>();
-  final GlobalKey<StringWidgetState> passwordWidgetKey =
-      GlobalKey<StringWidgetState>();
-  final GlobalKey<DefaultWidgetState> rolesWidgetKey =
-      GlobalKey<DefaultWidgetState>();
 
   @override
   Widget build(BuildContext context) {
@@ -193,14 +154,6 @@ class _PetWidgetState extends State<PetWidget> {
               value: widget.element?.description,
             ),
             StringWidget(
-              key: emailWidgetKey,
-              fieldName: "email",
-              fieldDescription: "This is the email",
-              editable: true,
-              placeholder: "Type the email",
-              value: widget.element?.email,
-            ),
-            StringWidget(
               key: idWidgetKey,
               fieldName: "id",
               fieldDescription: "This is the id",
@@ -224,22 +177,6 @@ class _PetWidgetState extends State<PetWidget> {
               placeholder: "Write the Owner",
               value: widget.element?.ownerid,
             ),
-            StringWidget(
-              key: passwordWidgetKey,
-              fieldName: "password",
-              fieldDescription: "This is the password",
-              editable: true,
-              placeholder: "Type the password",
-              value: widget.element?.password,
-            ),
-            DefaultWidget(
-              key: rolesWidgetKey,
-              fieldName: "roles",
-              fieldDescription: "This is the roles",
-              editable: true,
-              placeholder: "Type the roles",
-              value: widget.element?.roles,
-            ),
           ],
         ),
       ),
@@ -250,8 +187,6 @@ class _PetWidgetState extends State<PetWidget> {
           String? updateddescription =
               descriptionWidgetKey.currentState?.getUpdatedValue();
 
-          String? updatedemail = emailWidgetKey.currentState?.getUpdatedValue();
-
           String? updatedid = idWidgetKey.currentState?.getUpdatedValue();
 
           String? updatedname = nameWidgetKey.currentState?.getUpdatedValue();
@@ -259,33 +194,21 @@ class _PetWidgetState extends State<PetWidget> {
           String? updatedownerid =
               owneridWidgetKey.currentState?.getUpdatedValue();
 
-          String? updatedpassword =
-              passwordWidgetKey.currentState?.getUpdatedValue();
-
-          List<String>? updatedroles =
-              rolesWidgetKey.currentState?.getUpdatedValue();
-
           Pet updatedPet = widget.element ??
               Pet(
                 age: updatedage ?? '',
                 description: updateddescription ?? '',
-                email: updatedemail ?? '',
                 id: updatedid ?? '',
                 name: updatedname ?? '',
                 ownerid: updatedownerid ?? '',
-                password: updatedpassword ?? '',
-                roles: updatedroles ?? [''],
               );
 
           updatedPet = updatedPet.copyWith(
               age: updatedage,
               description: updateddescription,
-              email: updatedemail,
               id: updatedid,
               name: updatedname,
-              ownerid: updatedownerid,
-              password: updatedpassword,
-              roles: updatedroles);
+              ownerid: updatedownerid);
           var container = ProviderContainer();
           try {
             if (widget.isEditing) {
@@ -679,271 +602,6 @@ class PetMultiFieldWidgetState extends State<PetMultiFieldWidget> {
   }
 }
 
-class PetLoginWidget extends StatefulWidget {
-  final Pet? element;
-
-  const PetLoginWidget({this.element, Key? key}) : super(key: key);
-
-  @override
-  _PetLoginWidgetState createState() => _PetLoginWidgetState();
-}
-
-class _PetLoginWidgetState extends State<PetLoginWidget> {
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-
-  bool _isPasswordVisible = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Log In'),
-        centerTitle: true,
-      ),
-      body: SingleChildScrollView(
-        scrollDirection: Axis.vertical,
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SizedBox(height: MediaQuery.of(context).size.height * 0.2),
-              _buildTextField(
-                controller: _emailController,
-                labelText: 'Email',
-              ),
-              _buildTextField(
-                controller: _passwordController,
-                labelText: 'Password',
-                isPassword: true,
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 16.0),
-                child: ElevatedButton(
-                  onPressed: () async {
-                    var container = ProviderContainer();
-                    var loginData = Auth(
-                        email: _emailController.text,
-                        password: _passwordController.text);
-                    try {
-                      AuthResult loginResult = await container
-                          .read(loginPetProvider(loginData).future);
-                      if (loginResult.success) {
-                        Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(builder: (context) => Home()),
-                        );
-                      } else {
-                        CustomSnackBar.show(context, loginResult.errorMessage);
-                      }
-                    } catch (error) {
-                      print(error);
-                    }
-                  },
-                  child: const Text('Login'),
-                ),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                        builder: (context) => PetRegisterWidget()),
-                  );
-                },
-                child: const Text("I don't have an account: Register"),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildTextField({
-    required TextEditingController controller,
-    required String labelText,
-    bool isPassword = false,
-  }) {
-    return Container(
-      padding: const EdgeInsets.all(8.0),
-      margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10.0),
-        color: Styles.secondaryColor,
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: TextField(
-          controller: controller,
-          obscureText: isPassword && !_isPasswordVisible,
-          decoration: InputDecoration(
-            labelText: labelText,
-            suffixIcon: isPassword
-                ? IconButton(
-                    icon: Icon(
-                      _isPasswordVisible
-                          ? Icons.visibility
-                          : Icons.visibility_off,
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        _isPasswordVisible = !_isPasswordVisible;
-                      });
-                    },
-                  )
-                : null,
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class PetRegisterWidget extends StatefulWidget {
-  final Pet? element;
-
-  const PetRegisterWidget({this.element, Key? key}) : super(key: key);
-
-  @override
-  _PetRegisterWidgetState createState() => _PetRegisterWidgetState();
-}
-
-class _PetRegisterWidgetState extends State<PetRegisterWidget> {
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController =
-      TextEditingController();
-
-  final TextEditingController _descriptionController = TextEditingController();
-  final TextEditingController _nameController = TextEditingController();
-  bool _isPasswordVisible = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Register'),
-        centerTitle: true,
-      ),
-      body: SingleChildScrollView(
-        scrollDirection: Axis.vertical,
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SizedBox(height: MediaQuery.of(context).size.height * 0.2),
-              _buildTextField(
-                controller: _emailController,
-                labelText: 'Email',
-              ),
-              _buildTextField(
-                controller: _passwordController,
-                labelText: 'Password',
-                isPassword: true,
-              ),
-              _buildTextField(
-                controller: _confirmPasswordController,
-                labelText: 'Confirm password',
-                isPassword: true,
-              ),
-              _buildTextField(
-                controller: _descriptionController,
-                labelText: 'description',
-              ),
-              _buildTextField(
-                controller: _nameController,
-                labelText: 'name',
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 16.0),
-                child: ElevatedButton(
-                  onPressed: () async {
-                    if (_passwordController.text !=
-                        _confirmPasswordController.text) {
-                      CustomSnackBar.show(context, "Passwords do not match");
-                      return;
-                    }
-                    var container = ProviderContainer();
-                    var registerData = Pet(
-                      email: _emailController.text,
-                      password: _passwordController.text,
-                      description: _descriptionController.text,
-                      name: _nameController.text,
-                    );
-                    try {
-                      AuthResult registerResult = await container
-                          .read(registerPetProvider(registerData).future);
-                      if (registerResult.success) {
-                        Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(builder: (context) => Home()),
-                        );
-                      } else {
-                        CustomSnackBar.show(
-                            context, registerResult.errorMessage);
-                      }
-                    } catch (error) {
-                      print(error);
-                    }
-                  },
-                  child: Text('Register'),
-                ),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => PetLoginWidget()),
-                  );
-                },
-                child: Text("I already have an account: LogIn"),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildTextField({
-    required TextEditingController controller,
-    required String labelText,
-    bool isPassword = false,
-  }) {
-    return Container(
-      padding: const EdgeInsets.all(8.0),
-      margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10.0),
-        color: Styles.secondaryColor,
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: TextField(
-          controller: controller,
-          obscureText: isPassword && !_isPasswordVisible,
-          decoration: InputDecoration(
-            labelText: labelText,
-            suffixIcon: isPassword
-                ? IconButton(
-                    icon: Icon(
-                      _isPasswordVisible
-                          ? Icons.visibility
-                          : Icons.visibility_off,
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        _isPasswordVisible = !_isPasswordVisible;
-                      });
-                    },
-                  )
-                : null,
-          ),
-        ),
-      ),
-    );
-  }
-}
-
 // **************************************************************************
 // HomeWidgetElementGenerator
 // **************************************************************************
@@ -997,24 +655,17 @@ class PetHomeWidget extends StatelessWidget {
 Pet _$PetFromJson(Map<String, dynamic> json) => Pet(
       age: json['age'] as String?,
       description: json['description'] as String,
-      email: json['email'] as String,
       id: json['id'] as String?,
       name: json['name'] as String,
       ownerid: json['ownerid'] as String?,
-      password: json['password'] as String,
-      roles:
-          (json['roles'] as List<dynamic>?)?.map((e) => e as String).toList(),
     );
 
 Map<String, dynamic> _$PetToJson(Pet instance) => <String, dynamic>{
       'age': instance.age,
       'description': instance.description,
-      'email': instance.email,
       'id': instance.id,
       'name': instance.name,
       'ownerid': instance.ownerid,
-      'password': instance.password,
-      'roles': instance.roles,
     };
 
 // **************************************************************************
@@ -1126,12 +777,9 @@ class _PetListViewState extends ConsumerState<PetListView> {
                     fields: const {
                       'age': 'String?',
                       'description': 'String',
-                      'email': 'String',
                       'id': 'String?',
                       'name': 'String',
-                      'ownerid': 'String?',
-                      'password': 'String',
-                      'roles': 'List<String>?'
+                      'ownerid': 'String?'
                     },
                     filters: fieldsFilterStates,
                     onFilterChanged: onFilter,
@@ -1223,42 +871,6 @@ class _PetListViewState extends ConsumerState<PetListView> {
                                       ),
                                       onSort: (columnIndex, ascending) =>
                                           {onSort('description')},
-                                    ),
-                                    DataColumn(
-                                      label: Expanded(
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            const Text(
-                                              'email',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Color.fromARGB(
-                                                      255, 94, 54, 54)),
-                                              textAlign: TextAlign.center,
-                                            ),
-                                            if (columnSortStates['email'] !=
-                                                null) ...[
-                                              Icon(
-                                                columnSortStates['email'] == 1
-                                                    ? Icons
-                                                        .arrow_drop_up_rounded
-                                                    : Icons
-                                                        .arrow_drop_down_rounded,
-                                                color: Colors.black,
-                                              ),
-                                              Text(
-                                                '${columnSortStates.keys.toList().indexOf('email') + 1}',
-                                                style: const TextStyle(
-                                                    fontSize: 10),
-                                              ),
-                                            ],
-                                          ],
-                                        ),
-                                      ),
-                                      onSort: (columnIndex, ascending) =>
-                                          {onSort('email')},
                                     ),
                                     DataColumn(
                                       label: Expanded(
@@ -1368,80 +980,6 @@ class _PetListViewState extends ConsumerState<PetListView> {
                                       onSort: (columnIndex, ascending) =>
                                           {onSort('ownerid')},
                                     ),
-                                    DataColumn(
-                                      label: Expanded(
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            const Text(
-                                              'password',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Color.fromARGB(
-                                                      255, 94, 54, 54)),
-                                              textAlign: TextAlign.center,
-                                            ),
-                                            if (columnSortStates['password'] !=
-                                                null) ...[
-                                              Icon(
-                                                columnSortStates[
-                                                            'password'] ==
-                                                        1
-                                                    ? Icons
-                                                        .arrow_drop_up_rounded
-                                                    : Icons
-                                                        .arrow_drop_down_rounded,
-                                                color: Colors.black,
-                                              ),
-                                              Text(
-                                                '${columnSortStates.keys.toList().indexOf('password') + 1}',
-                                                style: const TextStyle(
-                                                    fontSize: 10),
-                                              ),
-                                            ],
-                                          ],
-                                        ),
-                                      ),
-                                      onSort: (columnIndex, ascending) =>
-                                          {onSort('password')},
-                                    ),
-                                    DataColumn(
-                                      label: Expanded(
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            const Text(
-                                              'roles',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Color.fromARGB(
-                                                      255, 94, 54, 54)),
-                                              textAlign: TextAlign.center,
-                                            ),
-                                            if (columnSortStates['roles'] !=
-                                                null) ...[
-                                              Icon(
-                                                columnSortStates['roles'] == 1
-                                                    ? Icons
-                                                        .arrow_drop_up_rounded
-                                                    : Icons
-                                                        .arrow_drop_down_rounded,
-                                                color: Colors.black,
-                                              ),
-                                              Text(
-                                                '${columnSortStates.keys.toList().indexOf('roles') + 1}',
-                                                style: const TextStyle(
-                                                    fontSize: 10),
-                                              ),
-                                            ],
-                                          ],
-                                        ),
-                                      ),
-                                      onSort: (columnIndex, ascending) =>
-                                          {onSort('roles')},
-                                    ),
                                   ],
                                   rows: pets.map((pet) {
                                     return DataRow(
@@ -1451,8 +989,6 @@ class _PetListViewState extends ConsumerState<PetListView> {
                                         DataCell(Center(
                                             child: Text(
                                                 pet.description.toString()))),
-                                        DataCell(Center(
-                                            child: Text(pet.email.toString()))),
                                         DataCell(Center(
                                             child: Text(pet.id.toString()))),
                                         DataCell(Center(
@@ -1561,11 +1097,6 @@ class _PetListViewState extends ConsumerState<PetListView> {
                                             ),
                                           ),
                                         ),
-                                        DataCell(Center(
-                                            child:
-                                                Text(pet.password.toString()))),
-                                        DataCell(Center(
-                                            child: Text(pet.roles.toString()))),
                                       ],
                                       onSelectChanged: (selected) {
                                         Navigator.push(
@@ -1745,90 +1276,4 @@ final getAllPetProvider = FutureProvider.autoDispose
     currentPage: jsonData['current_page'],
     maxPages: jsonData['max_pages'],
   );
-});
-
-class Auth {
-  final String email;
-  final String password;
-
-  Auth({required this.email, required this.password});
-
-  Map<String, dynamic> toJson() {
-    return {
-      'email': email,
-      'password': password,
-    };
-  }
-}
-
-class AuthResult {
-  final bool success;
-  final String? errorMessage;
-  final Pet? pet;
-
-  AuthResult(this.success, {this.errorMessage, this.pet});
-}
-
-final loginPetProvider =
-    FutureProvider.autoDispose.family<AuthResult, Auth>((ref, auth) async {
-  final response = await http.post(
-    Uri.parse('$baseURL/auth/login/pet/'),
-    headers: {'Content-Type': 'application/json'},
-    body: jsonEncode(auth.toJson()),
-  );
-  if (response.statusCode != 200) {
-    return AuthResult(false, errorMessage: 'Incorrect email or password.');
-  }
-
-  final responseData = jsonDecode(response.body);
-  final token = responseData['token'];
-
-  final prefs = await SharedPreferences.getInstance();
-  await prefs.setString('token', token);
-
-  return AuthResult(true, pet: Pet.fromJson(responseData['user']));
-});
-
-final registerPetProvider =
-    FutureProvider.autoDispose.family<AuthResult, Pet>((ref, pet) async {
-  final response = await http.post(
-    Uri.parse('$baseURL/auth/register/pet/'),
-    headers: {'Content-Type': 'application/json'},
-    body: jsonEncode(pet.toJson()),
-  );
-  if (response.statusCode != 200) {
-    return AuthResult(false, errorMessage: jsonDecode(response.body)['detail']);
-  }
-
-  final responseData = jsonDecode(response.body);
-  final token = responseData['token'];
-
-  final prefs = await SharedPreferences.getInstance();
-  await prefs.setString('token', token);
-
-  return AuthResult(true, pet: Pet.fromJson(responseData['user']));
-});
-
-final verifyTokenPetProvider = FutureProvider.autoDispose<bool>((ref) async {
-  try {
-    final prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString('token');
-
-    if (token == null) {
-      return false;
-    }
-
-    final response = await http.get(
-      Uri.parse('$baseURL/auth/verify/pet/$token'),
-      headers: {'Authorization': 'Bearer $token'},
-    );
-
-    if (response.statusCode == 200) {
-      return true;
-    } else {
-      return false;
-    }
-  } catch (e) {
-    return false;
-  }
 });

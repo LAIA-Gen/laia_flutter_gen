@@ -12,6 +12,7 @@ import 'package:example/config/styles.dart';
 import 'dart:convert';
 import 'package:collection/collection.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:example/models/role.dart';
 
 part 'accessright.g.dart';
 
@@ -24,7 +25,7 @@ part 'accessright.g.dart';
 class AccessRight {
   @Field(fieldName: 'name')
   final String name;
-  @Field(fieldName: 'role')
+  @Field(relation: "Role")
   final String role;
   @Field(fieldName: 'model')
   final String model;

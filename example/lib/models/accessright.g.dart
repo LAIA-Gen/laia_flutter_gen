@@ -156,8 +156,8 @@ class AccessRightWidget extends StatefulWidget {
 class _AccessRightWidgetState extends State<AccessRightWidget> {
   final GlobalKey<StringWidgetState> nameWidgetKey =
       GlobalKey<StringWidgetState>();
-  final GlobalKey<StringWidgetState> roleWidgetKey =
-      GlobalKey<StringWidgetState>();
+  final GlobalKey<RoleFieldWidgetState> roleWidgetKey =
+      GlobalKey<RoleFieldWidgetState>();
   final GlobalKey<StringWidgetState> modelWidgetKey =
       GlobalKey<StringWidgetState>();
   final GlobalKey<StringWidgetState> operationsWidgetKey =
@@ -189,7 +189,7 @@ class _AccessRightWidgetState extends State<AccessRightWidget> {
               placeholder: "Type the name",
               value: widget.element?.name,
             ),
-            StringWidget(
+            RoleFieldWidget(
               key: roleWidgetKey,
               fieldName: "role",
               fieldDescription: "This is the role",
@@ -836,6 +836,19 @@ class _AccessRightListViewState extends ConsumerState<AccessRightListView> {
       }
     }
 
+    Future<List<Role>> fetchRoleList(List<String>? ids) async {
+      if (ids == null || ids.isEmpty) {
+        return [];
+      }
+      final nonEmptyIds = ids.where((id) => id.isNotEmpty).toList();
+      List<Role> roleList = await Future.wait(
+        nonEmptyIds.map((id) async {
+          return await ref.read(getRoleProvider(id).future);
+        }),
+      );
+      return roleList;
+    }
+
     return Scaffold(
         appBar: AppBar(
           title: const Text('AccessRight List'),
@@ -1197,9 +1210,111 @@ class _AccessRightListViewState extends ConsumerState<AccessRightListView> {
                                         DataCell(Center(
                                             child: Text(
                                                 accessright.name.toString()))),
-                                        DataCell(Center(
-                                            child: Text(
-                                                accessright.role.toString()))),
+                                        DataCell(
+                                          Center(
+                                            child: FutureBuilder<List<Role>>(
+                                              future: fetchRoleList(
+                                                  [accessright.role ?? '']),
+                                              builder: (context, snapshot) {
+                                                if (snapshot.connectionState ==
+                                                        ConnectionState
+                                                            .waiting ||
+                                                    snapshot.data == null) {
+                                                  return const CircularProgressIndicator();
+                                                } else {
+                                                  return Wrap(
+                                                    spacing: 4,
+                                                    children: snapshot.data!
+                                                        .map((role) {
+                                                      return ElevatedButton(
+                                                        onPressed: () {
+                                                          Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                              builder:
+                                                                  (context) =>
+                                                                      RoleWidget(
+                                                                element: role,
+                                                                isEditing: true,
+                                                              ),
+                                                            ),
+                                                          );
+                                                        },
+                                                        style: ButtonStyle(
+                                                          shape: MaterialStateProperty
+                                                              .all<
+                                                                  RoundedRectangleBorder>(
+                                                            RoundedRectangleBorder(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          5),
+                                                            ),
+                                                          ),
+                                                          padding:
+                                                              MaterialStateProperty
+                                                                  .all<
+                                                                      EdgeInsetsGeometry>(
+                                                            EdgeInsets
+                                                                .symmetric(
+                                                                    horizontal:
+                                                                        1,
+                                                                    vertical:
+                                                                        1),
+                                                          ),
+                                                          backgroundColor:
+                                                              MaterialStateProperty
+                                                                  .all<Color>(Styles
+                                                                      .buttonPrimaryColor),
+                                                          elevation:
+                                                              MaterialStateProperty
+                                                                  .resolveWith<
+                                                                          double>(
+                                                                      (states) {
+                                                            if (states.contains(
+                                                                    MaterialState
+                                                                        .hovered) ||
+                                                                states.contains(
+                                                                    MaterialState
+                                                                        .pressed)) {
+                                                              return 0;
+                                                            }
+                                                            return 0;
+                                                          }),
+                                                          foregroundColor:
+                                                              MaterialStateProperty
+                                                                  .all<Color>(
+                                                                      Colors
+                                                                          .white),
+                                                          overlayColor:
+                                                              MaterialStateProperty
+                                                                  .resolveWith<
+                                                                          Color>(
+                                                                      (states) {
+                                                            if (states.contains(
+                                                                MaterialState
+                                                                    .hovered)) {
+                                                              return Styles
+                                                                  .buttonPrimaryColorHover;
+                                                            }
+                                                            return Colors
+                                                                .transparent;
+                                                          }),
+                                                        ),
+                                                        child: Text(
+                                                          role.name,
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.white),
+                                                        ),
+                                                      );
+                                                    }).toList(),
+                                                  );
+                                                }
+                                              },
+                                            ),
+                                          ),
+                                        ),
                                         DataCell(Center(
                                             child: Text(
                                                 accessright.model.toString()))),
