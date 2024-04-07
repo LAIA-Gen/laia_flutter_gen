@@ -7,11 +7,11 @@ part of 'accessright.dart';
 // **************************************************************************
 
 abstract class _$AccessRightCWProxy {
-  AccessRight fields_create(String fields_create);
+  AccessRight fields_create(dynamic fields_create);
 
-  AccessRight fields_edit(String fields_edit);
+  AccessRight fields_edit(dynamic fields_edit);
 
-  AccessRight fields_visible(String fields_visible);
+  AccessRight fields_visible(dynamic fields_visible);
 
   AccessRight id(String id);
 
@@ -19,7 +19,7 @@ abstract class _$AccessRightCWProxy {
 
   AccessRight name(String name);
 
-  AccessRight operations(String operations);
+  AccessRight operations(dynamic operations);
 
   AccessRight role(String role);
 
@@ -30,13 +30,13 @@ abstract class _$AccessRightCWProxy {
   /// AccessRight(...).copyWith(id: 12, name: "My name")
   /// ````
   AccessRight call({
-    String? fields_create,
-    String? fields_edit,
-    String? fields_visible,
+    dynamic? fields_create,
+    dynamic? fields_edit,
+    dynamic? fields_visible,
     String? id,
     String? model,
     String? name,
-    String? operations,
+    dynamic? operations,
     String? role,
   });
 }
@@ -48,14 +48,15 @@ class _$AccessRightCWProxyImpl implements _$AccessRightCWProxy {
   const _$AccessRightCWProxyImpl(this._value);
 
   @override
-  AccessRight fields_create(String fields_create) =>
+  AccessRight fields_create(dynamic fields_create) =>
       this(fields_create: fields_create);
 
   @override
-  AccessRight fields_edit(String fields_edit) => this(fields_edit: fields_edit);
+  AccessRight fields_edit(dynamic fields_edit) =>
+      this(fields_edit: fields_edit);
 
   @override
-  AccessRight fields_visible(String fields_visible) =>
+  AccessRight fields_visible(dynamic fields_visible) =>
       this(fields_visible: fields_visible);
 
   @override
@@ -68,7 +69,7 @@ class _$AccessRightCWProxyImpl implements _$AccessRightCWProxy {
   AccessRight name(String name) => this(name: name);
 
   @override
-  AccessRight operations(String operations) => this(operations: operations);
+  AccessRight operations(dynamic operations) => this(operations: operations);
 
   @override
   AccessRight role(String role) => this(role: role);
@@ -96,17 +97,17 @@ class _$AccessRightCWProxyImpl implements _$AccessRightCWProxy {
           fields_create == const $CopyWithPlaceholder() || fields_create == null
               ? _value.fields_create
               // ignore: cast_nullable_to_non_nullable
-              : fields_create as String,
+              : fields_create as dynamic,
       fields_edit:
           fields_edit == const $CopyWithPlaceholder() || fields_edit == null
               ? _value.fields_edit
               // ignore: cast_nullable_to_non_nullable
-              : fields_edit as String,
+              : fields_edit as dynamic,
       fields_visible: fields_visible == const $CopyWithPlaceholder() ||
               fields_visible == null
           ? _value.fields_visible
           // ignore: cast_nullable_to_non_nullable
-          : fields_visible as String,
+          : fields_visible as dynamic,
       id: id == const $CopyWithPlaceholder() || id == null
           ? _value.id
           // ignore: cast_nullable_to_non_nullable
@@ -123,7 +124,7 @@ class _$AccessRightCWProxyImpl implements _$AccessRightCWProxy {
           operations == const $CopyWithPlaceholder() || operations == null
               ? _value.operations
               // ignore: cast_nullable_to_non_nullable
-              : operations as String,
+              : operations as dynamic,
       role: role == const $CopyWithPlaceholder() || role == null
           ? _value.role
           // ignore: cast_nullable_to_non_nullable
@@ -160,14 +161,14 @@ class _AccessRightWidgetState extends State<AccessRightWidget> {
       GlobalKey<RoleFieldWidgetState>();
   final GlobalKey<StringWidgetState> modelWidgetKey =
       GlobalKey<StringWidgetState>();
-  final GlobalKey<StringWidgetState> operationsWidgetKey =
-      GlobalKey<StringWidgetState>();
-  final GlobalKey<StringWidgetState> fields_createWidgetKey =
-      GlobalKey<StringWidgetState>();
-  final GlobalKey<StringWidgetState> fields_editWidgetKey =
-      GlobalKey<StringWidgetState>();
-  final GlobalKey<StringWidgetState> fields_visibleWidgetKey =
-      GlobalKey<StringWidgetState>();
+  final GlobalKey<DefaultWidgetState> operationsWidgetKey =
+      GlobalKey<DefaultWidgetState>();
+  final GlobalKey<DefaultWidgetState> fields_createWidgetKey =
+      GlobalKey<DefaultWidgetState>();
+  final GlobalKey<DefaultWidgetState> fields_editWidgetKey =
+      GlobalKey<DefaultWidgetState>();
+  final GlobalKey<DefaultWidgetState> fields_visibleWidgetKey =
+      GlobalKey<DefaultWidgetState>();
   final GlobalKey<StringWidgetState> idWidgetKey =
       GlobalKey<StringWidgetState>();
 
@@ -205,7 +206,7 @@ class _AccessRightWidgetState extends State<AccessRightWidget> {
               placeholder: "Type the model",
               value: widget.element?.model,
             ),
-            StringWidget(
+            DefaultWidget(
               key: operationsWidgetKey,
               fieldName: "operations",
               fieldDescription: "This is the operations",
@@ -213,7 +214,7 @@ class _AccessRightWidgetState extends State<AccessRightWidget> {
               placeholder: "Type the operations",
               value: widget.element?.operations,
             ),
-            StringWidget(
+            DefaultWidget(
               key: fields_createWidgetKey,
               fieldName: "fields_create",
               fieldDescription: "This is the fields_create",
@@ -221,7 +222,7 @@ class _AccessRightWidgetState extends State<AccessRightWidget> {
               placeholder: "Type the fields_create",
               value: widget.element?.fields_create,
             ),
-            StringWidget(
+            DefaultWidget(
               key: fields_editWidgetKey,
               fieldName: "fields_edit",
               fieldDescription: "This is the fields_edit",
@@ -229,7 +230,7 @@ class _AccessRightWidgetState extends State<AccessRightWidget> {
               placeholder: "Type the fields_edit",
               value: widget.element?.fields_edit,
             ),
-            StringWidget(
+            DefaultWidget(
               key: fields_visibleWidgetKey,
               fieldName: "fields_visible",
               fieldDescription: "This is the fields_visible",
@@ -256,16 +257,16 @@ class _AccessRightWidgetState extends State<AccessRightWidget> {
 
           String? updatedmodel = modelWidgetKey.currentState?.getUpdatedValue();
 
-          String? updatedoperations =
+          dynamic updatedoperations =
               operationsWidgetKey.currentState?.getUpdatedValue();
 
-          String? updatedfields_create =
+          dynamic updatedfields_create =
               fields_createWidgetKey.currentState?.getUpdatedValue();
 
-          String? updatedfields_edit =
+          dynamic updatedfields_edit =
               fields_editWidgetKey.currentState?.getUpdatedValue();
 
-          String? updatedfields_visible =
+          dynamic updatedfields_visible =
               fields_visibleWidgetKey.currentState?.getUpdatedValue();
 
           String? updatedid = idWidgetKey.currentState?.getUpdatedValue();
@@ -295,11 +296,11 @@ class _AccessRightWidgetState extends State<AccessRightWidget> {
           try {
             if (widget.isEditing) {
               await container
-                  .read(updateAccessRightProvider(updatedAccessRight));
+                  .read(updateAccessRightProvider(Tuple2(updatedAccessRight, context)));
               print('AccessRight updated successfully');
             } else {
               await container
-                  .read(createAccessRightProvider(updatedAccessRight));
+                  .read(createAccessRightProvider(Tuple2(updatedAccessRight, context)));
               print('AccessRight created successfully');
             }
           } catch (error) {
@@ -747,10 +748,10 @@ AccessRight _$AccessRightFromJson(Map<String, dynamic> json) => AccessRight(
       name: json['name'] as String,
       role: json['role'] as String,
       model: json['model'] as String,
-      operations: json['operations'] as String,
-      fields_create: json['fields_create'] as String,
-      fields_edit: json['fields_edit'] as String,
-      fields_visible: json['fields_visible'] as String,
+      operations: json['operations'],
+      fields_create: json['fields_create'],
+      fields_edit: json['fields_edit'],
+      fields_visible: json['fields_visible'],
       id: json['id'] as String,
     );
 
@@ -881,10 +882,10 @@ class _AccessRightListViewState extends ConsumerState<AccessRightListView> {
                       'name': 'String',
                       'role': 'String',
                       'model': 'String',
-                      'operations': 'String',
-                      'fields_create': 'String',
-                      'fields_edit': 'String',
-                      'fields_visible': 'String',
+                      'operations': 'dynamic',
+                      'fields_create': 'dynamic',
+                      'fields_edit': 'dynamic',
+                      'fields_visible': 'dynamic',
                       'id': 'String'
                     },
                     filters: fieldsFilterStates,
@@ -1449,26 +1450,32 @@ final getAccessRightProvider = FutureProvider.autoDispose
 });
 
 final createAccessRightProvider = FutureProvider.autoDispose
-    .family<void, AccessRight>((ref, accessrightInstance) async {
+    .family<void, Tuple2<AccessRight, BuildContext>>((ref, tuple) async {
+  AccessRight accessrightInstance = tuple.item1;
+  BuildContext context = tuple.item2;
+
   final response = await http.post(
     Uri.parse('$baseURL/accessright'),
     headers: {'Content-Type': 'application/json'},
     body: jsonEncode(accessrightInstance.toJson()),
   );
   if (response.statusCode != 201) {
-    throw Exception('Failed to create AccessRight');
+    CustomSnackBar.show(context, jsonDecode(response.body)['detail']);
   }
 });
 
 final updateAccessRightProvider = FutureProvider.autoDispose
-    .family<void, AccessRight>((ref, accessrightInstance) async {
+    .family<void, Tuple2<AccessRight, BuildContext>>((ref, tuple) async {
+  AccessRight accessrightInstance = tuple.item1;
+  BuildContext context = tuple.item2;
+
   final response = await http.put(
     Uri.parse('$baseURL/accessright/${accessrightInstance.id}'),
     headers: {'Content-Type': 'application/json'},
     body: jsonEncode(accessrightInstance.toJson()),
   );
   if (response.statusCode != 200) {
-    throw Exception('Failed to update AccessRight');
+    CustomSnackBar.show(context, jsonDecode(response.body)['detail']);
   }
 });
 

@@ -57,25 +57,31 @@ class RiverpodCustomGenerator extends GeneratorForAnnotation<RiverpodGenAnnotati
         return $className.fromJson(jsonData);
       });
 
-      final create${className}Provider = FutureProvider.autoDispose.family<void, $className>((ref, ${classNameLowercase}Instance) async {
+      final create${className}Provider = FutureProvider.autoDispose.family<void, Tuple2<$className, BuildContext>>((ref, tuple) async {
+        $className ${classNameLowercase}Instance = tuple.item1;
+        BuildContext context = tuple.item2;
+
         final response = await http.post(
           Uri.parse('\$baseURL$createPath'),
           headers: {'Content-Type': 'application/json'},
           body: jsonEncode(${classNameLowercase}Instance.toJson()),
         );
         if (response.statusCode != 201) {
-          throw Exception('Failed to create $className');
+          CustomSnackBar.show(context, jsonDecode(response.body)['detail']);
         }
       });
 
-      final update${className}Provider = FutureProvider.autoDispose.family<void, $className>((ref, ${classNameLowercase}Instance) async {
+      final update${className}Provider = FutureProvider.autoDispose.family<void, Tuple2<$className, BuildContext>>((ref, tuple) async {
+        $className ${classNameLowercase}Instance = tuple.item1;
+        BuildContext context = tuple.item2;
+
         final response = await http.put(
           Uri.parse('\$baseURL$updatePath'),
           headers: {'Content-Type': 'application/json'},
           body: jsonEncode(${classNameLowercase}Instance.toJson()),
         );
         if (response.statusCode != 200) {
-          throw Exception('Failed to update $className');
+          CustomSnackBar.show(context, jsonDecode(response.body)['detail']);
         }
       });
 

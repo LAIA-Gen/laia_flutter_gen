@@ -30,13 +30,13 @@ class AccessRight {
   @Field(fieldName: 'model')
   final String model;
   @Field(fieldName: 'operations')
-  final String operations;
+  final dynamic operations;
   @Field(fieldName: 'fields_create')
-  final String fields_create;
+  final dynamic fields_create;
   @Field(fieldName: 'fields_edit')
-  final String fields_edit;
+  final dynamic fields_edit;
   @Field(fieldName: 'fields_visible')
-  final String fields_visible;
+  final dynamic fields_visible;
   @Field(fieldName: 'id')
   final String id;
 

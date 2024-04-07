@@ -377,10 +377,10 @@ class _${visitor.className}WidgetState extends State<${visitor.className}Widget>
           var container = ProviderContainer();
           try {
             if (widget.isEditing) {
-              await container.read(update${visitor.className}Provider(updated${visitor.className}));
+              await container.read(update${visitor.className}Provider(Tuple2(updated${visitor.className}, context)));
               print('${visitor.className} updated successfully');
             } else {
-              await container.read(create${visitor.className}Provider(updated${visitor.className}));
+              await container.read(create${visitor.className}Provider(Tuple2(updated${visitor.className}, context)));
               print('${visitor.className} created successfully');
             }
           } catch (error) {
