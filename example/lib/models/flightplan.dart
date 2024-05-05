@@ -18,26 +18,26 @@ part 'flightplan.g.dart';
 @JsonSerializable()
 @RiverpodGenAnnotation(auth: false)
 @HomeWidgetElementGenAnnotation()
-@ListWidgetGenAnnotation()
+@ListWidgetGenAnnotation(defaultFields: ['name', 'date', 'mission_details', 'route'], )
 @ElementWidgetGen(auth: false)
 @CopyWith()
 class FlightPlan {
-  @Field(fieldName: 'date')
+  @Field(editable: true, fieldDescription: "Departure Datetime of the FlightPlan", fieldName: "Flight Date", placeholder: "Select a Datetime")
   final DateTime? date;
   @Field(fieldName: 'id')
   final String? id;
-  @Field(fieldName: 'mission_details')
+  @Field(editable: true, fieldDescription: "These are the important details for the mission", fieldName: "Mission Details", placeholder: "Write the mission details here")
   final String? mission_details;
-  @Field(fieldName: 'name')
-  final String? name;
-  @Field(fieldName: 'route')
+  @Field(editable: true, fieldDescription: "This is the Name of the FlightPlan", fieldName: "Name", placeholder: "Write the Name of this FlightPlan")
+  final String name;
+  @Field(editable: true, fieldDescription: "This is Route of the FlightPlan", fieldName: "Route", placeholder: "Add the coordinates for the Route", uspaceMap: true)
   final LineString? route;
 
   FlightPlan({
     this.date,
     this.id,
     this.mission_details,
-    this.name,
+    required this.name,
     this.route
   });
 

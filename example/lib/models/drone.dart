@@ -19,17 +19,17 @@ part 'drone.g.dart';
 @JsonSerializable()
 @RiverpodGenAnnotation(auth: false)
 @HomeWidgetElementGenAnnotation()
-@ListWidgetGenAnnotation()
+@ListWidgetGenAnnotation(defaultFields: ['name', 'description', 'flightplans'], )
 @ElementWidgetGen(auth: false)
 @CopyWith()
 class Drone {
-  @Field(fieldName: 'description')
+  @Field(editable: true, fieldDescription: "This is the Drone Description", fieldName: "Description", placeholder: "Write short description of your Drone")
   final String? description;
-  @Field(relation: "FlightPlan")
+  @Field(editable: true, fieldDescription: "These are the Drone's FlightPlans", fieldName: "FlightPlans", placeholder: "List the Drone's FlightPlans", relation: "FlightPlan")
   final List<String> flightplans;
   @Field(fieldName: 'id')
   final String? id;
-  @Field(fieldName: 'name')
+  @Field(editable: true, fieldDescription: "This is the Drone Name", fieldName: "Name", placeholder: "Write the Name of your Drone")
   final String name;
 
   Drone({

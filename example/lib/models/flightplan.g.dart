@@ -13,7 +13,7 @@ abstract class _$FlightPlanCWProxy {
 
   FlightPlan mission_details(String? mission_details);
 
-  FlightPlan name(String? name);
+  FlightPlan name(String name);
 
   FlightPlan route(LineString? route);
 
@@ -49,7 +49,7 @@ class _$FlightPlanCWProxyImpl implements _$FlightPlanCWProxy {
       this(mission_details: mission_details);
 
   @override
-  FlightPlan name(String? name) => this(name: name);
+  FlightPlan name(String name) => this(name: name);
 
   @override
   FlightPlan route(LineString? route) => this(route: route);
@@ -82,10 +82,10 @@ class _$FlightPlanCWProxyImpl implements _$FlightPlanCWProxy {
           ? _value.mission_details
           // ignore: cast_nullable_to_non_nullable
           : mission_details as String?,
-      name: name == const $CopyWithPlaceholder()
+      name: name == const $CopyWithPlaceholder() || name == null
           ? _value.name
           // ignore: cast_nullable_to_non_nullable
-          : name as String?,
+          : name as String,
       route: route == const $CopyWithPlaceholder()
           ? _value.route
           // ignore: cast_nullable_to_non_nullable
@@ -138,10 +138,10 @@ class _FlightPlanWidgetState extends State<FlightPlanWidget> {
           children: [
             DateTimeWidget(
               key: dateWidgetKey,
-              fieldName: "date",
-              fieldDescription: "This is the date",
+              fieldName: "Flight Date",
+              fieldDescription: "Departure Datetime of the FlightPlan",
               editable: true,
-              placeholder: "Type the date",
+              placeholder: "Select a Datetime",
               value: widget.element?.date,
             ),
             StringWidget(
@@ -154,33 +154,34 @@ class _FlightPlanWidgetState extends State<FlightPlanWidget> {
             ),
             StringWidget(
               key: mission_detailsWidgetKey,
-              fieldName: "mission_details",
-              fieldDescription: "This is the mission_details",
+              fieldName: "Mission Details",
+              fieldDescription:
+                  "These are the important details for the mission",
               editable: true,
-              placeholder: "Type the mission_details",
+              placeholder: "Write the mission details here",
               value: widget.element?.mission_details,
             ),
             StringWidget(
               key: nameWidgetKey,
-              fieldName: "name",
-              fieldDescription: "This is the name",
+              fieldName: "Name",
+              fieldDescription: "This is the Name of the FlightPlan",
               editable: true,
-              placeholder: "Type the name",
+              placeholder: "Write the Name of this FlightPlan",
               value: widget.element?.name,
             ),
             MapWidget(
                 key: routeWidgetKey,
-                fieldName: "route",
-                fieldDescription: "This is the route",
+                fieldName: "Route",
+                fieldDescription: "This is Route of the FlightPlan",
                 editable: true,
-                placeholder: "Type the route",
+                placeholder: "Add the coordinates for the Route",
                 value: widget.element?.route ??
                     LineString(
                         type: "Feature",
                         geometry: GeometryLineString(
                             coordinates: [], type: "LineString"),
                         properties: {}),
-                uspaceMap: false),
+                uspaceMap: true),
           ],
         ),
       ),
@@ -676,7 +677,7 @@ FlightPlan _$FlightPlanFromJson(Map<String, dynamic> json) => FlightPlan(
           json['date'] == null ? null : DateTime.parse(json['date'] as String),
       id: json['id'] as String?,
       mission_details: json['mission_details'] as String?,
-      name: json['name'] as String?,
+      name: json['name'] as String,
       route: json['route'] == null
           ? null
           : LineString.fromJson(json['route'] as Map<String, dynamic>),
@@ -793,7 +794,7 @@ class _FlightPlanListViewState extends ConsumerState<FlightPlanListView> {
                       'date': 'DateTime?',
                       'id': 'String?',
                       'mission_details': 'String?',
-                      'name': 'String?',
+                      'name': 'String',
                       'route': 'LineString?'
                     },
                     filters: fieldsFilterStates,
@@ -824,7 +825,43 @@ class _FlightPlanListViewState extends ConsumerState<FlightPlanListView> {
                                                 MainAxisAlignment.center,
                                             children: [
                                               const Text(
-                                                'date',
+                                                'Name',
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Color.fromARGB(
+                                                        255, 94, 54, 54)),
+                                                textAlign: TextAlign.center,
+                                              ),
+                                              if (columnSortStates['name'] !=
+                                                  null) ...[
+                                                Icon(
+                                                  columnSortStates['name'] == 1
+                                                      ? Icons
+                                                          .arrow_drop_up_rounded
+                                                      : Icons
+                                                          .arrow_drop_down_rounded,
+                                                  color: Colors.black,
+                                                ),
+                                                Text(
+                                                  '${columnSortStates.keys.toList().indexOf('name') + 1}',
+                                                  style: const TextStyle(
+                                                      fontSize: 10),
+                                                ),
+                                              ],
+                                            ],
+                                          ),
+                                        ),
+                                        onSort: (columnIndex, ascending) =>
+                                            {onSort('name')},
+                                      ),
+                                      DataColumn(
+                                        label: Expanded(
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              const Text(
+                                                'Flight Date',
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.bold,
                                                     color: Color.fromARGB(
@@ -860,43 +897,7 @@ class _FlightPlanListViewState extends ConsumerState<FlightPlanListView> {
                                                 MainAxisAlignment.center,
                                             children: [
                                               const Text(
-                                                'id',
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Color.fromARGB(
-                                                        255, 94, 54, 54)),
-                                                textAlign: TextAlign.center,
-                                              ),
-                                              if (columnSortStates['id'] !=
-                                                  null) ...[
-                                                Icon(
-                                                  columnSortStates['id'] == 1
-                                                      ? Icons
-                                                          .arrow_drop_up_rounded
-                                                      : Icons
-                                                          .arrow_drop_down_rounded,
-                                                  color: Colors.black,
-                                                ),
-                                                Text(
-                                                  '${columnSortStates.keys.toList().indexOf('id') + 1}',
-                                                  style: const TextStyle(
-                                                      fontSize: 10),
-                                                ),
-                                              ],
-                                            ],
-                                          ),
-                                        ),
-                                        onSort: (columnIndex, ascending) =>
-                                            {onSort('id')},
-                                      ),
-                                      DataColumn(
-                                        label: Expanded(
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              const Text(
-                                                'mission_details',
+                                                'Mission Details',
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.bold,
                                                     color: Color.fromARGB(
@@ -935,43 +936,7 @@ class _FlightPlanListViewState extends ConsumerState<FlightPlanListView> {
                                                 MainAxisAlignment.center,
                                             children: [
                                               const Text(
-                                                'name',
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Color.fromARGB(
-                                                        255, 94, 54, 54)),
-                                                textAlign: TextAlign.center,
-                                              ),
-                                              if (columnSortStates['name'] !=
-                                                  null) ...[
-                                                Icon(
-                                                  columnSortStates['name'] == 1
-                                                      ? Icons
-                                                          .arrow_drop_up_rounded
-                                                      : Icons
-                                                          .arrow_drop_down_rounded,
-                                                  color: Colors.black,
-                                                ),
-                                                Text(
-                                                  '${columnSortStates.keys.toList().indexOf('name') + 1}',
-                                                  style: const TextStyle(
-                                                      fontSize: 10),
-                                                ),
-                                              ],
-                                            ],
-                                          ),
-                                        ),
-                                        onSort: (columnIndex, ascending) =>
-                                            {onSort('name')},
-                                      ),
-                                      DataColumn(
-                                        label: Expanded(
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              const Text(
-                                                'route',
+                                                'Route',
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.bold,
                                                     color: Color.fromARGB(
@@ -1006,17 +971,14 @@ class _FlightPlanListViewState extends ConsumerState<FlightPlanListView> {
                                         cells: [
                                           DataCell(Center(
                                               child: Text(
-                                                  flightplan.date.toString()))),
+                                                  flightplan.name.toString()))),
                                           DataCell(Center(
                                               child: Text(
-                                                  flightplan.id.toString()))),
+                                                  flightplan.date.toString()))),
                                           DataCell(Center(
                                               child: Text(flightplan
                                                   .mission_details
                                                   .toString()))),
-                                          DataCell(Center(
-                                              child: Text(
-                                                  flightplan.name.toString()))),
                                           DataCell(Center(
                                               child: ElevatedButton(
                                             onPressed: () {
@@ -1036,7 +998,7 @@ class _FlightPlanListViewState extends ConsumerState<FlightPlanListView> {
                                                                       context)
                                                                   .size
                                                                   .height,
-                                                              false)),
+                                                              true)),
                                                 ),
                                               );
                                             },

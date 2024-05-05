@@ -126,18 +126,18 @@ class _DroneWidgetState extends State<DroneWidget> {
           children: [
             StringWidget(
               key: descriptionWidgetKey,
-              fieldName: "description",
-              fieldDescription: "This is the description",
+              fieldName: "Description",
+              fieldDescription: "This is the Drone Description",
               editable: true,
-              placeholder: "Type the description",
+              placeholder: "Write short description of your Drone",
               value: widget.element?.description,
             ),
             FlightPlanMultiFieldWidget(
               key: flightplansWidgetKey,
-              fieldName: "flightplans",
-              fieldDescription: "This is the flightplans",
+              fieldName: "FlightPlans",
+              fieldDescription: "These are the Drone's FlightPlans",
               editable: true,
-              placeholder: "Type the flightplans",
+              placeholder: "List the Drone's FlightPlans",
               values: widget.element?.flightplans,
             ),
             StringWidget(
@@ -150,10 +150,10 @@ class _DroneWidgetState extends State<DroneWidget> {
             ),
             StringWidget(
               key: nameWidgetKey,
-              fieldName: "name",
-              fieldDescription: "This is the name",
+              fieldName: "Name",
+              fieldDescription: "This is the Drone Name",
               editable: true,
-              placeholder: "Type the name",
+              placeholder: "Write the Name of your Drone",
               value: widget.element?.name,
             ),
           ],
@@ -788,7 +788,43 @@ class _DroneListViewState extends ConsumerState<DroneListView> {
                                                 MainAxisAlignment.center,
                                             children: [
                                               const Text(
-                                                'description',
+                                                'Name',
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Color.fromARGB(
+                                                        255, 94, 54, 54)),
+                                                textAlign: TextAlign.center,
+                                              ),
+                                              if (columnSortStates['name'] !=
+                                                  null) ...[
+                                                Icon(
+                                                  columnSortStates['name'] == 1
+                                                      ? Icons
+                                                          .arrow_drop_up_rounded
+                                                      : Icons
+                                                          .arrow_drop_down_rounded,
+                                                  color: Colors.black,
+                                                ),
+                                                Text(
+                                                  '${columnSortStates.keys.toList().indexOf('name') + 1}',
+                                                  style: const TextStyle(
+                                                      fontSize: 10),
+                                                ),
+                                              ],
+                                            ],
+                                          ),
+                                        ),
+                                        onSort: (columnIndex, ascending) =>
+                                            {onSort('name')},
+                                      ),
+                                      DataColumn(
+                                        label: Expanded(
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              const Text(
+                                                'Description',
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.bold,
                                                     color: Color.fromARGB(
@@ -827,7 +863,7 @@ class _DroneListViewState extends ConsumerState<DroneListView> {
                                                 MainAxisAlignment.center,
                                             children: [
                                               const Text(
-                                                'flightplans',
+                                                'FlightPlans',
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.bold,
                                                     color: Color.fromARGB(
@@ -859,82 +895,13 @@ class _DroneListViewState extends ConsumerState<DroneListView> {
                                         onSort: (columnIndex, ascending) =>
                                             {onSort('flightplans')},
                                       ),
-                                      DataColumn(
-                                        label: Expanded(
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              const Text(
-                                                'id',
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Color.fromARGB(
-                                                        255, 94, 54, 54)),
-                                                textAlign: TextAlign.center,
-                                              ),
-                                              if (columnSortStates['id'] !=
-                                                  null) ...[
-                                                Icon(
-                                                  columnSortStates['id'] == 1
-                                                      ? Icons
-                                                          .arrow_drop_up_rounded
-                                                      : Icons
-                                                          .arrow_drop_down_rounded,
-                                                  color: Colors.black,
-                                                ),
-                                                Text(
-                                                  '${columnSortStates.keys.toList().indexOf('id') + 1}',
-                                                  style: const TextStyle(
-                                                      fontSize: 10),
-                                                ),
-                                              ],
-                                            ],
-                                          ),
-                                        ),
-                                        onSort: (columnIndex, ascending) =>
-                                            {onSort('id')},
-                                      ),
-                                      DataColumn(
-                                        label: Expanded(
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              const Text(
-                                                'name',
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Color.fromARGB(
-                                                        255, 94, 54, 54)),
-                                                textAlign: TextAlign.center,
-                                              ),
-                                              if (columnSortStates['name'] !=
-                                                  null) ...[
-                                                Icon(
-                                                  columnSortStates['name'] == 1
-                                                      ? Icons
-                                                          .arrow_drop_up_rounded
-                                                      : Icons
-                                                          .arrow_drop_down_rounded,
-                                                  color: Colors.black,
-                                                ),
-                                                Text(
-                                                  '${columnSortStates.keys.toList().indexOf('name') + 1}',
-                                                  style: const TextStyle(
-                                                      fontSize: 10),
-                                                ),
-                                              ],
-                                            ],
-                                          ),
-                                        ),
-                                        onSort: (columnIndex, ascending) =>
-                                            {onSort('name')},
-                                      ),
                                     ],
                                     rows: drones.map((drone) {
                                       return DataRow(
                                         cells: [
+                                          DataCell(Center(
+                                              child:
+                                                  Text(drone.name.toString()))),
                                           DataCell(Center(
                                               child: Text(drone.description
                                                   .toString()))),
@@ -1046,12 +1013,6 @@ class _DroneListViewState extends ConsumerState<DroneListView> {
                                               ),
                                             ),
                                           ),
-                                          DataCell(Center(
-                                              child:
-                                                  Text(drone.id.toString()))),
-                                          DataCell(Center(
-                                              child:
-                                                  Text(drone.name.toString()))),
                                         ],
                                         onSelectChanged: (selected) {
                                           Navigator.push(
