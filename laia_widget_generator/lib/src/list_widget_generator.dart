@@ -36,6 +36,8 @@ class ListWidgetGenerator extends GeneratorForAnnotation<ListWidgetGenAnnotation
 class ${className}ListView extends ConsumerStatefulWidget {
   final Map<String, dynamic>? extraFilters;
   final Map<String, dynamic> currentFilters = {};
+  late bool _initialized = false;
+  late List<bool> selectedStates;
 
   ${className}ListView({Key? key, this.extraFilters}) : super(key: key);
 
@@ -117,26 +119,60 @@ class _${className}ListViewState extends ConsumerState<${className}ListView> {
       appBar: AppBar(
         title: const Text('$className List'),
         actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const ${className}Widget(
-                    isEditing: false,
+          Container(
+              margin: const EdgeInsets.only(right: 10),
+              child: ElevatedButton(
+              onPressed: () {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const ${className}Widget(
+                      isEditing: false,
+                    ),
+                  ),
+                );
+              },
+              style: ButtonStyle(
+                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5),
                   ),
                 ),
-              );
-            },
-            icon: const Icon(Icons.add),
-          ),
-        ],
-      ),
+                backgroundColor: MaterialStateProperty.all<Color>(
+                    Styles.buttonPrimaryColor),
+                elevation:
+                    MaterialStateProperty.resolveWith<double>((states) {
+                  if (states.contains(MaterialState.hovered) ||
+                      states.contains(MaterialState.pressed)) {
+                    return 0;
+                  }
+                  return 0;
+                }),
+                foregroundColor:
+                    MaterialStateProperty.all<Color>(Colors.white),
+                overlayColor:
+                    MaterialStateProperty.resolveWith<Color>((states) {
+                  if (states.contains(MaterialState.hovered)) {
+                    return Styles.buttonPrimaryColorHover;
+                  }
+                  return Colors.transparent;
+                }),
+              ),
+              child: const Text('Create $className'),
+            ),),
+          ],
+        ),
       body: ${classNamePlural}AsyncValue.when(
         loading: () => const CircularProgressIndicator(),
         error: (error, stackTrace) => Text('Error: \$error'),
         data: (${className}PaginationData data) {
           final $classNamePlural = data.items;
+
+          if (!widget._initialized) {
+            widget.selectedStates = List.generate($classNamePlural.length, (index) => false);
+            widget._initialized = true;
+          }
+
           return Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -159,6 +195,62 @@ class _${className}ListViewState extends ConsumerState<${className}ListView> {
               filters: fieldsFilterStates,
               onFilterChanged: onFilter,
               onFilterRemove: onFilterRemove,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.refresh, color: Colors.grey),
+                  onPressed: () {
+                    ref.read(${classNameLowercase}PaginationProvider.notifier).setPage(1);
+                  },
+                ),
+                Container(
+                  margin: const EdgeInsets.only(right: 10, left: 10, bottom: 5),
+                  child: ElevatedButton(
+                  onPressed: widget.selectedStates.contains(true)
+                    ? () {
+                        List<int> selectedIndices = List.generate(
+                          widget.selectedStates.length,
+                          (index) => widget.selectedStates[index] ? index : -1,
+                        ).where((index) => index != -1).toList();
+
+                        List<$className> selected${className}s = selectedIndices.map((index) => $classNamePlural[index]).toList();
+                        _onDeleteElement(selected${className}s, ref, paginationState);
+                      }
+                    : null,
+                  style: ButtonStyle(
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                    ),
+                    backgroundColor: MaterialStateProperty.all<Color>(
+                      widget.selectedStates.contains(true)
+                        ?
+                        const Color.fromARGB(255, 224, 210, 210): 
+                        const Color.fromARGB(255, 202, 202, 202)),
+                    elevation:
+                        MaterialStateProperty.resolveWith<double>((states) {
+                      if (states.contains(MaterialState.hovered) ||
+                          states.contains(MaterialState.pressed)) {
+                        return 0;
+                      }
+                      return 0;
+                    }),
+                    foregroundColor:
+                        MaterialStateProperty.all<Color>(Colors.white),
+                    overlayColor:
+                        MaterialStateProperty.resolveWith<Color>((states) {
+                      if (states.contains(MaterialState.hovered)) {
+                        return const Color.fromARGB(255, 194, 165, 165);
+                      }
+                      return Colors.transparent;
+                    }),
+                  ),
+                  child: const Text('Delete'),
+                ),
+              ),]
             ),
             Expanded(
               child: ListView(
@@ -260,8 +352,11 @@ class _${className}ListViewState extends ConsumerState<${className}ListView> {
   }
     buffer.writeln('''
         ],
-        rows: $classNamePlural.map(($classNameLowercase) {
+        rows: List<DataRow>.generate($classNamePlural.length, (index) {
+          var $classNameLowercase = $classNamePlural[index];
+          
           return DataRow(
+            selected: widget.selectedStates[index],
             cells: [
 ''');
 
@@ -344,6 +439,9 @@ DataCell(Center(
     },
   ),
 ),
+onTap: () => {
+  _navigateElement($classNameLowercase)
+},
 ),
 ''');
         }
@@ -413,6 +511,9 @@ DataCell(Center(
     },
   ),
 ),
+onTap: () => {
+  _navigateElement($classNameLowercase)
+},
 ),
 ''');
           }
@@ -464,12 +565,20 @@ DataCell(Center(
                     "$fieldType",
                     style: TextStyle(color: Colors.white),
                   ),
-                ))),
+                )),
+                onTap: () => {
+                  _navigateElement($classNameLowercase)
+                },
+                ),
         ''');
         }
         else {
           buffer.writeln('''
-          DataCell(Center(child: Text($classNameLowercase.$field.toString()))),
+          DataCell(Center(child: Text($classNameLowercase.$field.toString())),
+          onTap: () => {
+            _navigateElement($classNameLowercase)
+          },
+          ),
         ''');
         }
       }
@@ -478,14 +587,12 @@ DataCell(Center(
     buffer.writeln('''
                         ],
                             onSelectChanged: (selected) {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => $widget(element: $classNameLowercase, isEditing: true)),
-                              );
+                              setState(() {
+                                widget.selectedStates[index] = selected!;
+                              });
                             },
                           );
                         }).toList(),
-                        showCheckboxColumn: false,
                       ),
                     ),
                   ),),
@@ -510,6 +617,55 @@ DataCell(Center(
     if (pageNumber <= maxPages) {
       ref.read(${classNameLowercase}PaginationProvider.notifier).setPage(pageNumber);
     }
+  }
+
+  void _navigateElement($className $classNameLowercase) {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+          builder: (context) =>
+              ${className}Widget(
+                  element: $classNameLowercase,
+                  isEditing: true)),
+    );
+  }
+
+  void _onDeleteElement(List<$className> $classNamePlural, WidgetRef ref, ${className}PaginationState paginationState) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Confirm Delete'),
+          content: const Text('Are you sure you want to delete these records?'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                _deleteRecords($classNamePlural, ref, paginationState);
+                Navigator.of(context).pop();
+                setState(() {});
+              },
+              child: const Text('Delete'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _deleteRecords(List<$className> $classNamePlural, WidgetRef ref, ${className}PaginationState paginationState) async {
+    for (var $classNameLowercase in $classNamePlural) {
+      await ref.read(delete${className}Provider($classNameLowercase.id!).future);
+    }
+    setState(() {
+      widget._initialized = false;
+    });
+    ref.read(${classNameLowercase}PaginationProvider.notifier).setPage(1);
   }
 }
 

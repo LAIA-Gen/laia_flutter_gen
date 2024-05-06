@@ -177,6 +177,13 @@ class _AccessRightWidgetState extends State<AccessRightWidget> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('AccessRight'),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () => Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => AccessRightListView()),
+          ),
+        ),
       ),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
@@ -299,10 +306,12 @@ class _AccessRightWidgetState extends State<AccessRightWidget> {
               await container.read(updateAccessRightProvider(
                   Tuple2(updatedAccessRight, context)));
               print('AccessRight updated successfully');
+              CustomSnackBar.show(context, 'AccessRight updated successfully');
             } else {
               await container.read(createAccessRightProvider(
                   Tuple2(updatedAccessRight, context)));
               print('AccessRight created successfully');
+              CustomSnackBar.show(context, 'AccessRight created successfully');
             }
           } catch (error) {
             print('Failed to update AccessRight: $error');
@@ -775,6 +784,8 @@ Map<String, dynamic> _$AccessRightToJson(AccessRight instance) =>
 class AccessRightListView extends ConsumerStatefulWidget {
   final Map<String, dynamic>? extraFilters;
   final Map<String, dynamic> currentFilters = {};
+  late bool _initialized = false;
+  late List<bool> selectedStates;
 
   AccessRightListView({Key? key, this.extraFilters}) : super(key: key);
 
@@ -855,18 +866,47 @@ class _AccessRightListViewState extends ConsumerState<AccessRightListView> {
         appBar: AppBar(
           title: const Text('AccessRight List'),
           actions: [
-            IconButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const AccessRightWidget(
-                      isEditing: false,
+            Container(
+              margin: const EdgeInsets.only(right: 10),
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const AccessRightWidget(
+                        isEditing: false,
+                      ),
+                    ),
+                  );
+                },
+                style: ButtonStyle(
+                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5),
                     ),
                   ),
-                );
-              },
-              icon: const Icon(Icons.add),
+                  backgroundColor: MaterialStateProperty.all<Color>(
+                      Styles.buttonPrimaryColor),
+                  elevation:
+                      MaterialStateProperty.resolveWith<double>((states) {
+                    if (states.contains(MaterialState.hovered) ||
+                        states.contains(MaterialState.pressed)) {
+                      return 0;
+                    }
+                    return 0;
+                  }),
+                  foregroundColor:
+                      MaterialStateProperty.all<Color>(Colors.white),
+                  overlayColor:
+                      MaterialStateProperty.resolveWith<Color>((states) {
+                    if (states.contains(MaterialState.hovered)) {
+                      return Styles.buttonPrimaryColorHover;
+                    }
+                    return Colors.transparent;
+                  }),
+                ),
+                child: const Text('Create AccessRight'),
+              ),
             ),
           ],
         ),
@@ -875,6 +915,13 @@ class _AccessRightListViewState extends ConsumerState<AccessRightListView> {
           error: (error, stackTrace) => Text('Error: $error'),
           data: (AccessRightPaginationData data) {
             final accessrights = data.items;
+
+            if (!widget._initialized) {
+              widget.selectedStates =
+                  List.generate(accessrights.length, (index) => false);
+              widget._initialized = true;
+            }
+
             return Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
@@ -893,6 +940,69 @@ class _AccessRightListViewState extends ConsumerState<AccessRightListView> {
                     onFilterChanged: onFilter,
                     onFilterRemove: onFilterRemove,
                   ),
+                  Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+                    IconButton(
+                      icon: const Icon(Icons.refresh, color: Colors.grey),
+                      onPressed: () {
+                        ref
+                            .read(accessrightPaginationProvider.notifier)
+                            .setPage(1);
+                      },
+                    ),
+                    Container(
+                      margin:
+                          const EdgeInsets.only(right: 10, left: 10, bottom: 5),
+                      child: ElevatedButton(
+                        onPressed: widget.selectedStates.contains(true)
+                            ? () {
+                                List<int> selectedIndices = List.generate(
+                                  widget.selectedStates.length,
+                                  (index) =>
+                                      widget.selectedStates[index] ? index : -1,
+                                ).where((index) => index != -1).toList();
+
+                                List<AccessRight> selectedAccessRights =
+                                    selectedIndices
+                                        .map((index) => accessrights[index])
+                                        .toList();
+                                _onDeleteElement(
+                                    selectedAccessRights, ref, paginationState);
+                              }
+                            : null,
+                        style: ButtonStyle(
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                          ),
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                              widget.selectedStates.contains(true)
+                                  ? const Color.fromARGB(255, 224, 210, 210)
+                                  : const Color.fromARGB(255, 202, 202, 202)),
+                          elevation: MaterialStateProperty.resolveWith<double>(
+                              (states) {
+                            if (states.contains(MaterialState.hovered) ||
+                                states.contains(MaterialState.pressed)) {
+                              return 0;
+                            }
+                            return 0;
+                          }),
+                          foregroundColor:
+                              MaterialStateProperty.all<Color>(Colors.white),
+                          overlayColor:
+                              MaterialStateProperty.resolveWith<Color>(
+                                  (states) {
+                            if (states.contains(MaterialState.hovered)) {
+                              return const Color.fromARGB(255, 194, 165, 165);
+                            }
+                            return Colors.transparent;
+                          }),
+                        ),
+                        child: const Text('Delete'),
+                      ),
+                    ),
+                  ]),
                   Expanded(
                     child: ListView(
                       children: [
@@ -1211,12 +1321,20 @@ class _AccessRightListViewState extends ConsumerState<AccessRightListView> {
                                             {onSort('id')},
                                       ),
                                     ],
-                                    rows: accessrights.map((accessright) {
+                                    rows: List<DataRow>.generate(
+                                        accessrights.length, (index) {
+                                      var accessright = accessrights[index];
+
                                       return DataRow(
+                                        selected: widget.selectedStates[index],
                                         cells: [
-                                          DataCell(Center(
-                                              child: Text(accessright.name
-                                                  .toString()))),
+                                          DataCell(
+                                            Center(
+                                                child: Text(accessright.name
+                                                    .toString())),
+                                            onTap: () =>
+                                                {_navigateElement(accessright)},
+                                          ),
                                           DataCell(
                                             Center(
                                               child: FutureBuilder<List<Role>>(
@@ -1322,42 +1440,64 @@ class _AccessRightListViewState extends ConsumerState<AccessRightListView> {
                                                 },
                                               ),
                                             ),
+                                            onTap: () =>
+                                                {_navigateElement(accessright)},
                                           ),
-                                          DataCell(Center(
-                                              child: Text(accessright.model
-                                                  .toString()))),
-                                          DataCell(Center(
-                                              child: Text(accessright.operations
-                                                  .toString()))),
-                                          DataCell(Center(
-                                              child: Text(accessright
-                                                  .fields_create
-                                                  .toString()))),
-                                          DataCell(Center(
-                                              child: Text(accessright
-                                                  .fields_edit
-                                                  .toString()))),
-                                          DataCell(Center(
-                                              child: Text(accessright
-                                                  .fields_visible
-                                                  .toString()))),
-                                          DataCell(Center(
-                                              child: Text(
-                                                  accessright.id.toString()))),
+                                          DataCell(
+                                            Center(
+                                                child: Text(accessright.model
+                                                    .toString())),
+                                            onTap: () =>
+                                                {_navigateElement(accessright)},
+                                          ),
+                                          DataCell(
+                                            Center(
+                                                child: Text(accessright
+                                                    .operations
+                                                    .toString())),
+                                            onTap: () =>
+                                                {_navigateElement(accessright)},
+                                          ),
+                                          DataCell(
+                                            Center(
+                                                child: Text(accessright
+                                                    .fields_create
+                                                    .toString())),
+                                            onTap: () =>
+                                                {_navigateElement(accessright)},
+                                          ),
+                                          DataCell(
+                                            Center(
+                                                child: Text(accessright
+                                                    .fields_edit
+                                                    .toString())),
+                                            onTap: () =>
+                                                {_navigateElement(accessright)},
+                                          ),
+                                          DataCell(
+                                            Center(
+                                                child: Text(accessright
+                                                    .fields_visible
+                                                    .toString())),
+                                            onTap: () =>
+                                                {_navigateElement(accessright)},
+                                          ),
+                                          DataCell(
+                                            Center(
+                                                child: Text(
+                                                    accessright.id.toString())),
+                                            onTap: () =>
+                                                {_navigateElement(accessright)},
+                                          ),
                                         ],
                                         onSelectChanged: (selected) {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    AccessRightWidget(
-                                                        element: accessright,
-                                                        isEditing: true)),
-                                          );
+                                          setState(() {
+                                            widget.selectedStates[index] =
+                                                selected!;
+                                          });
                                         },
                                       );
                                     }).toList(),
-                                    showCheckboxColumn: false,
                                   ),
                                 ),
                               ),
@@ -1384,6 +1524,55 @@ class _AccessRightListViewState extends ConsumerState<AccessRightListView> {
     if (pageNumber <= maxPages) {
       ref.read(accessrightPaginationProvider.notifier).setPage(pageNumber);
     }
+  }
+
+  void _navigateElement(AccessRight accessright) {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+          builder: (context) =>
+              AccessRightWidget(element: accessright, isEditing: true)),
+    );
+  }
+
+  void _onDeleteElement(List<AccessRight> accessrights, WidgetRef ref,
+      AccessRightPaginationState paginationState) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Confirm Delete'),
+          content: const Text('Are you sure you want to delete these records?'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                _deleteRecords(accessrights, ref, paginationState);
+                Navigator.of(context).pop();
+                setState(() {});
+              },
+              child: const Text('Delete'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _deleteRecords(List<AccessRight> accessrights, WidgetRef ref,
+      AccessRightPaginationState paginationState) async {
+    for (var accessright in accessrights) {
+      await ref.read(deleteAccessRightProvider(accessright.id!).future);
+    }
+    setState(() {
+      widget._initialized = false;
+    });
+    ref.read(accessrightPaginationProvider.notifier).setPage(1);
   }
 }
 
@@ -1468,7 +1657,7 @@ final createAccessRightProvider = FutureProvider.autoDispose
     headers: {'Content-Type': 'application/json'},
     body: jsonEncode(accessrightInstance.toJson()),
   );
-  if (response.statusCode != 201) {
+  if (response.statusCode != 200) {
     CustomSnackBar.show(context, jsonDecode(response.body)['detail']);
   }
 });
@@ -1489,11 +1678,11 @@ final updateAccessRightProvider = FutureProvider.autoDispose
 });
 
 final deleteAccessRightProvider =
-    FutureProvider.autoDispose.family<void, int>((ref, accessrightId) async {
+    FutureProvider.autoDispose.family<void, String>((ref, accessrightId) async {
   final response = await http.delete(
     Uri.parse('$baseURL/accessright/$accessrightId'),
   );
-  if (response.statusCode != 204) {
+  if (response.statusCode != 200) {
     throw Exception('Failed to delete AccessRight');
   }
 });

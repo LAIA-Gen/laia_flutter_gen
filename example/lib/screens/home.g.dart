@@ -42,6 +42,7 @@ List<Widget> _dashboardWidgets = [
   DroneHomeWidget(),
   FlightPlanHomeWidget(),
   AccessRightHomeWidget(),
+  RoleHomeWidget(),
 ];
 
 class DynamicLogInScreen extends StatelessWidget {

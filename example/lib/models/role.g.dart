@@ -92,6 +92,13 @@ class _RoleWidgetState extends State<RoleWidget> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Role'),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () => Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => RoleListView()),
+          ),
+        ),
       ),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
@@ -135,10 +142,12 @@ class _RoleWidgetState extends State<RoleWidget> {
               await container
                   .read(updateRoleProvider(Tuple2(updatedRole, context)));
               print('Role updated successfully');
+              CustomSnackBar.show(context, 'Role updated successfully');
             } else {
               await container
                   .read(createRoleProvider(Tuple2(updatedRole, context)));
               print('Role created successfully');
+              CustomSnackBar.show(context, 'Role created successfully');
             }
           } catch (error) {
             print('Failed to update Role: $error');
@@ -591,6 +600,8 @@ Map<String, dynamic> _$RoleToJson(Role instance) => <String, dynamic>{
 class RoleListView extends ConsumerStatefulWidget {
   final Map<String, dynamic>? extraFilters;
   final Map<String, dynamic> currentFilters = {};
+  late bool _initialized = false;
+  late List<bool> selectedStates;
 
   RoleListView({Key? key, this.extraFilters}) : super(key: key);
 
@@ -655,18 +666,47 @@ class _RoleListViewState extends ConsumerState<RoleListView> {
         appBar: AppBar(
           title: const Text('Role List'),
           actions: [
-            IconButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const RoleWidget(
-                      isEditing: false,
+            Container(
+              margin: const EdgeInsets.only(right: 10),
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const RoleWidget(
+                        isEditing: false,
+                      ),
+                    ),
+                  );
+                },
+                style: ButtonStyle(
+                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5),
                     ),
                   ),
-                );
-              },
-              icon: const Icon(Icons.add),
+                  backgroundColor: MaterialStateProperty.all<Color>(
+                      Styles.buttonPrimaryColor),
+                  elevation:
+                      MaterialStateProperty.resolveWith<double>((states) {
+                    if (states.contains(MaterialState.hovered) ||
+                        states.contains(MaterialState.pressed)) {
+                      return 0;
+                    }
+                    return 0;
+                  }),
+                  foregroundColor:
+                      MaterialStateProperty.all<Color>(Colors.white),
+                  overlayColor:
+                      MaterialStateProperty.resolveWith<Color>((states) {
+                    if (states.contains(MaterialState.hovered)) {
+                      return Styles.buttonPrimaryColorHover;
+                    }
+                    return Colors.transparent;
+                  }),
+                ),
+                child: const Text('Create Role'),
+              ),
             ),
           ],
         ),
@@ -675,6 +715,13 @@ class _RoleListViewState extends ConsumerState<RoleListView> {
           error: (error, stackTrace) => Text('Error: $error'),
           data: (RolePaginationData data) {
             final roles = data.items;
+
+            if (!widget._initialized) {
+              widget.selectedStates =
+                  List.generate(roles.length, (index) => false);
+              widget._initialized = true;
+            }
+
             return Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
@@ -684,6 +731,66 @@ class _RoleListViewState extends ConsumerState<RoleListView> {
                     onFilterChanged: onFilter,
                     onFilterRemove: onFilterRemove,
                   ),
+                  Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+                    IconButton(
+                      icon: const Icon(Icons.refresh, color: Colors.grey),
+                      onPressed: () {
+                        ref.read(rolePaginationProvider.notifier).setPage(1);
+                      },
+                    ),
+                    Container(
+                      margin:
+                          const EdgeInsets.only(right: 10, left: 10, bottom: 5),
+                      child: ElevatedButton(
+                        onPressed: widget.selectedStates.contains(true)
+                            ? () {
+                                List<int> selectedIndices = List.generate(
+                                  widget.selectedStates.length,
+                                  (index) =>
+                                      widget.selectedStates[index] ? index : -1,
+                                ).where((index) => index != -1).toList();
+
+                                List<Role> selectedRoles = selectedIndices
+                                    .map((index) => roles[index])
+                                    .toList();
+                                _onDeleteElement(
+                                    selectedRoles, ref, paginationState);
+                              }
+                            : null,
+                        style: ButtonStyle(
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                          ),
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                              widget.selectedStates.contains(true)
+                                  ? const Color.fromARGB(255, 224, 210, 210)
+                                  : const Color.fromARGB(255, 202, 202, 202)),
+                          elevation: MaterialStateProperty.resolveWith<double>(
+                              (states) {
+                            if (states.contains(MaterialState.hovered) ||
+                                states.contains(MaterialState.pressed)) {
+                              return 0;
+                            }
+                            return 0;
+                          }),
+                          foregroundColor:
+                              MaterialStateProperty.all<Color>(Colors.white),
+                          overlayColor:
+                              MaterialStateProperty.resolveWith<Color>(
+                                  (states) {
+                            if (states.contains(MaterialState.hovered)) {
+                              return const Color.fromARGB(255, 194, 165, 165);
+                            }
+                            return Colors.transparent;
+                          }),
+                        ),
+                        child: const Text('Delete'),
+                      ),
+                    ),
+                  ]),
                   Expanded(
                     child: ListView(
                       children: [
@@ -774,28 +881,36 @@ class _RoleListViewState extends ConsumerState<RoleListView> {
                                             {onSort('id')},
                                       ),
                                     ],
-                                    rows: roles.map((role) {
+                                    rows: List<DataRow>.generate(roles.length,
+                                        (index) {
+                                      var role = roles[index];
+
                                       return DataRow(
+                                        selected: widget.selectedStates[index],
                                         cells: [
-                                          DataCell(Center(
-                                              child:
-                                                  Text(role.name.toString()))),
-                                          DataCell(Center(
-                                              child: Text(role.id.toString()))),
+                                          DataCell(
+                                            Center(
+                                                child:
+                                                    Text(role.name.toString())),
+                                            onTap: () =>
+                                                {_navigateElement(role)},
+                                          ),
+                                          DataCell(
+                                            Center(
+                                                child:
+                                                    Text(role.id.toString())),
+                                            onTap: () =>
+                                                {_navigateElement(role)},
+                                          ),
                                         ],
                                         onSelectChanged: (selected) {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    RoleWidget(
-                                                        element: role,
-                                                        isEditing: true)),
-                                          );
+                                          setState(() {
+                                            widget.selectedStates[index] =
+                                                selected!;
+                                          });
                                         },
                                       );
                                     }).toList(),
-                                    showCheckboxColumn: false,
                                   ),
                                 ),
                               ),
@@ -822,6 +937,54 @@ class _RoleListViewState extends ConsumerState<RoleListView> {
     if (pageNumber <= maxPages) {
       ref.read(rolePaginationProvider.notifier).setPage(pageNumber);
     }
+  }
+
+  void _navigateElement(Role role) {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+          builder: (context) => RoleWidget(element: role, isEditing: true)),
+    );
+  }
+
+  void _onDeleteElement(
+      List<Role> roles, WidgetRef ref, RolePaginationState paginationState) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Confirm Delete'),
+          content: const Text('Are you sure you want to delete these records?'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                _deleteRecords(roles, ref, paginationState);
+                Navigator.of(context).pop();
+                setState(() {});
+              },
+              child: const Text('Delete'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _deleteRecords(List<Role> roles, WidgetRef ref,
+      RolePaginationState paginationState) async {
+    for (var role in roles) {
+      await ref.read(deleteRoleProvider(role.id!).future);
+    }
+    setState(() {
+      widget._initialized = false;
+    });
+    ref.read(rolePaginationProvider.notifier).setPage(1);
   }
 }
 
@@ -905,7 +1068,7 @@ final createRoleProvider = FutureProvider.autoDispose
     headers: {'Content-Type': 'application/json'},
     body: jsonEncode(roleInstance.toJson()),
   );
-  if (response.statusCode != 201) {
+  if (response.statusCode != 200) {
     CustomSnackBar.show(context, jsonDecode(response.body)['detail']);
   }
 });
@@ -926,11 +1089,11 @@ final updateRoleProvider = FutureProvider.autoDispose
 });
 
 final deleteRoleProvider =
-    FutureProvider.autoDispose.family<void, int>((ref, roleId) async {
+    FutureProvider.autoDispose.family<void, String>((ref, roleId) async {
   final response = await http.delete(
     Uri.parse('$baseURL/role/$roleId'),
   );
-  if (response.statusCode != 204) {
+  if (response.statusCode != 200) {
     throw Exception('Failed to delete Role');
   }
 });

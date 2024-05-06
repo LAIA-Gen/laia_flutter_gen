@@ -107,6 +107,14 @@ class _${visitor.className}WidgetState extends State<${visitor.className}Widget>
     return Scaffold(
         appBar: AppBar(
           title: const Text('${visitor.className}'),
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back, color: Colors.black),
+            onPressed: () => Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => ${visitor.className}ListView()),
+            ),
+          ), 
         ),
         body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
@@ -379,9 +387,11 @@ class _${visitor.className}WidgetState extends State<${visitor.className}Widget>
             if (widget.isEditing) {
               await container.read(update${visitor.className}Provider(Tuple2(updated${visitor.className}, context)));
               print('${visitor.className} updated successfully');
+              CustomSnackBar.show(context, '${visitor.className} updated successfully');
             } else {
               await container.read(create${visitor.className}Provider(Tuple2(updated${visitor.className}, context)));
               print('${visitor.className} created successfully');
+              CustomSnackBar.show(context, '${visitor.className} created successfully');
             }
           } catch (error) {
             print('Failed to update ${visitor.className}: \$error');

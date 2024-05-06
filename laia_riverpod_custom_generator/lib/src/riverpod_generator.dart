@@ -66,7 +66,7 @@ class RiverpodCustomGenerator extends GeneratorForAnnotation<RiverpodGenAnnotati
           headers: {'Content-Type': 'application/json'},
           body: jsonEncode(${classNameLowercase}Instance.toJson()),
         );
-        if (response.statusCode != 201) {
+        if (response.statusCode != 200) {
           CustomSnackBar.show(context, jsonDecode(response.body)['detail']);
         }
       });
@@ -85,11 +85,11 @@ class RiverpodCustomGenerator extends GeneratorForAnnotation<RiverpodGenAnnotati
         }
       });
 
-      final delete${className}Provider = FutureProvider.autoDispose.family<void, int>((ref, ${classNameLowercase}Id) async {
+      final delete${className}Provider = FutureProvider.autoDispose.family<void, String>((ref, ${classNameLowercase}Id) async {
         final response = await http.delete(
           Uri.parse('\$baseURL$deletePath'),
         );
-        if (response.statusCode != 204) {
+        if (response.statusCode != 200) {
           throw Exception('Failed to delete $className');
         }
       });

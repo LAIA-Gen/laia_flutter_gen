@@ -119,6 +119,13 @@ class _DroneWidgetState extends State<DroneWidget> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Drone'),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () => Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => DroneListView()),
+          ),
+        ),
       ),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
@@ -190,10 +197,12 @@ class _DroneWidgetState extends State<DroneWidget> {
               await container
                   .read(updateDroneProvider(Tuple2(updatedDrone, context)));
               print('Drone updated successfully');
+              CustomSnackBar.show(context, 'Drone updated successfully');
             } else {
               await container
                   .read(createDroneProvider(Tuple2(updatedDrone, context)));
               print('Drone created successfully');
+              CustomSnackBar.show(context, 'Drone created successfully');
             }
           } catch (error) {
             print('Failed to update Drone: $error');
@@ -653,6 +662,8 @@ Map<String, dynamic> _$DroneToJson(Drone instance) => <String, dynamic>{
 class DroneListView extends ConsumerStatefulWidget {
   final Map<String, dynamic>? extraFilters;
   final Map<String, dynamic> currentFilters = {};
+  late bool _initialized = false;
+  late List<bool> selectedStates;
 
   DroneListView({Key? key, this.extraFilters}) : super(key: key);
 
@@ -730,18 +741,47 @@ class _DroneListViewState extends ConsumerState<DroneListView> {
         appBar: AppBar(
           title: const Text('Drone List'),
           actions: [
-            IconButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const DroneWidget(
-                      isEditing: false,
+            Container(
+              margin: const EdgeInsets.only(right: 10),
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const DroneWidget(
+                        isEditing: false,
+                      ),
+                    ),
+                  );
+                },
+                style: ButtonStyle(
+                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5),
                     ),
                   ),
-                );
-              },
-              icon: const Icon(Icons.add),
+                  backgroundColor: MaterialStateProperty.all<Color>(
+                      Styles.buttonPrimaryColor),
+                  elevation:
+                      MaterialStateProperty.resolveWith<double>((states) {
+                    if (states.contains(MaterialState.hovered) ||
+                        states.contains(MaterialState.pressed)) {
+                      return 0;
+                    }
+                    return 0;
+                  }),
+                  foregroundColor:
+                      MaterialStateProperty.all<Color>(Colors.white),
+                  overlayColor:
+                      MaterialStateProperty.resolveWith<Color>((states) {
+                    if (states.contains(MaterialState.hovered)) {
+                      return Styles.buttonPrimaryColorHover;
+                    }
+                    return Colors.transparent;
+                  }),
+                ),
+                child: const Text('Create Drone'),
+              ),
             ),
           ],
         ),
@@ -750,6 +790,13 @@ class _DroneListViewState extends ConsumerState<DroneListView> {
           error: (error, stackTrace) => Text('Error: $error'),
           data: (DronePaginationData data) {
             final drones = data.items;
+
+            if (!widget._initialized) {
+              widget.selectedStates =
+                  List.generate(drones.length, (index) => false);
+              widget._initialized = true;
+            }
+
             return Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
@@ -764,6 +811,66 @@ class _DroneListViewState extends ConsumerState<DroneListView> {
                     onFilterChanged: onFilter,
                     onFilterRemove: onFilterRemove,
                   ),
+                  Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+                    IconButton(
+                      icon: const Icon(Icons.refresh, color: Colors.grey),
+                      onPressed: () {
+                        ref.read(dronePaginationProvider.notifier).setPage(1);
+                      },
+                    ),
+                    Container(
+                      margin:
+                          const EdgeInsets.only(right: 10, left: 10, bottom: 5),
+                      child: ElevatedButton(
+                        onPressed: widget.selectedStates.contains(true)
+                            ? () {
+                                List<int> selectedIndices = List.generate(
+                                  widget.selectedStates.length,
+                                  (index) =>
+                                      widget.selectedStates[index] ? index : -1,
+                                ).where((index) => index != -1).toList();
+
+                                List<Drone> selectedDrones = selectedIndices
+                                    .map((index) => drones[index])
+                                    .toList();
+                                _onDeleteElement(
+                                    selectedDrones, ref, paginationState);
+                              }
+                            : null,
+                        style: ButtonStyle(
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                          ),
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                              widget.selectedStates.contains(true)
+                                  ? const Color.fromARGB(255, 224, 210, 210)
+                                  : const Color.fromARGB(255, 202, 202, 202)),
+                          elevation: MaterialStateProperty.resolveWith<double>(
+                              (states) {
+                            if (states.contains(MaterialState.hovered) ||
+                                states.contains(MaterialState.pressed)) {
+                              return 0;
+                            }
+                            return 0;
+                          }),
+                          foregroundColor:
+                              MaterialStateProperty.all<Color>(Colors.white),
+                          overlayColor:
+                              MaterialStateProperty.resolveWith<Color>(
+                                  (states) {
+                            if (states.contains(MaterialState.hovered)) {
+                              return const Color.fromARGB(255, 194, 165, 165);
+                            }
+                            return Colors.transparent;
+                          }),
+                        ),
+                        child: const Text('Delete'),
+                      ),
+                    ),
+                  ]),
                   Expanded(
                     child: ListView(
                       children: [
@@ -896,15 +1003,27 @@ class _DroneListViewState extends ConsumerState<DroneListView> {
                                             {onSort('flightplans')},
                                       ),
                                     ],
-                                    rows: drones.map((drone) {
+                                    rows: List<DataRow>.generate(drones.length,
+                                        (index) {
+                                      var drone = drones[index];
+
                                       return DataRow(
+                                        selected: widget.selectedStates[index],
                                         cells: [
-                                          DataCell(Center(
-                                              child:
-                                                  Text(drone.name.toString()))),
-                                          DataCell(Center(
-                                              child: Text(drone.description
-                                                  .toString()))),
+                                          DataCell(
+                                            Center(
+                                                child: Text(
+                                                    drone.name.toString())),
+                                            onTap: () =>
+                                                {_navigateElement(drone)},
+                                          ),
+                                          DataCell(
+                                            Center(
+                                                child: Text(drone.description
+                                                    .toString())),
+                                            onTap: () =>
+                                                {_navigateElement(drone)},
+                                          ),
                                           DataCell(
                                             Center(
                                               child: FutureBuilder<
@@ -1012,21 +1131,18 @@ class _DroneListViewState extends ConsumerState<DroneListView> {
                                                 },
                                               ),
                                             ),
+                                            onTap: () =>
+                                                {_navigateElement(drone)},
                                           ),
                                         ],
                                         onSelectChanged: (selected) {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    DroneWidget(
-                                                        element: drone,
-                                                        isEditing: true)),
-                                          );
+                                          setState(() {
+                                            widget.selectedStates[index] =
+                                                selected!;
+                                          });
                                         },
                                       );
                                     }).toList(),
-                                    showCheckboxColumn: false,
                                   ),
                                 ),
                               ),
@@ -1053,6 +1169,54 @@ class _DroneListViewState extends ConsumerState<DroneListView> {
     if (pageNumber <= maxPages) {
       ref.read(dronePaginationProvider.notifier).setPage(pageNumber);
     }
+  }
+
+  void _navigateElement(Drone drone) {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+          builder: (context) => DroneWidget(element: drone, isEditing: true)),
+    );
+  }
+
+  void _onDeleteElement(
+      List<Drone> drones, WidgetRef ref, DronePaginationState paginationState) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Confirm Delete'),
+          content: const Text('Are you sure you want to delete these records?'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                _deleteRecords(drones, ref, paginationState);
+                Navigator.of(context).pop();
+                setState(() {});
+              },
+              child: const Text('Delete'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _deleteRecords(List<Drone> drones, WidgetRef ref,
+      DronePaginationState paginationState) async {
+    for (var drone in drones) {
+      await ref.read(deleteDroneProvider(drone.id!).future);
+    }
+    setState(() {
+      widget._initialized = false;
+    });
+    ref.read(dronePaginationProvider.notifier).setPage(1);
   }
 }
 
@@ -1136,7 +1300,7 @@ final createDroneProvider = FutureProvider.autoDispose
     headers: {'Content-Type': 'application/json'},
     body: jsonEncode(droneInstance.toJson()),
   );
-  if (response.statusCode != 201) {
+  if (response.statusCode != 200) {
     CustomSnackBar.show(context, jsonDecode(response.body)['detail']);
   }
 });
@@ -1157,11 +1321,11 @@ final updateDroneProvider = FutureProvider.autoDispose
 });
 
 final deleteDroneProvider =
-    FutureProvider.autoDispose.family<void, int>((ref, droneId) async {
+    FutureProvider.autoDispose.family<void, String>((ref, droneId) async {
   final response = await http.delete(
     Uri.parse('$baseURL/drone/$droneId'),
   );
-  if (response.statusCode != 204) {
+  if (response.statusCode != 200) {
     throw Exception('Failed to delete Drone');
   }
 });

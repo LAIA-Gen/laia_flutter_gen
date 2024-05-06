@@ -131,6 +131,13 @@ class _FlightPlanWidgetState extends State<FlightPlanWidget> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('FlightPlan'),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () => Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => FlightPlanListView()),
+          ),
+        ),
       ),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
@@ -226,10 +233,12 @@ class _FlightPlanWidgetState extends State<FlightPlanWidget> {
               await container.read(
                   updateFlightPlanProvider(Tuple2(updatedFlightPlan, context)));
               print('FlightPlan updated successfully');
+              CustomSnackBar.show(context, 'FlightPlan updated successfully');
             } else {
               await container.read(
                   createFlightPlanProvider(Tuple2(updatedFlightPlan, context)));
               print('FlightPlan created successfully');
+              CustomSnackBar.show(context, 'FlightPlan created successfully');
             }
           } catch (error) {
             print('Failed to update FlightPlan: $error');
@@ -699,6 +708,8 @@ Map<String, dynamic> _$FlightPlanToJson(FlightPlan instance) =>
 class FlightPlanListView extends ConsumerStatefulWidget {
   final Map<String, dynamic>? extraFilters;
   final Map<String, dynamic> currentFilters = {};
+  late bool _initialized = false;
+  late List<bool> selectedStates;
 
   FlightPlanListView({Key? key, this.extraFilters}) : super(key: key);
 
@@ -766,18 +777,47 @@ class _FlightPlanListViewState extends ConsumerState<FlightPlanListView> {
         appBar: AppBar(
           title: const Text('FlightPlan List'),
           actions: [
-            IconButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const FlightPlanWidget(
-                      isEditing: false,
+            Container(
+              margin: const EdgeInsets.only(right: 10),
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const FlightPlanWidget(
+                        isEditing: false,
+                      ),
+                    ),
+                  );
+                },
+                style: ButtonStyle(
+                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5),
                     ),
                   ),
-                );
-              },
-              icon: const Icon(Icons.add),
+                  backgroundColor: MaterialStateProperty.all<Color>(
+                      Styles.buttonPrimaryColor),
+                  elevation:
+                      MaterialStateProperty.resolveWith<double>((states) {
+                    if (states.contains(MaterialState.hovered) ||
+                        states.contains(MaterialState.pressed)) {
+                      return 0;
+                    }
+                    return 0;
+                  }),
+                  foregroundColor:
+                      MaterialStateProperty.all<Color>(Colors.white),
+                  overlayColor:
+                      MaterialStateProperty.resolveWith<Color>((states) {
+                    if (states.contains(MaterialState.hovered)) {
+                      return Styles.buttonPrimaryColorHover;
+                    }
+                    return Colors.transparent;
+                  }),
+                ),
+                child: const Text('Create FlightPlan'),
+              ),
             ),
           ],
         ),
@@ -786,6 +826,13 @@ class _FlightPlanListViewState extends ConsumerState<FlightPlanListView> {
           error: (error, stackTrace) => Text('Error: $error'),
           data: (FlightPlanPaginationData data) {
             final flightplans = data.items;
+
+            if (!widget._initialized) {
+              widget.selectedStates =
+                  List.generate(flightplans.length, (index) => false);
+              widget._initialized = true;
+            }
+
             return Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
@@ -801,6 +848,69 @@ class _FlightPlanListViewState extends ConsumerState<FlightPlanListView> {
                     onFilterChanged: onFilter,
                     onFilterRemove: onFilterRemove,
                   ),
+                  Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+                    IconButton(
+                      icon: const Icon(Icons.refresh, color: Colors.grey),
+                      onPressed: () {
+                        ref
+                            .read(flightplanPaginationProvider.notifier)
+                            .setPage(1);
+                      },
+                    ),
+                    Container(
+                      margin:
+                          const EdgeInsets.only(right: 10, left: 10, bottom: 5),
+                      child: ElevatedButton(
+                        onPressed: widget.selectedStates.contains(true)
+                            ? () {
+                                List<int> selectedIndices = List.generate(
+                                  widget.selectedStates.length,
+                                  (index) =>
+                                      widget.selectedStates[index] ? index : -1,
+                                ).where((index) => index != -1).toList();
+
+                                List<FlightPlan> selectedFlightPlans =
+                                    selectedIndices
+                                        .map((index) => flightplans[index])
+                                        .toList();
+                                _onDeleteElement(
+                                    selectedFlightPlans, ref, paginationState);
+                              }
+                            : null,
+                        style: ButtonStyle(
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                          ),
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                              widget.selectedStates.contains(true)
+                                  ? const Color.fromARGB(255, 224, 210, 210)
+                                  : const Color.fromARGB(255, 202, 202, 202)),
+                          elevation: MaterialStateProperty.resolveWith<double>(
+                              (states) {
+                            if (states.contains(MaterialState.hovered) ||
+                                states.contains(MaterialState.pressed)) {
+                              return 0;
+                            }
+                            return 0;
+                          }),
+                          foregroundColor:
+                              MaterialStateProperty.all<Color>(Colors.white),
+                          overlayColor:
+                              MaterialStateProperty.resolveWith<Color>(
+                                  (states) {
+                            if (states.contains(MaterialState.hovered)) {
+                              return const Color.fromARGB(255, 194, 165, 165);
+                            }
+                            return Colors.transparent;
+                          }),
+                        ),
+                        child: const Text('Delete'),
+                      ),
+                    ),
+                  ]),
                   Expanded(
                     child: ListView(
                       children: [
@@ -966,107 +1076,126 @@ class _FlightPlanListViewState extends ConsumerState<FlightPlanListView> {
                                             {onSort('route')},
                                       ),
                                     ],
-                                    rows: flightplans.map((flightplan) {
+                                    rows: List<DataRow>.generate(
+                                        flightplans.length, (index) {
+                                      var flightplan = flightplans[index];
+
                                       return DataRow(
+                                        selected: widget.selectedStates[index],
                                         cells: [
-                                          DataCell(Center(
-                                              child: Text(
-                                                  flightplan.name.toString()))),
-                                          DataCell(Center(
-                                              child: Text(
-                                                  flightplan.date.toString()))),
-                                          DataCell(Center(
-                                              child: Text(flightplan
-                                                  .mission_details
-                                                  .toString()))),
-                                          DataCell(Center(
-                                              child: ElevatedButton(
-                                            onPressed: () {
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      MapScreenView(
-                                                          LineStringView(
-                                                              flightplan
-                                                                  .route!
-                                                                  .geometry
-                                                                  .coordinates,
-                                                              flightplan.route!
-                                                                  .properties,
-                                                              MediaQuery.of(
-                                                                      context)
-                                                                  .size
-                                                                  .height,
-                                                              true)),
+                                          DataCell(
+                                            Center(
+                                                child: Text(flightplan.name
+                                                    .toString())),
+                                            onTap: () =>
+                                                {_navigateElement(flightplan)},
+                                          ),
+                                          DataCell(
+                                            Center(
+                                                child: Text(flightplan.date
+                                                    .toString())),
+                                            onTap: () =>
+                                                {_navigateElement(flightplan)},
+                                          ),
+                                          DataCell(
+                                            Center(
+                                                child: Text(flightplan
+                                                    .mission_details
+                                                    .toString())),
+                                            onTap: () =>
+                                                {_navigateElement(flightplan)},
+                                          ),
+                                          DataCell(
+                                            Center(
+                                                child: ElevatedButton(
+                                              onPressed: () {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        MapScreenView(
+                                                            LineStringView(
+                                                                flightplan
+                                                                    .route!
+                                                                    .geometry
+                                                                    .coordinates,
+                                                                flightplan
+                                                                    .route!
+                                                                    .properties,
+                                                                MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .height,
+                                                                true)),
+                                                  ),
+                                                );
+                                              },
+                                              style: ButtonStyle(
+                                                shape:
+                                                    MaterialStateProperty.all<
+                                                        RoundedRectangleBorder>(
+                                                  RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            5),
+                                                  ),
                                                 ),
-                                              );
-                                            },
-                                            style: ButtonStyle(
-                                              shape: MaterialStateProperty.all<
-                                                  RoundedRectangleBorder>(
-                                                RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(5),
+                                                padding: MaterialStateProperty
+                                                    .all<EdgeInsetsGeometry>(
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 1,
+                                                      vertical: 1),
                                                 ),
-                                              ),
-                                              padding: MaterialStateProperty
-                                                  .all<EdgeInsetsGeometry>(
-                                                const EdgeInsets.symmetric(
-                                                    horizontal: 1, vertical: 1),
-                                              ),
-                                              backgroundColor:
-                                                  MaterialStateProperty
-                                                      .all<Color>(Styles
-                                                          .buttonPrimaryColor),
-                                              elevation: MaterialStateProperty
-                                                  .resolveWith<double>(
-                                                      (states) {
-                                                if (states.contains(
-                                                        MaterialState
-                                                            .hovered) ||
-                                                    states.contains(
-                                                        MaterialState
-                                                            .pressed)) {
+                                                backgroundColor:
+                                                    MaterialStateProperty
+                                                        .all<Color>(Styles
+                                                            .buttonPrimaryColor),
+                                                elevation: MaterialStateProperty
+                                                    .resolveWith<double>(
+                                                        (states) {
+                                                  if (states.contains(
+                                                          MaterialState
+                                                              .hovered) ||
+                                                      states.contains(
+                                                          MaterialState
+                                                              .pressed)) {
+                                                    return 0;
+                                                  }
                                                   return 0;
-                                                }
-                                                return 0;
-                                              }),
-                                              foregroundColor:
-                                                  MaterialStateProperty.all<
-                                                      Color>(Colors.white),
-                                              overlayColor:
-                                                  MaterialStateProperty
-                                                      .resolveWith<Color>(
-                                                          (states) {
-                                                if (states.contains(
-                                                    MaterialState.hovered)) {
-                                                  return Styles
-                                                      .buttonPrimaryColorHover;
-                                                }
-                                                return Colors.transparent;
-                                              }),
-                                            ),
-                                            child: const Text(
-                                              "LineString?",
-                                              style: TextStyle(
-                                                  color: Colors.white),
-                                            ),
-                                          ))),
+                                                }),
+                                                foregroundColor:
+                                                    MaterialStateProperty.all<
+                                                        Color>(Colors.white),
+                                                overlayColor:
+                                                    MaterialStateProperty
+                                                        .resolveWith<Color>(
+                                                            (states) {
+                                                  if (states.contains(
+                                                      MaterialState.hovered)) {
+                                                    return Styles
+                                                        .buttonPrimaryColorHover;
+                                                  }
+                                                  return Colors.transparent;
+                                                }),
+                                              ),
+                                              child: const Text(
+                                                "LineString?",
+                                                style: TextStyle(
+                                                    color: Colors.white),
+                                              ),
+                                            )),
+                                            onTap: () =>
+                                                {_navigateElement(flightplan)},
+                                          ),
                                         ],
                                         onSelectChanged: (selected) {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    FlightPlanWidget(
-                                                        element: flightplan,
-                                                        isEditing: true)),
-                                          );
+                                          setState(() {
+                                            widget.selectedStates[index] =
+                                                selected!;
+                                          });
                                         },
                                       );
                                     }).toList(),
-                                    showCheckboxColumn: false,
                                   ),
                                 ),
                               ),
@@ -1093,6 +1222,55 @@ class _FlightPlanListViewState extends ConsumerState<FlightPlanListView> {
     if (pageNumber <= maxPages) {
       ref.read(flightplanPaginationProvider.notifier).setPage(pageNumber);
     }
+  }
+
+  void _navigateElement(FlightPlan flightplan) {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+          builder: (context) =>
+              FlightPlanWidget(element: flightplan, isEditing: true)),
+    );
+  }
+
+  void _onDeleteElement(List<FlightPlan> flightplans, WidgetRef ref,
+      FlightPlanPaginationState paginationState) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Confirm Delete'),
+          content: const Text('Are you sure you want to delete these records?'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                _deleteRecords(flightplans, ref, paginationState);
+                Navigator.of(context).pop();
+                setState(() {});
+              },
+              child: const Text('Delete'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _deleteRecords(List<FlightPlan> flightplans, WidgetRef ref,
+      FlightPlanPaginationState paginationState) async {
+    for (var flightplan in flightplans) {
+      await ref.read(deleteFlightPlanProvider(flightplan.id!).future);
+    }
+    setState(() {
+      widget._initialized = false;
+    });
+    ref.read(flightplanPaginationProvider.notifier).setPage(1);
   }
 }
 
@@ -1177,7 +1355,7 @@ final createFlightPlanProvider = FutureProvider.autoDispose
     headers: {'Content-Type': 'application/json'},
     body: jsonEncode(flightplanInstance.toJson()),
   );
-  if (response.statusCode != 201) {
+  if (response.statusCode != 200) {
     CustomSnackBar.show(context, jsonDecode(response.body)['detail']);
   }
 });
@@ -1198,11 +1376,11 @@ final updateFlightPlanProvider = FutureProvider.autoDispose
 });
 
 final deleteFlightPlanProvider =
-    FutureProvider.autoDispose.family<void, int>((ref, flightplanId) async {
+    FutureProvider.autoDispose.family<void, String>((ref, flightplanId) async {
   final response = await http.delete(
     Uri.parse('$baseURL/flightplan/$flightplanId'),
   );
-  if (response.statusCode != 204) {
+  if (response.statusCode != 200) {
     throw Exception('Failed to delete FlightPlan');
   }
 });
