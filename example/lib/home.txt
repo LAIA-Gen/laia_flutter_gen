@@ -1,4 +1,7 @@
-DroneHomeWidget
-FlightPlanHomeWidget
 AccessRightHomeWidget
 RoleHomeWidget
+DroneTypeHomeWidget
+OperatorHomeWidget
+FlightPlanHomeWidget
+ManufacturerHomeWidget
+DroneHomeWidget

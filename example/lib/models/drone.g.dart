@@ -7,13 +7,19 @@ part of 'drone.dart';
 // **************************************************************************
 
 abstract class _$DroneCWProxy {
-  Drone description(String? description);
-
-  Drone flightplans(List<String> flightplans);
+  Drone capabilities(String capabilities);
 
   Drone id(String? id);
 
+  Drone manufacturer(String? manufacturer);
+
+  Drone model(String model);
+
   Drone name(String name);
+
+  Drone operatorId(String? operatorId);
+
+  Drone type(String type);
 
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Drone(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
@@ -22,10 +28,13 @@ abstract class _$DroneCWProxy {
   /// Drone(...).copyWith(id: 12, name: "My name")
   /// ````
   Drone call({
-    String? description,
-    List<String>? flightplans,
+    String? capabilities,
     String? id,
+    String? manufacturer,
+    String? model,
     String? name,
+    String? operatorId,
+    String? type,
   });
 }
 
@@ -36,16 +45,25 @@ class _$DroneCWProxyImpl implements _$DroneCWProxy {
   const _$DroneCWProxyImpl(this._value);
 
   @override
-  Drone description(String? description) => this(description: description);
-
-  @override
-  Drone flightplans(List<String> flightplans) => this(flightplans: flightplans);
+  Drone capabilities(String capabilities) => this(capabilities: capabilities);
 
   @override
   Drone id(String? id) => this(id: id);
 
   @override
+  Drone manufacturer(String? manufacturer) => this(manufacturer: manufacturer);
+
+  @override
+  Drone model(String model) => this(model: model);
+
+  @override
   Drone name(String name) => this(name: name);
+
+  @override
+  Drone operatorId(String? operatorId) => this(operatorId: operatorId);
+
+  @override
+  Drone type(String type) => this(type: type);
 
   @override
 
@@ -56,29 +74,44 @@ class _$DroneCWProxyImpl implements _$DroneCWProxy {
   /// Drone(...).copyWith(id: 12, name: "My name")
   /// ````
   Drone call({
-    Object? description = const $CopyWithPlaceholder(),
-    Object? flightplans = const $CopyWithPlaceholder(),
+    Object? capabilities = const $CopyWithPlaceholder(),
     Object? id = const $CopyWithPlaceholder(),
+    Object? manufacturer = const $CopyWithPlaceholder(),
+    Object? model = const $CopyWithPlaceholder(),
     Object? name = const $CopyWithPlaceholder(),
+    Object? operatorId = const $CopyWithPlaceholder(),
+    Object? type = const $CopyWithPlaceholder(),
   }) {
     return Drone(
-      description: description == const $CopyWithPlaceholder()
-          ? _value.description
-          // ignore: cast_nullable_to_non_nullable
-          : description as String?,
-      flightplans:
-          flightplans == const $CopyWithPlaceholder() || flightplans == null
-              ? _value.flightplans
+      capabilities:
+          capabilities == const $CopyWithPlaceholder() || capabilities == null
+              ? _value.capabilities
               // ignore: cast_nullable_to_non_nullable
-              : flightplans as List<String>,
+              : capabilities as String,
       id: id == const $CopyWithPlaceholder()
           ? _value.id
           // ignore: cast_nullable_to_non_nullable
           : id as String?,
+      manufacturer: manufacturer == const $CopyWithPlaceholder()
+          ? _value.manufacturer
+          // ignore: cast_nullable_to_non_nullable
+          : manufacturer as String?,
+      model: model == const $CopyWithPlaceholder() || model == null
+          ? _value.model
+          // ignore: cast_nullable_to_non_nullable
+          : model as String,
       name: name == const $CopyWithPlaceholder() || name == null
           ? _value.name
           // ignore: cast_nullable_to_non_nullable
           : name as String,
+      operatorId: operatorId == const $CopyWithPlaceholder()
+          ? _value.operatorId
+          // ignore: cast_nullable_to_non_nullable
+          : operatorId as String?,
+      type: type == const $CopyWithPlaceholder() || type == null
+          ? _value.type
+          // ignore: cast_nullable_to_non_nullable
+          : type as String,
     );
   }
 }
@@ -105,14 +138,20 @@ class DroneWidget extends StatefulWidget {
 }
 
 class _DroneWidgetState extends State<DroneWidget> {
-  final GlobalKey<StringWidgetState> descriptionWidgetKey =
+  final GlobalKey<StringWidgetState> capabilitiesWidgetKey =
       GlobalKey<StringWidgetState>();
-  final GlobalKey<FlightPlanMultiFieldWidgetState> flightplansWidgetKey =
-      GlobalKey<FlightPlanMultiFieldWidgetState>();
   final GlobalKey<StringWidgetState> idWidgetKey =
+      GlobalKey<StringWidgetState>();
+  final GlobalKey<ManufacturerFieldWidgetState> manufacturerWidgetKey =
+      GlobalKey<ManufacturerFieldWidgetState>();
+  final GlobalKey<StringWidgetState> modelWidgetKey =
       GlobalKey<StringWidgetState>();
   final GlobalKey<StringWidgetState> nameWidgetKey =
       GlobalKey<StringWidgetState>();
+  final GlobalKey<OperatorFieldWidgetState> operatorIdWidgetKey =
+      GlobalKey<OperatorFieldWidgetState>();
+  final GlobalKey<DroneTypeFieldWidgetState> typeWidgetKey =
+      GlobalKey<DroneTypeFieldWidgetState>();
 
   @override
   Widget build(BuildContext context) {
@@ -132,20 +171,12 @@ class _DroneWidgetState extends State<DroneWidget> {
         child: Column(
           children: [
             StringWidget(
-              key: descriptionWidgetKey,
-              fieldName: "Description",
-              fieldDescription: "This is the Drone Description",
+              key: capabilitiesWidgetKey,
+              fieldName: "Capabilities",
+              fieldDescription: "These are the Capabilities of the Drone",
               editable: true,
-              placeholder: "Write short description of your Drone",
-              value: widget.element?.description,
-            ),
-            FlightPlanMultiFieldWidget(
-              key: flightplansWidgetKey,
-              fieldName: "FlightPlans",
-              fieldDescription: "These are the Drone's FlightPlans",
-              editable: true,
-              placeholder: "List the Drone's FlightPlans",
-              values: widget.element?.flightplans,
+              placeholder: "Describe the Capabilities of the Drone",
+              value: widget.element?.capabilities,
             ),
             StringWidget(
               key: idWidgetKey,
@@ -155,6 +186,22 @@ class _DroneWidgetState extends State<DroneWidget> {
               placeholder: "Type the id",
               value: widget.element?.id,
             ),
+            ManufacturerFieldWidget(
+              key: manufacturerWidgetKey,
+              fieldName: "Manufacturer",
+              fieldDescription: "This is the drone Manufacturer",
+              editable: true,
+              placeholder: "Select the Manufacturer",
+              value: widget.element?.manufacturer,
+            ),
+            StringWidget(
+              key: modelWidgetKey,
+              fieldName: "Model",
+              fieldDescription: "This is the Model of the Drone",
+              editable: true,
+              placeholder: "Enter the Model of the Drone",
+              value: widget.element?.model,
+            ),
             StringWidget(
               key: nameWidgetKey,
               fieldName: "Name",
@@ -163,34 +210,63 @@ class _DroneWidgetState extends State<DroneWidget> {
               placeholder: "Write the Name of your Drone",
               value: widget.element?.name,
             ),
+            OperatorFieldWidget(
+              key: operatorIdWidgetKey,
+              fieldName: "Operator",
+              fieldDescription: "This is the Operator of the Drone",
+              editable: true,
+              placeholder: "Select the Operator of the Drone",
+              value: widget.element?.operatorId,
+            ),
+            DroneTypeFieldWidget(
+              key: typeWidgetKey,
+              fieldName: "Drone Type",
+              fieldDescription: "This is the Type of the Drone",
+              editable: true,
+              placeholder: "Select the Type of the Drone",
+              value: widget.element?.type,
+            ),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          String? updateddescription =
-              descriptionWidgetKey.currentState?.getUpdatedValue();
-
-          List<String>? updatedflightplans =
-              flightplansWidgetKey.currentState?.getUpdatedValue();
+          String? updatedcapabilities =
+              capabilitiesWidgetKey.currentState?.getUpdatedValue();
 
           String? updatedid = idWidgetKey.currentState?.getUpdatedValue();
 
+          String? updatedmanufacturer =
+              manufacturerWidgetKey.currentState?.getUpdatedValue();
+
+          String? updatedmodel = modelWidgetKey.currentState?.getUpdatedValue();
+
           String? updatedname = nameWidgetKey.currentState?.getUpdatedValue();
+
+          String? updatedoperatorId =
+              operatorIdWidgetKey.currentState?.getUpdatedValue();
+
+          String? updatedtype = typeWidgetKey.currentState?.getUpdatedValue();
 
           Drone updatedDrone = widget.element ??
               Drone(
-                description: updateddescription ?? '',
-                flightplans: updatedflightplans ?? [''],
+                capabilities: updatedcapabilities ?? '',
                 id: updatedid ?? '',
+                manufacturer: updatedmanufacturer ?? '',
+                model: updatedmodel ?? '',
                 name: updatedname ?? '',
+                operatorId: updatedoperatorId ?? '',
+                type: updatedtype ?? '',
               );
 
           updatedDrone = updatedDrone.copyWith(
-              description: updateddescription,
-              flightplans: updatedflightplans,
+              capabilities: updatedcapabilities,
               id: updatedid,
-              name: updatedname);
+              manufacturer: updatedmanufacturer,
+              model: updatedmodel,
+              name: updatedname,
+              operatorId: updatedoperatorId,
+              type: updatedtype);
           var container = ProviderContainer();
           try {
             if (widget.isEditing) {
@@ -640,19 +716,23 @@ class DroneHomeWidget extends StatelessWidget {
 // **************************************************************************
 
 Drone _$DroneFromJson(Map<String, dynamic> json) => Drone(
-      description: json['description'] as String?,
-      flightplans: (json['flightplans'] as List<dynamic>)
-          .map((e) => e as String)
-          .toList(),
+      capabilities: json['capabilities'] as String,
       id: json['id'] as String?,
+      manufacturer: json['manufacturer'] as String?,
+      model: json['model'] as String,
       name: json['name'] as String,
+      operatorId: json['operatorId'] as String?,
+      type: json['type'] as String,
     );
 
 Map<String, dynamic> _$DroneToJson(Drone instance) => <String, dynamic>{
-      'description': instance.description,
-      'flightplans': instance.flightplans,
+      'capabilities': instance.capabilities,
       'id': instance.id,
+      'manufacturer': instance.manufacturer,
+      'model': instance.model,
       'name': instance.name,
+      'operatorId': instance.operatorId,
+      'type': instance.type,
     };
 
 // **************************************************************************
@@ -724,17 +804,43 @@ class _DroneListViewState extends ConsumerState<DroneListView> {
       }
     }
 
-    Future<List<FlightPlan>> fetchFlightPlanList(List<String>? ids) async {
+    Future<List<Manufacturer>> fetchManufacturerList(List<String>? ids) async {
       if (ids == null || ids.isEmpty) {
         return [];
       }
       final nonEmptyIds = ids.where((id) => id.isNotEmpty).toList();
-      List<FlightPlan> flightplanList = await Future.wait(
+      List<Manufacturer> manufacturerList = await Future.wait(
         nonEmptyIds.map((id) async {
-          return await ref.read(getFlightPlanProvider(id).future);
+          return await ref.read(getManufacturerProvider(id).future);
         }),
       );
-      return flightplanList;
+      return manufacturerList;
+    }
+
+    Future<List<Operator>> fetchOperatorList(List<String>? ids) async {
+      if (ids == null || ids.isEmpty) {
+        return [];
+      }
+      final nonEmptyIds = ids.where((id) => id.isNotEmpty).toList();
+      List<Operator> operatorList = await Future.wait(
+        nonEmptyIds.map((id) async {
+          return await ref.read(getOperatorProvider(id).future);
+        }),
+      );
+      return operatorList;
+    }
+
+    Future<List<DroneType>> fetchDroneTypeList(List<String>? ids) async {
+      if (ids == null || ids.isEmpty) {
+        return [];
+      }
+      final nonEmptyIds = ids.where((id) => id.isNotEmpty).toList();
+      List<DroneType> dronetypeList = await Future.wait(
+        nonEmptyIds.map((id) async {
+          return await ref.read(getDroneTypeProvider(id).future);
+        }),
+      );
+      return dronetypeList;
     }
 
     return Scaffold(
@@ -802,10 +908,13 @@ class _DroneListViewState extends ConsumerState<DroneListView> {
                 children: [
                   CustomSearchBar(
                     fields: const {
-                      'description': 'String?',
-                      'flightplans': 'List<String>',
+                      'capabilities': 'String',
                       'id': 'String?',
-                      'name': 'String'
+                      'manufacturer': 'String?',
+                      'model': 'String',
+                      'name': 'String',
+                      'operatorId': 'String?',
+                      'type': 'String'
                     },
                     filters: fieldsFilterStates,
                     onFilterChanged: onFilter,
@@ -931,20 +1040,17 @@ class _DroneListViewState extends ConsumerState<DroneListView> {
                                                 MainAxisAlignment.center,
                                             children: [
                                               const Text(
-                                                'Description',
+                                                'Drone Type',
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.bold,
                                                     color: Color.fromARGB(
                                                         255, 94, 54, 54)),
                                                 textAlign: TextAlign.center,
                                               ),
-                                              if (columnSortStates[
-                                                      'description'] !=
+                                              if (columnSortStates['type'] !=
                                                   null) ...[
                                                 Icon(
-                                                  columnSortStates[
-                                                              'description'] ==
-                                                          1
+                                                  columnSortStates['type'] == 1
                                                       ? Icons
                                                           .arrow_drop_up_rounded
                                                       : Icons
@@ -952,7 +1058,7 @@ class _DroneListViewState extends ConsumerState<DroneListView> {
                                                   color: Colors.black,
                                                 ),
                                                 Text(
-                                                  '${columnSortStates.keys.toList().indexOf('description') + 1}',
+                                                  '${columnSortStates.keys.toList().indexOf('type') + 1}',
                                                   style: const TextStyle(
                                                       fontSize: 10),
                                                 ),
@@ -961,7 +1067,7 @@ class _DroneListViewState extends ConsumerState<DroneListView> {
                                           ),
                                         ),
                                         onSort: (columnIndex, ascending) =>
-                                            {onSort('description')},
+                                            {onSort('type')},
                                       ),
                                       DataColumn(
                                         label: Expanded(
@@ -970,20 +1076,17 @@ class _DroneListViewState extends ConsumerState<DroneListView> {
                                                 MainAxisAlignment.center,
                                             children: [
                                               const Text(
-                                                'FlightPlans',
+                                                'Model',
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.bold,
                                                     color: Color.fromARGB(
                                                         255, 94, 54, 54)),
                                                 textAlign: TextAlign.center,
                                               ),
-                                              if (columnSortStates[
-                                                      'flightplans'] !=
+                                              if (columnSortStates['model'] !=
                                                   null) ...[
                                                 Icon(
-                                                  columnSortStates[
-                                                              'flightplans'] ==
-                                                          1
+                                                  columnSortStates['model'] == 1
                                                       ? Icons
                                                           .arrow_drop_up_rounded
                                                       : Icons
@@ -991,7 +1094,7 @@ class _DroneListViewState extends ConsumerState<DroneListView> {
                                                   color: Colors.black,
                                                 ),
                                                 Text(
-                                                  '${columnSortStates.keys.toList().indexOf('flightplans') + 1}',
+                                                  '${columnSortStates.keys.toList().indexOf('model') + 1}',
                                                   style: const TextStyle(
                                                       fontSize: 10),
                                                 ),
@@ -1000,7 +1103,124 @@ class _DroneListViewState extends ConsumerState<DroneListView> {
                                           ),
                                         ),
                                         onSort: (columnIndex, ascending) =>
-                                            {onSort('flightplans')},
+                                            {onSort('model')},
+                                      ),
+                                      DataColumn(
+                                        label: Expanded(
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              const Text(
+                                                'Capabilities',
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Color.fromARGB(
+                                                        255, 94, 54, 54)),
+                                                textAlign: TextAlign.center,
+                                              ),
+                                              if (columnSortStates[
+                                                      'capabilities'] !=
+                                                  null) ...[
+                                                Icon(
+                                                  columnSortStates[
+                                                              'capabilities'] ==
+                                                          1
+                                                      ? Icons
+                                                          .arrow_drop_up_rounded
+                                                      : Icons
+                                                          .arrow_drop_down_rounded,
+                                                  color: Colors.black,
+                                                ),
+                                                Text(
+                                                  '${columnSortStates.keys.toList().indexOf('capabilities') + 1}',
+                                                  style: const TextStyle(
+                                                      fontSize: 10),
+                                                ),
+                                              ],
+                                            ],
+                                          ),
+                                        ),
+                                        onSort: (columnIndex, ascending) =>
+                                            {onSort('capabilities')},
+                                      ),
+                                      DataColumn(
+                                        label: Expanded(
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              const Text(
+                                                'Manufacturer',
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Color.fromARGB(
+                                                        255, 94, 54, 54)),
+                                                textAlign: TextAlign.center,
+                                              ),
+                                              if (columnSortStates[
+                                                      'manufacturer'] !=
+                                                  null) ...[
+                                                Icon(
+                                                  columnSortStates[
+                                                              'manufacturer'] ==
+                                                          1
+                                                      ? Icons
+                                                          .arrow_drop_up_rounded
+                                                      : Icons
+                                                          .arrow_drop_down_rounded,
+                                                  color: Colors.black,
+                                                ),
+                                                Text(
+                                                  '${columnSortStates.keys.toList().indexOf('manufacturer') + 1}',
+                                                  style: const TextStyle(
+                                                      fontSize: 10),
+                                                ),
+                                              ],
+                                            ],
+                                          ),
+                                        ),
+                                        onSort: (columnIndex, ascending) =>
+                                            {onSort('manufacturer')},
+                                      ),
+                                      DataColumn(
+                                        label: Expanded(
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              const Text(
+                                                'Operator',
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Color.fromARGB(
+                                                        255, 94, 54, 54)),
+                                                textAlign: TextAlign.center,
+                                              ),
+                                              if (columnSortStates[
+                                                      'operatorId'] !=
+                                                  null) ...[
+                                                Icon(
+                                                  columnSortStates[
+                                                              'operatorId'] ==
+                                                          1
+                                                      ? Icons
+                                                          .arrow_drop_up_rounded
+                                                      : Icons
+                                                          .arrow_drop_down_rounded,
+                                                  color: Colors.black,
+                                                ),
+                                                Text(
+                                                  '${columnSortStates.keys.toList().indexOf('operatorId') + 1}',
+                                                  style: const TextStyle(
+                                                      fontSize: 10),
+                                                ),
+                                              ],
+                                            ],
+                                          ),
+                                        ),
+                                        onSort: (columnIndex, ascending) =>
+                                            {onSort('operatorId')},
                                       ),
                                     ],
                                     rows: List<DataRow>.generate(drones.length,
@@ -1019,17 +1239,10 @@ class _DroneListViewState extends ConsumerState<DroneListView> {
                                           ),
                                           DataCell(
                                             Center(
-                                                child: Text(drone.description
-                                                    .toString())),
-                                            onTap: () =>
-                                                {_navigateElement(drone)},
-                                          ),
-                                          DataCell(
-                                            Center(
                                               child: FutureBuilder<
-                                                  List<FlightPlan>>(
-                                                future: fetchFlightPlanList(
-                                                    drone.flightplans),
+                                                  List<DroneType>>(
+                                                future: fetchDroneTypeList(
+                                                    [drone.type ?? '']),
                                                 builder: (context, snapshot) {
                                                   if (snapshot.connectionState ==
                                                           ConnectionState
@@ -1040,7 +1253,7 @@ class _DroneListViewState extends ConsumerState<DroneListView> {
                                                     return Wrap(
                                                       spacing: 4,
                                                       children: snapshot.data!
-                                                          .map((flightplan) {
+                                                          .map((dronetype) {
                                                         return ElevatedButton(
                                                           onPressed: () {
                                                             Navigator.push(
@@ -1048,9 +1261,9 @@ class _DroneListViewState extends ConsumerState<DroneListView> {
                                                               MaterialPageRoute(
                                                                 builder:
                                                                     (context) =>
-                                                                        FlightPlanWidget(
+                                                                        DroneTypeWidget(
                                                                   element:
-                                                                      flightplan,
+                                                                      dronetype,
                                                                   isEditing:
                                                                       true,
                                                                 ),
@@ -1119,7 +1332,241 @@ class _DroneListViewState extends ConsumerState<DroneListView> {
                                                             }),
                                                           ),
                                                           child: Text(
-                                                            flightplan.name!,
+                                                            dronetype.name!,
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .white),
+                                                          ),
+                                                        );
+                                                      }).toList(),
+                                                    );
+                                                  }
+                                                },
+                                              ),
+                                            ),
+                                            onTap: () =>
+                                                {_navigateElement(drone)},
+                                          ),
+                                          DataCell(
+                                            Center(
+                                                child: Text(
+                                                    drone.model.toString())),
+                                            onTap: () =>
+                                                {_navigateElement(drone)},
+                                          ),
+                                          DataCell(
+                                            Center(
+                                                child: Text(drone.capabilities
+                                                    .toString())),
+                                            onTap: () =>
+                                                {_navigateElement(drone)},
+                                          ),
+                                          DataCell(
+                                            Center(
+                                              child: FutureBuilder<
+                                                  List<Manufacturer>>(
+                                                future: fetchManufacturerList(
+                                                    [drone.manufacturer ?? '']),
+                                                builder: (context, snapshot) {
+                                                  if (snapshot.connectionState ==
+                                                          ConnectionState
+                                                              .waiting ||
+                                                      snapshot.data == null) {
+                                                    return const CircularProgressIndicator();
+                                                  } else {
+                                                    return Wrap(
+                                                      spacing: 4,
+                                                      children: snapshot.data!
+                                                          .map((manufacturer) {
+                                                        return ElevatedButton(
+                                                          onPressed: () {
+                                                            Navigator.push(
+                                                              context,
+                                                              MaterialPageRoute(
+                                                                builder:
+                                                                    (context) =>
+                                                                        ManufacturerWidget(
+                                                                  element:
+                                                                      manufacturer,
+                                                                  isEditing:
+                                                                      true,
+                                                                ),
+                                                              ),
+                                                            );
+                                                          },
+                                                          style: ButtonStyle(
+                                                            shape: MaterialStateProperty
+                                                                .all<
+                                                                    RoundedRectangleBorder>(
+                                                              RoundedRectangleBorder(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            5),
+                                                              ),
+                                                            ),
+                                                            padding:
+                                                                MaterialStateProperty
+                                                                    .all<
+                                                                        EdgeInsetsGeometry>(
+                                                              EdgeInsets
+                                                                  .symmetric(
+                                                                      horizontal:
+                                                                          1,
+                                                                      vertical:
+                                                                          1),
+                                                            ),
+                                                            backgroundColor:
+                                                                MaterialStateProperty
+                                                                    .all<Color>(
+                                                                        Styles
+                                                                            .buttonPrimaryColor),
+                                                            elevation: MaterialStateProperty
+                                                                .resolveWith<
+                                                                        double>(
+                                                                    (states) {
+                                                              if (states.contains(
+                                                                      MaterialState
+                                                                          .hovered) ||
+                                                                  states.contains(
+                                                                      MaterialState
+                                                                          .pressed)) {
+                                                                return 0;
+                                                              }
+                                                              return 0;
+                                                            }),
+                                                            foregroundColor:
+                                                                MaterialStateProperty
+                                                                    .all<Color>(
+                                                                        Colors
+                                                                            .white),
+                                                            overlayColor:
+                                                                MaterialStateProperty
+                                                                    .resolveWith<
+                                                                            Color>(
+                                                                        (states) {
+                                                              if (states.contains(
+                                                                  MaterialState
+                                                                      .hovered)) {
+                                                                return Styles
+                                                                    .buttonPrimaryColorHover;
+                                                              }
+                                                              return Colors
+                                                                  .transparent;
+                                                            }),
+                                                          ),
+                                                          child: Text(
+                                                            manufacturer.name!,
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .white),
+                                                          ),
+                                                        );
+                                                      }).toList(),
+                                                    );
+                                                  }
+                                                },
+                                              ),
+                                            ),
+                                            onTap: () =>
+                                                {_navigateElement(drone)},
+                                          ),
+                                          DataCell(
+                                            Center(
+                                              child:
+                                                  FutureBuilder<List<Operator>>(
+                                                future: fetchOperatorList(
+                                                    [drone.operatorId ?? '']),
+                                                builder: (context, snapshot) {
+                                                  if (snapshot.connectionState ==
+                                                          ConnectionState
+                                                              .waiting ||
+                                                      snapshot.data == null) {
+                                                    return const CircularProgressIndicator();
+                                                  } else {
+                                                    return Wrap(
+                                                      spacing: 4,
+                                                      children: snapshot.data!
+                                                          .map((operator) {
+                                                        return ElevatedButton(
+                                                          onPressed: () {
+                                                            Navigator.push(
+                                                              context,
+                                                              MaterialPageRoute(
+                                                                builder:
+                                                                    (context) =>
+                                                                        OperatorWidget(
+                                                                  element:
+                                                                      operator,
+                                                                  isEditing:
+                                                                      true,
+                                                                ),
+                                                              ),
+                                                            );
+                                                          },
+                                                          style: ButtonStyle(
+                                                            shape: MaterialStateProperty
+                                                                .all<
+                                                                    RoundedRectangleBorder>(
+                                                              RoundedRectangleBorder(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            5),
+                                                              ),
+                                                            ),
+                                                            padding:
+                                                                MaterialStateProperty
+                                                                    .all<
+                                                                        EdgeInsetsGeometry>(
+                                                              EdgeInsets
+                                                                  .symmetric(
+                                                                      horizontal:
+                                                                          1,
+                                                                      vertical:
+                                                                          1),
+                                                            ),
+                                                            backgroundColor:
+                                                                MaterialStateProperty
+                                                                    .all<Color>(
+                                                                        Styles
+                                                                            .buttonPrimaryColor),
+                                                            elevation: MaterialStateProperty
+                                                                .resolveWith<
+                                                                        double>(
+                                                                    (states) {
+                                                              if (states.contains(
+                                                                      MaterialState
+                                                                          .hovered) ||
+                                                                  states.contains(
+                                                                      MaterialState
+                                                                          .pressed)) {
+                                                                return 0;
+                                                              }
+                                                              return 0;
+                                                            }),
+                                                            foregroundColor:
+                                                                MaterialStateProperty
+                                                                    .all<Color>(
+                                                                        Colors
+                                                                            .white),
+                                                            overlayColor:
+                                                                MaterialStateProperty
+                                                                    .resolveWith<
+                                                                            Color>(
+                                                                        (states) {
+                                                              if (states.contains(
+                                                                  MaterialState
+                                                                      .hovered)) {
+                                                                return Styles
+                                                                    .buttonPrimaryColorHover;
+                                                              }
+                                                              return Colors
+                                                                  .transparent;
+                                                            }),
+                                                          ),
+                                                          child: Text(
+                                                            operator.name!,
                                                             style: TextStyle(
                                                                 color: Colors
                                                                     .white),

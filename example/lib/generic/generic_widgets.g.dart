@@ -2065,7 +2065,7 @@ class BoolWidget extends StatefulWidget {
   final String fieldName;
   final String fieldDescription;
   final bool editable;
-  final bool value;
+  final bool? value;
 
   const BoolWidget({
     Key? key,
@@ -2097,7 +2097,7 @@ class BoolWidgetState extends State<BoolWidget> {
           margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10.0),
-            color: Colors.blueGrey, // Customize as needed
+            color: Styles.secondaryColor,
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -2163,7 +2163,16 @@ class ModelsSelectableWidget extends StatefulWidget {
 }
 
 class ModelsSelectableWidgetState extends State<ModelsSelectableWidget> {
-  List<String> options = ["", "Drone", "FlightPlan", "AccessRight", "Role"];
+  List<String> options = [
+    "",
+    "AccessRight",
+    "Role",
+    "DroneType",
+    "Operator",
+    "FlightPlan",
+    "Manufacturer",
+    "Drone"
+  ];
   bool isValueChanged = false;
   late String? initialValue;
   late String currentValue;

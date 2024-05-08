@@ -1,198 +1,208 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'flightplan.dart';
+part of 'operator.dart';
 
 // **************************************************************************
 // CopyWithGenerator
 // **************************************************************************
 
-abstract class _$FlightPlanCWProxy {
-  FlightPlan airspace_restrictions(List<String>? airspace_restrictions);
+abstract class _$OperatorCWProxy {
+  Operator address(Point? address);
 
-  FlightPlan approved(bool approved);
+  Operator contactInformation(String? contactInformation);
 
-  FlightPlan arrival_time(DateTime? arrival_time);
+  Operator drones(List<String>? drones);
 
-  FlightPlan departure_time(DateTime departure_time);
+  Operator email(String email);
 
-  FlightPlan droneId(String droneId);
+  Operator flightplans(List<String>? flightplans);
 
-  FlightPlan id(String? id);
+  Operator id(String? id);
 
-  FlightPlan mission_details(String? mission_details);
+  Operator identity(String? identity);
 
-  FlightPlan name(String name);
+  Operator name(String name);
 
-  FlightPlan route(LineString route);
+  Operator password(String password);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `FlightPlan(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  Operator roles(List<String>? roles);
+
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Operator(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
   /// Usage
   /// ```dart
-  /// FlightPlan(...).copyWith(id: 12, name: "My name")
+  /// Operator(...).copyWith(id: 12, name: "My name")
   /// ````
-  FlightPlan call({
-    List<String>? airspace_restrictions,
-    bool? approved,
-    DateTime? arrival_time,
-    DateTime? departure_time,
-    String? droneId,
+  Operator call({
+    Point? address,
+    String? contactInformation,
+    List<String>? drones,
+    String? email,
+    List<String>? flightplans,
     String? id,
-    String? mission_details,
+    String? identity,
     String? name,
-    LineString? route,
+    String? password,
+    List<String>? roles,
   });
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfFlightPlan.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfFlightPlan.copyWith.fieldName(...)`
-class _$FlightPlanCWProxyImpl implements _$FlightPlanCWProxy {
-  final FlightPlan _value;
+/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfOperator.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfOperator.copyWith.fieldName(...)`
+class _$OperatorCWProxyImpl implements _$OperatorCWProxy {
+  final Operator _value;
 
-  const _$FlightPlanCWProxyImpl(this._value);
-
-  @override
-  FlightPlan airspace_restrictions(List<String>? airspace_restrictions) =>
-      this(airspace_restrictions: airspace_restrictions);
+  const _$OperatorCWProxyImpl(this._value);
 
   @override
-  FlightPlan approved(bool approved) => this(approved: approved);
+  Operator address(Point? address) => this(address: address);
 
   @override
-  FlightPlan arrival_time(DateTime? arrival_time) =>
-      this(arrival_time: arrival_time);
+  Operator contactInformation(String? contactInformation) =>
+      this(contactInformation: contactInformation);
 
   @override
-  FlightPlan departure_time(DateTime departure_time) =>
-      this(departure_time: departure_time);
+  Operator drones(List<String>? drones) => this(drones: drones);
 
   @override
-  FlightPlan droneId(String droneId) => this(droneId: droneId);
+  Operator email(String email) => this(email: email);
 
   @override
-  FlightPlan id(String? id) => this(id: id);
+  Operator flightplans(List<String>? flightplans) =>
+      this(flightplans: flightplans);
 
   @override
-  FlightPlan mission_details(String? mission_details) =>
-      this(mission_details: mission_details);
+  Operator id(String? id) => this(id: id);
 
   @override
-  FlightPlan name(String name) => this(name: name);
+  Operator identity(String? identity) => this(identity: identity);
 
   @override
-  FlightPlan route(LineString route) => this(route: route);
+  Operator name(String name) => this(name: name);
+
+  @override
+  Operator password(String password) => this(password: password);
+
+  @override
+  Operator roles(List<String>? roles) => this(roles: roles);
 
   @override
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `FlightPlan(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Operator(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
   /// Usage
   /// ```dart
-  /// FlightPlan(...).copyWith(id: 12, name: "My name")
+  /// Operator(...).copyWith(id: 12, name: "My name")
   /// ````
-  FlightPlan call({
-    Object? airspace_restrictions = const $CopyWithPlaceholder(),
-    Object? approved = const $CopyWithPlaceholder(),
-    Object? arrival_time = const $CopyWithPlaceholder(),
-    Object? departure_time = const $CopyWithPlaceholder(),
-    Object? droneId = const $CopyWithPlaceholder(),
+  Operator call({
+    Object? address = const $CopyWithPlaceholder(),
+    Object? contactInformation = const $CopyWithPlaceholder(),
+    Object? drones = const $CopyWithPlaceholder(),
+    Object? email = const $CopyWithPlaceholder(),
+    Object? flightplans = const $CopyWithPlaceholder(),
     Object? id = const $CopyWithPlaceholder(),
-    Object? mission_details = const $CopyWithPlaceholder(),
+    Object? identity = const $CopyWithPlaceholder(),
     Object? name = const $CopyWithPlaceholder(),
-    Object? route = const $CopyWithPlaceholder(),
+    Object? password = const $CopyWithPlaceholder(),
+    Object? roles = const $CopyWithPlaceholder(),
   }) {
-    return FlightPlan(
-      airspace_restrictions:
-          airspace_restrictions == const $CopyWithPlaceholder()
-              ? _value.airspace_restrictions
-              // ignore: cast_nullable_to_non_nullable
-              : airspace_restrictions as List<String>?,
-      approved: approved == const $CopyWithPlaceholder() || approved == null
-          ? _value.approved
+    return Operator(
+      address: address == const $CopyWithPlaceholder()
+          ? _value.address
           // ignore: cast_nullable_to_non_nullable
-          : approved as bool,
-      arrival_time: arrival_time == const $CopyWithPlaceholder()
-          ? _value.arrival_time
+          : address as Point?,
+      contactInformation: contactInformation == const $CopyWithPlaceholder()
+          ? _value.contactInformation
           // ignore: cast_nullable_to_non_nullable
-          : arrival_time as DateTime?,
-      departure_time: departure_time == const $CopyWithPlaceholder() ||
-              departure_time == null
-          ? _value.departure_time
+          : contactInformation as String?,
+      drones: drones == const $CopyWithPlaceholder()
+          ? _value.drones
           // ignore: cast_nullable_to_non_nullable
-          : departure_time as DateTime,
-      droneId: droneId == const $CopyWithPlaceholder() || droneId == null
-          ? _value.droneId
+          : drones as List<String>?,
+      email: email == const $CopyWithPlaceholder() || email == null
+          ? _value.email
           // ignore: cast_nullable_to_non_nullable
-          : droneId as String,
+          : email as String,
+      flightplans: flightplans == const $CopyWithPlaceholder()
+          ? _value.flightplans
+          // ignore: cast_nullable_to_non_nullable
+          : flightplans as List<String>?,
       id: id == const $CopyWithPlaceholder()
           ? _value.id
           // ignore: cast_nullable_to_non_nullable
           : id as String?,
-      mission_details: mission_details == const $CopyWithPlaceholder()
-          ? _value.mission_details
+      identity: identity == const $CopyWithPlaceholder()
+          ? _value.identity
           // ignore: cast_nullable_to_non_nullable
-          : mission_details as String?,
+          : identity as String?,
       name: name == const $CopyWithPlaceholder() || name == null
           ? _value.name
           // ignore: cast_nullable_to_non_nullable
           : name as String,
-      route: route == const $CopyWithPlaceholder() || route == null
-          ? _value.route
+      password: password == const $CopyWithPlaceholder() || password == null
+          ? _value.password
           // ignore: cast_nullable_to_non_nullable
-          : route as LineString,
+          : password as String,
+      roles: roles == const $CopyWithPlaceholder()
+          ? _value.roles
+          // ignore: cast_nullable_to_non_nullable
+          : roles as List<String>?,
     );
   }
 }
 
-extension $FlightPlanCopyWith on FlightPlan {
-  /// Returns a callable class that can be used as follows: `instanceOfFlightPlan.copyWith(...)` or like so:`instanceOfFlightPlan.copyWith.fieldName(...)`.
+extension $OperatorCopyWith on Operator {
+  /// Returns a callable class that can be used as follows: `instanceOfOperator.copyWith(...)` or like so:`instanceOfOperator.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
-  _$FlightPlanCWProxy get copyWith => _$FlightPlanCWProxyImpl(this);
+  _$OperatorCWProxy get copyWith => _$OperatorCWProxyImpl(this);
 }
 
 // **************************************************************************
 // ElementWidgetGenerator
 // **************************************************************************
 
-class FlightPlanWidget extends StatefulWidget {
-  final FlightPlan? element;
+class OperatorWidget extends StatefulWidget {
+  final Operator? element;
   final bool isEditing;
 
-  const FlightPlanWidget({this.element, required this.isEditing, Key? key})
+  const OperatorWidget({this.element, required this.isEditing, Key? key})
       : super(key: key);
 
   @override
-  _FlightPlanWidgetState createState() => _FlightPlanWidgetState();
+  _OperatorWidgetState createState() => _OperatorWidgetState();
 }
 
-class _FlightPlanWidgetState extends State<FlightPlanWidget> {
-  final GlobalKey<DefaultWidgetState> airspace_restrictionsWidgetKey =
-      GlobalKey<DefaultWidgetState>();
-  final GlobalKey<DefaultWidgetState> approvedWidgetKey =
-      GlobalKey<DefaultWidgetState>();
-  final GlobalKey<DateTimeWidgetState> arrival_timeWidgetKey =
-      GlobalKey<DateTimeWidgetState>();
-  final GlobalKey<DateTimeWidgetState> departure_timeWidgetKey =
-      GlobalKey<DateTimeWidgetState>();
-  final GlobalKey<DroneFieldWidgetState> droneIdWidgetKey =
-      GlobalKey<DroneFieldWidgetState>();
+class _OperatorWidgetState extends State<OperatorWidget> {
+  final GlobalKey<MapWidgetState> addressWidgetKey =
+      GlobalKey<MapWidgetState>();
+  final GlobalKey<StringWidgetState> contactInformationWidgetKey =
+      GlobalKey<StringWidgetState>();
+  final GlobalKey<DroneMultiFieldWidgetState> dronesWidgetKey =
+      GlobalKey<DroneMultiFieldWidgetState>();
+  final GlobalKey<StringWidgetState> emailWidgetKey =
+      GlobalKey<StringWidgetState>();
+  final GlobalKey<FlightPlanMultiFieldWidgetState> flightplansWidgetKey =
+      GlobalKey<FlightPlanMultiFieldWidgetState>();
   final GlobalKey<StringWidgetState> idWidgetKey =
       GlobalKey<StringWidgetState>();
-  final GlobalKey<StringWidgetState> mission_detailsWidgetKey =
+  final GlobalKey<StringWidgetState> identityWidgetKey =
       GlobalKey<StringWidgetState>();
   final GlobalKey<StringWidgetState> nameWidgetKey =
       GlobalKey<StringWidgetState>();
-  final GlobalKey<MapWidgetState> routeWidgetKey = GlobalKey<MapWidgetState>();
+  final GlobalKey<StringWidgetState> passwordWidgetKey =
+      GlobalKey<StringWidgetState>();
+  final GlobalKey<RoleMultiFieldWidgetState> rolesWidgetKey =
+      GlobalKey<RoleMultiFieldWidgetState>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('FlightPlan'),
+        title: const Text('Operator'),
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => FlightPlanListView()),
+            MaterialPageRoute(builder: (context) => OperatorListView()),
           ),
         ),
       ),
@@ -200,44 +210,49 @@ class _FlightPlanWidgetState extends State<FlightPlanWidget> {
         scrollDirection: Axis.vertical,
         child: Column(
           children: [
-            DefaultWidget(
-              key: airspace_restrictionsWidgetKey,
-              fieldName: "airspace_restrictions",
-              fieldDescription: "This is the airspace_restrictions",
+            MapWidget(
+                key: addressWidgetKey,
+                fieldName: "Address",
+                fieldDescription: "The address of the Drone Operator",
+                editable: true,
+                placeholder: "Enter the address of the Drone Operator",
+                value: widget.element?.address ??
+                    Point(
+                        type: "Feature",
+                        geometry: GeometryPoint(coordinates: [], type: "Point"),
+                        properties: {}),
+                uspaceMap: false),
+            StringWidget(
+              key: contactInformationWidgetKey,
+              fieldName: "Contact Information",
+              fieldDescription: "Contact Information of the Operator",
               editable: true,
-              placeholder: "Type the airspace_restrictions",
-              value: widget.element?.airspace_restrictions,
+              placeholder: "Provide Contact Information for the Operator",
+              value: widget.element?.contactInformation,
             ),
-            BoolWidget(
-              key: approvedWidgetKey,
-              fieldName: "Approved",
-              fieldDescription: "Status of the Flightplan approval",
+            DroneMultiFieldWidget(
+              key: dronesWidgetKey,
+              fieldName: "Drones",
+              fieldDescription: "These are the Drones of the Operator",
               editable: true,
-              value: widget.element?.approved,
+              placeholder: "List the Drones operated by this Operator",
+              values: widget.element?.drones,
             ),
-            DateTimeWidget(
-              key: arrival_timeWidgetKey,
-              fieldName: "Arrival Time",
-              fieldDescription: "Arrival Datetime of the FlightPlan",
+            StringWidget(
+              key: emailWidgetKey,
+              fieldName: "email",
+              fieldDescription: "This is the email",
               editable: true,
-              placeholder: "Select a Datetime",
-              value: widget.element?.arrival_time,
+              placeholder: "Type the email",
+              value: widget.element?.email,
             ),
-            DateTimeWidget(
-              key: departure_timeWidgetKey,
-              fieldName: "Departure Time",
-              fieldDescription: "Departure Datetime of the FlightPlan",
+            FlightPlanMultiFieldWidget(
+              key: flightplansWidgetKey,
+              fieldName: "FlightPlans",
+              fieldDescription: "These are the Flightplans of the Operator",
               editable: true,
-              placeholder: "Select a Datetime",
-              value: widget.element?.departure_time,
-            ),
-            DroneFieldWidget(
-              key: droneIdWidgetKey,
-              fieldName: "Drone",
-              fieldDescription: "This is the Drone",
-              editable: true,
-              placeholder: "Select the Drone of this FlightPlan",
-              value: widget.element?.droneId,
+              placeholder: "List the Flightplans operated by this Operator",
+              values: widget.element?.flightplans,
             ),
             StringWidget(
               key: idWidgetKey,
@@ -248,108 +263,116 @@ class _FlightPlanWidgetState extends State<FlightPlanWidget> {
               value: widget.element?.id,
             ),
             StringWidget(
-              key: mission_detailsWidgetKey,
-              fieldName: "Mission Details",
-              fieldDescription: "Mission details of the Flight Plan",
+              key: identityWidgetKey,
+              fieldName: "Identity",
+              fieldDescription: "This is the Identity of the Operator",
               editable: true,
-              placeholder: "Provide the mission details",
-              value: widget.element?.mission_details,
+              placeholder: "Enter the Identity of the Operator",
+              value: widget.element?.identity,
             ),
             StringWidget(
               key: nameWidgetKey,
               fieldName: "Name",
-              fieldDescription: "This is the name of the Flight Plan",
+              fieldDescription: "This is the name of the Drone Operator",
               editable: true,
-              placeholder: "Write the Name of the Flight Plan",
+              placeholder: "Write the Name of the Drone Operator",
               value: widget.element?.name,
             ),
-            MapWidget(
-                key: routeWidgetKey,
-                fieldName: "Route",
-                fieldDescription: "This is Route of the FlightPlan",
-                editable: true,
-                placeholder: "Add the coordinates for the Route",
-                value: widget.element?.route ??
-                    LineString(
-                        type: "Feature",
-                        geometry: GeometryLineString(
-                            coordinates: [], type: "LineString"),
-                        properties: {}),
-                uspaceMap: true),
+            StringWidget(
+              key: passwordWidgetKey,
+              fieldName: "password",
+              fieldDescription: "This is the password",
+              editable: true,
+              placeholder: "Type the password",
+              value: widget.element?.password,
+            ),
+            RoleMultiFieldWidget(
+              key: rolesWidgetKey,
+              fieldName: "roles",
+              fieldDescription: "This is the roles",
+              editable: true,
+              placeholder: "Type the roles",
+              values: widget.element?.roles,
+            ),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          List<String>? updatedairspace_restrictions =
-              airspace_restrictionsWidgetKey.currentState?.getUpdatedValue();
+          dynamic updatedaddress =
+              addressWidgetKey.currentState?.getUpdatedValue();
 
-          bool? updatedapproved =
-              approvedWidgetKey.currentState?.getUpdatedValue();
+          updatedaddress = Point(
+              type: "Feature",
+              geometry: GeometryPoint(
+                  coordinates: updatedaddress.geometry.coordinates,
+                  type: updatedaddress.geometry.type),
+              properties: updatedaddress.properties);
 
-          DateTime? updatedarrival_time =
-              arrival_timeWidgetKey.currentState?.getUpdatedValue();
+          String? updatedcontactInformation =
+              contactInformationWidgetKey.currentState?.getUpdatedValue();
 
-          DateTime? updateddeparture_time =
-              departure_timeWidgetKey.currentState?.getUpdatedValue();
+          List<String>? updateddrones =
+              dronesWidgetKey.currentState?.getUpdatedValue();
 
-          String? updateddroneId =
-              droneIdWidgetKey.currentState?.getUpdatedValue();
+          String? updatedemail = emailWidgetKey.currentState?.getUpdatedValue();
+
+          List<String>? updatedflightplans =
+              flightplansWidgetKey.currentState?.getUpdatedValue();
 
           String? updatedid = idWidgetKey.currentState?.getUpdatedValue();
 
-          String? updatedmission_details =
-              mission_detailsWidgetKey.currentState?.getUpdatedValue();
+          String? updatedidentity =
+              identityWidgetKey.currentState?.getUpdatedValue();
 
           String? updatedname = nameWidgetKey.currentState?.getUpdatedValue();
 
-          dynamic updatedroute = routeWidgetKey.currentState?.getUpdatedValue();
+          String? updatedpassword =
+              passwordWidgetKey.currentState?.getUpdatedValue();
 
-          updatedroute = LineString(
-              type: "Feature",
-              geometry: GeometryLineString(
-                  coordinates: updatedroute.geometry.coordinates,
-                  type: updatedroute.geometry.type),
-              properties: updatedroute.properties);
+          List<String>? updatedroles =
+              rolesWidgetKey.currentState?.getUpdatedValue();
 
-          FlightPlan updatedFlightPlan = widget.element ??
-              FlightPlan(
-                airspace_restrictions: updatedairspace_restrictions ?? [''],
-                approved: updatedapproved ?? false,
-                arrival_time: updatedarrival_time ?? DateTime.now(),
-                departure_time: updateddeparture_time ?? DateTime.now(),
-                droneId: updateddroneId ?? '',
+          Operator updatedOperator = widget.element ??
+              Operator(
+                address: updatedaddress ?? '',
+                contactInformation: updatedcontactInformation ?? '',
+                drones: updateddrones ?? [''],
+                email: updatedemail ?? '',
+                flightplans: updatedflightplans ?? [''],
                 id: updatedid ?? '',
-                mission_details: updatedmission_details ?? '',
+                identity: updatedidentity ?? '',
                 name: updatedname ?? '',
-                route: updatedroute ?? '',
+                password: updatedpassword ?? '',
+                roles: updatedroles ?? [''],
               );
 
-          updatedFlightPlan = updatedFlightPlan.copyWith(
-              airspace_restrictions: updatedairspace_restrictions,
-              approved: updatedapproved,
-              arrival_time: updatedarrival_time,
-              departure_time: updateddeparture_time,
-              droneId: updateddroneId,
+          updatedOperator = updatedOperator.copyWith(
+              address: updatedaddress,
+              contactInformation: updatedcontactInformation,
+              drones: updateddrones,
+              email: updatedemail,
+              flightplans: updatedflightplans,
               id: updatedid,
-              mission_details: updatedmission_details,
+              identity: updatedidentity,
               name: updatedname,
-              route: updatedroute);
+              password: updatedpassword,
+              roles: updatedroles);
           var container = ProviderContainer();
           try {
             if (widget.isEditing) {
               await container.read(
-                  updateFlightPlanProvider(Tuple2(updatedFlightPlan, context)));
-              print('FlightPlan updated successfully');
-              CustomSnackBar.show(context, 'FlightPlan updated successfully');
+                  updateOperatorProvider(Tuple2(updatedOperator, context)));
+              print('Operator updated successfully');
+              CustomSnackBar.show(context, 'Operator updated successfully');
             } else {
               await container.read(
-                  createFlightPlanProvider(Tuple2(updatedFlightPlan, context)));
-              print('FlightPlan created successfully');
-              CustomSnackBar.show(context, 'FlightPlan created successfully');
+                  createOperatorProvider(Tuple2(updatedOperator, context)));
+              print('Operator created successfully');
+              CustomSnackBar.show(context, 'Operator created successfully');
             }
           } catch (error) {
-            print('Failed to update FlightPlan: $error');
+            print('Failed to update Operator: $error');
           }
         },
         child: Icon(Icons.save),
@@ -358,14 +381,14 @@ class _FlightPlanWidgetState extends State<FlightPlanWidget> {
   }
 }
 
-class FlightPlanFieldWidget extends StatefulWidget {
+class OperatorFieldWidget extends StatefulWidget {
   final String fieldName;
   final String fieldDescription;
   final bool editable;
   final String placeholder;
   final String? value;
 
-  const FlightPlanFieldWidget({
+  const OperatorFieldWidget({
     Key? key,
     required this.fieldName,
     required this.fieldDescription,
@@ -375,15 +398,15 @@ class FlightPlanFieldWidget extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  FlightPlanFieldWidgetState createState() => FlightPlanFieldWidgetState();
+  OperatorFieldWidgetState createState() => OperatorFieldWidgetState();
 }
 
-class FlightPlanFieldWidgetState extends State<FlightPlanFieldWidget> {
+class OperatorFieldWidgetState extends State<OperatorFieldWidget> {
   final TextEditingController _typeAheadController = TextEditingController();
   bool isValueChanged = false;
   late String? initialValue;
   late String currentValue;
-  late List<FlightPlan> options;
+  late List<Operator> options;
 
   @override
   void initState() {
@@ -395,9 +418,9 @@ class FlightPlanFieldWidgetState extends State<FlightPlanFieldWidget> {
     super.initState();
     initialValue = widget.value;
     currentValue = initialValue ?? '';
-    FlightPlan flightplan =
-        await container.read(getFlightPlanProvider(widget.value!).future);
-    _typeAheadController.text = '${flightplan.name} <id: ${flightplan.id}>';
+    Operator operator =
+        await container.read(getOperatorProvider(widget.value!).future);
+    _typeAheadController.text = '${operator.name} <id: ${operator.id}>';
   }
 
   String? getUpdatedValue() {
@@ -439,31 +462,31 @@ class FlightPlanFieldWidgetState extends State<FlightPlanFieldWidget> {
                 children: [
                   widget.editable
                       ? Expanded(
-                          child: TypeAheadField<FlightPlan>(
+                          child: TypeAheadField<Operator>(
                             controller: _typeAheadController,
                             suggestionsCallback: (String pattern) async {
-                              final flightplanPaginationData = await container
-                                  .read(getAllFlightPlanProvider(container
-                                          .read(flightplanPaginationProvider))
+                              final operatorPaginationData = await container
+                                  .read(getAllOperatorProvider(container
+                                          .read(operatorPaginationProvider))
                                       .future);
-                              final options = flightplanPaginationData.items;
+                              final options = operatorPaginationData.items;
                               return options
-                                  .where((flightplan) =>
-                                      flightplan.name!
+                                  .where((operator) =>
+                                      operator.name!
                                           .toLowerCase()
                                           .contains(pattern.toLowerCase()) ||
-                                      flightplan.id
+                                      operator.id
                                           .toString()
                                           .contains(pattern.toLowerCase()))
                                   .toList();
                             },
-                            itemBuilder: (context, flightplan) {
+                            itemBuilder: (context, operator) {
                               return ListTile(
                                 title: Text(
-                                    '${flightplan.name} <id: ${flightplan.id}>'),
+                                    '${operator.name} <id: ${operator.id}>'),
                               );
                             },
-                            onSelected: (FlightPlan value) {
+                            onSelected: (Operator value) {
                               setState(() {
                                 isValueChanged = value.id != initialValue;
                                 currentValue = value.id!;
@@ -498,20 +521,20 @@ class FlightPlanFieldWidgetState extends State<FlightPlanFieldWidget> {
           child: ElevatedButton(
             onPressed: () async {
               try {
-                FlightPlan flightplan = await container
-                    .read(getFlightPlanProvider(widget.value!).future);
+                Operator operator = await container
+                    .read(getOperatorProvider(widget.value!).future);
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) =>
-                        FlightPlanWidget(element: flightplan, isEditing: true),
+                        OperatorWidget(element: operator, isEditing: true),
                   ),
                 );
               } catch (error) {
-                print('Failed to fetch flightplan: $error');
+                print('Failed to fetch operator: $error');
               }
             },
-            child: const Text('View FlightPlan'),
+            child: const Text('View Operator'),
           ),
         ),
       ],
@@ -519,14 +542,14 @@ class FlightPlanFieldWidgetState extends State<FlightPlanFieldWidget> {
   }
 }
 
-class FlightPlanMultiFieldWidget extends StatefulWidget {
+class OperatorMultiFieldWidget extends StatefulWidget {
   final String fieldName;
   final String fieldDescription;
   final bool editable;
   final String placeholder;
   final List<String>? values;
 
-  const FlightPlanMultiFieldWidget({
+  const OperatorMultiFieldWidget({
     Key? key,
     required this.fieldName,
     required this.fieldDescription,
@@ -536,17 +559,16 @@ class FlightPlanMultiFieldWidget extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  FlightPlanMultiFieldWidgetState createState() =>
-      FlightPlanMultiFieldWidgetState();
+  OperatorMultiFieldWidgetState createState() =>
+      OperatorMultiFieldWidgetState();
 }
 
-class FlightPlanMultiFieldWidgetState
-    extends State<FlightPlanMultiFieldWidget> {
+class OperatorMultiFieldWidgetState extends State<OperatorMultiFieldWidget> {
   final TextEditingController _typeAheadController = TextEditingController();
   bool isValueChanged = false;
   late List<String> initialValues = [];
   late List<String> currentValues = [];
-  late List<FlightPlan> options = [];
+  late List<Operator> options = [];
 
   @override
   void initState() {
@@ -559,13 +581,13 @@ class FlightPlanMultiFieldWidgetState
     initialValues = widget.values ?? [];
     currentValues = initialValues;
     if (widget.values != null) {
-      List<FlightPlan> flightplanList = await Future.wait(
+      List<Operator> operatorList = await Future.wait(
         (widget.values ?? []).where((value) => value != '').map((value) async {
-          return await container.read(getFlightPlanProvider(value).future);
+          return await container.read(getOperatorProvider(value).future);
         }),
       );
-      String concatenatedText = '${flightplanList.map((flightplan) {
-        return '${flightplan.name} <id: ${flightplan.id}>';
+      String concatenatedText = '${operatorList.map((operator) {
+        return '${operator.name} <id: ${operator.id}>';
       }).join(', ')}, ';
       _typeAheadController.text = concatenatedText;
     } else {
@@ -612,7 +634,7 @@ class FlightPlanMultiFieldWidgetState
                 children: [
                   widget.editable
                       ? Expanded(
-                          child: TypeAheadField<FlightPlan>(
+                          child: TypeAheadField<Operator>(
                             controller: _typeAheadController,
                             suggestionsCallback: (String pattern) async {
                               final idRegex =
@@ -639,47 +661,47 @@ class FlightPlanMultiFieldWidgetState
                               }
                               final inputParts = pattern.split(',').last.trim();
                               container
-                                  .read(flightplanPaginationProvider.notifier)
+                                  .read(operatorPaginationProvider.notifier)
                                   .setFilters({
                                 'id': {'\$nin': currentValues}
                               });
-                              final flightplanPaginationData = await container
-                                  .read(getAllFlightPlanProvider(container
-                                          .read(flightplanPaginationProvider))
+                              final operatorPaginationData = await container
+                                  .read(getAllOperatorProvider(container
+                                          .read(operatorPaginationProvider))
                                       .future);
-                              final options = flightplanPaginationData.items;
+                              final options = operatorPaginationData.items;
                               return options
-                                  .where((flightplan) =>
-                                      flightplan.name!
+                                  .where((operator) =>
+                                      operator.name!
                                           .toLowerCase()
                                           .contains(inputParts.toLowerCase()) ||
-                                      flightplan.id
+                                      operator.id
                                           .toString()
                                           .toLowerCase()
                                           .contains(inputParts.toLowerCase()))
                                   .toList();
                             },
-                            itemBuilder: (context, flightplan) {
+                            itemBuilder: (context, operator) {
                               return ListTile(
                                 title: Text(
-                                    '${flightplan.name} <id: ${flightplan.id}>'),
+                                    '${operator.name} <id: ${operator.id}>'),
                               );
                             },
-                            onSelected: (FlightPlan value) async {
+                            onSelected: (Operator value) async {
                               isValueChanged =
                                   !initialValues.contains(value.id);
                               currentValues.add(value.id!);
 
-                              List<FlightPlan> flightplanList =
-                                  await Future.wait((currentValues)
+                              List<Operator> operatorList = await Future.wait(
+                                  (currentValues)
                                       .where((value) => value != '')
                                       .map((value) async {
                                 return await container
-                                    .read(getFlightPlanProvider(value).future);
+                                    .read(getOperatorProvider(value).future);
                               }));
                               String concatenatedText =
-                                  '${flightplanList.map((flightplan) {
-                                return '${flightplan.name} <id: ${flightplan.id}>';
+                                  '${operatorList.map((operator) {
+                                return '${operator.name} <id: ${operator.id}>';
                               }).join(', ')}, ';
 
                               setState(() {
@@ -723,18 +745,277 @@ class FlightPlanMultiFieldWidgetState
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) =>
-                        FlightPlanListView(extraFilters: query),
+                    builder: (context) => OperatorListView(extraFilters: query),
                   ),
                 );
               } catch (error) {
-                print('Failed to fetch flightplans: $error');
+                print('Failed to fetch operators: $error');
               }
             },
-            child: const Text('View FlightPlans'),
+            child: const Text('View Operators'),
           ),
         ),
       ],
+    );
+  }
+}
+
+class OperatorLoginWidget extends StatefulWidget {
+  final Operator? element;
+
+  const OperatorLoginWidget({this.element, Key? key}) : super(key: key);
+
+  @override
+  _OperatorLoginWidgetState createState() => _OperatorLoginWidgetState();
+}
+
+class _OperatorLoginWidgetState extends State<OperatorLoginWidget> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  bool _isPasswordVisible = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Log In'),
+        centerTitle: true,
+      ),
+      body: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(height: MediaQuery.of(context).size.height * 0.2),
+              _buildTextField(
+                controller: _emailController,
+                labelText: 'Email',
+              ),
+              _buildTextField(
+                controller: _passwordController,
+                labelText: 'Password',
+                isPassword: true,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 16.0),
+                child: ElevatedButton(
+                  onPressed: () async {
+                    var container = ProviderContainer();
+                    var loginData = Auth(
+                        email: _emailController.text,
+                        password: _passwordController.text);
+                    try {
+                      AuthResult loginResult = await container
+                          .read(loginOperatorProvider(loginData).future);
+                      if (loginResult.success) {
+                        Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(builder: (context) => Home()),
+                        );
+                      } else {
+                        CustomSnackBar.show(context, loginResult.errorMessage);
+                      }
+                    } catch (error) {
+                      print(error);
+                    }
+                  },
+                  child: const Text('Login'),
+                ),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                        builder: (context) => OperatorRegisterWidget()),
+                  );
+                },
+                child: const Text("I don't have an account: Register"),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTextField({
+    required TextEditingController controller,
+    required String labelText,
+    bool isPassword = false,
+  }) {
+    return Container(
+      padding: const EdgeInsets.all(8.0),
+      margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10.0),
+        color: Styles.secondaryColor,
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: TextField(
+          controller: controller,
+          obscureText: isPassword && !_isPasswordVisible,
+          decoration: InputDecoration(
+            labelText: labelText,
+            suffixIcon: isPassword
+                ? IconButton(
+                    icon: Icon(
+                      _isPasswordVisible
+                          ? Icons.visibility
+                          : Icons.visibility_off,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _isPasswordVisible = !_isPasswordVisible;
+                      });
+                    },
+                  )
+                : null,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class OperatorRegisterWidget extends StatefulWidget {
+  final Operator? element;
+
+  const OperatorRegisterWidget({this.element, Key? key}) : super(key: key);
+
+  @override
+  _OperatorRegisterWidgetState createState() => _OperatorRegisterWidgetState();
+}
+
+class _OperatorRegisterWidgetState extends State<OperatorRegisterWidget> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
+
+  final TextEditingController _nameController = TextEditingController();
+  bool _isPasswordVisible = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Register'),
+        centerTitle: true,
+      ),
+      body: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(height: MediaQuery.of(context).size.height * 0.2),
+              _buildTextField(
+                controller: _emailController,
+                labelText: 'Email',
+              ),
+              _buildTextField(
+                controller: _passwordController,
+                labelText: 'Password',
+                isPassword: true,
+              ),
+              _buildTextField(
+                controller: _confirmPasswordController,
+                labelText: 'Confirm password',
+                isPassword: true,
+              ),
+              _buildTextField(
+                controller: _nameController,
+                labelText: 'name',
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 16.0),
+                child: ElevatedButton(
+                  onPressed: () async {
+                    if (_passwordController.text !=
+                        _confirmPasswordController.text) {
+                      CustomSnackBar.show(context, "Passwords do not match");
+                      return;
+                    }
+                    var container = ProviderContainer();
+                    var registerData = Operator(
+                      email: _emailController.text,
+                      password: _passwordController.text,
+                      name: _nameController.text,
+                    );
+                    try {
+                      AuthResult registerResult = await container
+                          .read(registerOperatorProvider(registerData).future);
+                      if (registerResult.success) {
+                        Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(builder: (context) => Home()),
+                        );
+                      } else {
+                        CustomSnackBar.show(
+                            context, registerResult.errorMessage);
+                      }
+                    } catch (error) {
+                      print(error);
+                    }
+                  },
+                  child: Text('Register'),
+                ),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                        builder: (context) => OperatorLoginWidget()),
+                  );
+                },
+                child: Text("I already have an account: LogIn"),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTextField({
+    required TextEditingController controller,
+    required String labelText,
+    bool isPassword = false,
+  }) {
+    return Container(
+      padding: const EdgeInsets.all(8.0),
+      margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10.0),
+        color: Styles.secondaryColor,
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: TextField(
+          controller: controller,
+          obscureText: isPassword && !_isPasswordVisible,
+          decoration: InputDecoration(
+            labelText: labelText,
+            suffixIcon: isPassword
+                ? IconButton(
+                    icon: Icon(
+                      _isPasswordVisible
+                          ? Icons.visibility
+                          : Icons.visibility_off,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _isPasswordVisible = !_isPasswordVisible;
+                      });
+                    },
+                  )
+                : null,
+          ),
+        ),
+      ),
     );
   }
 }
@@ -743,15 +1024,15 @@ class FlightPlanMultiFieldWidgetState
 // HomeWidgetElementGenerator
 // **************************************************************************
 
-class FlightPlanHomeWidget extends StatelessWidget {
-  const FlightPlanHomeWidget({super.key});
+class OperatorHomeWidget extends StatelessWidget {
+  const OperatorHomeWidget({super.key});
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => FlightPlanListView()),
+          MaterialPageRoute(builder: (context) => OperatorListView()),
         );
       },
       child: Container(
@@ -765,14 +1046,14 @@ class FlightPlanHomeWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image.asset(
-              'assets/flightplan.png',
+              'assets/operator.png',
               width: 40.0,
               height: 40.0,
               color: Colors.white,
             ),
             const SizedBox(height: 8.0),
             const Text(
-              "FlightPlan",
+              "Operator",
               style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
@@ -789,52 +1070,55 @@ class FlightPlanHomeWidget extends StatelessWidget {
 // JsonSerializableGenerator
 // **************************************************************************
 
-FlightPlan _$FlightPlanFromJson(Map<String, dynamic> json) => FlightPlan(
-      airspace_restrictions: (json['airspace_restrictions'] as List<dynamic>?)
+Operator _$OperatorFromJson(Map<String, dynamic> json) => Operator(
+      address: json['address'] == null
+          ? null
+          : Point.fromJson(json['address'] as Map<String, dynamic>),
+      contactInformation: json['contactInformation'] as String?,
+      drones:
+          (json['drones'] as List<dynamic>?)?.map((e) => e as String).toList(),
+      email: json['email'] as String,
+      flightplans: (json['flightplans'] as List<dynamic>?)
           ?.map((e) => e as String)
           .toList(),
-      approved: json['approved'] as bool,
-      arrival_time: json['arrival_time'] == null
-          ? null
-          : DateTime.parse(json['arrival_time'] as String),
-      departure_time: DateTime.parse(json['departure_time'] as String),
-      droneId: json['droneId'] as String,
       id: json['id'] as String?,
-      mission_details: json['mission_details'] as String?,
+      identity: json['identity'] as String?,
       name: json['name'] as String,
-      route: LineString.fromJson(json['route'] as Map<String, dynamic>),
+      password: json['password'] as String,
+      roles:
+          (json['roles'] as List<dynamic>?)?.map((e) => e as String).toList(),
     );
 
-Map<String, dynamic> _$FlightPlanToJson(FlightPlan instance) =>
-    <String, dynamic>{
-      'airspace_restrictions': instance.airspace_restrictions,
-      'approved': instance.approved,
-      'arrival_time': instance.arrival_time?.toIso8601String(),
-      'departure_time': instance.departure_time.toIso8601String(),
-      'droneId': instance.droneId,
+Map<String, dynamic> _$OperatorToJson(Operator instance) => <String, dynamic>{
+      'address': instance.address,
+      'contactInformation': instance.contactInformation,
+      'drones': instance.drones,
+      'email': instance.email,
+      'flightplans': instance.flightplans,
       'id': instance.id,
-      'mission_details': instance.mission_details,
+      'identity': instance.identity,
       'name': instance.name,
-      'route': instance.route,
+      'password': instance.password,
+      'roles': instance.roles,
     };
 
 // **************************************************************************
 // ListWidgetGenerator
 // **************************************************************************
 
-class FlightPlanListView extends ConsumerStatefulWidget {
+class OperatorListView extends ConsumerStatefulWidget {
   final Map<String, dynamic>? extraFilters;
   final Map<String, dynamic> currentFilters = {};
   late bool _initialized = false;
   late List<bool> selectedStates;
 
-  FlightPlanListView({Key? key, this.extraFilters}) : super(key: key);
+  OperatorListView({Key? key, this.extraFilters}) : super(key: key);
 
   @override
-  _FlightPlanListViewState createState() => _FlightPlanListViewState();
+  _OperatorListViewState createState() => _OperatorListViewState();
 }
 
-class _FlightPlanListViewState extends ConsumerState<FlightPlanListView> {
+class _OperatorListViewState extends ConsumerState<OperatorListView> {
   @override
   void initState() {
     super.initState();
@@ -845,23 +1129,23 @@ class _FlightPlanListViewState extends ConsumerState<FlightPlanListView> {
         });
       }
       ref
-          .read(flightplanPaginationProvider.notifier)
+          .read(operatorPaginationProvider.notifier)
           .setFilters(widget.extraFilters!);
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final paginationState = ref.watch(flightplanPaginationProvider);
+    final paginationState = ref.watch(operatorPaginationProvider);
 
-    final flightplansAsyncValue =
-        ref.watch(getAllFlightPlanProvider(paginationState));
+    final operatorsAsyncValue =
+        ref.watch(getAllOperatorProvider(paginationState));
 
     final Map<String, int> columnSortStates =
-        ref.watch(flightplanPaginationProvider.notifier).getOrders();
+        ref.watch(operatorPaginationProvider.notifier).getOrders();
 
     final Map<String, dynamic> fieldsFilterStates =
-        ref.watch(flightplanPaginationProvider.notifier).getFilters();
+        ref.watch(operatorPaginationProvider.notifier).getFilters();
 
     void onSort(String columnName) {
       var state = columnSortStates[columnName];
@@ -872,15 +1156,13 @@ class _FlightPlanListViewState extends ConsumerState<FlightPlanListView> {
       } else if (state == -1) {
         columnSortStates.remove(columnName);
       }
-      ref
-          .read(flightplanPaginationProvider.notifier)
-          .setOrders(columnSortStates);
+      ref.read(operatorPaginationProvider.notifier).setOrders(columnSortStates);
     }
 
     void onFilter(String fieldName, dynamic filterValue) {
       widget.currentFilters[fieldName] = filterValue;
       ref
-          .read(flightplanPaginationProvider.notifier)
+          .read(operatorPaginationProvider.notifier)
           .setFilters(widget.currentFilters);
     }
 
@@ -903,9 +1185,35 @@ class _FlightPlanListViewState extends ConsumerState<FlightPlanListView> {
       return droneList;
     }
 
+    Future<List<FlightPlan>> fetchFlightPlanList(List<String>? ids) async {
+      if (ids == null || ids.isEmpty) {
+        return [];
+      }
+      final nonEmptyIds = ids.where((id) => id.isNotEmpty).toList();
+      List<FlightPlan> flightplanList = await Future.wait(
+        nonEmptyIds.map((id) async {
+          return await ref.read(getFlightPlanProvider(id).future);
+        }),
+      );
+      return flightplanList;
+    }
+
+    Future<List<Role>> fetchRoleList(List<String>? ids) async {
+      if (ids == null || ids.isEmpty) {
+        return [];
+      }
+      final nonEmptyIds = ids.where((id) => id.isNotEmpty).toList();
+      List<Role> roleList = await Future.wait(
+        nonEmptyIds.map((id) async {
+          return await ref.read(getRoleProvider(id).future);
+        }),
+      );
+      return roleList;
+    }
+
     return Scaffold(
         appBar: AppBar(
-          title: const Text('FlightPlan List'),
+          title: const Text('Operator List'),
           actions: [
             Container(
               margin: const EdgeInsets.only(right: 10),
@@ -914,7 +1222,7 @@ class _FlightPlanListViewState extends ConsumerState<FlightPlanListView> {
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const FlightPlanWidget(
+                      builder: (context) => const OperatorWidget(
                         isEditing: false,
                       ),
                     ),
@@ -946,20 +1254,20 @@ class _FlightPlanListViewState extends ConsumerState<FlightPlanListView> {
                     return Colors.transparent;
                   }),
                 ),
-                child: const Text('Create FlightPlan'),
+                child: const Text('Create Operator'),
               ),
             ),
           ],
         ),
-        body: flightplansAsyncValue.when(
+        body: operatorsAsyncValue.when(
           loading: () => const CircularProgressIndicator(),
           error: (error, stackTrace) => Text('Error: $error'),
-          data: (FlightPlanPaginationData data) {
-            final flightplans = data.items;
+          data: (OperatorPaginationData data) {
+            final operators = data.items;
 
             if (!widget._initialized) {
               widget.selectedStates =
-                  List.generate(flightplans.length, (index) => false);
+                  List.generate(operators.length, (index) => false);
               widget._initialized = true;
             }
 
@@ -968,15 +1276,16 @@ class _FlightPlanListViewState extends ConsumerState<FlightPlanListView> {
                 children: [
                   CustomSearchBar(
                     fields: const {
-                      'airspace_restrictions': 'List<String>?',
-                      'approved': 'bool',
-                      'arrival_time': 'DateTime?',
-                      'departure_time': 'DateTime',
-                      'droneId': 'String',
+                      'address': 'Point?',
+                      'contactInformation': 'String?',
+                      'drones': 'List<String>?',
+                      'email': 'String',
+                      'flightplans': 'List<String>?',
                       'id': 'String?',
-                      'mission_details': 'String?',
+                      'identity': 'String?',
                       'name': 'String',
-                      'route': 'LineString'
+                      'password': 'String',
+                      'roles': 'List<String>?'
                     },
                     filters: fieldsFilterStates,
                     onFilterChanged: onFilter,
@@ -987,7 +1296,7 @@ class _FlightPlanListViewState extends ConsumerState<FlightPlanListView> {
                       icon: const Icon(Icons.refresh, color: Colors.grey),
                       onPressed: () {
                         ref
-                            .read(flightplanPaginationProvider.notifier)
+                            .read(operatorPaginationProvider.notifier)
                             .setPage(1);
                       },
                     ),
@@ -1003,12 +1312,12 @@ class _FlightPlanListViewState extends ConsumerState<FlightPlanListView> {
                                       widget.selectedStates[index] ? index : -1,
                                 ).where((index) => index != -1).toList();
 
-                                List<FlightPlan> selectedFlightPlans =
+                                List<Operator> selectedOperators =
                                     selectedIndices
-                                        .map((index) => flightplans[index])
+                                        .map((index) => operators[index])
                                         .toList();
                                 _onDeleteElement(
-                                    selectedFlightPlans, ref, paginationState);
+                                    selectedOperators, ref, paginationState);
                               }
                             : null,
                         style: ButtonStyle(
@@ -1105,7 +1414,44 @@ class _FlightPlanListViewState extends ConsumerState<FlightPlanListView> {
                                                 MainAxisAlignment.center,
                                             children: [
                                               const Text(
-                                                'Mission Details',
+                                                'Address',
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Color.fromARGB(
+                                                        255, 94, 54, 54)),
+                                                textAlign: TextAlign.center,
+                                              ),
+                                              if (columnSortStates['address'] !=
+                                                  null) ...[
+                                                Icon(
+                                                  columnSortStates['address'] ==
+                                                          1
+                                                      ? Icons
+                                                          .arrow_drop_up_rounded
+                                                      : Icons
+                                                          .arrow_drop_down_rounded,
+                                                  color: Colors.black,
+                                                ),
+                                                Text(
+                                                  '${columnSortStates.keys.toList().indexOf('address') + 1}',
+                                                  style: const TextStyle(
+                                                      fontSize: 10),
+                                                ),
+                                              ],
+                                            ],
+                                          ),
+                                        ),
+                                        onSort: (columnIndex, ascending) =>
+                                            {onSort('address')},
+                                      ),
+                                      DataColumn(
+                                        label: Expanded(
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              const Text(
+                                                'Identity',
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.bold,
                                                     color: Color.fromARGB(
@@ -1113,11 +1459,11 @@ class _FlightPlanListViewState extends ConsumerState<FlightPlanListView> {
                                                 textAlign: TextAlign.center,
                                               ),
                                               if (columnSortStates[
-                                                      'mission_details'] !=
+                                                      'identity'] !=
                                                   null) ...[
                                                 Icon(
                                                   columnSortStates[
-                                                              'mission_details'] ==
+                                                              'identity'] ==
                                                           1
                                                       ? Icons
                                                           .arrow_drop_up_rounded
@@ -1126,7 +1472,7 @@ class _FlightPlanListViewState extends ConsumerState<FlightPlanListView> {
                                                   color: Colors.black,
                                                 ),
                                                 Text(
-                                                  '${columnSortStates.keys.toList().indexOf('mission_details') + 1}',
+                                                  '${columnSortStates.keys.toList().indexOf('identity') + 1}',
                                                   style: const TextStyle(
                                                       fontSize: 10),
                                                 ),
@@ -1135,7 +1481,7 @@ class _FlightPlanListViewState extends ConsumerState<FlightPlanListView> {
                                           ),
                                         ),
                                         onSort: (columnIndex, ascending) =>
-                                            {onSort('mission_details')},
+                                            {onSort('identity')},
                                       ),
                                       DataColumn(
                                         label: Expanded(
@@ -1144,43 +1490,7 @@ class _FlightPlanListViewState extends ConsumerState<FlightPlanListView> {
                                                 MainAxisAlignment.center,
                                             children: [
                                               const Text(
-                                                'Route',
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Color.fromARGB(
-                                                        255, 94, 54, 54)),
-                                                textAlign: TextAlign.center,
-                                              ),
-                                              if (columnSortStates['route'] !=
-                                                  null) ...[
-                                                Icon(
-                                                  columnSortStates['route'] == 1
-                                                      ? Icons
-                                                          .arrow_drop_up_rounded
-                                                      : Icons
-                                                          .arrow_drop_down_rounded,
-                                                  color: Colors.black,
-                                                ),
-                                                Text(
-                                                  '${columnSortStates.keys.toList().indexOf('route') + 1}',
-                                                  style: const TextStyle(
-                                                      fontSize: 10),
-                                                ),
-                                              ],
-                                            ],
-                                          ),
-                                        ),
-                                        onSort: (columnIndex, ascending) =>
-                                            {onSort('route')},
-                                      ),
-                                      DataColumn(
-                                        label: Expanded(
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              const Text(
-                                                'Departure Time',
+                                                'Contact Information',
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.bold,
                                                     color: Color.fromARGB(
@@ -1188,11 +1498,11 @@ class _FlightPlanListViewState extends ConsumerState<FlightPlanListView> {
                                                 textAlign: TextAlign.center,
                                               ),
                                               if (columnSortStates[
-                                                      'departure_time'] !=
+                                                      'contactInformation'] !=
                                                   null) ...[
                                                 Icon(
                                                   columnSortStates[
-                                                              'departure_time'] ==
+                                                              'contactInformation'] ==
                                                           1
                                                       ? Icons
                                                           .arrow_drop_up_rounded
@@ -1201,7 +1511,7 @@ class _FlightPlanListViewState extends ConsumerState<FlightPlanListView> {
                                                   color: Colors.black,
                                                 ),
                                                 Text(
-                                                  '${columnSortStates.keys.toList().indexOf('departure_time') + 1}',
+                                                  '${columnSortStates.keys.toList().indexOf('contactInformation') + 1}',
                                                   style: const TextStyle(
                                                       fontSize: 10),
                                                 ),
@@ -1210,7 +1520,7 @@ class _FlightPlanListViewState extends ConsumerState<FlightPlanListView> {
                                           ),
                                         ),
                                         onSort: (columnIndex, ascending) =>
-                                            {onSort('departure_time')},
+                                            {onSort('contactInformation')},
                                       ),
                                       DataColumn(
                                         label: Expanded(
@@ -1219,7 +1529,44 @@ class _FlightPlanListViewState extends ConsumerState<FlightPlanListView> {
                                                 MainAxisAlignment.center,
                                             children: [
                                               const Text(
-                                                'Arrival Time',
+                                                'Drones',
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Color.fromARGB(
+                                                        255, 94, 54, 54)),
+                                                textAlign: TextAlign.center,
+                                              ),
+                                              if (columnSortStates['drones'] !=
+                                                  null) ...[
+                                                Icon(
+                                                  columnSortStates['drones'] ==
+                                                          1
+                                                      ? Icons
+                                                          .arrow_drop_up_rounded
+                                                      : Icons
+                                                          .arrow_drop_down_rounded,
+                                                  color: Colors.black,
+                                                ),
+                                                Text(
+                                                  '${columnSortStates.keys.toList().indexOf('drones') + 1}',
+                                                  style: const TextStyle(
+                                                      fontSize: 10),
+                                                ),
+                                              ],
+                                            ],
+                                          ),
+                                        ),
+                                        onSort: (columnIndex, ascending) =>
+                                            {onSort('drones')},
+                                      ),
+                                      DataColumn(
+                                        label: Expanded(
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              const Text(
+                                                'FlightPlans',
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.bold,
                                                     color: Color.fromARGB(
@@ -1227,11 +1574,11 @@ class _FlightPlanListViewState extends ConsumerState<FlightPlanListView> {
                                                 textAlign: TextAlign.center,
                                               ),
                                               if (columnSortStates[
-                                                      'arrival_time'] !=
+                                                      'flightplans'] !=
                                                   null) ...[
                                                 Icon(
                                                   columnSortStates[
-                                                              'arrival_time'] ==
+                                                              'flightplans'] ==
                                                           1
                                                       ? Icons
                                                           .arrow_drop_up_rounded
@@ -1240,7 +1587,7 @@ class _FlightPlanListViewState extends ConsumerState<FlightPlanListView> {
                                                   color: Colors.black,
                                                 ),
                                                 Text(
-                                                  '${columnSortStates.keys.toList().indexOf('arrival_time') + 1}',
+                                                  '${columnSortStates.keys.toList().indexOf('flightplans') + 1}',
                                                   style: const TextStyle(
                                                       fontSize: 10),
                                                 ),
@@ -1249,145 +1596,22 @@ class _FlightPlanListViewState extends ConsumerState<FlightPlanListView> {
                                           ),
                                         ),
                                         onSort: (columnIndex, ascending) =>
-                                            {onSort('arrival_time')},
-                                      ),
-                                      DataColumn(
-                                        label: Expanded(
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              const Text(
-                                                'Drone',
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Color.fromARGB(
-                                                        255, 94, 54, 54)),
-                                                textAlign: TextAlign.center,
-                                              ),
-                                              if (columnSortStates['droneId'] !=
-                                                  null) ...[
-                                                Icon(
-                                                  columnSortStates['droneId'] ==
-                                                          1
-                                                      ? Icons
-                                                          .arrow_drop_up_rounded
-                                                      : Icons
-                                                          .arrow_drop_down_rounded,
-                                                  color: Colors.black,
-                                                ),
-                                                Text(
-                                                  '${columnSortStates.keys.toList().indexOf('droneId') + 1}',
-                                                  style: const TextStyle(
-                                                      fontSize: 10),
-                                                ),
-                                              ],
-                                            ],
-                                          ),
-                                        ),
-                                        onSort: (columnIndex, ascending) =>
-                                            {onSort('droneId')},
-                                      ),
-                                      DataColumn(
-                                        label: Expanded(
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              const Text(
-                                                'airspace_restrictions',
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Color.fromARGB(
-                                                        255, 94, 54, 54)),
-                                                textAlign: TextAlign.center,
-                                              ),
-                                              if (columnSortStates[
-                                                      'airspace_restrictions'] !=
-                                                  null) ...[
-                                                Icon(
-                                                  columnSortStates[
-                                                              'airspace_restrictions'] ==
-                                                          1
-                                                      ? Icons
-                                                          .arrow_drop_up_rounded
-                                                      : Icons
-                                                          .arrow_drop_down_rounded,
-                                                  color: Colors.black,
-                                                ),
-                                                Text(
-                                                  '${columnSortStates.keys.toList().indexOf('airspace_restrictions') + 1}',
-                                                  style: const TextStyle(
-                                                      fontSize: 10),
-                                                ),
-                                              ],
-                                            ],
-                                          ),
-                                        ),
-                                        onSort: (columnIndex, ascending) =>
-                                            {onSort('airspace_restrictions')},
-                                      ),
-                                      DataColumn(
-                                        label: Expanded(
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              const Text(
-                                                'Approved',
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Color.fromARGB(
-                                                        255, 94, 54, 54)),
-                                                textAlign: TextAlign.center,
-                                              ),
-                                              if (columnSortStates[
-                                                      'approved'] !=
-                                                  null) ...[
-                                                Icon(
-                                                  columnSortStates[
-                                                              'approved'] ==
-                                                          1
-                                                      ? Icons
-                                                          .arrow_drop_up_rounded
-                                                      : Icons
-                                                          .arrow_drop_down_rounded,
-                                                  color: Colors.black,
-                                                ),
-                                                Text(
-                                                  '${columnSortStates.keys.toList().indexOf('approved') + 1}',
-                                                  style: const TextStyle(
-                                                      fontSize: 10),
-                                                ),
-                                              ],
-                                            ],
-                                          ),
-                                        ),
-                                        onSort: (columnIndex, ascending) =>
-                                            {onSort('approved')},
+                                            {onSort('flightplans')},
                                       ),
                                     ],
                                     rows: List<DataRow>.generate(
-                                        flightplans.length, (index) {
-                                      var flightplan = flightplans[index];
+                                        operators.length, (index) {
+                                      var operator = operators[index];
 
                                       return DataRow(
                                         selected: widget.selectedStates[index],
                                         cells: [
                                           DataCell(
                                             Center(
-                                                child: Text(flightplan.name
-                                                    .toString())),
+                                                child: Text(
+                                                    operator.name.toString())),
                                             onTap: () =>
-                                                {_navigateElement(flightplan)},
-                                          ),
-                                          DataCell(
-                                            Center(
-                                                child: Text(flightplan
-                                                    .mission_details
-                                                    .toString())),
-                                            onTap: () =>
-                                                {_navigateElement(flightplan)},
+                                                {_navigateElement(operator)},
                                           ),
                                           DataCell(
                                             Center(
@@ -1397,20 +1621,18 @@ class _FlightPlanListViewState extends ConsumerState<FlightPlanListView> {
                                                   context,
                                                   MaterialPageRoute(
                                                     builder: (context) =>
-                                                        MapScreenView(
-                                                            LineStringView(
-                                                                flightplan
-                                                                    .route!
-                                                                    .geometry
-                                                                    .coordinates,
-                                                                flightplan
-                                                                    .route!
-                                                                    .properties,
-                                                                MediaQuery.of(
-                                                                        context)
-                                                                    .size
-                                                                    .height,
-                                                                true)),
+                                                        MapScreenView(PointView(
+                                                            operator
+                                                                .address!
+                                                                .geometry
+                                                                .coordinates,
+                                                            operator.address!
+                                                                .properties,
+                                                            MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .height,
+                                                            false)),
                                                   ),
                                                 );
                                               },
@@ -1463,35 +1685,34 @@ class _FlightPlanListViewState extends ConsumerState<FlightPlanListView> {
                                                 }),
                                               ),
                                               child: const Text(
-                                                "LineString",
+                                                "Point?",
                                                 style: TextStyle(
                                                     color: Colors.white),
                                               ),
                                             )),
                                             onTap: () =>
-                                                {_navigateElement(flightplan)},
+                                                {_navigateElement(operator)},
                                           ),
                                           DataCell(
                                             Center(
-                                                child: Text(flightplan
-                                                    .departure_time
+                                                child: Text(operator.identity
                                                     .toString())),
                                             onTap: () =>
-                                                {_navigateElement(flightplan)},
+                                                {_navigateElement(operator)},
                                           ),
                                           DataCell(
                                             Center(
-                                                child: Text(flightplan
-                                                    .arrival_time
+                                                child: Text(operator
+                                                    .contactInformation
                                                     .toString())),
                                             onTap: () =>
-                                                {_navigateElement(flightplan)},
+                                                {_navigateElement(operator)},
                                           ),
                                           DataCell(
                                             Center(
                                               child: FutureBuilder<List<Drone>>(
                                                 future: fetchDroneList(
-                                                    [flightplan.droneId ?? '']),
+                                                    operator.drones),
                                                 builder: (context, snapshot) {
                                                   if (snapshot.connectionState ==
                                                           ConnectionState
@@ -1594,22 +1815,117 @@ class _FlightPlanListViewState extends ConsumerState<FlightPlanListView> {
                                               ),
                                             ),
                                             onTap: () =>
-                                                {_navigateElement(flightplan)},
+                                                {_navigateElement(operator)},
                                           ),
                                           DataCell(
                                             Center(
-                                                child: Text(flightplan
-                                                    .airspace_restrictions
-                                                    .toString())),
+                                              child: FutureBuilder<
+                                                  List<FlightPlan>>(
+                                                future: fetchFlightPlanList(
+                                                    operator.flightplans),
+                                                builder: (context, snapshot) {
+                                                  if (snapshot.connectionState ==
+                                                          ConnectionState
+                                                              .waiting ||
+                                                      snapshot.data == null) {
+                                                    return const CircularProgressIndicator();
+                                                  } else {
+                                                    return Wrap(
+                                                      spacing: 4,
+                                                      children: snapshot.data!
+                                                          .map((flightplan) {
+                                                        return ElevatedButton(
+                                                          onPressed: () {
+                                                            Navigator.push(
+                                                              context,
+                                                              MaterialPageRoute(
+                                                                builder:
+                                                                    (context) =>
+                                                                        FlightPlanWidget(
+                                                                  element:
+                                                                      flightplan,
+                                                                  isEditing:
+                                                                      true,
+                                                                ),
+                                                              ),
+                                                            );
+                                                          },
+                                                          style: ButtonStyle(
+                                                            shape: MaterialStateProperty
+                                                                .all<
+                                                                    RoundedRectangleBorder>(
+                                                              RoundedRectangleBorder(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            5),
+                                                              ),
+                                                            ),
+                                                            padding:
+                                                                MaterialStateProperty
+                                                                    .all<
+                                                                        EdgeInsetsGeometry>(
+                                                              EdgeInsets
+                                                                  .symmetric(
+                                                                      horizontal:
+                                                                          1,
+                                                                      vertical:
+                                                                          1),
+                                                            ),
+                                                            backgroundColor:
+                                                                MaterialStateProperty
+                                                                    .all<Color>(
+                                                                        Styles
+                                                                            .buttonPrimaryColor),
+                                                            elevation: MaterialStateProperty
+                                                                .resolveWith<
+                                                                        double>(
+                                                                    (states) {
+                                                              if (states.contains(
+                                                                      MaterialState
+                                                                          .hovered) ||
+                                                                  states.contains(
+                                                                      MaterialState
+                                                                          .pressed)) {
+                                                                return 0;
+                                                              }
+                                                              return 0;
+                                                            }),
+                                                            foregroundColor:
+                                                                MaterialStateProperty
+                                                                    .all<Color>(
+                                                                        Colors
+                                                                            .white),
+                                                            overlayColor:
+                                                                MaterialStateProperty
+                                                                    .resolveWith<
+                                                                            Color>(
+                                                                        (states) {
+                                                              if (states.contains(
+                                                                  MaterialState
+                                                                      .hovered)) {
+                                                                return Styles
+                                                                    .buttonPrimaryColorHover;
+                                                              }
+                                                              return Colors
+                                                                  .transparent;
+                                                            }),
+                                                          ),
+                                                          child: Text(
+                                                            flightplan.name!,
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .white),
+                                                          ),
+                                                        );
+                                                      }).toList(),
+                                                    );
+                                                  }
+                                                },
+                                              ),
+                                            ),
                                             onTap: () =>
-                                                {_navigateElement(flightplan)},
-                                          ),
-                                          DataCell(
-                                            Center(
-                                                child: Text(flightplan.approved
-                                                    .toString())),
-                                            onTap: () =>
-                                                {_navigateElement(flightplan)},
+                                                {_navigateElement(operator)},
                                           ),
                                         ],
                                         onSelectChanged: (selected) {
@@ -1642,23 +1958,23 @@ class _FlightPlanListViewState extends ConsumerState<FlightPlanListView> {
   }
 
   void _onPageButtonPressed(int pageNumber, WidgetRef ref,
-      FlightPlanPaginationState paginationState, int maxPages) {
+      OperatorPaginationState paginationState, int maxPages) {
     if (pageNumber <= maxPages) {
-      ref.read(flightplanPaginationProvider.notifier).setPage(pageNumber);
+      ref.read(operatorPaginationProvider.notifier).setPage(pageNumber);
     }
   }
 
-  void _navigateElement(FlightPlan flightplan) {
+  void _navigateElement(Operator operator) {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
           builder: (context) =>
-              FlightPlanWidget(element: flightplan, isEditing: true)),
+              OperatorWidget(element: operator, isEditing: true)),
     );
   }
 
-  void _onDeleteElement(List<FlightPlan> flightplans, WidgetRef ref,
-      FlightPlanPaginationState paginationState) {
+  void _onDeleteElement(List<Operator> operators, WidgetRef ref,
+      OperatorPaginationState paginationState) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -1674,7 +1990,7 @@ class _FlightPlanListViewState extends ConsumerState<FlightPlanListView> {
             ),
             TextButton(
               onPressed: () {
-                _deleteRecords(flightplans, ref, paginationState);
+                _deleteRecords(operators, ref, paginationState);
                 Navigator.of(context).pop();
                 setState(() {});
               },
@@ -1686,41 +2002,41 @@ class _FlightPlanListViewState extends ConsumerState<FlightPlanListView> {
     );
   }
 
-  Future<void> _deleteRecords(List<FlightPlan> flightplans, WidgetRef ref,
-      FlightPlanPaginationState paginationState) async {
-    for (var flightplan in flightplans) {
-      await ref.read(deleteFlightPlanProvider(flightplan.id!).future);
+  Future<void> _deleteRecords(List<Operator> operators, WidgetRef ref,
+      OperatorPaginationState paginationState) async {
+    for (var operator in operators) {
+      await ref.read(deleteOperatorProvider(operator.id!).future);
     }
     setState(() {
       widget._initialized = false;
     });
-    ref.read(flightplanPaginationProvider.notifier).setPage(1);
+    ref.read(operatorPaginationProvider.notifier).setPage(1);
   }
 }
 
-class FlightPlanPaginationState {
+class OperatorPaginationState {
   final Tuple2<int, int> pagination;
   final Map<String, int> orders;
   final Map<String, dynamic> filters;
 
-  FlightPlanPaginationState({
+  OperatorPaginationState({
     required this.pagination,
     required this.orders,
     required this.filters,
   });
 }
 
-class FlightPlanPaginationNotifier
-    extends StateNotifier<FlightPlanPaginationState> {
-  FlightPlanPaginationNotifier()
-      : super(FlightPlanPaginationState(
+class OperatorPaginationNotifier
+    extends StateNotifier<OperatorPaginationState> {
+  OperatorPaginationNotifier()
+      : super(OperatorPaginationState(
           pagination: const Tuple2<int, int>(0, 10),
           orders: {},
           filters: {},
         ));
 
   void setPage(int page) {
-    state = FlightPlanPaginationState(
+    state = OperatorPaginationState(
       pagination: Tuple2(page * state.pagination.item2 - state.pagination.item2,
           state.pagination.item2),
       orders: state.orders,
@@ -1729,7 +2045,7 @@ class FlightPlanPaginationNotifier
   }
 
   void setOrders(Map<String, int> newOrders) {
-    state = FlightPlanPaginationState(
+    state = OperatorPaginationState(
       pagination: Tuple2(state.pagination.item1, state.pagination.item2),
       orders: newOrders,
       filters: state.filters,
@@ -1737,7 +2053,7 @@ class FlightPlanPaginationNotifier
   }
 
   void setFilters(Map<String, dynamic> newFilters) {
-    state = FlightPlanPaginationState(
+    state = OperatorPaginationState(
       pagination: Tuple2(state.pagination.item1, state.pagination.item2),
       orders: state.orders,
       filters: newFilters,
@@ -1753,76 +2069,76 @@ class FlightPlanPaginationNotifier
   }
 }
 
-final flightplanPaginationProvider = StateNotifierProvider<
-    FlightPlanPaginationNotifier, FlightPlanPaginationState>(
-  (ref) => FlightPlanPaginationNotifier(),
+final operatorPaginationProvider =
+    StateNotifierProvider<OperatorPaginationNotifier, OperatorPaginationState>(
+  (ref) => OperatorPaginationNotifier(),
 );
 
 // **************************************************************************
 // RiverpodCustomGenerator
 // **************************************************************************
 
-final getFlightPlanProvider = FutureProvider.autoDispose
-    .family<FlightPlan, String>((ref, flightplanId) async {
-  final json = await http.get(Uri.parse('$baseURL/flightplan/$flightplanId'));
+final getOperatorProvider = FutureProvider.autoDispose
+    .family<Operator, String>((ref, operatorId) async {
+  final json = await http.get(Uri.parse('$baseURL/operator/$operatorId'));
   final jsonData = jsonDecode(json.body);
-  return FlightPlan.fromJson(jsonData);
+  return Operator.fromJson(jsonData);
 });
 
-final createFlightPlanProvider = FutureProvider.autoDispose
-    .family<void, Tuple2<FlightPlan, BuildContext>>((ref, tuple) async {
-  FlightPlan flightplanInstance = tuple.item1;
+final createOperatorProvider = FutureProvider.autoDispose
+    .family<void, Tuple2<Operator, BuildContext>>((ref, tuple) async {
+  Operator operatorInstance = tuple.item1;
   BuildContext context = tuple.item2;
 
   final response = await http.post(
-    Uri.parse('$baseURL/flightplan'),
+    Uri.parse('$baseURL/operator'),
     headers: {'Content-Type': 'application/json'},
-    body: jsonEncode(flightplanInstance.toJson()),
+    body: jsonEncode(operatorInstance.toJson()),
   );
   if (response.statusCode != 200) {
     CustomSnackBar.show(context, jsonDecode(response.body)['detail']);
   }
 });
 
-final updateFlightPlanProvider = FutureProvider.autoDispose
-    .family<void, Tuple2<FlightPlan, BuildContext>>((ref, tuple) async {
-  FlightPlan flightplanInstance = tuple.item1;
+final updateOperatorProvider = FutureProvider.autoDispose
+    .family<void, Tuple2<Operator, BuildContext>>((ref, tuple) async {
+  Operator operatorInstance = tuple.item1;
   BuildContext context = tuple.item2;
 
   final response = await http.put(
-    Uri.parse('$baseURL/flightplan/${flightplanInstance.id}'),
+    Uri.parse('$baseURL/operator/${operatorInstance.id}'),
     headers: {'Content-Type': 'application/json'},
-    body: jsonEncode(flightplanInstance.toJson()),
+    body: jsonEncode(operatorInstance.toJson()),
   );
   if (response.statusCode != 200) {
     CustomSnackBar.show(context, jsonDecode(response.body)['detail']);
   }
 });
 
-final deleteFlightPlanProvider =
-    FutureProvider.autoDispose.family<void, String>((ref, flightplanId) async {
+final deleteOperatorProvider =
+    FutureProvider.autoDispose.family<void, String>((ref, operatorId) async {
   final response = await http.delete(
-    Uri.parse('$baseURL/flightplan/$flightplanId'),
+    Uri.parse('$baseURL/operator/$operatorId'),
   );
   if (response.statusCode != 200) {
-    throw Exception('Failed to delete FlightPlan');
+    throw Exception('Failed to delete Operator');
   }
 });
 
-class FlightPlanPaginationData {
-  final List<FlightPlan> items;
+class OperatorPaginationData {
+  final List<Operator> items;
   final int currentPage;
   final int maxPages;
 
-  FlightPlanPaginationData({
+  OperatorPaginationData({
     required this.items,
     required this.currentPage,
     required this.maxPages,
   });
 }
 
-final getAllFlightPlanProvider = FutureProvider.autoDispose
-    .family<FlightPlanPaginationData, FlightPlanPaginationState>(
+final getAllOperatorProvider = FutureProvider.autoDispose
+    .family<OperatorPaginationData, OperatorPaginationState>(
         (ref, state) async {
   final fixedQuery = {
     if (state.orders.isNotEmpty) 'orders': state.orders,
@@ -1833,16 +2149,103 @@ final getAllFlightPlanProvider = FutureProvider.autoDispose
 
   final json = await http.post(
       Uri.parse(
-          '$baseURL/flightplans?skip=${state.pagination.item1}&limit=${state.pagination.item2}'),
+          '$baseURL/operators?skip=${state.pagination.item1}&limit=${state.pagination.item2}'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode(fixedQuery));
   final jsonData = jsonDecode(json.body);
 
-  return FlightPlanPaginationData(
+  return OperatorPaginationData(
     items: (jsonData['items'] as List)
-        .map((data) => FlightPlan.fromJson(data))
+        .map((data) => Operator.fromJson(data))
         .toList(),
     currentPage: jsonData['current_page'],
     maxPages: jsonData['max_pages'],
   );
+});
+
+class Auth {
+  final String email;
+  final String password;
+
+  Auth({required this.email, required this.password});
+
+  Map<String, dynamic> toJson() {
+    return {
+      'email': email,
+      'password': password,
+    };
+  }
+}
+
+class AuthResult {
+  final bool success;
+  final String? errorMessage;
+  final Operator? operator;
+
+  AuthResult(this.success, {this.errorMessage, this.operator});
+}
+
+final loginOperatorProvider =
+    FutureProvider.autoDispose.family<AuthResult, Auth>((ref, auth) async {
+  final response = await http.post(
+    Uri.parse('$baseURL/auth/login/operator/'),
+    headers: {'Content-Type': 'application/json'},
+    body: jsonEncode(auth.toJson()),
+  );
+  if (response.statusCode != 200) {
+    return AuthResult(false, errorMessage: 'Incorrect email or password.');
+  }
+
+  final responseData = jsonDecode(response.body);
+  final token = responseData['token'];
+
+  final prefs = await SharedPreferences.getInstance();
+  await prefs.setString('token', token);
+
+  return AuthResult(true, operator: Operator.fromJson(responseData['user']));
+});
+
+final registerOperatorProvider = FutureProvider.autoDispose
+    .family<AuthResult, Operator>((ref, operator) async {
+  final response = await http.post(
+    Uri.parse('$baseURL/auth/register/operator/'),
+    headers: {'Content-Type': 'application/json'},
+    body: jsonEncode(operator.toJson()),
+  );
+  if (response.statusCode != 200) {
+    return AuthResult(false, errorMessage: jsonDecode(response.body)['detail']);
+  }
+
+  final responseData = jsonDecode(response.body);
+  final token = responseData['token'];
+
+  final prefs = await SharedPreferences.getInstance();
+  await prefs.setString('token', token);
+
+  return AuthResult(true, operator: Operator.fromJson(responseData['user']));
+});
+
+final verifyTokenOperatorProvider =
+    FutureProvider.autoDispose<bool>((ref) async {
+  try {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+
+    if (token == null) {
+      return false;
+    }
+
+    final response = await http.get(
+      Uri.parse('$baseURL/auth/verify/operator/$token'),
+      headers: {'Authorization': 'Bearer $token'},
+    );
+
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      return false;
+    }
+  } catch (e) {
+    return false;
+  }
 });

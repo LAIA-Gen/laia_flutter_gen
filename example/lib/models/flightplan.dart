@@ -12,33 +12,46 @@ import 'package:example/config/styles.dart';
 import 'dart:convert';
 import 'package:collection/collection.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:example/models/drone.dart';
 
 part 'flightplan.g.dart';
 
 @JsonSerializable()
 @RiverpodGenAnnotation(auth: false)
 @HomeWidgetElementGenAnnotation()
-@ListWidgetGenAnnotation(defaultFields: ['name', 'date', 'mission_details', 'route'], )
+@ListWidgetGenAnnotation(defaultFields: ['name', 'mission_details', 'route', 'departure_time', 'arrival_time', 'droneId', 'airspace_restrictions', 'approved'], )
 @ElementWidgetGen(auth: false)
 @CopyWith()
 class FlightPlan {
-  @Field(editable: true, fieldDescription: "Departure Datetime of the FlightPlan", fieldName: "Flight Date", placeholder: "Select a Datetime")
-  final DateTime? date;
+  @Field(fieldName: 'airspace_restrictions')
+  final List<String>? airspace_restrictions;
+  @Field(editable: true, fieldDescription: "Status of the Flightplan approval", fieldName: "Approved", placeholder: "Toggle the Approving status")
+  final bool approved;
+  @Field(editable: true, fieldDescription: "Arrival Datetime of the FlightPlan", fieldName: "Arrival Time", placeholder: "Select a Datetime")
+  final DateTime? arrival_time;
+  @Field(editable: true, fieldDescription: "Departure Datetime of the FlightPlan", fieldName: "Departure Time", placeholder: "Select a Datetime")
+  final DateTime departure_time;
+  @Field(editable: true, fieldDescription: "This is the Drone", fieldName: "Drone", placeholder: "Select the Drone of this FlightPlan", relation: "Drone")
+  final String droneId;
   @Field(fieldName: 'id')
   final String? id;
-  @Field(editable: true, fieldDescription: "These are the important details for the mission", fieldName: "Mission Details", placeholder: "Write the mission details here")
+  @Field(editable: true, fieldDescription: "Mission details of the Flight Plan", fieldName: "Mission Details", placeholder: "Provide the mission details")
   final String? mission_details;
-  @Field(editable: true, fieldDescription: "This is the Name of the FlightPlan", fieldName: "Name", placeholder: "Write the Name of this FlightPlan")
+  @Field(editable: true, fieldDescription: "This is the name of the Flight Plan", fieldName: "Name", placeholder: "Write the Name of the Flight Plan")
   final String name;
   @Field(editable: true, fieldDescription: "This is Route of the FlightPlan", fieldName: "Route", placeholder: "Add the coordinates for the Route", uspaceMap: true)
-  final LineString? route;
+  final LineString route;
 
   FlightPlan({
-    this.date,
+    this.airspace_restrictions,
+    required this.approved,
+    this.arrival_time,
+    required this.departure_time,
+    required this.droneId,
     this.id,
     this.mission_details,
     required this.name,
-    this.route
+    required this.route
   });
 
   factory FlightPlan.fromJson(Map<String, dynamic> json) => _$FlightPlanFromJson(json);

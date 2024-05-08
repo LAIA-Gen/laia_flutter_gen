@@ -1,198 +1,185 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'flightplan.dart';
+part of 'manufacturer.dart';
 
 // **************************************************************************
 // CopyWithGenerator
 // **************************************************************************
 
-abstract class _$FlightPlanCWProxy {
-  FlightPlan airspace_restrictions(List<String>? airspace_restrictions);
+abstract class _$ManufacturerCWProxy {
+  Manufacturer certifications_compliance(String? certifications_compliance);
 
-  FlightPlan approved(bool approved);
+  Manufacturer contact_information(String? contact_information);
 
-  FlightPlan arrival_time(DateTime? arrival_time);
+  Manufacturer country(String? country);
 
-  FlightPlan departure_time(DateTime departure_time);
+  Manufacturer id(String? id);
 
-  FlightPlan droneId(String droneId);
+  Manufacturer information(String? information);
 
-  FlightPlan id(String? id);
+  Manufacturer location(Point? location);
 
-  FlightPlan mission_details(String? mission_details);
+  Manufacturer name(String name);
 
-  FlightPlan name(String name);
+  Manufacturer target_market(String? target_market);
 
-  FlightPlan route(LineString route);
-
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `FlightPlan(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Manufacturer(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
   /// Usage
   /// ```dart
-  /// FlightPlan(...).copyWith(id: 12, name: "My name")
+  /// Manufacturer(...).copyWith(id: 12, name: "My name")
   /// ````
-  FlightPlan call({
-    List<String>? airspace_restrictions,
-    bool? approved,
-    DateTime? arrival_time,
-    DateTime? departure_time,
-    String? droneId,
+  Manufacturer call({
+    String? certifications_compliance,
+    String? contact_information,
+    String? country,
     String? id,
-    String? mission_details,
+    String? information,
+    Point? location,
     String? name,
-    LineString? route,
+    String? target_market,
   });
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfFlightPlan.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfFlightPlan.copyWith.fieldName(...)`
-class _$FlightPlanCWProxyImpl implements _$FlightPlanCWProxy {
-  final FlightPlan _value;
+/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfManufacturer.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfManufacturer.copyWith.fieldName(...)`
+class _$ManufacturerCWProxyImpl implements _$ManufacturerCWProxy {
+  final Manufacturer _value;
 
-  const _$FlightPlanCWProxyImpl(this._value);
-
-  @override
-  FlightPlan airspace_restrictions(List<String>? airspace_restrictions) =>
-      this(airspace_restrictions: airspace_restrictions);
+  const _$ManufacturerCWProxyImpl(this._value);
 
   @override
-  FlightPlan approved(bool approved) => this(approved: approved);
+  Manufacturer certifications_compliance(String? certifications_compliance) =>
+      this(certifications_compliance: certifications_compliance);
 
   @override
-  FlightPlan arrival_time(DateTime? arrival_time) =>
-      this(arrival_time: arrival_time);
+  Manufacturer contact_information(String? contact_information) =>
+      this(contact_information: contact_information);
 
   @override
-  FlightPlan departure_time(DateTime departure_time) =>
-      this(departure_time: departure_time);
+  Manufacturer country(String? country) => this(country: country);
 
   @override
-  FlightPlan droneId(String droneId) => this(droneId: droneId);
+  Manufacturer id(String? id) => this(id: id);
 
   @override
-  FlightPlan id(String? id) => this(id: id);
+  Manufacturer information(String? information) =>
+      this(information: information);
 
   @override
-  FlightPlan mission_details(String? mission_details) =>
-      this(mission_details: mission_details);
+  Manufacturer location(Point? location) => this(location: location);
 
   @override
-  FlightPlan name(String name) => this(name: name);
+  Manufacturer name(String name) => this(name: name);
 
   @override
-  FlightPlan route(LineString route) => this(route: route);
+  Manufacturer target_market(String? target_market) =>
+      this(target_market: target_market);
 
   @override
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `FlightPlan(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Manufacturer(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
   /// Usage
   /// ```dart
-  /// FlightPlan(...).copyWith(id: 12, name: "My name")
+  /// Manufacturer(...).copyWith(id: 12, name: "My name")
   /// ````
-  FlightPlan call({
-    Object? airspace_restrictions = const $CopyWithPlaceholder(),
-    Object? approved = const $CopyWithPlaceholder(),
-    Object? arrival_time = const $CopyWithPlaceholder(),
-    Object? departure_time = const $CopyWithPlaceholder(),
-    Object? droneId = const $CopyWithPlaceholder(),
+  Manufacturer call({
+    Object? certifications_compliance = const $CopyWithPlaceholder(),
+    Object? contact_information = const $CopyWithPlaceholder(),
+    Object? country = const $CopyWithPlaceholder(),
     Object? id = const $CopyWithPlaceholder(),
-    Object? mission_details = const $CopyWithPlaceholder(),
+    Object? information = const $CopyWithPlaceholder(),
+    Object? location = const $CopyWithPlaceholder(),
     Object? name = const $CopyWithPlaceholder(),
-    Object? route = const $CopyWithPlaceholder(),
+    Object? target_market = const $CopyWithPlaceholder(),
   }) {
-    return FlightPlan(
-      airspace_restrictions:
-          airspace_restrictions == const $CopyWithPlaceholder()
-              ? _value.airspace_restrictions
+    return Manufacturer(
+      certifications_compliance:
+          certifications_compliance == const $CopyWithPlaceholder()
+              ? _value.certifications_compliance
               // ignore: cast_nullable_to_non_nullable
-              : airspace_restrictions as List<String>?,
-      approved: approved == const $CopyWithPlaceholder() || approved == null
-          ? _value.approved
+              : certifications_compliance as String?,
+      contact_information: contact_information == const $CopyWithPlaceholder()
+          ? _value.contact_information
           // ignore: cast_nullable_to_non_nullable
-          : approved as bool,
-      arrival_time: arrival_time == const $CopyWithPlaceholder()
-          ? _value.arrival_time
+          : contact_information as String?,
+      country: country == const $CopyWithPlaceholder()
+          ? _value.country
           // ignore: cast_nullable_to_non_nullable
-          : arrival_time as DateTime?,
-      departure_time: departure_time == const $CopyWithPlaceholder() ||
-              departure_time == null
-          ? _value.departure_time
-          // ignore: cast_nullable_to_non_nullable
-          : departure_time as DateTime,
-      droneId: droneId == const $CopyWithPlaceholder() || droneId == null
-          ? _value.droneId
-          // ignore: cast_nullable_to_non_nullable
-          : droneId as String,
+          : country as String?,
       id: id == const $CopyWithPlaceholder()
           ? _value.id
           // ignore: cast_nullable_to_non_nullable
           : id as String?,
-      mission_details: mission_details == const $CopyWithPlaceholder()
-          ? _value.mission_details
+      information: information == const $CopyWithPlaceholder()
+          ? _value.information
           // ignore: cast_nullable_to_non_nullable
-          : mission_details as String?,
+          : information as String?,
+      location: location == const $CopyWithPlaceholder()
+          ? _value.location
+          // ignore: cast_nullable_to_non_nullable
+          : location as Point?,
       name: name == const $CopyWithPlaceholder() || name == null
           ? _value.name
           // ignore: cast_nullable_to_non_nullable
           : name as String,
-      route: route == const $CopyWithPlaceholder() || route == null
-          ? _value.route
+      target_market: target_market == const $CopyWithPlaceholder()
+          ? _value.target_market
           // ignore: cast_nullable_to_non_nullable
-          : route as LineString,
+          : target_market as String?,
     );
   }
 }
 
-extension $FlightPlanCopyWith on FlightPlan {
-  /// Returns a callable class that can be used as follows: `instanceOfFlightPlan.copyWith(...)` or like so:`instanceOfFlightPlan.copyWith.fieldName(...)`.
+extension $ManufacturerCopyWith on Manufacturer {
+  /// Returns a callable class that can be used as follows: `instanceOfManufacturer.copyWith(...)` or like so:`instanceOfManufacturer.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
-  _$FlightPlanCWProxy get copyWith => _$FlightPlanCWProxyImpl(this);
+  _$ManufacturerCWProxy get copyWith => _$ManufacturerCWProxyImpl(this);
 }
 
 // **************************************************************************
 // ElementWidgetGenerator
 // **************************************************************************
 
-class FlightPlanWidget extends StatefulWidget {
-  final FlightPlan? element;
+class ManufacturerWidget extends StatefulWidget {
+  final Manufacturer? element;
   final bool isEditing;
 
-  const FlightPlanWidget({this.element, required this.isEditing, Key? key})
+  const ManufacturerWidget({this.element, required this.isEditing, Key? key})
       : super(key: key);
 
   @override
-  _FlightPlanWidgetState createState() => _FlightPlanWidgetState();
+  _ManufacturerWidgetState createState() => _ManufacturerWidgetState();
 }
 
-class _FlightPlanWidgetState extends State<FlightPlanWidget> {
-  final GlobalKey<DefaultWidgetState> airspace_restrictionsWidgetKey =
-      GlobalKey<DefaultWidgetState>();
-  final GlobalKey<DefaultWidgetState> approvedWidgetKey =
-      GlobalKey<DefaultWidgetState>();
-  final GlobalKey<DateTimeWidgetState> arrival_timeWidgetKey =
-      GlobalKey<DateTimeWidgetState>();
-  final GlobalKey<DateTimeWidgetState> departure_timeWidgetKey =
-      GlobalKey<DateTimeWidgetState>();
-  final GlobalKey<DroneFieldWidgetState> droneIdWidgetKey =
-      GlobalKey<DroneFieldWidgetState>();
+class _ManufacturerWidgetState extends State<ManufacturerWidget> {
+  final GlobalKey<StringWidgetState> certifications_complianceWidgetKey =
+      GlobalKey<StringWidgetState>();
+  final GlobalKey<StringWidgetState> contact_informationWidgetKey =
+      GlobalKey<StringWidgetState>();
+  final GlobalKey<StringWidgetState> countryWidgetKey =
+      GlobalKey<StringWidgetState>();
   final GlobalKey<StringWidgetState> idWidgetKey =
       GlobalKey<StringWidgetState>();
-  final GlobalKey<StringWidgetState> mission_detailsWidgetKey =
+  final GlobalKey<StringWidgetState> informationWidgetKey =
       GlobalKey<StringWidgetState>();
+  final GlobalKey<MapWidgetState> locationWidgetKey =
+      GlobalKey<MapWidgetState>();
   final GlobalKey<StringWidgetState> nameWidgetKey =
       GlobalKey<StringWidgetState>();
-  final GlobalKey<MapWidgetState> routeWidgetKey = GlobalKey<MapWidgetState>();
+  final GlobalKey<StringWidgetState> target_marketWidgetKey =
+      GlobalKey<StringWidgetState>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('FlightPlan'),
+        title: const Text('Manufacturer'),
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => FlightPlanListView()),
+            MaterialPageRoute(builder: (context) => ManufacturerListView()),
           ),
         ),
       ),
@@ -200,44 +187,30 @@ class _FlightPlanWidgetState extends State<FlightPlanWidget> {
         scrollDirection: Axis.vertical,
         child: Column(
           children: [
-            DefaultWidget(
-              key: airspace_restrictionsWidgetKey,
-              fieldName: "airspace_restrictions",
-              fieldDescription: "This is the airspace_restrictions",
+            StringWidget(
+              key: certifications_complianceWidgetKey,
+              fieldName: "certifications_compliance",
+              fieldDescription: "This is the certifications_compliance",
               editable: true,
-              placeholder: "Type the airspace_restrictions",
-              value: widget.element?.airspace_restrictions,
+              placeholder: "Type the certifications_compliance",
+              value: widget.element?.certifications_compliance,
             ),
-            BoolWidget(
-              key: approvedWidgetKey,
-              fieldName: "Approved",
-              fieldDescription: "Status of the Flightplan approval",
+            StringWidget(
+              key: contact_informationWidgetKey,
+              fieldName: "Contact Information",
+              fieldDescription:
+                  "Contact details for the Manufacturer (e.g., Email, Phone)",
               editable: true,
-              value: widget.element?.approved,
+              placeholder: "Provide Contact Information for the Manufacturer",
+              value: widget.element?.contact_information,
             ),
-            DateTimeWidget(
-              key: arrival_timeWidgetKey,
-              fieldName: "Arrival Time",
-              fieldDescription: "Arrival Datetime of the FlightPlan",
+            StringWidget(
+              key: countryWidgetKey,
+              fieldName: "Country",
+              fieldDescription: "Country where the Manufacturer is based",
               editable: true,
-              placeholder: "Select a Datetime",
-              value: widget.element?.arrival_time,
-            ),
-            DateTimeWidget(
-              key: departure_timeWidgetKey,
-              fieldName: "Departure Time",
-              fieldDescription: "Departure Datetime of the FlightPlan",
-              editable: true,
-              placeholder: "Select a Datetime",
-              value: widget.element?.departure_time,
-            ),
-            DroneFieldWidget(
-              key: droneIdWidgetKey,
-              fieldName: "Drone",
-              fieldDescription: "This is the Drone",
-              editable: true,
-              placeholder: "Select the Drone of this FlightPlan",
-              value: widget.element?.droneId,
+              placeholder: "Enter the Country of the Manufacturer",
+              value: widget.element?.country,
             ),
             StringWidget(
               key: idWidgetKey,
@@ -248,108 +221,113 @@ class _FlightPlanWidgetState extends State<FlightPlanWidget> {
               value: widget.element?.id,
             ),
             StringWidget(
-              key: mission_detailsWidgetKey,
-              fieldName: "Mission Details",
-              fieldDescription: "Mission details of the Flight Plan",
+              key: informationWidgetKey,
+              fieldName: "Information",
+              fieldDescription: "Information about the Manufacturer",
               editable: true,
-              placeholder: "Provide the mission details",
-              value: widget.element?.mission_details,
+              placeholder: "Provide Information about the Manufacturer",
+              value: widget.element?.information,
             ),
+            MapWidget(
+                key: locationWidgetKey,
+                fieldName: "Location",
+                fieldDescription: "Location/Address of the Manufacturer",
+                editable: true,
+                placeholder: "Enter the Location of the Manufacturer",
+                value: widget.element?.location ??
+                    Point(
+                        type: "Feature",
+                        geometry: GeometryPoint(coordinates: [], type: "Point"),
+                        properties: {}),
+                uspaceMap: false),
             StringWidget(
               key: nameWidgetKey,
               fieldName: "Name",
-              fieldDescription: "This is the name of the Flight Plan",
+              fieldDescription: "This is the Manufacturer Name",
               editable: true,
-              placeholder: "Write the Name of the Flight Plan",
+              placeholder: "Write the Name of the Manufacturer",
               value: widget.element?.name,
             ),
-            MapWidget(
-                key: routeWidgetKey,
-                fieldName: "Route",
-                fieldDescription: "This is Route of the FlightPlan",
-                editable: true,
-                placeholder: "Add the coordinates for the Route",
-                value: widget.element?.route ??
-                    LineString(
-                        type: "Feature",
-                        geometry: GeometryLineString(
-                            coordinates: [], type: "LineString"),
-                        properties: {}),
-                uspaceMap: true),
+            StringWidget(
+              key: target_marketWidgetKey,
+              fieldName: "Target Market",
+              fieldDescription: "Industries served by the Manufacturer",
+              editable: true,
+              placeholder: "Describe the Target Market of the Manufacturer",
+              value: widget.element?.target_market,
+            ),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          List<String>? updatedairspace_restrictions =
-              airspace_restrictionsWidgetKey.currentState?.getUpdatedValue();
+          String? updatedcertifications_compliance =
+              certifications_complianceWidgetKey.currentState
+                  ?.getUpdatedValue();
 
-          bool? updatedapproved =
-              approvedWidgetKey.currentState?.getUpdatedValue();
+          String? updatedcontact_information =
+              contact_informationWidgetKey.currentState?.getUpdatedValue();
 
-          DateTime? updatedarrival_time =
-              arrival_timeWidgetKey.currentState?.getUpdatedValue();
-
-          DateTime? updateddeparture_time =
-              departure_timeWidgetKey.currentState?.getUpdatedValue();
-
-          String? updateddroneId =
-              droneIdWidgetKey.currentState?.getUpdatedValue();
+          String? updatedcountry =
+              countryWidgetKey.currentState?.getUpdatedValue();
 
           String? updatedid = idWidgetKey.currentState?.getUpdatedValue();
 
-          String? updatedmission_details =
-              mission_detailsWidgetKey.currentState?.getUpdatedValue();
+          String? updatedinformation =
+              informationWidgetKey.currentState?.getUpdatedValue();
+
+          dynamic updatedlocation =
+              locationWidgetKey.currentState?.getUpdatedValue();
+
+          updatedlocation = Point(
+              type: "Feature",
+              geometry: GeometryPoint(
+                  coordinates: updatedlocation.geometry.coordinates,
+                  type: updatedlocation.geometry.type),
+              properties: updatedlocation.properties);
 
           String? updatedname = nameWidgetKey.currentState?.getUpdatedValue();
 
-          dynamic updatedroute = routeWidgetKey.currentState?.getUpdatedValue();
+          String? updatedtarget_market =
+              target_marketWidgetKey.currentState?.getUpdatedValue();
 
-          updatedroute = LineString(
-              type: "Feature",
-              geometry: GeometryLineString(
-                  coordinates: updatedroute.geometry.coordinates,
-                  type: updatedroute.geometry.type),
-              properties: updatedroute.properties);
-
-          FlightPlan updatedFlightPlan = widget.element ??
-              FlightPlan(
-                airspace_restrictions: updatedairspace_restrictions ?? [''],
-                approved: updatedapproved ?? false,
-                arrival_time: updatedarrival_time ?? DateTime.now(),
-                departure_time: updateddeparture_time ?? DateTime.now(),
-                droneId: updateddroneId ?? '',
+          Manufacturer updatedManufacturer = widget.element ??
+              Manufacturer(
+                certifications_compliance:
+                    updatedcertifications_compliance ?? '',
+                contact_information: updatedcontact_information ?? '',
+                country: updatedcountry ?? '',
                 id: updatedid ?? '',
-                mission_details: updatedmission_details ?? '',
+                information: updatedinformation ?? '',
+                location: updatedlocation ?? '',
                 name: updatedname ?? '',
-                route: updatedroute ?? '',
+                target_market: updatedtarget_market ?? '',
               );
 
-          updatedFlightPlan = updatedFlightPlan.copyWith(
-              airspace_restrictions: updatedairspace_restrictions,
-              approved: updatedapproved,
-              arrival_time: updatedarrival_time,
-              departure_time: updateddeparture_time,
-              droneId: updateddroneId,
+          updatedManufacturer = updatedManufacturer.copyWith(
+              certifications_compliance: updatedcertifications_compliance,
+              contact_information: updatedcontact_information,
+              country: updatedcountry,
               id: updatedid,
-              mission_details: updatedmission_details,
+              information: updatedinformation,
+              location: updatedlocation,
               name: updatedname,
-              route: updatedroute);
+              target_market: updatedtarget_market);
           var container = ProviderContainer();
           try {
             if (widget.isEditing) {
-              await container.read(
-                  updateFlightPlanProvider(Tuple2(updatedFlightPlan, context)));
-              print('FlightPlan updated successfully');
-              CustomSnackBar.show(context, 'FlightPlan updated successfully');
+              await container.read(updateManufacturerProvider(
+                  Tuple2(updatedManufacturer, context)));
+              print('Manufacturer updated successfully');
+              CustomSnackBar.show(context, 'Manufacturer updated successfully');
             } else {
-              await container.read(
-                  createFlightPlanProvider(Tuple2(updatedFlightPlan, context)));
-              print('FlightPlan created successfully');
-              CustomSnackBar.show(context, 'FlightPlan created successfully');
+              await container.read(createManufacturerProvider(
+                  Tuple2(updatedManufacturer, context)));
+              print('Manufacturer created successfully');
+              CustomSnackBar.show(context, 'Manufacturer created successfully');
             }
           } catch (error) {
-            print('Failed to update FlightPlan: $error');
+            print('Failed to update Manufacturer: $error');
           }
         },
         child: Icon(Icons.save),
@@ -358,14 +336,14 @@ class _FlightPlanWidgetState extends State<FlightPlanWidget> {
   }
 }
 
-class FlightPlanFieldWidget extends StatefulWidget {
+class ManufacturerFieldWidget extends StatefulWidget {
   final String fieldName;
   final String fieldDescription;
   final bool editable;
   final String placeholder;
   final String? value;
 
-  const FlightPlanFieldWidget({
+  const ManufacturerFieldWidget({
     Key? key,
     required this.fieldName,
     required this.fieldDescription,
@@ -375,15 +353,15 @@ class FlightPlanFieldWidget extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  FlightPlanFieldWidgetState createState() => FlightPlanFieldWidgetState();
+  ManufacturerFieldWidgetState createState() => ManufacturerFieldWidgetState();
 }
 
-class FlightPlanFieldWidgetState extends State<FlightPlanFieldWidget> {
+class ManufacturerFieldWidgetState extends State<ManufacturerFieldWidget> {
   final TextEditingController _typeAheadController = TextEditingController();
   bool isValueChanged = false;
   late String? initialValue;
   late String currentValue;
-  late List<FlightPlan> options;
+  late List<Manufacturer> options;
 
   @override
   void initState() {
@@ -395,9 +373,9 @@ class FlightPlanFieldWidgetState extends State<FlightPlanFieldWidget> {
     super.initState();
     initialValue = widget.value;
     currentValue = initialValue ?? '';
-    FlightPlan flightplan =
-        await container.read(getFlightPlanProvider(widget.value!).future);
-    _typeAheadController.text = '${flightplan.name} <id: ${flightplan.id}>';
+    Manufacturer manufacturer =
+        await container.read(getManufacturerProvider(widget.value!).future);
+    _typeAheadController.text = '${manufacturer.name} <id: ${manufacturer.id}>';
   }
 
   String? getUpdatedValue() {
@@ -439,31 +417,31 @@ class FlightPlanFieldWidgetState extends State<FlightPlanFieldWidget> {
                 children: [
                   widget.editable
                       ? Expanded(
-                          child: TypeAheadField<FlightPlan>(
+                          child: TypeAheadField<Manufacturer>(
                             controller: _typeAheadController,
                             suggestionsCallback: (String pattern) async {
-                              final flightplanPaginationData = await container
-                                  .read(getAllFlightPlanProvider(container
-                                          .read(flightplanPaginationProvider))
+                              final manufacturerPaginationData = await container
+                                  .read(getAllManufacturerProvider(container
+                                          .read(manufacturerPaginationProvider))
                                       .future);
-                              final options = flightplanPaginationData.items;
+                              final options = manufacturerPaginationData.items;
                               return options
-                                  .where((flightplan) =>
-                                      flightplan.name!
+                                  .where((manufacturer) =>
+                                      manufacturer.name!
                                           .toLowerCase()
                                           .contains(pattern.toLowerCase()) ||
-                                      flightplan.id
+                                      manufacturer.id
                                           .toString()
                                           .contains(pattern.toLowerCase()))
                                   .toList();
                             },
-                            itemBuilder: (context, flightplan) {
+                            itemBuilder: (context, manufacturer) {
                               return ListTile(
                                 title: Text(
-                                    '${flightplan.name} <id: ${flightplan.id}>'),
+                                    '${manufacturer.name} <id: ${manufacturer.id}>'),
                               );
                             },
-                            onSelected: (FlightPlan value) {
+                            onSelected: (Manufacturer value) {
                               setState(() {
                                 isValueChanged = value.id != initialValue;
                                 currentValue = value.id!;
@@ -498,20 +476,20 @@ class FlightPlanFieldWidgetState extends State<FlightPlanFieldWidget> {
           child: ElevatedButton(
             onPressed: () async {
               try {
-                FlightPlan flightplan = await container
-                    .read(getFlightPlanProvider(widget.value!).future);
+                Manufacturer manufacturer = await container
+                    .read(getManufacturerProvider(widget.value!).future);
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) =>
-                        FlightPlanWidget(element: flightplan, isEditing: true),
+                    builder: (context) => ManufacturerWidget(
+                        element: manufacturer, isEditing: true),
                   ),
                 );
               } catch (error) {
-                print('Failed to fetch flightplan: $error');
+                print('Failed to fetch manufacturer: $error');
               }
             },
-            child: const Text('View FlightPlan'),
+            child: const Text('View Manufacturer'),
           ),
         ),
       ],
@@ -519,14 +497,14 @@ class FlightPlanFieldWidgetState extends State<FlightPlanFieldWidget> {
   }
 }
 
-class FlightPlanMultiFieldWidget extends StatefulWidget {
+class ManufacturerMultiFieldWidget extends StatefulWidget {
   final String fieldName;
   final String fieldDescription;
   final bool editable;
   final String placeholder;
   final List<String>? values;
 
-  const FlightPlanMultiFieldWidget({
+  const ManufacturerMultiFieldWidget({
     Key? key,
     required this.fieldName,
     required this.fieldDescription,
@@ -536,17 +514,17 @@ class FlightPlanMultiFieldWidget extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  FlightPlanMultiFieldWidgetState createState() =>
-      FlightPlanMultiFieldWidgetState();
+  ManufacturerMultiFieldWidgetState createState() =>
+      ManufacturerMultiFieldWidgetState();
 }
 
-class FlightPlanMultiFieldWidgetState
-    extends State<FlightPlanMultiFieldWidget> {
+class ManufacturerMultiFieldWidgetState
+    extends State<ManufacturerMultiFieldWidget> {
   final TextEditingController _typeAheadController = TextEditingController();
   bool isValueChanged = false;
   late List<String> initialValues = [];
   late List<String> currentValues = [];
-  late List<FlightPlan> options = [];
+  late List<Manufacturer> options = [];
 
   @override
   void initState() {
@@ -559,13 +537,13 @@ class FlightPlanMultiFieldWidgetState
     initialValues = widget.values ?? [];
     currentValues = initialValues;
     if (widget.values != null) {
-      List<FlightPlan> flightplanList = await Future.wait(
+      List<Manufacturer> manufacturerList = await Future.wait(
         (widget.values ?? []).where((value) => value != '').map((value) async {
-          return await container.read(getFlightPlanProvider(value).future);
+          return await container.read(getManufacturerProvider(value).future);
         }),
       );
-      String concatenatedText = '${flightplanList.map((flightplan) {
-        return '${flightplan.name} <id: ${flightplan.id}>';
+      String concatenatedText = '${manufacturerList.map((manufacturer) {
+        return '${manufacturer.name} <id: ${manufacturer.id}>';
       }).join(', ')}, ';
       _typeAheadController.text = concatenatedText;
     } else {
@@ -612,7 +590,7 @@ class FlightPlanMultiFieldWidgetState
                 children: [
                   widget.editable
                       ? Expanded(
-                          child: TypeAheadField<FlightPlan>(
+                          child: TypeAheadField<Manufacturer>(
                             controller: _typeAheadController,
                             suggestionsCallback: (String pattern) async {
                               final idRegex =
@@ -639,47 +617,47 @@ class FlightPlanMultiFieldWidgetState
                               }
                               final inputParts = pattern.split(',').last.trim();
                               container
-                                  .read(flightplanPaginationProvider.notifier)
+                                  .read(manufacturerPaginationProvider.notifier)
                                   .setFilters({
                                 'id': {'\$nin': currentValues}
                               });
-                              final flightplanPaginationData = await container
-                                  .read(getAllFlightPlanProvider(container
-                                          .read(flightplanPaginationProvider))
+                              final manufacturerPaginationData = await container
+                                  .read(getAllManufacturerProvider(container
+                                          .read(manufacturerPaginationProvider))
                                       .future);
-                              final options = flightplanPaginationData.items;
+                              final options = manufacturerPaginationData.items;
                               return options
-                                  .where((flightplan) =>
-                                      flightplan.name!
+                                  .where((manufacturer) =>
+                                      manufacturer.name!
                                           .toLowerCase()
                                           .contains(inputParts.toLowerCase()) ||
-                                      flightplan.id
+                                      manufacturer.id
                                           .toString()
                                           .toLowerCase()
                                           .contains(inputParts.toLowerCase()))
                                   .toList();
                             },
-                            itemBuilder: (context, flightplan) {
+                            itemBuilder: (context, manufacturer) {
                               return ListTile(
                                 title: Text(
-                                    '${flightplan.name} <id: ${flightplan.id}>'),
+                                    '${manufacturer.name} <id: ${manufacturer.id}>'),
                               );
                             },
-                            onSelected: (FlightPlan value) async {
+                            onSelected: (Manufacturer value) async {
                               isValueChanged =
                                   !initialValues.contains(value.id);
                               currentValues.add(value.id!);
 
-                              List<FlightPlan> flightplanList =
+                              List<Manufacturer> manufacturerList =
                                   await Future.wait((currentValues)
                                       .where((value) => value != '')
                                       .map((value) async {
-                                return await container
-                                    .read(getFlightPlanProvider(value).future);
+                                return await container.read(
+                                    getManufacturerProvider(value).future);
                               }));
                               String concatenatedText =
-                                  '${flightplanList.map((flightplan) {
-                                return '${flightplan.name} <id: ${flightplan.id}>';
+                                  '${manufacturerList.map((manufacturer) {
+                                return '${manufacturer.name} <id: ${manufacturer.id}>';
                               }).join(', ')}, ';
 
                               setState(() {
@@ -724,14 +702,14 @@ class FlightPlanMultiFieldWidgetState
                   context,
                   MaterialPageRoute(
                     builder: (context) =>
-                        FlightPlanListView(extraFilters: query),
+                        ManufacturerListView(extraFilters: query),
                   ),
                 );
               } catch (error) {
-                print('Failed to fetch flightplans: $error');
+                print('Failed to fetch manufacturers: $error');
               }
             },
-            child: const Text('View FlightPlans'),
+            child: const Text('View Manufacturers'),
           ),
         ),
       ],
@@ -743,15 +721,15 @@ class FlightPlanMultiFieldWidgetState
 // HomeWidgetElementGenerator
 // **************************************************************************
 
-class FlightPlanHomeWidget extends StatelessWidget {
-  const FlightPlanHomeWidget({super.key});
+class ManufacturerHomeWidget extends StatelessWidget {
+  const ManufacturerHomeWidget({super.key});
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => FlightPlanListView()),
+          MaterialPageRoute(builder: (context) => ManufacturerListView()),
         );
       },
       child: Container(
@@ -765,14 +743,14 @@ class FlightPlanHomeWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image.asset(
-              'assets/flightplan.png',
+              'assets/manufacturer.png',
               width: 40.0,
               height: 40.0,
               color: Colors.white,
             ),
             const SizedBox(height: 8.0),
             const Text(
-              "FlightPlan",
+              "Manufacturer",
               style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
@@ -789,52 +767,48 @@ class FlightPlanHomeWidget extends StatelessWidget {
 // JsonSerializableGenerator
 // **************************************************************************
 
-FlightPlan _$FlightPlanFromJson(Map<String, dynamic> json) => FlightPlan(
-      airspace_restrictions: (json['airspace_restrictions'] as List<dynamic>?)
-          ?.map((e) => e as String)
-          .toList(),
-      approved: json['approved'] as bool,
-      arrival_time: json['arrival_time'] == null
-          ? null
-          : DateTime.parse(json['arrival_time'] as String),
-      departure_time: DateTime.parse(json['departure_time'] as String),
-      droneId: json['droneId'] as String,
+Manufacturer _$ManufacturerFromJson(Map<String, dynamic> json) => Manufacturer(
+      certifications_compliance: json['certifications_compliance'] as String?,
+      contact_information: json['contact_information'] as String?,
+      country: json['country'] as String?,
       id: json['id'] as String?,
-      mission_details: json['mission_details'] as String?,
+      information: json['information'] as String?,
+      location: json['location'] == null
+          ? null
+          : Point.fromJson(json['location'] as Map<String, dynamic>),
       name: json['name'] as String,
-      route: LineString.fromJson(json['route'] as Map<String, dynamic>),
+      target_market: json['target_market'] as String?,
     );
 
-Map<String, dynamic> _$FlightPlanToJson(FlightPlan instance) =>
+Map<String, dynamic> _$ManufacturerToJson(Manufacturer instance) =>
     <String, dynamic>{
-      'airspace_restrictions': instance.airspace_restrictions,
-      'approved': instance.approved,
-      'arrival_time': instance.arrival_time?.toIso8601String(),
-      'departure_time': instance.departure_time.toIso8601String(),
-      'droneId': instance.droneId,
+      'certifications_compliance': instance.certifications_compliance,
+      'contact_information': instance.contact_information,
+      'country': instance.country,
       'id': instance.id,
-      'mission_details': instance.mission_details,
+      'information': instance.information,
+      'location': instance.location,
       'name': instance.name,
-      'route': instance.route,
+      'target_market': instance.target_market,
     };
 
 // **************************************************************************
 // ListWidgetGenerator
 // **************************************************************************
 
-class FlightPlanListView extends ConsumerStatefulWidget {
+class ManufacturerListView extends ConsumerStatefulWidget {
   final Map<String, dynamic>? extraFilters;
   final Map<String, dynamic> currentFilters = {};
   late bool _initialized = false;
   late List<bool> selectedStates;
 
-  FlightPlanListView({Key? key, this.extraFilters}) : super(key: key);
+  ManufacturerListView({Key? key, this.extraFilters}) : super(key: key);
 
   @override
-  _FlightPlanListViewState createState() => _FlightPlanListViewState();
+  _ManufacturerListViewState createState() => _ManufacturerListViewState();
 }
 
-class _FlightPlanListViewState extends ConsumerState<FlightPlanListView> {
+class _ManufacturerListViewState extends ConsumerState<ManufacturerListView> {
   @override
   void initState() {
     super.initState();
@@ -845,23 +819,23 @@ class _FlightPlanListViewState extends ConsumerState<FlightPlanListView> {
         });
       }
       ref
-          .read(flightplanPaginationProvider.notifier)
+          .read(manufacturerPaginationProvider.notifier)
           .setFilters(widget.extraFilters!);
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final paginationState = ref.watch(flightplanPaginationProvider);
+    final paginationState = ref.watch(manufacturerPaginationProvider);
 
-    final flightplansAsyncValue =
-        ref.watch(getAllFlightPlanProvider(paginationState));
+    final manufacturersAsyncValue =
+        ref.watch(getAllManufacturerProvider(paginationState));
 
     final Map<String, int> columnSortStates =
-        ref.watch(flightplanPaginationProvider.notifier).getOrders();
+        ref.watch(manufacturerPaginationProvider.notifier).getOrders();
 
     final Map<String, dynamic> fieldsFilterStates =
-        ref.watch(flightplanPaginationProvider.notifier).getFilters();
+        ref.watch(manufacturerPaginationProvider.notifier).getFilters();
 
     void onSort(String columnName) {
       var state = columnSortStates[columnName];
@@ -873,14 +847,14 @@ class _FlightPlanListViewState extends ConsumerState<FlightPlanListView> {
         columnSortStates.remove(columnName);
       }
       ref
-          .read(flightplanPaginationProvider.notifier)
+          .read(manufacturerPaginationProvider.notifier)
           .setOrders(columnSortStates);
     }
 
     void onFilter(String fieldName, dynamic filterValue) {
       widget.currentFilters[fieldName] = filterValue;
       ref
-          .read(flightplanPaginationProvider.notifier)
+          .read(manufacturerPaginationProvider.notifier)
           .setFilters(widget.currentFilters);
     }
 
@@ -890,22 +864,9 @@ class _FlightPlanListViewState extends ConsumerState<FlightPlanListView> {
       }
     }
 
-    Future<List<Drone>> fetchDroneList(List<String>? ids) async {
-      if (ids == null || ids.isEmpty) {
-        return [];
-      }
-      final nonEmptyIds = ids.where((id) => id.isNotEmpty).toList();
-      List<Drone> droneList = await Future.wait(
-        nonEmptyIds.map((id) async {
-          return await ref.read(getDroneProvider(id).future);
-        }),
-      );
-      return droneList;
-    }
-
     return Scaffold(
         appBar: AppBar(
-          title: const Text('FlightPlan List'),
+          title: const Text('Manufacturer List'),
           actions: [
             Container(
               margin: const EdgeInsets.only(right: 10),
@@ -914,7 +875,7 @@ class _FlightPlanListViewState extends ConsumerState<FlightPlanListView> {
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const FlightPlanWidget(
+                      builder: (context) => const ManufacturerWidget(
                         isEditing: false,
                       ),
                     ),
@@ -946,20 +907,20 @@ class _FlightPlanListViewState extends ConsumerState<FlightPlanListView> {
                     return Colors.transparent;
                   }),
                 ),
-                child: const Text('Create FlightPlan'),
+                child: const Text('Create Manufacturer'),
               ),
             ),
           ],
         ),
-        body: flightplansAsyncValue.when(
+        body: manufacturersAsyncValue.when(
           loading: () => const CircularProgressIndicator(),
           error: (error, stackTrace) => Text('Error: $error'),
-          data: (FlightPlanPaginationData data) {
-            final flightplans = data.items;
+          data: (ManufacturerPaginationData data) {
+            final manufacturers = data.items;
 
             if (!widget._initialized) {
               widget.selectedStates =
-                  List.generate(flightplans.length, (index) => false);
+                  List.generate(manufacturers.length, (index) => false);
               widget._initialized = true;
             }
 
@@ -968,15 +929,14 @@ class _FlightPlanListViewState extends ConsumerState<FlightPlanListView> {
                 children: [
                   CustomSearchBar(
                     fields: const {
-                      'airspace_restrictions': 'List<String>?',
-                      'approved': 'bool',
-                      'arrival_time': 'DateTime?',
-                      'departure_time': 'DateTime',
-                      'droneId': 'String',
+                      'certifications_compliance': 'String?',
+                      'contact_information': 'String?',
+                      'country': 'String?',
                       'id': 'String?',
-                      'mission_details': 'String?',
+                      'information': 'String?',
+                      'location': 'Point?',
                       'name': 'String',
-                      'route': 'LineString'
+                      'target_market': 'String?'
                     },
                     filters: fieldsFilterStates,
                     onFilterChanged: onFilter,
@@ -987,7 +947,7 @@ class _FlightPlanListViewState extends ConsumerState<FlightPlanListView> {
                       icon: const Icon(Icons.refresh, color: Colors.grey),
                       onPressed: () {
                         ref
-                            .read(flightplanPaginationProvider.notifier)
+                            .read(manufacturerPaginationProvider.notifier)
                             .setPage(1);
                       },
                     ),
@@ -1003,12 +963,12 @@ class _FlightPlanListViewState extends ConsumerState<FlightPlanListView> {
                                       widget.selectedStates[index] ? index : -1,
                                 ).where((index) => index != -1).toList();
 
-                                List<FlightPlan> selectedFlightPlans =
+                                List<Manufacturer> selectedManufacturers =
                                     selectedIndices
-                                        .map((index) => flightplans[index])
+                                        .map((index) => manufacturers[index])
                                         .toList();
-                                _onDeleteElement(
-                                    selectedFlightPlans, ref, paginationState);
+                                _onDeleteElement(selectedManufacturers, ref,
+                                    paginationState);
                               }
                             : null,
                         style: ButtonStyle(
@@ -1105,7 +1065,7 @@ class _FlightPlanListViewState extends ConsumerState<FlightPlanListView> {
                                                 MainAxisAlignment.center,
                                             children: [
                                               const Text(
-                                                'Mission Details',
+                                                'Information',
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.bold,
                                                     color: Color.fromARGB(
@@ -1113,11 +1073,11 @@ class _FlightPlanListViewState extends ConsumerState<FlightPlanListView> {
                                                 textAlign: TextAlign.center,
                                               ),
                                               if (columnSortStates[
-                                                      'mission_details'] !=
+                                                      'information'] !=
                                                   null) ...[
                                                 Icon(
                                                   columnSortStates[
-                                                              'mission_details'] ==
+                                                              'information'] ==
                                                           1
                                                       ? Icons
                                                           .arrow_drop_up_rounded
@@ -1126,7 +1086,7 @@ class _FlightPlanListViewState extends ConsumerState<FlightPlanListView> {
                                                   color: Colors.black,
                                                 ),
                                                 Text(
-                                                  '${columnSortStates.keys.toList().indexOf('mission_details') + 1}',
+                                                  '${columnSortStates.keys.toList().indexOf('information') + 1}',
                                                   style: const TextStyle(
                                                       fontSize: 10),
                                                 ),
@@ -1135,7 +1095,7 @@ class _FlightPlanListViewState extends ConsumerState<FlightPlanListView> {
                                           ),
                                         ),
                                         onSort: (columnIndex, ascending) =>
-                                            {onSort('mission_details')},
+                                            {onSort('information')},
                                       ),
                                       DataColumn(
                                         label: Expanded(
@@ -1144,17 +1104,18 @@ class _FlightPlanListViewState extends ConsumerState<FlightPlanListView> {
                                                 MainAxisAlignment.center,
                                             children: [
                                               const Text(
-                                                'Route',
+                                                'Country',
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.bold,
                                                     color: Color.fromARGB(
                                                         255, 94, 54, 54)),
                                                 textAlign: TextAlign.center,
                                               ),
-                                              if (columnSortStates['route'] !=
+                                              if (columnSortStates['country'] !=
                                                   null) ...[
                                                 Icon(
-                                                  columnSortStates['route'] == 1
+                                                  columnSortStates['country'] ==
+                                                          1
                                                       ? Icons
                                                           .arrow_drop_up_rounded
                                                       : Icons
@@ -1162,7 +1123,7 @@ class _FlightPlanListViewState extends ConsumerState<FlightPlanListView> {
                                                   color: Colors.black,
                                                 ),
                                                 Text(
-                                                  '${columnSortStates.keys.toList().indexOf('route') + 1}',
+                                                  '${columnSortStates.keys.toList().indexOf('country') + 1}',
                                                   style: const TextStyle(
                                                       fontSize: 10),
                                                 ),
@@ -1171,7 +1132,7 @@ class _FlightPlanListViewState extends ConsumerState<FlightPlanListView> {
                                           ),
                                         ),
                                         onSort: (columnIndex, ascending) =>
-                                            {onSort('route')},
+                                            {onSort('country')},
                                       ),
                                       DataColumn(
                                         label: Expanded(
@@ -1180,7 +1141,7 @@ class _FlightPlanListViewState extends ConsumerState<FlightPlanListView> {
                                                 MainAxisAlignment.center,
                                             children: [
                                               const Text(
-                                                'Departure Time',
+                                                'Location',
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.bold,
                                                     color: Color.fromARGB(
@@ -1188,11 +1149,11 @@ class _FlightPlanListViewState extends ConsumerState<FlightPlanListView> {
                                                 textAlign: TextAlign.center,
                                               ),
                                               if (columnSortStates[
-                                                      'departure_time'] !=
+                                                      'location'] !=
                                                   null) ...[
                                                 Icon(
                                                   columnSortStates[
-                                                              'departure_time'] ==
+                                                              'location'] ==
                                                           1
                                                       ? Icons
                                                           .arrow_drop_up_rounded
@@ -1201,7 +1162,7 @@ class _FlightPlanListViewState extends ConsumerState<FlightPlanListView> {
                                                   color: Colors.black,
                                                 ),
                                                 Text(
-                                                  '${columnSortStates.keys.toList().indexOf('departure_time') + 1}',
+                                                  '${columnSortStates.keys.toList().indexOf('location') + 1}',
                                                   style: const TextStyle(
                                                       fontSize: 10),
                                                 ),
@@ -1210,7 +1171,7 @@ class _FlightPlanListViewState extends ConsumerState<FlightPlanListView> {
                                           ),
                                         ),
                                         onSort: (columnIndex, ascending) =>
-                                            {onSort('departure_time')},
+                                            {onSort('location')},
                                       ),
                                       DataColumn(
                                         label: Expanded(
@@ -1219,7 +1180,7 @@ class _FlightPlanListViewState extends ConsumerState<FlightPlanListView> {
                                                 MainAxisAlignment.center,
                                             children: [
                                               const Text(
-                                                'Arrival Time',
+                                                'Contact Information',
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.bold,
                                                     color: Color.fromARGB(
@@ -1227,11 +1188,11 @@ class _FlightPlanListViewState extends ConsumerState<FlightPlanListView> {
                                                 textAlign: TextAlign.center,
                                               ),
                                               if (columnSortStates[
-                                                      'arrival_time'] !=
+                                                      'contact_information'] !=
                                                   null) ...[
                                                 Icon(
                                                   columnSortStates[
-                                                              'arrival_time'] ==
+                                                              'contact_information'] ==
                                                           1
                                                       ? Icons
                                                           .arrow_drop_up_rounded
@@ -1240,7 +1201,7 @@ class _FlightPlanListViewState extends ConsumerState<FlightPlanListView> {
                                                   color: Colors.black,
                                                 ),
                                                 Text(
-                                                  '${columnSortStates.keys.toList().indexOf('arrival_time') + 1}',
+                                                  '${columnSortStates.keys.toList().indexOf('contact_information') + 1}',
                                                   style: const TextStyle(
                                                       fontSize: 10),
                                                 ),
@@ -1249,7 +1210,7 @@ class _FlightPlanListViewState extends ConsumerState<FlightPlanListView> {
                                           ),
                                         ),
                                         onSort: (columnIndex, ascending) =>
-                                            {onSort('arrival_time')},
+                                            {onSort('contact_information')},
                                       ),
                                       DataColumn(
                                         label: Expanded(
@@ -1258,44 +1219,7 @@ class _FlightPlanListViewState extends ConsumerState<FlightPlanListView> {
                                                 MainAxisAlignment.center,
                                             children: [
                                               const Text(
-                                                'Drone',
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Color.fromARGB(
-                                                        255, 94, 54, 54)),
-                                                textAlign: TextAlign.center,
-                                              ),
-                                              if (columnSortStates['droneId'] !=
-                                                  null) ...[
-                                                Icon(
-                                                  columnSortStates['droneId'] ==
-                                                          1
-                                                      ? Icons
-                                                          .arrow_drop_up_rounded
-                                                      : Icons
-                                                          .arrow_drop_down_rounded,
-                                                  color: Colors.black,
-                                                ),
-                                                Text(
-                                                  '${columnSortStates.keys.toList().indexOf('droneId') + 1}',
-                                                  style: const TextStyle(
-                                                      fontSize: 10),
-                                                ),
-                                              ],
-                                            ],
-                                          ),
-                                        ),
-                                        onSort: (columnIndex, ascending) =>
-                                            {onSort('droneId')},
-                                      ),
-                                      DataColumn(
-                                        label: Expanded(
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              const Text(
-                                                'airspace_restrictions',
+                                                'Target Market',
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.bold,
                                                     color: Color.fromARGB(
@@ -1303,11 +1227,11 @@ class _FlightPlanListViewState extends ConsumerState<FlightPlanListView> {
                                                 textAlign: TextAlign.center,
                                               ),
                                               if (columnSortStates[
-                                                      'airspace_restrictions'] !=
+                                                      'target_market'] !=
                                                   null) ...[
                                                 Icon(
                                                   columnSortStates[
-                                                              'airspace_restrictions'] ==
+                                                              'target_market'] ==
                                                           1
                                                       ? Icons
                                                           .arrow_drop_up_rounded
@@ -1316,7 +1240,7 @@ class _FlightPlanListViewState extends ConsumerState<FlightPlanListView> {
                                                   color: Colors.black,
                                                 ),
                                                 Text(
-                                                  '${columnSortStates.keys.toList().indexOf('airspace_restrictions') + 1}',
+                                                  '${columnSortStates.keys.toList().indexOf('target_market') + 1}',
                                                   style: const TextStyle(
                                                       fontSize: 10),
                                                 ),
@@ -1325,7 +1249,7 @@ class _FlightPlanListViewState extends ConsumerState<FlightPlanListView> {
                                           ),
                                         ),
                                         onSort: (columnIndex, ascending) =>
-                                            {onSort('airspace_restrictions')},
+                                            {onSort('target_market')},
                                       ),
                                       DataColumn(
                                         label: Expanded(
@@ -1334,7 +1258,7 @@ class _FlightPlanListViewState extends ConsumerState<FlightPlanListView> {
                                                 MainAxisAlignment.center,
                                             children: [
                                               const Text(
-                                                'Approved',
+                                                'certifications_compliance',
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.bold,
                                                     color: Color.fromARGB(
@@ -1342,11 +1266,11 @@ class _FlightPlanListViewState extends ConsumerState<FlightPlanListView> {
                                                 textAlign: TextAlign.center,
                                               ),
                                               if (columnSortStates[
-                                                      'approved'] !=
+                                                      'certifications_compliance'] !=
                                                   null) ...[
                                                 Icon(
                                                   columnSortStates[
-                                                              'approved'] ==
+                                                              'certifications_compliance'] ==
                                                           1
                                                       ? Icons
                                                           .arrow_drop_up_rounded
@@ -1355,7 +1279,7 @@ class _FlightPlanListViewState extends ConsumerState<FlightPlanListView> {
                                                   color: Colors.black,
                                                 ),
                                                 Text(
-                                                  '${columnSortStates.keys.toList().indexOf('approved') + 1}',
+                                                  '${columnSortStates.keys.toList().indexOf('certifications_compliance') + 1}',
                                                   style: const TextStyle(
                                                       fontSize: 10),
                                                 ),
@@ -1363,31 +1287,42 @@ class _FlightPlanListViewState extends ConsumerState<FlightPlanListView> {
                                             ],
                                           ),
                                         ),
-                                        onSort: (columnIndex, ascending) =>
-                                            {onSort('approved')},
+                                        onSort: (columnIndex, ascending) => {
+                                          onSort('certifications_compliance')
+                                        },
                                       ),
                                     ],
                                     rows: List<DataRow>.generate(
-                                        flightplans.length, (index) {
-                                      var flightplan = flightplans[index];
+                                        manufacturers.length, (index) {
+                                      var manufacturer = manufacturers[index];
 
                                       return DataRow(
                                         selected: widget.selectedStates[index],
                                         cells: [
                                           DataCell(
                                             Center(
-                                                child: Text(flightplan.name
+                                                child: Text(manufacturer.name
                                                     .toString())),
-                                            onTap: () =>
-                                                {_navigateElement(flightplan)},
+                                            onTap: () => {
+                                              _navigateElement(manufacturer)
+                                            },
                                           ),
                                           DataCell(
                                             Center(
-                                                child: Text(flightplan
-                                                    .mission_details
+                                                child: Text(manufacturer
+                                                    .information
                                                     .toString())),
-                                            onTap: () =>
-                                                {_navigateElement(flightplan)},
+                                            onTap: () => {
+                                              _navigateElement(manufacturer)
+                                            },
+                                          ),
+                                          DataCell(
+                                            Center(
+                                                child: Text(manufacturer.country
+                                                    .toString())),
+                                            onTap: () => {
+                                              _navigateElement(manufacturer)
+                                            },
                                           ),
                                           DataCell(
                                             Center(
@@ -1397,20 +1332,19 @@ class _FlightPlanListViewState extends ConsumerState<FlightPlanListView> {
                                                   context,
                                                   MaterialPageRoute(
                                                     builder: (context) =>
-                                                        MapScreenView(
-                                                            LineStringView(
-                                                                flightplan
-                                                                    .route!
-                                                                    .geometry
-                                                                    .coordinates,
-                                                                flightplan
-                                                                    .route!
-                                                                    .properties,
-                                                                MediaQuery.of(
-                                                                        context)
-                                                                    .size
-                                                                    .height,
-                                                                true)),
+                                                        MapScreenView(PointView(
+                                                            manufacturer
+                                                                .location!
+                                                                .geometry
+                                                                .coordinates,
+                                                            manufacturer
+                                                                .location!
+                                                                .properties,
+                                                            MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .height,
+                                                            false)),
                                                   ),
                                                 );
                                               },
@@ -1463,153 +1397,41 @@ class _FlightPlanListViewState extends ConsumerState<FlightPlanListView> {
                                                 }),
                                               ),
                                               child: const Text(
-                                                "LineString",
+                                                "Point?",
                                                 style: TextStyle(
                                                     color: Colors.white),
                                               ),
                                             )),
-                                            onTap: () =>
-                                                {_navigateElement(flightplan)},
+                                            onTap: () => {
+                                              _navigateElement(manufacturer)
+                                            },
                                           ),
                                           DataCell(
                                             Center(
-                                                child: Text(flightplan
-                                                    .departure_time
+                                                child: Text(manufacturer
+                                                    .contact_information
                                                     .toString())),
-                                            onTap: () =>
-                                                {_navigateElement(flightplan)},
+                                            onTap: () => {
+                                              _navigateElement(manufacturer)
+                                            },
                                           ),
                                           DataCell(
                                             Center(
-                                                child: Text(flightplan
-                                                    .arrival_time
+                                                child: Text(manufacturer
+                                                    .target_market
                                                     .toString())),
-                                            onTap: () =>
-                                                {_navigateElement(flightplan)},
+                                            onTap: () => {
+                                              _navigateElement(manufacturer)
+                                            },
                                           ),
                                           DataCell(
                                             Center(
-                                              child: FutureBuilder<List<Drone>>(
-                                                future: fetchDroneList(
-                                                    [flightplan.droneId ?? '']),
-                                                builder: (context, snapshot) {
-                                                  if (snapshot.connectionState ==
-                                                          ConnectionState
-                                                              .waiting ||
-                                                      snapshot.data == null) {
-                                                    return const CircularProgressIndicator();
-                                                  } else {
-                                                    return Wrap(
-                                                      spacing: 4,
-                                                      children: snapshot.data!
-                                                          .map((drone) {
-                                                        return ElevatedButton(
-                                                          onPressed: () {
-                                                            Navigator.push(
-                                                              context,
-                                                              MaterialPageRoute(
-                                                                builder:
-                                                                    (context) =>
-                                                                        DroneWidget(
-                                                                  element:
-                                                                      drone,
-                                                                  isEditing:
-                                                                      true,
-                                                                ),
-                                                              ),
-                                                            );
-                                                          },
-                                                          style: ButtonStyle(
-                                                            shape: MaterialStateProperty
-                                                                .all<
-                                                                    RoundedRectangleBorder>(
-                                                              RoundedRectangleBorder(
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            5),
-                                                              ),
-                                                            ),
-                                                            padding:
-                                                                MaterialStateProperty
-                                                                    .all<
-                                                                        EdgeInsetsGeometry>(
-                                                              EdgeInsets
-                                                                  .symmetric(
-                                                                      horizontal:
-                                                                          1,
-                                                                      vertical:
-                                                                          1),
-                                                            ),
-                                                            backgroundColor:
-                                                                MaterialStateProperty
-                                                                    .all<Color>(
-                                                                        Styles
-                                                                            .buttonPrimaryColor),
-                                                            elevation: MaterialStateProperty
-                                                                .resolveWith<
-                                                                        double>(
-                                                                    (states) {
-                                                              if (states.contains(
-                                                                      MaterialState
-                                                                          .hovered) ||
-                                                                  states.contains(
-                                                                      MaterialState
-                                                                          .pressed)) {
-                                                                return 0;
-                                                              }
-                                                              return 0;
-                                                            }),
-                                                            foregroundColor:
-                                                                MaterialStateProperty
-                                                                    .all<Color>(
-                                                                        Colors
-                                                                            .white),
-                                                            overlayColor:
-                                                                MaterialStateProperty
-                                                                    .resolveWith<
-                                                                            Color>(
-                                                                        (states) {
-                                                              if (states.contains(
-                                                                  MaterialState
-                                                                      .hovered)) {
-                                                                return Styles
-                                                                    .buttonPrimaryColorHover;
-                                                              }
-                                                              return Colors
-                                                                  .transparent;
-                                                            }),
-                                                          ),
-                                                          child: Text(
-                                                            drone.name!,
-                                                            style: TextStyle(
-                                                                color: Colors
-                                                                    .white),
-                                                          ),
-                                                        );
-                                                      }).toList(),
-                                                    );
-                                                  }
-                                                },
-                                              ),
-                                            ),
-                                            onTap: () =>
-                                                {_navigateElement(flightplan)},
-                                          ),
-                                          DataCell(
-                                            Center(
-                                                child: Text(flightplan
-                                                    .airspace_restrictions
+                                                child: Text(manufacturer
+                                                    .certifications_compliance
                                                     .toString())),
-                                            onTap: () =>
-                                                {_navigateElement(flightplan)},
-                                          ),
-                                          DataCell(
-                                            Center(
-                                                child: Text(flightplan.approved
-                                                    .toString())),
-                                            onTap: () =>
-                                                {_navigateElement(flightplan)},
+                                            onTap: () => {
+                                              _navigateElement(manufacturer)
+                                            },
                                           ),
                                         ],
                                         onSelectChanged: (selected) {
@@ -1642,23 +1464,23 @@ class _FlightPlanListViewState extends ConsumerState<FlightPlanListView> {
   }
 
   void _onPageButtonPressed(int pageNumber, WidgetRef ref,
-      FlightPlanPaginationState paginationState, int maxPages) {
+      ManufacturerPaginationState paginationState, int maxPages) {
     if (pageNumber <= maxPages) {
-      ref.read(flightplanPaginationProvider.notifier).setPage(pageNumber);
+      ref.read(manufacturerPaginationProvider.notifier).setPage(pageNumber);
     }
   }
 
-  void _navigateElement(FlightPlan flightplan) {
+  void _navigateElement(Manufacturer manufacturer) {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
           builder: (context) =>
-              FlightPlanWidget(element: flightplan, isEditing: true)),
+              ManufacturerWidget(element: manufacturer, isEditing: true)),
     );
   }
 
-  void _onDeleteElement(List<FlightPlan> flightplans, WidgetRef ref,
-      FlightPlanPaginationState paginationState) {
+  void _onDeleteElement(List<Manufacturer> manufacturers, WidgetRef ref,
+      ManufacturerPaginationState paginationState) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -1674,7 +1496,7 @@ class _FlightPlanListViewState extends ConsumerState<FlightPlanListView> {
             ),
             TextButton(
               onPressed: () {
-                _deleteRecords(flightplans, ref, paginationState);
+                _deleteRecords(manufacturers, ref, paginationState);
                 Navigator.of(context).pop();
                 setState(() {});
               },
@@ -1686,41 +1508,41 @@ class _FlightPlanListViewState extends ConsumerState<FlightPlanListView> {
     );
   }
 
-  Future<void> _deleteRecords(List<FlightPlan> flightplans, WidgetRef ref,
-      FlightPlanPaginationState paginationState) async {
-    for (var flightplan in flightplans) {
-      await ref.read(deleteFlightPlanProvider(flightplan.id!).future);
+  Future<void> _deleteRecords(List<Manufacturer> manufacturers, WidgetRef ref,
+      ManufacturerPaginationState paginationState) async {
+    for (var manufacturer in manufacturers) {
+      await ref.read(deleteManufacturerProvider(manufacturer.id!).future);
     }
     setState(() {
       widget._initialized = false;
     });
-    ref.read(flightplanPaginationProvider.notifier).setPage(1);
+    ref.read(manufacturerPaginationProvider.notifier).setPage(1);
   }
 }
 
-class FlightPlanPaginationState {
+class ManufacturerPaginationState {
   final Tuple2<int, int> pagination;
   final Map<String, int> orders;
   final Map<String, dynamic> filters;
 
-  FlightPlanPaginationState({
+  ManufacturerPaginationState({
     required this.pagination,
     required this.orders,
     required this.filters,
   });
 }
 
-class FlightPlanPaginationNotifier
-    extends StateNotifier<FlightPlanPaginationState> {
-  FlightPlanPaginationNotifier()
-      : super(FlightPlanPaginationState(
+class ManufacturerPaginationNotifier
+    extends StateNotifier<ManufacturerPaginationState> {
+  ManufacturerPaginationNotifier()
+      : super(ManufacturerPaginationState(
           pagination: const Tuple2<int, int>(0, 10),
           orders: {},
           filters: {},
         ));
 
   void setPage(int page) {
-    state = FlightPlanPaginationState(
+    state = ManufacturerPaginationState(
       pagination: Tuple2(page * state.pagination.item2 - state.pagination.item2,
           state.pagination.item2),
       orders: state.orders,
@@ -1729,7 +1551,7 @@ class FlightPlanPaginationNotifier
   }
 
   void setOrders(Map<String, int> newOrders) {
-    state = FlightPlanPaginationState(
+    state = ManufacturerPaginationState(
       pagination: Tuple2(state.pagination.item1, state.pagination.item2),
       orders: newOrders,
       filters: state.filters,
@@ -1737,7 +1559,7 @@ class FlightPlanPaginationNotifier
   }
 
   void setFilters(Map<String, dynamic> newFilters) {
-    state = FlightPlanPaginationState(
+    state = ManufacturerPaginationState(
       pagination: Tuple2(state.pagination.item1, state.pagination.item2),
       orders: state.orders,
       filters: newFilters,
@@ -1753,76 +1575,77 @@ class FlightPlanPaginationNotifier
   }
 }
 
-final flightplanPaginationProvider = StateNotifierProvider<
-    FlightPlanPaginationNotifier, FlightPlanPaginationState>(
-  (ref) => FlightPlanPaginationNotifier(),
+final manufacturerPaginationProvider = StateNotifierProvider<
+    ManufacturerPaginationNotifier, ManufacturerPaginationState>(
+  (ref) => ManufacturerPaginationNotifier(),
 );
 
 // **************************************************************************
 // RiverpodCustomGenerator
 // **************************************************************************
 
-final getFlightPlanProvider = FutureProvider.autoDispose
-    .family<FlightPlan, String>((ref, flightplanId) async {
-  final json = await http.get(Uri.parse('$baseURL/flightplan/$flightplanId'));
+final getManufacturerProvider = FutureProvider.autoDispose
+    .family<Manufacturer, String>((ref, manufacturerId) async {
+  final json =
+      await http.get(Uri.parse('$baseURL/manufacturer/$manufacturerId'));
   final jsonData = jsonDecode(json.body);
-  return FlightPlan.fromJson(jsonData);
+  return Manufacturer.fromJson(jsonData);
 });
 
-final createFlightPlanProvider = FutureProvider.autoDispose
-    .family<void, Tuple2<FlightPlan, BuildContext>>((ref, tuple) async {
-  FlightPlan flightplanInstance = tuple.item1;
+final createManufacturerProvider = FutureProvider.autoDispose
+    .family<void, Tuple2<Manufacturer, BuildContext>>((ref, tuple) async {
+  Manufacturer manufacturerInstance = tuple.item1;
   BuildContext context = tuple.item2;
 
   final response = await http.post(
-    Uri.parse('$baseURL/flightplan'),
+    Uri.parse('$baseURL/manufacturer'),
     headers: {'Content-Type': 'application/json'},
-    body: jsonEncode(flightplanInstance.toJson()),
+    body: jsonEncode(manufacturerInstance.toJson()),
   );
   if (response.statusCode != 200) {
     CustomSnackBar.show(context, jsonDecode(response.body)['detail']);
   }
 });
 
-final updateFlightPlanProvider = FutureProvider.autoDispose
-    .family<void, Tuple2<FlightPlan, BuildContext>>((ref, tuple) async {
-  FlightPlan flightplanInstance = tuple.item1;
+final updateManufacturerProvider = FutureProvider.autoDispose
+    .family<void, Tuple2<Manufacturer, BuildContext>>((ref, tuple) async {
+  Manufacturer manufacturerInstance = tuple.item1;
   BuildContext context = tuple.item2;
 
   final response = await http.put(
-    Uri.parse('$baseURL/flightplan/${flightplanInstance.id}'),
+    Uri.parse('$baseURL/manufacturer/${manufacturerInstance.id}'),
     headers: {'Content-Type': 'application/json'},
-    body: jsonEncode(flightplanInstance.toJson()),
+    body: jsonEncode(manufacturerInstance.toJson()),
   );
   if (response.statusCode != 200) {
     CustomSnackBar.show(context, jsonDecode(response.body)['detail']);
   }
 });
 
-final deleteFlightPlanProvider =
-    FutureProvider.autoDispose.family<void, String>((ref, flightplanId) async {
+final deleteManufacturerProvider = FutureProvider.autoDispose
+    .family<void, String>((ref, manufacturerId) async {
   final response = await http.delete(
-    Uri.parse('$baseURL/flightplan/$flightplanId'),
+    Uri.parse('$baseURL/manufacturer/$manufacturerId'),
   );
   if (response.statusCode != 200) {
-    throw Exception('Failed to delete FlightPlan');
+    throw Exception('Failed to delete Manufacturer');
   }
 });
 
-class FlightPlanPaginationData {
-  final List<FlightPlan> items;
+class ManufacturerPaginationData {
+  final List<Manufacturer> items;
   final int currentPage;
   final int maxPages;
 
-  FlightPlanPaginationData({
+  ManufacturerPaginationData({
     required this.items,
     required this.currentPage,
     required this.maxPages,
   });
 }
 
-final getAllFlightPlanProvider = FutureProvider.autoDispose
-    .family<FlightPlanPaginationData, FlightPlanPaginationState>(
+final getAllManufacturerProvider = FutureProvider.autoDispose
+    .family<ManufacturerPaginationData, ManufacturerPaginationState>(
         (ref, state) async {
   final fixedQuery = {
     if (state.orders.isNotEmpty) 'orders': state.orders,
@@ -1833,14 +1656,14 @@ final getAllFlightPlanProvider = FutureProvider.autoDispose
 
   final json = await http.post(
       Uri.parse(
-          '$baseURL/flightplans?skip=${state.pagination.item1}&limit=${state.pagination.item2}'),
+          '$baseURL/manufacturers?skip=${state.pagination.item1}&limit=${state.pagination.item2}'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode(fixedQuery));
   final jsonData = jsonDecode(json.body);
 
-  return FlightPlanPaginationData(
+  return ManufacturerPaginationData(
     items: (jsonData['items'] as List)
-        .map((data) => FlightPlan.fromJson(data))
+        .map((data) => Manufacturer.fromJson(data))
         .toList(),
     currentPage: jsonData['current_page'],
     maxPages: jsonData['max_pages'],
