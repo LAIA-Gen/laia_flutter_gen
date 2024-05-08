@@ -623,7 +623,7 @@ class EnaireMapLayers {
     return [
       FeatureLayer(
         FeatureLayerOptions(
-          "https://servais.enaire.es/insigniad/rest/services/NOTAM/NOTAM_DRONES_APP_nacw0113_V1/MapServer/0",
+          "https://servais.enaire.es/insigniad/rest/services/NOTAM/NOTAM_DRONES_APP_V1_Local/MapServer/0",
           "polygon",
           render: (dynamic attributes) {
             return PolygonOptions(
@@ -638,7 +638,7 @@ class EnaireMapLayers {
       ),
       FeatureLayer(
         FeatureLayerOptions(
-          "https://servais.enaire.es/insigniad/rest/services/NSF_APP/Drones_APP_V1/MapServer/1",
+          "https://servais.enaire.es/insigniad/rest/services/NSF_APP/Drones_APP_V1_Local/MapServer/1",
           "polygon",
           render: (dynamic attributes) {
             return PolygonOptions(
@@ -653,7 +653,7 @@ class EnaireMapLayers {
       ),
       FeatureLayer(
         FeatureLayerOptions(
-          "https://servais.enaire.es/insigniad/rest/services/NSF_APP/Drones_APP_V1/MapServer/2",
+          "https://servais.enaire.es/insigniad/rest/services/NSF_APP/Drones_APP_V1_Local/MapServer/2",
           "polygon",
           render: (dynamic attributes) {
             return PolygonOptions(
