@@ -125,7 +125,7 @@ class _${visitor.className}WidgetState extends State<${visitor.className}Widget>
       String fieldName = field.name;
       String fieldDisplayName = fieldName;
       String fieldType = field.type.toString();
-      String fieldAccessor = 'widget.element?.$fieldName';
+      String fieldAccessor = 'widget.element!.$fieldName';
       String widget = 'defaultWidget';
       String fieldDescription = "This is the $fieldName";
       String placeholder = 'Type the $fieldName';
