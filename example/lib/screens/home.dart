@@ -1,11 +1,7 @@
 import 'package:example/config/styles.dart';
 import 'package:laia_annotations/laia_annotations.dart';
+import 'package:example/models/notam.dart';
 import 'package:example/models/accessright.dart';
-import 'package:example/models/drone.dart';
-import 'package:example/models/dronetype.dart';
-import 'package:example/models/manufacturer.dart';
-import 'package:example/models/flightplan.dart';
-import 'package:example/models/operator.dart';
 import 'package:example/models/role.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';

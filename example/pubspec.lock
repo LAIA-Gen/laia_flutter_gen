@@ -532,24 +532,24 @@ packages:
     dependency: "direct main"
     description:
       name: laia_annotations
-      sha256: fe9d8400d51448358b81919e83fa052dc84d86f430e8830baaaaddb102abffeb
+      sha256: "7aab358ed28f90af2063a5ac91f835641552644329158cdc820d3b5b96afeb41"
       url: "https://pub.dev"
     source: hosted
-    version: "0.0.4"
+    version: "0.0.7"
   laia_riverpod_custom_generator:
     dependency: "direct dev"
     description:
       path: "../laia_riverpod_custom_generator"
       relative: true
     source: path
-    version: "0.0.6"
+    version: "0.0.10"
   laia_widget_generator:
     dependency: "direct dev"
     description:
       path: "../laia_widget_generator"
       relative: true
     source: path
-    version: "0.0.6"
+    version: "0.0.15"
   latlong2:
     dependency: "direct main"
     description:

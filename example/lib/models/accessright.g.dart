@@ -157,18 +157,25 @@ class AccessRightWidget extends StatefulWidget {
 class _AccessRightWidgetState extends State<AccessRightWidget> {
   final GlobalKey<StringWidgetState> nameWidgetKey =
       GlobalKey<StringWidgetState>();
+
   final GlobalKey<RoleFieldWidgetState> roleWidgetKey =
       GlobalKey<RoleFieldWidgetState>();
+
   final GlobalKey<ModelsSelectableWidgetState> modelWidgetKey =
       GlobalKey<ModelsSelectableWidgetState>();
+
   final GlobalKey<DefaultWidgetState> operationsWidgetKey =
       GlobalKey<DefaultWidgetState>();
+
   final GlobalKey<DefaultWidgetState> fields_createWidgetKey =
       GlobalKey<DefaultWidgetState>();
+
   final GlobalKey<DefaultWidgetState> fields_editWidgetKey =
       GlobalKey<DefaultWidgetState>();
+
   final GlobalKey<DefaultWidgetState> fields_visibleWidgetKey =
       GlobalKey<DefaultWidgetState>();
+
   final GlobalKey<StringWidgetState> idWidgetKey =
       GlobalKey<StringWidgetState>();
 

@@ -1,6 +1,7 @@
 class ElementWidgetGen {
   final bool auth;
-  const ElementWidgetGen({ this.auth = false});
+  final List<List<String>> defaultFieldsDetail;
+  const ElementWidgetGen({ this.auth = false, this.defaultFieldsDetail = const []});
 }
 
 class Field {

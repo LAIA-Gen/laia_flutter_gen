@@ -84,6 +84,7 @@ class RoleWidget extends StatefulWidget {
 class _RoleWidgetState extends State<RoleWidget> {
   final GlobalKey<StringWidgetState> nameWidgetKey =
       GlobalKey<StringWidgetState>();
+
   final GlobalKey<StringWidgetState> idWidgetKey =
       GlobalKey<StringWidgetState>();
 

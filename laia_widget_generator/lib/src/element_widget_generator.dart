@@ -20,6 +20,45 @@ class ElementWidgetGenerator extends GeneratorForAnnotation<ElementWidgetGen> {
     element.visitChildren(visitor);
     ClassElement classElement = element as ClassElement;
     final auth = annotation.read('auth').boolValue;
+    final List<List<String>> defaultFieldsDetail = annotation
+      .read('defaultFieldsDetail')
+      .listValue
+      .map((element) => (element.toListValue() ?? []).map((e) => e.toStringValue() ?? '').toList())
+      .toList();
+
+    List<String> defaultFieldsDetailNames = [];
+    List<int> defaultFieldsDetailWidths = [];
+
+    defaultFieldsDetail.forEach((field) {
+
+      String name = field[0];
+      int width = field.length > 1 ? int.tryParse(field[1]) ?? 100 : 100;
+
+      defaultFieldsDetailNames.add(name);
+      defaultFieldsDetailWidths.add(width);
+    });
+
+    List<List<String>> defaultFieldsDetailRows = [];
+    List<String> currentRow = [];
+    int currentWidth = 0;
+
+    for (int i = 0; i < defaultFieldsDetailNames.length; i++) {
+      String name = defaultFieldsDetailNames[i];
+      int width = defaultFieldsDetailWidths[i];
+      
+      if (currentWidth + width <= 100) {
+        currentRow.add(name);
+        currentWidth += width;
+      } else {
+        defaultFieldsDetailRows.add(currentRow);
+        currentRow = [name];
+        currentWidth = width;
+      }
+    }
+
+    if (currentRow.isNotEmpty) {
+      defaultFieldsDetailRows.add(currentRow);
+    }
 
     buffer.writeln('''
 class ${visitor.className}Widget extends StatefulWidget {
@@ -33,7 +72,8 @@ class ${visitor.className}Widget extends StatefulWidget {
 }
 
 class _${visitor.className}WidgetState extends State<${visitor.className}Widget> {''');
-    for (var field in classElement.fields) {
+    globalKeyDeclarationCode(var field) {
+      var bufferGlobalKey = StringBuffer();
       String fieldName = field.name;
       String fieldType = field.type.toString();
 
@@ -98,7 +138,18 @@ class _${visitor.className}WidgetState extends State<${visitor.className}Widget>
         }
       }
 
-      buffer.writeln("final GlobalKey<${widget}State> ${fieldName}WidgetKey = GlobalKey<${widget}State>();");
+      bufferGlobalKey.writeln("final GlobalKey<${widget}State> ${fieldName}WidgetKey = GlobalKey<${widget}State>();");
+      return bufferGlobalKey;
+    }
+    if (defaultFieldsDetail.isEmpty) {
+      for (var field in classElement.fields) {
+        buffer.writeln(globalKeyDeclarationCode(field));
+      }
+    } else {
+      for (var defaultField in defaultFieldsDetailNames) {
+        var field = classElement.fields.firstWhere((f) => f.name == defaultField);
+        buffer.writeln(globalKeyDeclarationCode(field));
+      }
     }
     buffer.writeln('''
 
@@ -121,7 +172,8 @@ class _${visitor.className}WidgetState extends State<${visitor.className}Widget>
         child: Column(
           children: [
 ''');
-    for (var field in classElement.fields) {
+    fieldWidgetCode(var field) {
+      var bufferfieldWidget = StringBuffer();
       String fieldName = field.name;
       String fieldDisplayName = fieldName;
       String fieldType = field.type.toString();
@@ -229,7 +281,7 @@ class _${visitor.className}WidgetState extends State<${visitor.className}Widget>
         }
       }
 
-      buffer.writeln('''
+      bufferfieldWidget.writeln('''
           $widget(
             key: ${fieldName}WidgetKey,
             fieldName: "$fieldDisplayName",
@@ -238,24 +290,49 @@ class _${visitor.className}WidgetState extends State<${visitor.className}Widget>
             ${widget == 'BoolWidget' ? "" : "placeholder: \"$placeholder\","}''');
 
       if (multiRelation) {
-        buffer.writeln('''
+        bufferfieldWidget.writeln('''
             values: $fieldAccessor,
           ),
       ''');
       } else {
         if (widget == "MapWidget") {
-          buffer.writeln('''
+          bufferfieldWidget.writeln('''
             value: $fieldAccessor  ?? ${fieldType.replaceAll("?", "")}(type: "Feature", geometry: Geometry${fieldType.replaceAll("?", "")}(coordinates: [], type: "${fieldType.replaceAll("?", "")}"), properties: {}),
             uspaceMap: $uspaceMap
           ),
       ''');
         } else {
-          buffer.writeln('''
+          bufferfieldWidget.writeln('''
             value: $fieldAccessor,
           ),
       ''');
         }
         
+      }
+      return bufferfieldWidget;
+    }
+    if (defaultFieldsDetail.isEmpty) {
+      for (var field in classElement.fields) {
+        buffer.writeln(fieldWidgetCode(field));
+      }
+    } else {
+      for (List<String> row in defaultFieldsDetailRows) {
+        buffer.writeln('''
+                Row(
+                  children: [''');
+
+        for (String fieldName in row) {
+          var field = classElement.fields.firstWhere((f) => f.name == fieldName);
+          buffer.writeln('''
+                    Expanded(
+                      flex: ${defaultFieldsDetailWidths[defaultFieldsDetailNames.indexOf(fieldName)]},
+                      child: ${fieldWidgetCode(field)}
+                    ),''');
+        }
+
+        buffer.writeln('''
+                  ],
+                ),''');
       }
     }
     buffer.writeln('],');
@@ -267,69 +344,79 @@ class _${visitor.className}WidgetState extends State<${visitor.className}Widget>
           ''');
         final List<String> updatedFields = [];
         for (var fieldName in visitor.fields.keys) {
-          String fieldType = visitor.fields[fieldName];
+          var writeCode = false;
+          if (defaultFieldsDetail.isEmpty) {
+            writeCode = true;
+          } else {
+            if (defaultFieldsDetailNames.contains(fieldName)) {
+              writeCode = true;
+            }
+          }
+          if (writeCode) {
+            String fieldType = visitor.fields[fieldName];
 
-          switch (fieldType) {
-            case 'int':
-            case 'int?':
-              buffer.writeln('''
-          int? updated$fieldName = ${fieldName}WidgetKey.currentState?.getUpdatedValue();
-''');         updatedFields.add('$fieldName: updated$fieldName');
-              break;
-            case 'double':
-            case 'double?':
-              buffer.writeln('''
-          double? updated$fieldName = ${fieldName}WidgetKey.currentState?.getUpdatedValue();
-''');         updatedFields.add('$fieldName: updated$fieldName');
-              break;
-            case 'String':
-            case 'String?':
-              buffer.writeln('''
-          String? updated$fieldName = ${fieldName}WidgetKey.currentState?.getUpdatedValue();
-''');         updatedFields.add('$fieldName: updated$fieldName');
-              break;
-            case 'List<String>':
-            case 'List<String>?':
-              buffer.writeln('''
-          List<String>? updated$fieldName = ${fieldName}WidgetKey.currentState?.getUpdatedValue();
-''');         updatedFields.add('$fieldName: updated$fieldName');
-              break;
-            case 'DateTime':
-            case 'DateTime?':
-              buffer.writeln('''
-          DateTime? updated$fieldName = ${fieldName}WidgetKey.currentState?.getUpdatedValue();
-''');         updatedFields.add('$fieldName: updated$fieldName');
-              break;
-            case 'bool':
-            case 'bool?':
-              buffer.writeln('''
-          bool? updated$fieldName = ${fieldName}WidgetKey.currentState?.getUpdatedValue();
-''');         updatedFields.add('$fieldName: updated$fieldName');
-              break;
-            case 'LineString':
-            case 'MultiLineString':
-            case 'MultiPoint':
-            case 'MultiPolygon':
-            case 'Point':
-            case 'Polygon':
-            case 'LineString?':
-            case 'MultiLineString?':
-            case 'MultiPoint?':
-            case 'MultiPolygon?':
-            case 'Point?':
-            case 'Polygon?':
-              buffer.writeln('''
-          dynamic updated$fieldName = ${fieldName}WidgetKey.currentState?.getUpdatedValue();
+            switch (fieldType) {
+              case 'int':
+              case 'int?':
+                buffer.writeln('''
+            int? updated$fieldName = ${fieldName}WidgetKey.currentState?.getUpdatedValue();
+  ''');         updatedFields.add('$fieldName: updated$fieldName');
+                break;
+              case 'double':
+              case 'double?':
+                buffer.writeln('''
+            double? updated$fieldName = ${fieldName}WidgetKey.currentState?.getUpdatedValue();
+  ''');         updatedFields.add('$fieldName: updated$fieldName');
+                break;
+              case 'String':
+              case 'String?':
+                buffer.writeln('''
+            String? updated$fieldName = ${fieldName}WidgetKey.currentState?.getUpdatedValue();
+  ''');         updatedFields.add('$fieldName: updated$fieldName');
+                break;
+              case 'List<String>':
+              case 'List<String>?':
+                buffer.writeln('''
+            List<String>? updated$fieldName = ${fieldName}WidgetKey.currentState?.getUpdatedValue();
+  ''');         updatedFields.add('$fieldName: updated$fieldName');
+                break;
+              case 'DateTime':
+              case 'DateTime?':
+                buffer.writeln('''
+            DateTime? updated$fieldName = ${fieldName}WidgetKey.currentState?.getUpdatedValue();
+  ''');         updatedFields.add('$fieldName: updated$fieldName');
+                break;
+              case 'bool':
+              case 'bool?':
+                buffer.writeln('''
+            bool? updated$fieldName = ${fieldName}WidgetKey.currentState?.getUpdatedValue();
+  ''');         updatedFields.add('$fieldName: updated$fieldName');
+                break;
+              case 'LineString':
+              case 'MultiLineString':
+              case 'MultiPoint':
+              case 'MultiPolygon':
+              case 'Point':
+              case 'Polygon':
+              case 'LineString?':
+              case 'MultiLineString?':
+              case 'MultiPoint?':
+              case 'MultiPolygon?':
+              case 'Point?':
+              case 'Polygon?':
+                buffer.writeln('''
+            dynamic updated$fieldName = ${fieldName}WidgetKey.currentState?.getUpdatedValue();
 
-          updated$fieldName = ${fieldType.replaceAll("?", "")}(type: "Feature", geometry: Geometry${fieldType.replaceAll("?", "")}(coordinates:updated$fieldName.geometry.coordinates, type: updated$fieldName.geometry.type), properties: updated$fieldName.properties);
-''');         updatedFields.add('$fieldName: updated$fieldName');
-              break;
-            default:
-              buffer.writeln('''
-          dynamic updated$fieldName = ${fieldName}WidgetKey.currentState?.getUpdatedValue();
-''');         updatedFields.add('$fieldName: updated$fieldName');
-              break;
-            
+            updated$fieldName = ${fieldType.replaceAll("?", "")}(type: "Feature", geometry: Geometry${fieldType.replaceAll("?", "")}(coordinates:updated$fieldName.geometry.coordinates, type: updated$fieldName.geometry.type), properties: updated$fieldName.properties);
+  ''');         updatedFields.add('$fieldName: updated$fieldName');
+                break;
+              default:
+                buffer.writeln('''
+            dynamic updated$fieldName = ${fieldName}WidgetKey.currentState?.getUpdatedValue();
+  ''');         updatedFields.add('$fieldName: updated$fieldName');
+                break;
+              
+            }
           }
         }
     
@@ -337,42 +424,52 @@ class _${visitor.className}WidgetState extends State<${visitor.className}Widget>
           ${visitor.className} updated${visitor.className} = widget.element ?? ${visitor.className}(''');
     
     for (var fieldName in visitor.fields.keys) {
-      String fieldType = visitor.fields[fieldName];
+      var writeCode = false;
+      if (defaultFieldsDetail.isEmpty) {
+        writeCode = true;
+      } else {
+        if (defaultFieldsDetailNames.contains(fieldName)) {
+          writeCode = true;
+        }
+      }
+      if (writeCode) {
+        String fieldType = visitor.fields[fieldName];
 
-      switch (fieldType) {
-        case 'int':
-        case 'int?':
-          buffer.writeln('''$fieldName: updated$fieldName ?? 0,''');
-          break;
-        case 'double':
-        case 'double?':
-          buffer.writeln('''$fieldName: updated$fieldName ?? 0.0,''');
-          break;
-        case 'String':
-        case 'String?':
-          buffer.writeln('''$fieldName: updated$fieldName ?? '',''');
-          break;
-        case 'DateTime':
-        case 'DateTime?':
-          buffer.writeln('''$fieldName: updated$fieldName ?? DateTime.now(),''');
-          break;
-        case 'bool':
-        case 'bool?':
-          buffer.writeln('''$fieldName: updated$fieldName ?? false,''');
-          break;
-        case 'Map<String, dynamic>':
-        case 'Map<String, dynamic>?':
-        case 'List<Map<String, dynamic>>':
-        case 'List<Map<String, dynamic>>?':
-          buffer.writeln('''$fieldName: updated$fieldName ?? {},''');
-          break;
-        case 'List<String>':
-        case 'List<String>?':
-          buffer.writeln('''$fieldName: updated$fieldName ?? [''],''');
-          break;
-        default:
-          buffer.writeln('''$fieldName: updated$fieldName ?? '',''');
-              break;
+        switch (fieldType) {
+          case 'int':
+          case 'int?':
+            buffer.writeln('''$fieldName: updated$fieldName ?? 0,''');
+            break;
+          case 'double':
+          case 'double?':
+            buffer.writeln('''$fieldName: updated$fieldName ?? 0.0,''');
+            break;
+          case 'String':
+          case 'String?':
+            buffer.writeln('''$fieldName: updated$fieldName ?? '',''');
+            break;
+          case 'DateTime':
+          case 'DateTime?':
+            buffer.writeln('''$fieldName: updated$fieldName ?? DateTime.now(),''');
+            break;
+          case 'bool':
+          case 'bool?':
+            buffer.writeln('''$fieldName: updated$fieldName ?? false,''');
+            break;
+          case 'Map<String, dynamic>':
+          case 'Map<String, dynamic>?':
+          case 'List<Map<String, dynamic>>':
+          case 'List<Map<String, dynamic>>?':
+            buffer.writeln('''$fieldName: updated$fieldName ?? {},''');
+            break;
+          case 'List<String>':
+          case 'List<String>?':
+            buffer.writeln('''$fieldName: updated$fieldName ?? [''],''');
+            break;
+          default:
+            buffer.writeln('''$fieldName: updated$fieldName ?? '',''');
+                break;
+        }
       }
     }
 

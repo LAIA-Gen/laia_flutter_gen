@@ -2163,16 +2163,7 @@ class ModelsSelectableWidget extends StatefulWidget {
 }
 
 class ModelsSelectableWidgetState extends State<ModelsSelectableWidget> {
-  List<String> options = [
-    "",
-    "AccessRight",
-    "Role",
-    "DroneType",
-    "Operator",
-    "FlightPlan",
-    "Manufacturer",
-    "Drone"
-  ];
+  List<String> options = ["", "NOTAM", "Role", "AccessRight"];
   bool isValueChanged = false;
   late String? initialValue;
   late String currentValue;
