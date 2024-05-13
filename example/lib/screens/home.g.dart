@@ -39,9 +39,11 @@ bool _isMobile(MediaQueryData mediaQuery) {
 }
 
 List<Widget> _dashboardWidgets = [
-  NOTAMHomeWidget(),
   RoleHomeWidget(),
   AccessRightHomeWidget(),
+  DroneHomeWidget(),
+  DronesTrackingHomeWidget(),
+  FlightPlanHomeWidget(),
 ];
 
 class DynamicLogInScreen extends StatelessWidget {

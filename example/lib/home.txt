@@ -1,3 +1,5 @@
-NOTAMHomeWidget
 RoleHomeWidget
 AccessRightHomeWidget
+DroneHomeWidget
+DronesTrackingHomeWidget
+FlightPlanHomeWidget

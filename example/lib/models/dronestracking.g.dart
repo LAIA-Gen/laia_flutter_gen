@@ -1,213 +1,173 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'notam.dart';
+part of 'dronestracking.dart';
 
 // **************************************************************************
 // CopyWithGenerator
 // **************************************************************************
 
-abstract class _$NOTAMCWProxy {
-  NOTAM area(Polygon area);
+abstract class _$DronesTrackingCWProxy {
+  DronesTracking altitude(double altitude);
 
-  NOTAM description(String? description);
+  DronesTracking coordinates(Point coordinates);
 
-  NOTAM end_date(DateTime end_date);
+  DronesTracking droneId(String droneId);
 
-  NOTAM id(String? id);
+  DronesTracking flightplanId(String? flightplanId);
 
-  NOTAM issuing_authority(String? issuing_authority);
+  DronesTracking id(String? id);
 
-  NOTAM name(String name);
+  DronesTracking name(String name);
 
-  NOTAM reference(String? reference);
+  DronesTracking timestamp(DateTime timestamp);
 
-  NOTAM start_date(DateTime start_date);
-
-  NOTAM status(String? status);
-
-  NOTAM type(String? type);
-
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `NOTAM(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `DronesTracking(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
   /// Usage
   /// ```dart
-  /// NOTAM(...).copyWith(id: 12, name: "My name")
+  /// DronesTracking(...).copyWith(id: 12, name: "My name")
   /// ````
-  NOTAM call({
-    Polygon? area,
-    String? description,
-    DateTime? end_date,
+  DronesTracking call({
+    double? altitude,
+    Point? coordinates,
+    String? droneId,
+    String? flightplanId,
     String? id,
-    String? issuing_authority,
     String? name,
-    String? reference,
-    DateTime? start_date,
-    String? status,
-    String? type,
+    DateTime? timestamp,
   });
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfNOTAM.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfNOTAM.copyWith.fieldName(...)`
-class _$NOTAMCWProxyImpl implements _$NOTAMCWProxy {
-  final NOTAM _value;
+/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfDronesTracking.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfDronesTracking.copyWith.fieldName(...)`
+class _$DronesTrackingCWProxyImpl implements _$DronesTrackingCWProxy {
+  final DronesTracking _value;
 
-  const _$NOTAMCWProxyImpl(this._value);
-
-  @override
-  NOTAM area(Polygon area) => this(area: area);
+  const _$DronesTrackingCWProxyImpl(this._value);
 
   @override
-  NOTAM description(String? description) => this(description: description);
+  DronesTracking altitude(double altitude) => this(altitude: altitude);
 
   @override
-  NOTAM end_date(DateTime end_date) => this(end_date: end_date);
+  DronesTracking coordinates(Point coordinates) =>
+      this(coordinates: coordinates);
 
   @override
-  NOTAM id(String? id) => this(id: id);
+  DronesTracking droneId(String droneId) => this(droneId: droneId);
 
   @override
-  NOTAM issuing_authority(String? issuing_authority) =>
-      this(issuing_authority: issuing_authority);
+  DronesTracking flightplanId(String? flightplanId) =>
+      this(flightplanId: flightplanId);
 
   @override
-  NOTAM name(String name) => this(name: name);
+  DronesTracking id(String? id) => this(id: id);
 
   @override
-  NOTAM reference(String? reference) => this(reference: reference);
+  DronesTracking name(String name) => this(name: name);
 
   @override
-  NOTAM start_date(DateTime start_date) => this(start_date: start_date);
-
-  @override
-  NOTAM status(String? status) => this(status: status);
-
-  @override
-  NOTAM type(String? type) => this(type: type);
+  DronesTracking timestamp(DateTime timestamp) => this(timestamp: timestamp);
 
   @override
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `NOTAM(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `DronesTracking(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
   /// Usage
   /// ```dart
-  /// NOTAM(...).copyWith(id: 12, name: "My name")
+  /// DronesTracking(...).copyWith(id: 12, name: "My name")
   /// ````
-  NOTAM call({
-    Object? area = const $CopyWithPlaceholder(),
-    Object? description = const $CopyWithPlaceholder(),
-    Object? end_date = const $CopyWithPlaceholder(),
+  DronesTracking call({
+    Object? altitude = const $CopyWithPlaceholder(),
+    Object? coordinates = const $CopyWithPlaceholder(),
+    Object? droneId = const $CopyWithPlaceholder(),
+    Object? flightplanId = const $CopyWithPlaceholder(),
     Object? id = const $CopyWithPlaceholder(),
-    Object? issuing_authority = const $CopyWithPlaceholder(),
     Object? name = const $CopyWithPlaceholder(),
-    Object? reference = const $CopyWithPlaceholder(),
-    Object? start_date = const $CopyWithPlaceholder(),
-    Object? status = const $CopyWithPlaceholder(),
-    Object? type = const $CopyWithPlaceholder(),
+    Object? timestamp = const $CopyWithPlaceholder(),
   }) {
-    return NOTAM(
-      area: area == const $CopyWithPlaceholder() || area == null
-          ? _value.area
+    return DronesTracking(
+      altitude: altitude == const $CopyWithPlaceholder() || altitude == null
+          ? _value.altitude
           // ignore: cast_nullable_to_non_nullable
-          : area as Polygon,
-      description: description == const $CopyWithPlaceholder()
-          ? _value.description
+          : altitude as double,
+      coordinates:
+          coordinates == const $CopyWithPlaceholder() || coordinates == null
+              ? _value.coordinates
+              // ignore: cast_nullable_to_non_nullable
+              : coordinates as Point,
+      droneId: droneId == const $CopyWithPlaceholder() || droneId == null
+          ? _value.droneId
           // ignore: cast_nullable_to_non_nullable
-          : description as String?,
-      end_date: end_date == const $CopyWithPlaceholder() || end_date == null
-          ? _value.end_date
+          : droneId as String,
+      flightplanId: flightplanId == const $CopyWithPlaceholder()
+          ? _value.flightplanId
           // ignore: cast_nullable_to_non_nullable
-          : end_date as DateTime,
+          : flightplanId as String?,
       id: id == const $CopyWithPlaceholder()
           ? _value.id
           // ignore: cast_nullable_to_non_nullable
           : id as String?,
-      issuing_authority: issuing_authority == const $CopyWithPlaceholder()
-          ? _value.issuing_authority
-          // ignore: cast_nullable_to_non_nullable
-          : issuing_authority as String?,
       name: name == const $CopyWithPlaceholder() || name == null
           ? _value.name
           // ignore: cast_nullable_to_non_nullable
           : name as String,
-      reference: reference == const $CopyWithPlaceholder()
-          ? _value.reference
+      timestamp: timestamp == const $CopyWithPlaceholder() || timestamp == null
+          ? _value.timestamp
           // ignore: cast_nullable_to_non_nullable
-          : reference as String?,
-      start_date:
-          start_date == const $CopyWithPlaceholder() || start_date == null
-              ? _value.start_date
-              // ignore: cast_nullable_to_non_nullable
-              : start_date as DateTime,
-      status: status == const $CopyWithPlaceholder()
-          ? _value.status
-          // ignore: cast_nullable_to_non_nullable
-          : status as String?,
-      type: type == const $CopyWithPlaceholder()
-          ? _value.type
-          // ignore: cast_nullable_to_non_nullable
-          : type as String?,
+          : timestamp as DateTime,
     );
   }
 }
 
-extension $NOTAMCopyWith on NOTAM {
-  /// Returns a callable class that can be used as follows: `instanceOfNOTAM.copyWith(...)` or like so:`instanceOfNOTAM.copyWith.fieldName(...)`.
+extension $DronesTrackingCopyWith on DronesTracking {
+  /// Returns a callable class that can be used as follows: `instanceOfDronesTracking.copyWith(...)` or like so:`instanceOfDronesTracking.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
-  _$NOTAMCWProxy get copyWith => _$NOTAMCWProxyImpl(this);
+  _$DronesTrackingCWProxy get copyWith => _$DronesTrackingCWProxyImpl(this);
 }
 
 // **************************************************************************
 // ElementWidgetGenerator
 // **************************************************************************
 
-class NOTAMWidget extends StatefulWidget {
-  final NOTAM? element;
+class DronesTrackingWidget extends StatefulWidget {
+  final DronesTracking? element;
   final bool isEditing;
 
-  const NOTAMWidget({this.element, required this.isEditing, Key? key})
+  const DronesTrackingWidget({this.element, required this.isEditing, Key? key})
       : super(key: key);
 
   @override
-  _NOTAMWidgetState createState() => _NOTAMWidgetState();
+  _DronesTrackingWidgetState createState() => _DronesTrackingWidgetState();
 }
 
-class _NOTAMWidgetState extends State<NOTAMWidget> {
+class _DronesTrackingWidgetState extends State<DronesTrackingWidget> {
   final GlobalKey<StringWidgetState> nameWidgetKey =
       GlobalKey<StringWidgetState>();
 
-  final GlobalKey<StringWidgetState> descriptionWidgetKey =
-      GlobalKey<StringWidgetState>();
+  final GlobalKey<DroneFieldWidgetState> droneIdWidgetKey =
+      GlobalKey<DroneFieldWidgetState>();
 
-  final GlobalKey<StringWidgetState> typeWidgetKey =
-      GlobalKey<StringWidgetState>();
+  final GlobalKey<FlightPlanFieldWidgetState> flightplanIdWidgetKey =
+      GlobalKey<FlightPlanFieldWidgetState>();
 
-  final GlobalKey<DateTimeWidgetState> start_dateWidgetKey =
+  final GlobalKey<MapWidgetState> coordinatesWidgetKey =
+      GlobalKey<MapWidgetState>();
+
+  final GlobalKey<DoubleWidgetState> altitudeWidgetKey =
+      GlobalKey<DoubleWidgetState>();
+
+  final GlobalKey<DateTimeWidgetState> timestampWidgetKey =
       GlobalKey<DateTimeWidgetState>();
-
-  final GlobalKey<DateTimeWidgetState> end_dateWidgetKey =
-      GlobalKey<DateTimeWidgetState>();
-
-  final GlobalKey<StringWidgetState> issuing_authorityWidgetKey =
-      GlobalKey<StringWidgetState>();
-
-  final GlobalKey<StringWidgetState> statusWidgetKey =
-      GlobalKey<StringWidgetState>();
-
-  final GlobalKey<StringWidgetState> referenceWidgetKey =
-      GlobalKey<StringWidgetState>();
-
-  final GlobalKey<MapWidgetState> areaWidgetKey = GlobalKey<MapWidgetState>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('NOTAM'),
+        title: const Text('DronesTracking'),
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => NOTAMListView()),
+            MaterialPageRoute(builder: (context) => DronesTrackingListView()),
           ),
         ),
       ),
@@ -218,62 +178,29 @@ class _NOTAMWidgetState extends State<NOTAMWidget> {
             Row(
               children: [
                 Expanded(
-                  flex: 50,
+                  flex: 100,
                   child: StringWidget(
                     key: nameWidgetKey,
                     fieldName: "Name",
-                    fieldDescription: "This is the NOTAM Name",
+                    fieldDescription: "Name",
                     editable: true,
-                    placeholder: "Write the NOTAM Name",
+                    placeholder: "Name",
                     value: widget.element?.name,
                   ),
                 ),
-                Expanded(
-                  flex: 50,
-                  child: StringWidget(
-                    key: descriptionWidgetKey,
-                    fieldName: "Description",
-                    fieldDescription: "This is the NOTAM Description",
-                    editable: true,
-                    placeholder: "Write the NOTAM Description",
-                    value: widget.element?.description,
-                  ),
-                ),
               ],
             ),
             Row(
               children: [
                 Expanded(
-                  flex: 30,
-                  child: StringWidget(
-                    key: typeWidgetKey,
-                    fieldName: "Type",
-                    fieldDescription: "Type of the NOTAM",
+                  flex: 100,
+                  child: DroneFieldWidget(
+                    key: droneIdWidgetKey,
+                    fieldName: "Drone",
+                    fieldDescription: "This is the Drone",
                     editable: true,
-                    placeholder: "Specify the NOTAM Type",
-                    value: widget.element?.type,
-                  ),
-                ),
-                Expanded(
-                  flex: 30,
-                  child: DateTimeWidget(
-                    key: start_dateWidgetKey,
-                    fieldName: "Start Date",
-                    fieldDescription: "Start Date of the NOTAM",
-                    editable: true,
-                    placeholder: "Select the Start Date",
-                    value: widget.element?.start_date,
-                  ),
-                ),
-                Expanded(
-                  flex: 10,
-                  child: DateTimeWidget(
-                    key: end_dateWidgetKey,
-                    fieldName: "End Date",
-                    fieldDescription: "End Date of the NOTAM",
-                    editable: true,
-                    placeholder: "Select the End Date",
-                    value: widget.element?.end_date,
+                    placeholder: "Select the Drone of this position",
+                    value: widget.element?.droneId,
                   ),
                 ),
               ],
@@ -282,13 +209,13 @@ class _NOTAMWidgetState extends State<NOTAMWidget> {
               children: [
                 Expanded(
                   flex: 100,
-                  child: StringWidget(
-                    key: issuing_authorityWidgetKey,
-                    fieldName: "Issuing Authority",
-                    fieldDescription: "Authority issuing the NOTAM",
+                  child: FlightPlanFieldWidget(
+                    key: flightplanIdWidgetKey,
+                    fieldName: "FlightPlan",
+                    fieldDescription: "This is the FlightPlan",
                     editable: true,
-                    placeholder: "Specify the Issuing Authority",
-                    value: widget.element?.issuing_authority,
+                    placeholder: "Select the FlightPlan of this position",
+                    value: widget.element?.flightplanId,
                   ),
                 ),
               ],
@@ -297,45 +224,49 @@ class _NOTAMWidgetState extends State<NOTAMWidget> {
               children: [
                 Expanded(
                   flex: 100,
-                  child: StringWidget(
-                    key: statusWidgetKey,
-                    fieldName: "Status",
-                    fieldDescription: "Status of the NOTAM",
-                    editable: true,
-                    placeholder: "Specify the NOTAM Status",
-                    value: widget.element?.status,
-                  ),
-                ),
-              ],
-            ),
-            Row(
-              children: [
-                Expanded(
-                  flex: 50,
-                  child: StringWidget(
-                    key: referenceWidgetKey,
-                    fieldName: "Reference",
-                    fieldDescription: "Reference information for the NOTAM",
-                    editable: true,
-                    placeholder: "Provide a Reference",
-                    value: widget.element?.reference,
-                  ),
-                ),
-                Expanded(
-                  flex: 50,
                   child: MapWidget(
-                      key: areaWidgetKey,
-                      fieldName: "Area",
-                      fieldDescription: "Geographical Area of the NOTAM",
+                      key: coordinatesWidgetKey,
+                      fieldName: "Coordinates",
+                      fieldDescription: "This are the coordinates of the Drone",
                       editable: true,
-                      placeholder: "Define the Area for the NOTAM",
-                      value: widget.element?.area ??
-                          Polygon(
+                      placeholder: "Add the coordinates of the Drone",
+                      value: widget.element?.coordinates ??
+                          Point(
                               type: "Feature",
-                              geometry: GeometryPolygon(
-                                  coordinates: [], type: "Polygon"),
+                              geometry:
+                                  GeometryPoint(coordinates: [], type: "Point"),
                               properties: {}),
-                      uspaceMap: false),
+                      uspaceMap: true),
+                ),
+              ],
+            ),
+            Row(
+              children: [
+                Expanded(
+                  flex: 100,
+                  child: DoubleWidget(
+                    key: altitudeWidgetKey,
+                    fieldName: "Altitude",
+                    fieldDescription: "Altitude of this position",
+                    editable: true,
+                    placeholder: "Enter Altitude",
+                    value: widget.element?.altitude,
+                  ),
+                ),
+              ],
+            ),
+            Row(
+              children: [
+                Expanded(
+                  flex: 100,
+                  child: DateTimeWidget(
+                    key: timestampWidgetKey,
+                    fieldName: "Timestamp",
+                    fieldDescription: "Timestamp of the Drone position",
+                    editable: true,
+                    placeholder: "Select a Datetime",
+                    value: widget.element?.timestamp,
+                  ),
                 ),
               ],
             ),
@@ -344,75 +275,64 @@ class _NOTAMWidgetState extends State<NOTAMWidget> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          dynamic updatedarea = areaWidgetKey.currentState?.getUpdatedValue();
+          double? updatedaltitude =
+              altitudeWidgetKey.currentState?.getUpdatedValue();
 
-          updatedarea = Polygon(
+          dynamic updatedcoordinates =
+              coordinatesWidgetKey.currentState?.getUpdatedValue();
+
+          updatedcoordinates = Point(
               type: "Feature",
-              geometry: GeometryPolygon(
-                  coordinates: updatedarea.geometry.coordinates,
-                  type: updatedarea.geometry.type),
-              properties: updatedarea.properties);
+              geometry: GeometryPoint(
+                  coordinates: updatedcoordinates.geometry.coordinates,
+                  type: updatedcoordinates.geometry.type),
+              properties: updatedcoordinates.properties);
 
-          String? updateddescription =
-              descriptionWidgetKey.currentState?.getUpdatedValue();
+          String? updateddroneId =
+              droneIdWidgetKey.currentState?.getUpdatedValue();
 
-          DateTime? updatedend_date =
-              end_dateWidgetKey.currentState?.getUpdatedValue();
-
-          String? updatedissuing_authority =
-              issuing_authorityWidgetKey.currentState?.getUpdatedValue();
+          String? updatedflightplanId =
+              flightplanIdWidgetKey.currentState?.getUpdatedValue();
 
           String? updatedname = nameWidgetKey.currentState?.getUpdatedValue();
 
-          String? updatedreference =
-              referenceWidgetKey.currentState?.getUpdatedValue();
+          DateTime? updatedtimestamp =
+              timestampWidgetKey.currentState?.getUpdatedValue();
 
-          DateTime? updatedstart_date =
-              start_dateWidgetKey.currentState?.getUpdatedValue();
-
-          String? updatedstatus =
-              statusWidgetKey.currentState?.getUpdatedValue();
-
-          String? updatedtype = typeWidgetKey.currentState?.getUpdatedValue();
-
-          NOTAM updatedNOTAM = widget.element ??
-              NOTAM(
-                area: updatedarea ?? '',
-                description: updateddescription ?? '',
-                end_date: updatedend_date ?? DateTime.now(),
-                issuing_authority: updatedissuing_authority ?? '',
+          DronesTracking updatedDronesTracking = widget.element ??
+              DronesTracking(
+                altitude: updatedaltitude ?? 0.0,
+                coordinates: updatedcoordinates ?? '',
+                droneId: updateddroneId ?? '',
+                flightplanId: updatedflightplanId ?? '',
                 name: updatedname ?? '',
-                reference: updatedreference ?? '',
-                start_date: updatedstart_date ?? DateTime.now(),
-                status: updatedstatus ?? '',
-                type: updatedtype ?? '',
+                timestamp: updatedtimestamp ?? DateTime.now(),
               );
 
-          updatedNOTAM = updatedNOTAM.copyWith(
-              area: updatedarea,
-              description: updateddescription,
-              end_date: updatedend_date,
-              issuing_authority: updatedissuing_authority,
+          updatedDronesTracking = updatedDronesTracking.copyWith(
+              altitude: updatedaltitude,
+              coordinates: updatedcoordinates,
+              droneId: updateddroneId,
+              flightplanId: updatedflightplanId,
               name: updatedname,
-              reference: updatedreference,
-              start_date: updatedstart_date,
-              status: updatedstatus,
-              type: updatedtype);
+              timestamp: updatedtimestamp);
           var container = ProviderContainer();
           try {
             if (widget.isEditing) {
-              await container
-                  .read(updateNOTAMProvider(Tuple2(updatedNOTAM, context)));
-              print('NOTAM updated successfully');
-              CustomSnackBar.show(context, 'NOTAM updated successfully');
+              await container.read(updateDronesTrackingProvider(
+                  Tuple2(updatedDronesTracking, context)));
+              print('DronesTracking updated successfully');
+              CustomSnackBar.show(
+                  context, 'DronesTracking updated successfully');
             } else {
-              await container
-                  .read(createNOTAMProvider(Tuple2(updatedNOTAM, context)));
-              print('NOTAM created successfully');
-              CustomSnackBar.show(context, 'NOTAM created successfully');
+              await container.read(createDronesTrackingProvider(
+                  Tuple2(updatedDronesTracking, context)));
+              print('DronesTracking created successfully');
+              CustomSnackBar.show(
+                  context, 'DronesTracking created successfully');
             }
           } catch (error) {
-            print('Failed to update NOTAM: $error');
+            print('Failed to update DronesTracking: $error');
           }
         },
         child: Icon(Icons.save),
@@ -421,14 +341,14 @@ class _NOTAMWidgetState extends State<NOTAMWidget> {
   }
 }
 
-class NOTAMFieldWidget extends StatefulWidget {
+class DronesTrackingFieldWidget extends StatefulWidget {
   final String fieldName;
   final String fieldDescription;
   final bool editable;
   final String placeholder;
   final String? value;
 
-  const NOTAMFieldWidget({
+  const DronesTrackingFieldWidget({
     Key? key,
     required this.fieldName,
     required this.fieldDescription,
@@ -438,15 +358,16 @@ class NOTAMFieldWidget extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  NOTAMFieldWidgetState createState() => NOTAMFieldWidgetState();
+  DronesTrackingFieldWidgetState createState() =>
+      DronesTrackingFieldWidgetState();
 }
 
-class NOTAMFieldWidgetState extends State<NOTAMFieldWidget> {
+class DronesTrackingFieldWidgetState extends State<DronesTrackingFieldWidget> {
   final TextEditingController _typeAheadController = TextEditingController();
   bool isValueChanged = false;
   late String? initialValue;
   late String currentValue;
-  late List<NOTAM> options;
+  late List<DronesTracking> options;
 
   @override
   void initState() {
@@ -458,8 +379,10 @@ class NOTAMFieldWidgetState extends State<NOTAMFieldWidget> {
     super.initState();
     initialValue = widget.value;
     currentValue = initialValue ?? '';
-    NOTAM notam = await container.read(getNOTAMProvider(widget.value!).future);
-    _typeAheadController.text = '${notam.name} <id: ${notam.id}>';
+    DronesTracking dronestracking =
+        await container.read(getDronesTrackingProvider(widget.value!).future);
+    _typeAheadController.text =
+        '${dronestracking.name} <id: ${dronestracking.id}>';
   }
 
   String? getUpdatedValue() {
@@ -501,30 +424,33 @@ class NOTAMFieldWidgetState extends State<NOTAMFieldWidget> {
                 children: [
                   widget.editable
                       ? Expanded(
-                          child: TypeAheadField<NOTAM>(
+                          child: TypeAheadField<DronesTracking>(
                             controller: _typeAheadController,
                             suggestionsCallback: (String pattern) async {
-                              final notamPaginationData = await container.read(
-                                  getAllNOTAMProvider(container
-                                          .read(notamPaginationProvider))
-                                      .future);
-                              final options = notamPaginationData.items;
+                              final dronestrackingPaginationData =
+                                  await container.read(
+                                      getAllDronesTrackingProvider(container.read(
+                                              dronestrackingPaginationProvider))
+                                          .future);
+                              final options =
+                                  dronestrackingPaginationData.items;
                               return options
-                                  .where((notam) =>
-                                      notam.name!
+                                  .where((dronestracking) =>
+                                      dronestracking.name!
                                           .toLowerCase()
                                           .contains(pattern.toLowerCase()) ||
-                                      notam.id
+                                      dronestracking.id
                                           .toString()
                                           .contains(pattern.toLowerCase()))
                                   .toList();
                             },
-                            itemBuilder: (context, notam) {
+                            itemBuilder: (context, dronestracking) {
                               return ListTile(
-                                title: Text('${notam.name} <id: ${notam.id}>'),
+                                title: Text(
+                                    '${dronestracking.name} <id: ${dronestracking.id}>'),
                               );
                             },
-                            onSelected: (NOTAM value) {
+                            onSelected: (DronesTracking value) {
                               setState(() {
                                 isValueChanged = value.id != initialValue;
                                 currentValue = value.id!;
@@ -559,20 +485,20 @@ class NOTAMFieldWidgetState extends State<NOTAMFieldWidget> {
           child: ElevatedButton(
             onPressed: () async {
               try {
-                NOTAM notam = await container
-                    .read(getNOTAMProvider(widget.value!).future);
+                DronesTracking dronestracking = await container
+                    .read(getDronesTrackingProvider(widget.value!).future);
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) =>
-                        NOTAMWidget(element: notam, isEditing: true),
+                    builder: (context) => DronesTrackingWidget(
+                        element: dronestracking, isEditing: true),
                   ),
                 );
               } catch (error) {
-                print('Failed to fetch notam: $error');
+                print('Failed to fetch dronestracking: $error');
               }
             },
-            child: const Text('View NOTAM'),
+            child: const Text('View DronesTracking'),
           ),
         ),
       ],
@@ -580,14 +506,14 @@ class NOTAMFieldWidgetState extends State<NOTAMFieldWidget> {
   }
 }
 
-class NOTAMMultiFieldWidget extends StatefulWidget {
+class DronesTrackingMultiFieldWidget extends StatefulWidget {
   final String fieldName;
   final String fieldDescription;
   final bool editable;
   final String placeholder;
   final List<String>? values;
 
-  const NOTAMMultiFieldWidget({
+  const DronesTrackingMultiFieldWidget({
     Key? key,
     required this.fieldName,
     required this.fieldDescription,
@@ -597,15 +523,17 @@ class NOTAMMultiFieldWidget extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  NOTAMMultiFieldWidgetState createState() => NOTAMMultiFieldWidgetState();
+  DronesTrackingMultiFieldWidgetState createState() =>
+      DronesTrackingMultiFieldWidgetState();
 }
 
-class NOTAMMultiFieldWidgetState extends State<NOTAMMultiFieldWidget> {
+class DronesTrackingMultiFieldWidgetState
+    extends State<DronesTrackingMultiFieldWidget> {
   final TextEditingController _typeAheadController = TextEditingController();
   bool isValueChanged = false;
   late List<String> initialValues = [];
   late List<String> currentValues = [];
-  late List<NOTAM> options = [];
+  late List<DronesTracking> options = [];
 
   @override
   void initState() {
@@ -618,13 +546,13 @@ class NOTAMMultiFieldWidgetState extends State<NOTAMMultiFieldWidget> {
     initialValues = widget.values ?? [];
     currentValues = initialValues;
     if (widget.values != null) {
-      List<NOTAM> notamList = await Future.wait(
+      List<DronesTracking> dronestrackingList = await Future.wait(
         (widget.values ?? []).where((value) => value != '').map((value) async {
-          return await container.read(getNOTAMProvider(value).future);
+          return await container.read(getDronesTrackingProvider(value).future);
         }),
       );
-      String concatenatedText = '${notamList.map((notam) {
-        return '${notam.name} <id: ${notam.id}>';
+      String concatenatedText = '${dronestrackingList.map((dronestracking) {
+        return '${dronestracking.name} <id: ${dronestracking.id}>';
       }).join(', ')}, ';
       _typeAheadController.text = concatenatedText;
     } else {
@@ -671,7 +599,7 @@ class NOTAMMultiFieldWidgetState extends State<NOTAMMultiFieldWidget> {
                 children: [
                   widget.editable
                       ? Expanded(
-                          child: TypeAheadField<NOTAM>(
+                          child: TypeAheadField<DronesTracking>(
                             controller: _typeAheadController,
                             suggestionsCallback: (String pattern) async {
                               final idRegex =
@@ -698,46 +626,50 @@ class NOTAMMultiFieldWidgetState extends State<NOTAMMultiFieldWidget> {
                               }
                               final inputParts = pattern.split(',').last.trim();
                               container
-                                  .read(notamPaginationProvider.notifier)
+                                  .read(
+                                      dronestrackingPaginationProvider.notifier)
                                   .setFilters({
                                 'id': {'\$nin': currentValues}
                               });
-                              final notamPaginationData = await container.read(
-                                  getAllNOTAMProvider(container
-                                          .read(notamPaginationProvider))
-                                      .future);
-                              final options = notamPaginationData.items;
+                              final dronestrackingPaginationData =
+                                  await container.read(
+                                      getAllDronesTrackingProvider(container.read(
+                                              dronestrackingPaginationProvider))
+                                          .future);
+                              final options =
+                                  dronestrackingPaginationData.items;
                               return options
-                                  .where((notam) =>
-                                      notam.name!
+                                  .where((dronestracking) =>
+                                      dronestracking.name!
                                           .toLowerCase()
                                           .contains(inputParts.toLowerCase()) ||
-                                      notam.id
+                                      dronestracking.id
                                           .toString()
                                           .toLowerCase()
                                           .contains(inputParts.toLowerCase()))
                                   .toList();
                             },
-                            itemBuilder: (context, notam) {
+                            itemBuilder: (context, dronestracking) {
                               return ListTile(
-                                title: Text('${notam.name} <id: ${notam.id}>'),
+                                title: Text(
+                                    '${dronestracking.name} <id: ${dronestracking.id}>'),
                               );
                             },
-                            onSelected: (NOTAM value) async {
+                            onSelected: (DronesTracking value) async {
                               isValueChanged =
                                   !initialValues.contains(value.id);
                               currentValues.add(value.id!);
 
-                              List<NOTAM> notamList = await Future.wait(
-                                  (currentValues)
+                              List<DronesTracking> dronestrackingList =
+                                  await Future.wait((currentValues)
                                       .where((value) => value != '')
                                       .map((value) async {
-                                return await container
-                                    .read(getNOTAMProvider(value).future);
+                                return await container.read(
+                                    getDronesTrackingProvider(value).future);
                               }));
                               String concatenatedText =
-                                  '${notamList.map((notam) {
-                                return '${notam.name} <id: ${notam.id}>';
+                                  '${dronestrackingList.map((dronestracking) {
+                                return '${dronestracking.name} <id: ${dronestracking.id}>';
                               }).join(', ')}, ';
 
                               setState(() {
@@ -781,14 +713,15 @@ class NOTAMMultiFieldWidgetState extends State<NOTAMMultiFieldWidget> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => NOTAMListView(extraFilters: query),
+                    builder: (context) =>
+                        DronesTrackingListView(extraFilters: query),
                   ),
                 );
               } catch (error) {
-                print('Failed to fetch notams: $error');
+                print('Failed to fetch dronestrackings: $error');
               }
             },
-            child: const Text('View NOTAMs'),
+            child: const Text('View DronesTrackings'),
           ),
         ),
       ],
@@ -800,15 +733,15 @@ class NOTAMMultiFieldWidgetState extends State<NOTAMMultiFieldWidget> {
 // HomeWidgetElementGenerator
 // **************************************************************************
 
-class NOTAMHomeWidget extends StatelessWidget {
-  const NOTAMHomeWidget({super.key});
+class DronesTrackingHomeWidget extends StatelessWidget {
+  const DronesTrackingHomeWidget({super.key});
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => NOTAMListView()),
+          MaterialPageRoute(builder: (context) => DronesTrackingListView()),
         );
       },
       child: Container(
@@ -822,14 +755,14 @@ class NOTAMHomeWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image.asset(
-              'assets/notam.png',
+              'assets/dronestracking.png',
               width: 40.0,
               height: 40.0,
               color: Colors.white,
             ),
             const SizedBox(height: 8.0),
             const Text(
-              "NOTAM",
+              "DronesTracking",
               style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
@@ -846,49 +779,46 @@ class NOTAMHomeWidget extends StatelessWidget {
 // JsonSerializableGenerator
 // **************************************************************************
 
-NOTAM _$NOTAMFromJson(Map<String, dynamic> json) => NOTAM(
-      area: Polygon.fromJson(json['area'] as Map<String, dynamic>),
-      description: json['description'] as String?,
-      end_date: DateTime.parse(json['end_date'] as String),
+DronesTracking _$DronesTrackingFromJson(Map<String, dynamic> json) =>
+    DronesTracking(
+      altitude: (json['altitude'] as num).toDouble(),
+      coordinates: Point.fromJson(json['coordinates'] as Map<String, dynamic>),
+      droneId: json['droneId'] as String,
+      flightplanId: json['flightplanId'] as String?,
       id: json['id'] as String?,
-      issuing_authority: json['issuing_authority'] as String?,
       name: json['name'] as String,
-      reference: json['reference'] as String?,
-      start_date: DateTime.parse(json['start_date'] as String),
-      status: json['status'] as String?,
-      type: json['type'] as String?,
+      timestamp: DateTime.parse(json['timestamp'] as String),
     );
 
-Map<String, dynamic> _$NOTAMToJson(NOTAM instance) => <String, dynamic>{
-      'area': instance.area,
-      'description': instance.description,
-      'end_date': instance.end_date.toIso8601String(),
+Map<String, dynamic> _$DronesTrackingToJson(DronesTracking instance) =>
+    <String, dynamic>{
+      'altitude': instance.altitude,
+      'coordinates': instance.coordinates,
+      'droneId': instance.droneId,
+      'flightplanId': instance.flightplanId,
       'id': instance.id,
-      'issuing_authority': instance.issuing_authority,
       'name': instance.name,
-      'reference': instance.reference,
-      'start_date': instance.start_date.toIso8601String(),
-      'status': instance.status,
-      'type': instance.type,
+      'timestamp': instance.timestamp.toIso8601String(),
     };
 
 // **************************************************************************
 // ListWidgetGenerator
 // **************************************************************************
 
-class NOTAMListView extends ConsumerStatefulWidget {
+class DronesTrackingListView extends ConsumerStatefulWidget {
   final Map<String, dynamic>? extraFilters;
   final Map<String, dynamic> currentFilters = {};
   late bool _initialized = false;
   late List<bool> selectedStates;
 
-  NOTAMListView({Key? key, this.extraFilters}) : super(key: key);
+  DronesTrackingListView({Key? key, this.extraFilters}) : super(key: key);
 
   @override
-  _NOTAMListViewState createState() => _NOTAMListViewState();
+  _DronesTrackingListViewState createState() => _DronesTrackingListViewState();
 }
 
-class _NOTAMListViewState extends ConsumerState<NOTAMListView> {
+class _DronesTrackingListViewState
+    extends ConsumerState<DronesTrackingListView> {
   @override
   void initState() {
     super.initState();
@@ -899,22 +829,23 @@ class _NOTAMListViewState extends ConsumerState<NOTAMListView> {
         });
       }
       ref
-          .read(notamPaginationProvider.notifier)
+          .read(dronestrackingPaginationProvider.notifier)
           .setFilters(widget.extraFilters!);
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final paginationState = ref.watch(notamPaginationProvider);
+    final paginationState = ref.watch(dronestrackingPaginationProvider);
 
-    final notamsAsyncValue = ref.watch(getAllNOTAMProvider(paginationState));
+    final dronestrackingsAsyncValue =
+        ref.watch(getAllDronesTrackingProvider(paginationState));
 
     final Map<String, int> columnSortStates =
-        ref.watch(notamPaginationProvider.notifier).getOrders();
+        ref.watch(dronestrackingPaginationProvider.notifier).getOrders();
 
     final Map<String, dynamic> fieldsFilterStates =
-        ref.watch(notamPaginationProvider.notifier).getFilters();
+        ref.watch(dronestrackingPaginationProvider.notifier).getFilters();
 
     void onSort(String columnName) {
       var state = columnSortStates[columnName];
@@ -925,13 +856,15 @@ class _NOTAMListViewState extends ConsumerState<NOTAMListView> {
       } else if (state == -1) {
         columnSortStates.remove(columnName);
       }
-      ref.read(notamPaginationProvider.notifier).setOrders(columnSortStates);
+      ref
+          .read(dronestrackingPaginationProvider.notifier)
+          .setOrders(columnSortStates);
     }
 
     void onFilter(String fieldName, dynamic filterValue) {
       widget.currentFilters[fieldName] = filterValue;
       ref
-          .read(notamPaginationProvider.notifier)
+          .read(dronestrackingPaginationProvider.notifier)
           .setFilters(widget.currentFilters);
     }
 
@@ -941,9 +874,35 @@ class _NOTAMListViewState extends ConsumerState<NOTAMListView> {
       }
     }
 
+    Future<List<Drone>> fetchDroneList(List<String>? ids) async {
+      if (ids == null || ids.isEmpty) {
+        return [];
+      }
+      final nonEmptyIds = ids.where((id) => id.isNotEmpty).toList();
+      List<Drone> droneList = await Future.wait(
+        nonEmptyIds.map((id) async {
+          return await ref.read(getDroneProvider(id).future);
+        }),
+      );
+      return droneList;
+    }
+
+    Future<List<FlightPlan>> fetchFlightPlanList(List<String>? ids) async {
+      if (ids == null || ids.isEmpty) {
+        return [];
+      }
+      final nonEmptyIds = ids.where((id) => id.isNotEmpty).toList();
+      List<FlightPlan> flightplanList = await Future.wait(
+        nonEmptyIds.map((id) async {
+          return await ref.read(getFlightPlanProvider(id).future);
+        }),
+      );
+      return flightplanList;
+    }
+
     return Scaffold(
         appBar: AppBar(
-          title: const Text('NOTAM List'),
+          title: const Text('DronesTracking List'),
           actions: [
             Container(
               margin: const EdgeInsets.only(right: 10),
@@ -952,7 +911,7 @@ class _NOTAMListViewState extends ConsumerState<NOTAMListView> {
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const NOTAMWidget(
+                      builder: (context) => const DronesTrackingWidget(
                         isEditing: false,
                       ),
                     ),
@@ -984,20 +943,20 @@ class _NOTAMListViewState extends ConsumerState<NOTAMListView> {
                     return Colors.transparent;
                   }),
                 ),
-                child: const Text('Create NOTAM'),
+                child: const Text('Create DronesTracking'),
               ),
             ),
           ],
         ),
-        body: notamsAsyncValue.when(
+        body: dronestrackingsAsyncValue.when(
           loading: () => const CircularProgressIndicator(),
           error: (error, stackTrace) => Text('Error: $error'),
-          data: (NOTAMPaginationData data) {
-            final notams = data.items;
+          data: (DronesTrackingPaginationData data) {
+            final dronestrackings = data.items;
 
             if (!widget._initialized) {
               widget.selectedStates =
-                  List.generate(notams.length, (index) => false);
+                  List.generate(dronestrackings.length, (index) => false);
               widget._initialized = true;
             }
 
@@ -1006,16 +965,13 @@ class _NOTAMListViewState extends ConsumerState<NOTAMListView> {
                 children: [
                   CustomSearchBar(
                     fields: const {
-                      'area': 'Polygon',
-                      'description': 'String?',
-                      'end_date': 'DateTime',
+                      'altitude': 'double',
+                      'coordinates': 'Point',
+                      'droneId': 'String',
+                      'flightplanId': 'String?',
                       'id': 'String?',
-                      'issuing_authority': 'String?',
                       'name': 'String',
-                      'reference': 'String?',
-                      'start_date': 'DateTime',
-                      'status': 'String?',
-                      'type': 'String?'
+                      'timestamp': 'DateTime'
                     },
                     filters: fieldsFilterStates,
                     onFilterChanged: onFilter,
@@ -1025,7 +981,9 @@ class _NOTAMListViewState extends ConsumerState<NOTAMListView> {
                     IconButton(
                       icon: const Icon(Icons.refresh, color: Colors.grey),
                       onPressed: () {
-                        ref.read(notamPaginationProvider.notifier).setPage(1);
+                        ref
+                            .read(dronestrackingPaginationProvider.notifier)
+                            .setPage(1);
                       },
                     ),
                     Container(
@@ -1040,11 +998,12 @@ class _NOTAMListViewState extends ConsumerState<NOTAMListView> {
                                       widget.selectedStates[index] ? index : -1,
                                 ).where((index) => index != -1).toList();
 
-                                List<NOTAM> selectedNOTAMs = selectedIndices
-                                    .map((index) => notams[index])
-                                    .toList();
-                                _onDeleteElement(
-                                    selectedNOTAMs, ref, paginationState);
+                                List<DronesTracking> selectedDronesTrackings =
+                                    selectedIndices
+                                        .map((index) => dronestrackings[index])
+                                        .toList();
+                                _onDeleteElement(selectedDronesTrackings, ref,
+                                    paginationState);
                               }
                             : null,
                         style: ButtonStyle(
@@ -1141,7 +1100,44 @@ class _NOTAMListViewState extends ConsumerState<NOTAMListView> {
                                                 MainAxisAlignment.center,
                                             children: [
                                               const Text(
-                                                'Description',
+                                                'Drone',
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Color.fromARGB(
+                                                        255, 94, 54, 54)),
+                                                textAlign: TextAlign.center,
+                                              ),
+                                              if (columnSortStates['droneId'] !=
+                                                  null) ...[
+                                                Icon(
+                                                  columnSortStates['droneId'] ==
+                                                          1
+                                                      ? Icons
+                                                          .arrow_drop_up_rounded
+                                                      : Icons
+                                                          .arrow_drop_down_rounded,
+                                                  color: Colors.black,
+                                                ),
+                                                Text(
+                                                  '${columnSortStates.keys.toList().indexOf('droneId') + 1}',
+                                                  style: const TextStyle(
+                                                      fontSize: 10),
+                                                ),
+                                              ],
+                                            ],
+                                          ),
+                                        ),
+                                        onSort: (columnIndex, ascending) =>
+                                            {onSort('droneId')},
+                                      ),
+                                      DataColumn(
+                                        label: Expanded(
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              const Text(
+                                                'FlightPlan',
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.bold,
                                                     color: Color.fromARGB(
@@ -1149,11 +1145,11 @@ class _NOTAMListViewState extends ConsumerState<NOTAMListView> {
                                                 textAlign: TextAlign.center,
                                               ),
                                               if (columnSortStates[
-                                                      'description'] !=
+                                                      'flightplanId'] !=
                                                   null) ...[
                                                 Icon(
                                                   columnSortStates[
-                                                              'description'] ==
+                                                              'flightplanId'] ==
                                                           1
                                                       ? Icons
                                                           .arrow_drop_up_rounded
@@ -1162,7 +1158,7 @@ class _NOTAMListViewState extends ConsumerState<NOTAMListView> {
                                                   color: Colors.black,
                                                 ),
                                                 Text(
-                                                  '${columnSortStates.keys.toList().indexOf('description') + 1}',
+                                                  '${columnSortStates.keys.toList().indexOf('flightplanId') + 1}',
                                                   style: const TextStyle(
                                                       fontSize: 10),
                                                 ),
@@ -1171,7 +1167,7 @@ class _NOTAMListViewState extends ConsumerState<NOTAMListView> {
                                           ),
                                         ),
                                         onSort: (columnIndex, ascending) =>
-                                            {onSort('description')},
+                                            {onSort('flightplanId')},
                                       ),
                                       DataColumn(
                                         label: Expanded(
@@ -1180,43 +1176,7 @@ class _NOTAMListViewState extends ConsumerState<NOTAMListView> {
                                                 MainAxisAlignment.center,
                                             children: [
                                               const Text(
-                                                'Type',
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Color.fromARGB(
-                                                        255, 94, 54, 54)),
-                                                textAlign: TextAlign.center,
-                                              ),
-                                              if (columnSortStates['type'] !=
-                                                  null) ...[
-                                                Icon(
-                                                  columnSortStates['type'] == 1
-                                                      ? Icons
-                                                          .arrow_drop_up_rounded
-                                                      : Icons
-                                                          .arrow_drop_down_rounded,
-                                                  color: Colors.black,
-                                                ),
-                                                Text(
-                                                  '${columnSortStates.keys.toList().indexOf('type') + 1}',
-                                                  style: const TextStyle(
-                                                      fontSize: 10),
-                                                ),
-                                              ],
-                                            ],
-                                          ),
-                                        ),
-                                        onSort: (columnIndex, ascending) =>
-                                            {onSort('type')},
-                                      ),
-                                      DataColumn(
-                                        label: Expanded(
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              const Text(
-                                                'Start Date',
+                                                'Coordinates',
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.bold,
                                                     color: Color.fromARGB(
@@ -1224,11 +1184,11 @@ class _NOTAMListViewState extends ConsumerState<NOTAMListView> {
                                                 textAlign: TextAlign.center,
                                               ),
                                               if (columnSortStates[
-                                                      'start_date'] !=
+                                                      'coordinates'] !=
                                                   null) ...[
                                                 Icon(
                                                   columnSortStates[
-                                                              'start_date'] ==
+                                                              'coordinates'] ==
                                                           1
                                                       ? Icons
                                                           .arrow_drop_up_rounded
@@ -1237,7 +1197,7 @@ class _NOTAMListViewState extends ConsumerState<NOTAMListView> {
                                                   color: Colors.black,
                                                 ),
                                                 Text(
-                                                  '${columnSortStates.keys.toList().indexOf('start_date') + 1}',
+                                                  '${columnSortStates.keys.toList().indexOf('coordinates') + 1}',
                                                   style: const TextStyle(
                                                       fontSize: 10),
                                                 ),
@@ -1246,7 +1206,7 @@ class _NOTAMListViewState extends ConsumerState<NOTAMListView> {
                                           ),
                                         ),
                                         onSort: (columnIndex, ascending) =>
-                                            {onSort('start_date')},
+                                            {onSort('coordinates')},
                                       ),
                                       DataColumn(
                                         label: Expanded(
@@ -1255,7 +1215,7 @@ class _NOTAMListViewState extends ConsumerState<NOTAMListView> {
                                                 MainAxisAlignment.center,
                                             children: [
                                               const Text(
-                                                'End Date',
+                                                'Altitude',
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.bold,
                                                     color: Color.fromARGB(
@@ -1263,11 +1223,11 @@ class _NOTAMListViewState extends ConsumerState<NOTAMListView> {
                                                 textAlign: TextAlign.center,
                                               ),
                                               if (columnSortStates[
-                                                      'end_date'] !=
+                                                      'altitude'] !=
                                                   null) ...[
                                                 Icon(
                                                   columnSortStates[
-                                                              'end_date'] ==
+                                                              'altitude'] ==
                                                           1
                                                       ? Icons
                                                           .arrow_drop_up_rounded
@@ -1276,7 +1236,7 @@ class _NOTAMListViewState extends ConsumerState<NOTAMListView> {
                                                   color: Colors.black,
                                                 ),
                                                 Text(
-                                                  '${columnSortStates.keys.toList().indexOf('end_date') + 1}',
+                                                  '${columnSortStates.keys.toList().indexOf('altitude') + 1}',
                                                   style: const TextStyle(
                                                       fontSize: 10),
                                                 ),
@@ -1285,7 +1245,7 @@ class _NOTAMListViewState extends ConsumerState<NOTAMListView> {
                                           ),
                                         ),
                                         onSort: (columnIndex, ascending) =>
-                                            {onSort('end_date')},
+                                            {onSort('altitude')},
                                       ),
                                       DataColumn(
                                         label: Expanded(
@@ -1294,7 +1254,7 @@ class _NOTAMListViewState extends ConsumerState<NOTAMListView> {
                                                 MainAxisAlignment.center,
                                             children: [
                                               const Text(
-                                                'Issuing Authority',
+                                                'Timestamp',
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.bold,
                                                     color: Color.fromARGB(
@@ -1302,11 +1262,11 @@ class _NOTAMListViewState extends ConsumerState<NOTAMListView> {
                                                 textAlign: TextAlign.center,
                                               ),
                                               if (columnSortStates[
-                                                      'issuing_authority'] !=
+                                                      'timestamp'] !=
                                                   null) ...[
                                                 Icon(
                                                   columnSortStates[
-                                                              'issuing_authority'] ==
+                                                              'timestamp'] ==
                                                           1
                                                       ? Icons
                                                           .arrow_drop_up_rounded
@@ -1315,7 +1275,7 @@ class _NOTAMListViewState extends ConsumerState<NOTAMListView> {
                                                   color: Colors.black,
                                                 ),
                                                 Text(
-                                                  '${columnSortStates.keys.toList().indexOf('issuing_authority') + 1}',
+                                                  '${columnSortStates.keys.toList().indexOf('timestamp') + 1}',
                                                   style: const TextStyle(
                                                       fontSize: 10),
                                                 ),
@@ -1324,184 +1284,248 @@ class _NOTAMListViewState extends ConsumerState<NOTAMListView> {
                                           ),
                                         ),
                                         onSort: (columnIndex, ascending) =>
-                                            {onSort('issuing_authority')},
-                                      ),
-                                      DataColumn(
-                                        label: Expanded(
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              const Text(
-                                                'Status',
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Color.fromARGB(
-                                                        255, 94, 54, 54)),
-                                                textAlign: TextAlign.center,
-                                              ),
-                                              if (columnSortStates['status'] !=
-                                                  null) ...[
-                                                Icon(
-                                                  columnSortStates['status'] ==
-                                                          1
-                                                      ? Icons
-                                                          .arrow_drop_up_rounded
-                                                      : Icons
-                                                          .arrow_drop_down_rounded,
-                                                  color: Colors.black,
-                                                ),
-                                                Text(
-                                                  '${columnSortStates.keys.toList().indexOf('status') + 1}',
-                                                  style: const TextStyle(
-                                                      fontSize: 10),
-                                                ),
-                                              ],
-                                            ],
-                                          ),
-                                        ),
-                                        onSort: (columnIndex, ascending) =>
-                                            {onSort('status')},
-                                      ),
-                                      DataColumn(
-                                        label: Expanded(
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              const Text(
-                                                'Reference',
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Color.fromARGB(
-                                                        255, 94, 54, 54)),
-                                                textAlign: TextAlign.center,
-                                              ),
-                                              if (columnSortStates[
-                                                      'reference'] !=
-                                                  null) ...[
-                                                Icon(
-                                                  columnSortStates[
-                                                              'reference'] ==
-                                                          1
-                                                      ? Icons
-                                                          .arrow_drop_up_rounded
-                                                      : Icons
-                                                          .arrow_drop_down_rounded,
-                                                  color: Colors.black,
-                                                ),
-                                                Text(
-                                                  '${columnSortStates.keys.toList().indexOf('reference') + 1}',
-                                                  style: const TextStyle(
-                                                      fontSize: 10),
-                                                ),
-                                              ],
-                                            ],
-                                          ),
-                                        ),
-                                        onSort: (columnIndex, ascending) =>
-                                            {onSort('reference')},
-                                      ),
-                                      DataColumn(
-                                        label: Expanded(
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              const Text(
-                                                'Area',
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Color.fromARGB(
-                                                        255, 94, 54, 54)),
-                                                textAlign: TextAlign.center,
-                                              ),
-                                              if (columnSortStates['area'] !=
-                                                  null) ...[
-                                                Icon(
-                                                  columnSortStates['area'] == 1
-                                                      ? Icons
-                                                          .arrow_drop_up_rounded
-                                                      : Icons
-                                                          .arrow_drop_down_rounded,
-                                                  color: Colors.black,
-                                                ),
-                                                Text(
-                                                  '${columnSortStates.keys.toList().indexOf('area') + 1}',
-                                                  style: const TextStyle(
-                                                      fontSize: 10),
-                                                ),
-                                              ],
-                                            ],
-                                          ),
-                                        ),
-                                        onSort: (columnIndex, ascending) =>
-                                            {onSort('area')},
+                                            {onSort('timestamp')},
                                       ),
                                     ],
-                                    rows: List<DataRow>.generate(notams.length,
-                                        (index) {
-                                      var notam = notams[index];
+                                    rows: List<DataRow>.generate(
+                                        dronestrackings.length, (index) {
+                                      var dronestracking =
+                                          dronestrackings[index];
 
                                       return DataRow(
                                         selected: widget.selectedStates[index],
                                         cells: [
                                           DataCell(
                                             Center(
-                                                child: Text(
-                                                    notam.name.toString())),
-                                            onTap: () =>
-                                                {_navigateElement(notam)},
-                                          ),
-                                          DataCell(
-                                            Center(
-                                                child: Text(notam.description
+                                                child: Text(dronestracking.name
                                                     .toString())),
-                                            onTap: () =>
-                                                {_navigateElement(notam)},
+                                            onTap: () => {
+                                              _navigateElement(dronestracking)
+                                            },
                                           ),
                                           DataCell(
                                             Center(
-                                                child: Text(
-                                                    notam.type.toString())),
-                                            onTap: () =>
-                                                {_navigateElement(notam)},
+                                              child: FutureBuilder<List<Drone>>(
+                                                future: fetchDroneList([
+                                                  dronestracking.droneId ?? ''
+                                                ]),
+                                                builder: (context, snapshot) {
+                                                  if (snapshot.connectionState ==
+                                                          ConnectionState
+                                                              .waiting ||
+                                                      snapshot.data == null) {
+                                                    return const CircularProgressIndicator();
+                                                  } else {
+                                                    return Wrap(
+                                                      spacing: 4,
+                                                      children: snapshot.data!
+                                                          .map((drone) {
+                                                        return ElevatedButton(
+                                                          onPressed: () {
+                                                            Navigator.push(
+                                                              context,
+                                                              MaterialPageRoute(
+                                                                builder:
+                                                                    (context) =>
+                                                                        DroneWidget(
+                                                                  element:
+                                                                      drone,
+                                                                  isEditing:
+                                                                      true,
+                                                                ),
+                                                              ),
+                                                            );
+                                                          },
+                                                          style: ButtonStyle(
+                                                            shape: MaterialStateProperty
+                                                                .all<
+                                                                    RoundedRectangleBorder>(
+                                                              RoundedRectangleBorder(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            5),
+                                                              ),
+                                                            ),
+                                                            padding:
+                                                                MaterialStateProperty
+                                                                    .all<
+                                                                        EdgeInsetsGeometry>(
+                                                              EdgeInsets
+                                                                  .symmetric(
+                                                                      horizontal:
+                                                                          1,
+                                                                      vertical:
+                                                                          1),
+                                                            ),
+                                                            backgroundColor:
+                                                                MaterialStateProperty
+                                                                    .all<Color>(
+                                                                        Styles
+                                                                            .buttonPrimaryColor),
+                                                            elevation: MaterialStateProperty
+                                                                .resolveWith<
+                                                                        double>(
+                                                                    (states) {
+                                                              if (states.contains(
+                                                                      MaterialState
+                                                                          .hovered) ||
+                                                                  states.contains(
+                                                                      MaterialState
+                                                                          .pressed)) {
+                                                                return 0;
+                                                              }
+                                                              return 0;
+                                                            }),
+                                                            foregroundColor:
+                                                                MaterialStateProperty
+                                                                    .all<Color>(
+                                                                        Colors
+                                                                            .white),
+                                                            overlayColor:
+                                                                MaterialStateProperty
+                                                                    .resolveWith<
+                                                                            Color>(
+                                                                        (states) {
+                                                              if (states.contains(
+                                                                  MaterialState
+                                                                      .hovered)) {
+                                                                return Styles
+                                                                    .buttonPrimaryColorHover;
+                                                              }
+                                                              return Colors
+                                                                  .transparent;
+                                                            }),
+                                                          ),
+                                                          child: Text(
+                                                            drone.name!,
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .white),
+                                                          ),
+                                                        );
+                                                      }).toList(),
+                                                    );
+                                                  }
+                                                },
+                                              ),
+                                            ),
+                                            onTap: () => {
+                                              _navigateElement(dronestracking)
+                                            },
                                           ),
                                           DataCell(
                                             Center(
-                                                child: Text(notam.start_date
-                                                    .toString())),
-                                            onTap: () =>
-                                                {_navigateElement(notam)},
-                                          ),
-                                          DataCell(
-                                            Center(
-                                                child: Text(
-                                                    notam.end_date.toString())),
-                                            onTap: () =>
-                                                {_navigateElement(notam)},
-                                          ),
-                                          DataCell(
-                                            Center(
-                                                child: Text(notam
-                                                    .issuing_authority
-                                                    .toString())),
-                                            onTap: () =>
-                                                {_navigateElement(notam)},
-                                          ),
-                                          DataCell(
-                                            Center(
-                                                child: Text(
-                                                    notam.status.toString())),
-                                            onTap: () =>
-                                                {_navigateElement(notam)},
-                                          ),
-                                          DataCell(
-                                            Center(
-                                                child: Text(notam.reference
-                                                    .toString())),
-                                            onTap: () =>
-                                                {_navigateElement(notam)},
+                                              child: FutureBuilder<
+                                                  List<FlightPlan>>(
+                                                future: fetchFlightPlanList([
+                                                  dronestracking.flightplanId ??
+                                                      ''
+                                                ]),
+                                                builder: (context, snapshot) {
+                                                  if (snapshot.connectionState ==
+                                                          ConnectionState
+                                                              .waiting ||
+                                                      snapshot.data == null) {
+                                                    return const CircularProgressIndicator();
+                                                  } else {
+                                                    return Wrap(
+                                                      spacing: 4,
+                                                      children: snapshot.data!
+                                                          .map((flightplan) {
+                                                        return ElevatedButton(
+                                                          onPressed: () {
+                                                            Navigator.push(
+                                                              context,
+                                                              MaterialPageRoute(
+                                                                builder:
+                                                                    (context) =>
+                                                                        FlightPlanWidget(
+                                                                  element:
+                                                                      flightplan,
+                                                                  isEditing:
+                                                                      true,
+                                                                ),
+                                                              ),
+                                                            );
+                                                          },
+                                                          style: ButtonStyle(
+                                                            shape: MaterialStateProperty
+                                                                .all<
+                                                                    RoundedRectangleBorder>(
+                                                              RoundedRectangleBorder(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            5),
+                                                              ),
+                                                            ),
+                                                            padding:
+                                                                MaterialStateProperty
+                                                                    .all<
+                                                                        EdgeInsetsGeometry>(
+                                                              EdgeInsets
+                                                                  .symmetric(
+                                                                      horizontal:
+                                                                          1,
+                                                                      vertical:
+                                                                          1),
+                                                            ),
+                                                            backgroundColor:
+                                                                MaterialStateProperty
+                                                                    .all<Color>(
+                                                                        Styles
+                                                                            .buttonPrimaryColor),
+                                                            elevation: MaterialStateProperty
+                                                                .resolveWith<
+                                                                        double>(
+                                                                    (states) {
+                                                              if (states.contains(
+                                                                      MaterialState
+                                                                          .hovered) ||
+                                                                  states.contains(
+                                                                      MaterialState
+                                                                          .pressed)) {
+                                                                return 0;
+                                                              }
+                                                              return 0;
+                                                            }),
+                                                            foregroundColor:
+                                                                MaterialStateProperty
+                                                                    .all<Color>(
+                                                                        Colors
+                                                                            .white),
+                                                            overlayColor:
+                                                                MaterialStateProperty
+                                                                    .resolveWith<
+                                                                            Color>(
+                                                                        (states) {
+                                                              if (states.contains(
+                                                                  MaterialState
+                                                                      .hovered)) {
+                                                                return Styles
+                                                                    .buttonPrimaryColorHover;
+                                                              }
+                                                              return Colors
+                                                                  .transparent;
+                                                            }),
+                                                          ),
+                                                          child: Text(
+                                                            flightplan.name!,
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .white),
+                                                          ),
+                                                        );
+                                                      }).toList(),
+                                                    );
+                                                  }
+                                                },
+                                              ),
+                                            ),
+                                            onTap: () => {
+                                              _navigateElement(dronestracking)
+                                            },
                                           ),
                                           DataCell(
                                             Center(
@@ -1511,19 +1535,19 @@ class _NOTAMListViewState extends ConsumerState<NOTAMListView> {
                                                   context,
                                                   MaterialPageRoute(
                                                     builder: (context) =>
-                                                        MapScreenView(
-                                                            PolygonView(
-                                                                notam
-                                                                    .area!
-                                                                    .geometry
-                                                                    .coordinates,
-                                                                notam.area!
-                                                                    .properties,
-                                                                MediaQuery.of(
-                                                                        context)
-                                                                    .size
-                                                                    .height,
-                                                                false)),
+                                                        MapScreenView(PointView(
+                                                            dronestracking
+                                                                .coordinates!
+                                                                .geometry
+                                                                .coordinates,
+                                                            dronestracking
+                                                                .coordinates!
+                                                                .properties,
+                                                            MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .height,
+                                                            true)),
                                                   ),
                                                 );
                                               },
@@ -1576,13 +1600,32 @@ class _NOTAMListViewState extends ConsumerState<NOTAMListView> {
                                                 }),
                                               ),
                                               child: const Text(
-                                                "Polygon",
+                                                "Point",
                                                 style: TextStyle(
                                                     color: Colors.white),
                                               ),
                                             )),
-                                            onTap: () =>
-                                                {_navigateElement(notam)},
+                                            onTap: () => {
+                                              _navigateElement(dronestracking)
+                                            },
+                                          ),
+                                          DataCell(
+                                            Center(
+                                                child: Text(dronestracking
+                                                    .altitude
+                                                    .toString())),
+                                            onTap: () => {
+                                              _navigateElement(dronestracking)
+                                            },
+                                          ),
+                                          DataCell(
+                                            Center(
+                                                child: Text(dronestracking
+                                                    .timestamp
+                                                    .toString())),
+                                            onTap: () => {
+                                              _navigateElement(dronestracking)
+                                            },
                                           ),
                                         ],
                                         onSelectChanged: (selected) {
@@ -1615,22 +1658,23 @@ class _NOTAMListViewState extends ConsumerState<NOTAMListView> {
   }
 
   void _onPageButtonPressed(int pageNumber, WidgetRef ref,
-      NOTAMPaginationState paginationState, int maxPages) {
+      DronesTrackingPaginationState paginationState, int maxPages) {
     if (pageNumber <= maxPages) {
-      ref.read(notamPaginationProvider.notifier).setPage(pageNumber);
+      ref.read(dronestrackingPaginationProvider.notifier).setPage(pageNumber);
     }
   }
 
-  void _navigateElement(NOTAM notam) {
+  void _navigateElement(DronesTracking dronestracking) {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
-          builder: (context) => NOTAMWidget(element: notam, isEditing: true)),
+          builder: (context) =>
+              DronesTrackingWidget(element: dronestracking, isEditing: true)),
     );
   }
 
-  void _onDeleteElement(
-      List<NOTAM> notams, WidgetRef ref, NOTAMPaginationState paginationState) {
+  void _onDeleteElement(List<DronesTracking> dronestrackings, WidgetRef ref,
+      DronesTrackingPaginationState paginationState) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -1646,7 +1690,7 @@ class _NOTAMListViewState extends ConsumerState<NOTAMListView> {
             ),
             TextButton(
               onPressed: () {
-                _deleteRecords(notams, ref, paginationState);
+                _deleteRecords(dronestrackings, ref, paginationState);
                 Navigator.of(context).pop();
                 setState(() {});
               },
@@ -1658,40 +1702,41 @@ class _NOTAMListViewState extends ConsumerState<NOTAMListView> {
     );
   }
 
-  Future<void> _deleteRecords(List<NOTAM> notams, WidgetRef ref,
-      NOTAMPaginationState paginationState) async {
-    for (var notam in notams) {
-      await ref.read(deleteNOTAMProvider(notam.id!).future);
+  Future<void> _deleteRecords(List<DronesTracking> dronestrackings,
+      WidgetRef ref, DronesTrackingPaginationState paginationState) async {
+    for (var dronestracking in dronestrackings) {
+      await ref.read(deleteDronesTrackingProvider(dronestracking.id!).future);
     }
     setState(() {
       widget._initialized = false;
     });
-    ref.read(notamPaginationProvider.notifier).setPage(1);
+    ref.read(dronestrackingPaginationProvider.notifier).setPage(1);
   }
 }
 
-class NOTAMPaginationState {
+class DronesTrackingPaginationState {
   final Tuple2<int, int> pagination;
   final Map<String, int> orders;
   final Map<String, dynamic> filters;
 
-  NOTAMPaginationState({
+  DronesTrackingPaginationState({
     required this.pagination,
     required this.orders,
     required this.filters,
   });
 }
 
-class NOTAMPaginationNotifier extends StateNotifier<NOTAMPaginationState> {
-  NOTAMPaginationNotifier()
-      : super(NOTAMPaginationState(
+class DronesTrackingPaginationNotifier
+    extends StateNotifier<DronesTrackingPaginationState> {
+  DronesTrackingPaginationNotifier()
+      : super(DronesTrackingPaginationState(
           pagination: const Tuple2<int, int>(0, 10),
           orders: {},
           filters: {},
         ));
 
   void setPage(int page) {
-    state = NOTAMPaginationState(
+    state = DronesTrackingPaginationState(
       pagination: Tuple2(page * state.pagination.item2 - state.pagination.item2,
           state.pagination.item2),
       orders: state.orders,
@@ -1700,7 +1745,7 @@ class NOTAMPaginationNotifier extends StateNotifier<NOTAMPaginationState> {
   }
 
   void setOrders(Map<String, int> newOrders) {
-    state = NOTAMPaginationState(
+    state = DronesTrackingPaginationState(
       pagination: Tuple2(state.pagination.item1, state.pagination.item2),
       orders: newOrders,
       filters: state.filters,
@@ -1708,7 +1753,7 @@ class NOTAMPaginationNotifier extends StateNotifier<NOTAMPaginationState> {
   }
 
   void setFilters(Map<String, dynamic> newFilters) {
-    state = NOTAMPaginationState(
+    state = DronesTrackingPaginationState(
       pagination: Tuple2(state.pagination.item1, state.pagination.item2),
       orders: state.orders,
       filters: newFilters,
@@ -1724,76 +1769,78 @@ class NOTAMPaginationNotifier extends StateNotifier<NOTAMPaginationState> {
   }
 }
 
-final notamPaginationProvider =
-    StateNotifierProvider<NOTAMPaginationNotifier, NOTAMPaginationState>(
-  (ref) => NOTAMPaginationNotifier(),
+final dronestrackingPaginationProvider = StateNotifierProvider<
+    DronesTrackingPaginationNotifier, DronesTrackingPaginationState>(
+  (ref) => DronesTrackingPaginationNotifier(),
 );
 
 // **************************************************************************
 // RiverpodCustomGenerator
 // **************************************************************************
 
-final getNOTAMProvider =
-    FutureProvider.autoDispose.family<NOTAM, String>((ref, notamId) async {
-  final json = await http.get(Uri.parse('$baseURL/notam/$notamId'));
+final getDronesTrackingProvider = FutureProvider.autoDispose
+    .family<DronesTracking, String>((ref, dronestrackingId) async {
+  final json =
+      await http.get(Uri.parse('$baseURL/dronestracking/$dronestrackingId'));
   final jsonData = jsonDecode(json.body);
-  return NOTAM.fromJson(jsonData);
+  return DronesTracking.fromJson(jsonData);
 });
 
-final createNOTAMProvider = FutureProvider.autoDispose
-    .family<void, Tuple2<NOTAM, BuildContext>>((ref, tuple) async {
-  NOTAM notamInstance = tuple.item1;
+final createDronesTrackingProvider = FutureProvider.autoDispose
+    .family<void, Tuple2<DronesTracking, BuildContext>>((ref, tuple) async {
+  DronesTracking dronestrackingInstance = tuple.item1;
   BuildContext context = tuple.item2;
 
   final response = await http.post(
-    Uri.parse('$baseURL/notam'),
+    Uri.parse('$baseURL/dronestracking'),
     headers: {'Content-Type': 'application/json'},
-    body: jsonEncode(notamInstance.toJson()),
+    body: jsonEncode(dronestrackingInstance.toJson()),
   );
   if (response.statusCode != 200) {
     CustomSnackBar.show(context, jsonDecode(response.body)['detail']);
   }
 });
 
-final updateNOTAMProvider = FutureProvider.autoDispose
-    .family<void, Tuple2<NOTAM, BuildContext>>((ref, tuple) async {
-  NOTAM notamInstance = tuple.item1;
+final updateDronesTrackingProvider = FutureProvider.autoDispose
+    .family<void, Tuple2<DronesTracking, BuildContext>>((ref, tuple) async {
+  DronesTracking dronestrackingInstance = tuple.item1;
   BuildContext context = tuple.item2;
 
   final response = await http.put(
-    Uri.parse('$baseURL/notam/${notamInstance.id}'),
+    Uri.parse('$baseURL/dronestracking/${dronestrackingInstance.id}'),
     headers: {'Content-Type': 'application/json'},
-    body: jsonEncode(notamInstance.toJson()),
+    body: jsonEncode(dronestrackingInstance.toJson()),
   );
   if (response.statusCode != 200) {
     CustomSnackBar.show(context, jsonDecode(response.body)['detail']);
   }
 });
 
-final deleteNOTAMProvider =
-    FutureProvider.autoDispose.family<void, String>((ref, notamId) async {
+final deleteDronesTrackingProvider = FutureProvider.autoDispose
+    .family<void, String>((ref, dronestrackingId) async {
   final response = await http.delete(
-    Uri.parse('$baseURL/notam/$notamId'),
+    Uri.parse('$baseURL/dronestracking/$dronestrackingId'),
   );
   if (response.statusCode != 200) {
-    throw Exception('Failed to delete NOTAM');
+    throw Exception('Failed to delete DronesTracking');
   }
 });
 
-class NOTAMPaginationData {
-  final List<NOTAM> items;
+class DronesTrackingPaginationData {
+  final List<DronesTracking> items;
   final int currentPage;
   final int maxPages;
 
-  NOTAMPaginationData({
+  DronesTrackingPaginationData({
     required this.items,
     required this.currentPage,
     required this.maxPages,
   });
 }
 
-final getAllNOTAMProvider = FutureProvider.autoDispose
-    .family<NOTAMPaginationData, NOTAMPaginationState>((ref, state) async {
+final getAllDronesTrackingProvider = FutureProvider.autoDispose
+    .family<DronesTrackingPaginationData, DronesTrackingPaginationState>(
+        (ref, state) async {
   final fixedQuery = {
     if (state.orders.isNotEmpty) 'orders': state.orders,
     if (state.filters.isNotEmpty)
@@ -1803,14 +1850,14 @@ final getAllNOTAMProvider = FutureProvider.autoDispose
 
   final json = await http.post(
       Uri.parse(
-          '$baseURL/notams?skip=${state.pagination.item1}&limit=${state.pagination.item2}'),
+          '$baseURL/dronestrackings?skip=${state.pagination.item1}&limit=${state.pagination.item2}'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode(fixedQuery));
   final jsonData = jsonDecode(json.body);
 
-  return NOTAMPaginationData(
+  return DronesTrackingPaginationData(
     items: (jsonData['items'] as List)
-        .map((data) => NOTAM.fromJson(data))
+        .map((data) => DronesTracking.fromJson(data))
         .toList(),
     currentPage: jsonData['current_page'],
     maxPages: jsonData['max_pages'],
