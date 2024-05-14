@@ -96,6 +96,10 @@ class _${visitor.className}WidgetState extends State<${visitor.className}Widget>
         case 'DateTime?':
           widget = 'DateTimeWidget';
           break;
+        case 'bool':
+        case 'bool?':
+          widget = 'BoolWidget';
+          break;
         case 'LineString':
         case 'MultiLineString':
         case 'MultiPoint':

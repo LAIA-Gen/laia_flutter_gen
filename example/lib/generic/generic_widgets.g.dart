@@ -2080,12 +2080,19 @@ class BoolWidget extends StatefulWidget {
 }
 
 class BoolWidgetState extends State<BoolWidget> {
-  bool? _updatedValue;
+  bool isValueChanged = false;
+  late bool? initialValue;
+  late bool currentValue;
 
   @override
   void initState() {
     super.initState();
-    _updatedValue = widget.value;
+    initialValue = widget.value;
+    currentValue = initialValue ?? false;
+  }
+
+  bool? getUpdatedValue() {
+    return isValueChanged ? currentValue : initialValue;
   }
 
   @override
@@ -2122,10 +2129,11 @@ class BoolWidgetState extends State<BoolWidget> {
                 children: [
                   widget.editable
                       ? Checkbox(
-                          value: _updatedValue ?? false,
+                          value: currentValue,
                           onChanged: (newValue) {
                             setState(() {
-                              _updatedValue = newValue;
+                              isValueChanged = newValue != initialValue;
+                              currentValue = newValue ?? false;
                             });
                           },
                         )
@@ -2163,7 +2171,14 @@ class ModelsSelectableWidget extends StatefulWidget {
 }
 
 class ModelsSelectableWidgetState extends State<ModelsSelectableWidget> {
-  List<String> options = ["", "NOTAM", "Role", "AccessRight"];
+  List<String> options = [
+    "",
+    "Role",
+    "AccessRight",
+    "Drone",
+    "DronesTracking",
+    "FlightPlan"
+  ];
   bool isValueChanged = false;
   late String? initialValue;
   late String currentValue;

@@ -166,8 +166,8 @@ class _FlightPlanWidgetState extends State<FlightPlanWidget> {
   final GlobalKey<DroneFieldWidgetState> droneIdWidgetKey =
       GlobalKey<DroneFieldWidgetState>();
 
-  final GlobalKey<DefaultWidgetState> approvedWidgetKey =
-      GlobalKey<DefaultWidgetState>();
+  final GlobalKey<BoolWidgetState> approvedWidgetKey =
+      GlobalKey<BoolWidgetState>();
 
   final GlobalKey<MapWidgetState> routeWidgetKey = GlobalKey<MapWidgetState>();
 
