@@ -291,7 +291,8 @@ class _${visitor.className}WidgetState extends State<${visitor.className}Widget>
             fieldName: "$fieldDisplayName",
             fieldDescription: "$fieldDescription",
             editable: $editable,
-            ${widget == 'BoolWidget' ? "" : "placeholder: \"$placeholder\","}''');
+            ${widget == 'BoolWidget' ? "" : "placeholder: \"$placeholder\","}
+            ${widgetValue.isEmpty || widgetValue == "ModelsSelectableWidget" ? '' : 'elementId: widget.element?.id,' }''');
 
       if (multiRelation) {
         bufferfieldWidget.writeln('''

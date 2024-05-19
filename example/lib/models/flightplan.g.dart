@@ -273,6 +273,7 @@ class _FlightPlanWidgetState extends State<FlightPlanWidget> {
                     fieldDescription: "Status of the Flightplan approval",
                     editable: true,
                     placeholder: "Toggle the Approving status",
+                    elementId: widget.element?.id,
                     value: widget.element?.approved,
                   ),
                 ),

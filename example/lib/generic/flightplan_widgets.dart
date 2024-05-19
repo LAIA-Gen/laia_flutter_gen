@@ -19,6 +19,7 @@ class flightplanApprovedWidget extends StatefulWidget {
   final String fieldDescription;
   final bool editable;
   final String placeholder;
+  final String? elementId;
   final bool? value;
   final List<Widget>? additionalChildren;
 
@@ -28,6 +29,7 @@ class flightplanApprovedWidget extends StatefulWidget {
     required this.fieldDescription,
     required this.editable,
     required this.placeholder,
+    required this.elementId,
     required this.value,
     this.additionalChildren,
   }) : super(key: key);
