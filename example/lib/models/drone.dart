@@ -12,7 +12,6 @@ import 'package:example/config/styles.dart';
 import 'dart:convert';
 import 'package:collection/collection.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
-import 'package:example/generic/drone_widgets.dart';
 
 part 'drone.g.dart';
 
@@ -23,7 +22,7 @@ part 'drone.g.dart';
 @ElementWidgetGen(defaultFieldsDetail: [['name'], ['model'], ['capabilities'], ['alerts']], auth: false)
 @CopyWith()
 class Drone {
-  @Field(fieldName: "Alerts", fieldDescription: "Drone's Alerts", editable: true, placeholder: "Drone's Alerts", widget: "droneAlertsWidget")
+  @Field(editable: true, fieldDescription: "Drone's Alerts", fieldName: "Alerts", placeholder: "Drone's Alerts")
   final Map<String, dynamic>? alerts;
   @Field(editable: true, fieldDescription: "These are the Capabilities of the Drone", fieldName: "Capabilities", placeholder: "Describe the Capabilities of the Drone")
   final String? capabilities;

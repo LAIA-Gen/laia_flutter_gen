@@ -124,8 +124,8 @@ class _DroneWidgetState extends State<DroneWidget> {
   final GlobalKey<StringWidgetState> capabilitiesWidgetKey =
       GlobalKey<StringWidgetState>();
 
-  final GlobalKey<droneAlertsWidgetState> alertsWidgetKey =
-      GlobalKey<droneAlertsWidgetState>();
+  final GlobalKey<DefaultWidgetState> alertsWidgetKey =
+      GlobalKey<DefaultWidgetState>();
 
   @override
   Widget build(BuildContext context) {
@@ -193,7 +193,7 @@ class _DroneWidgetState extends State<DroneWidget> {
               children: [
                 Expanded(
                   flex: 100,
-                  child: droneAlertsWidget(
+                  child: DefaultWidget(
                     key: alertsWidgetKey,
                     fieldName: "Alerts",
                     fieldDescription: "Drone's Alerts",

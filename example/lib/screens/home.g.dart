@@ -42,7 +42,6 @@ List<Widget> _dashboardWidgets = [
   RoleHomeWidget(),
   AccessRightHomeWidget(),
   DroneHomeWidget(),
-  DronesTrackingHomeWidget(),
   FlightPlanHomeWidget(),
 ];
 

@@ -166,8 +166,8 @@ class _FlightPlanWidgetState extends State<FlightPlanWidget> {
   final GlobalKey<DroneFieldWidgetState> droneIdWidgetKey =
       GlobalKey<DroneFieldWidgetState>();
 
-  final GlobalKey<BoolWidgetState> approvedWidgetKey =
-      GlobalKey<BoolWidgetState>();
+  final GlobalKey<flightplanApprovedWidgetState> approvedWidgetKey =
+      GlobalKey<flightplanApprovedWidgetState>();
 
   final GlobalKey<MapWidgetState> routeWidgetKey = GlobalKey<MapWidgetState>();
 
@@ -267,11 +267,12 @@ class _FlightPlanWidgetState extends State<FlightPlanWidget> {
               children: [
                 Expanded(
                   flex: 100,
-                  child: BoolWidget(
+                  child: flightplanApprovedWidget(
                     key: approvedWidgetKey,
                     fieldName: "Approved",
                     fieldDescription: "Status of the Flightplan approval",
                     editable: true,
+                    placeholder: "Toggle the Approving status",
                     value: widget.element?.approved,
                   ),
                 ),

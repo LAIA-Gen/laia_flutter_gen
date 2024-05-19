@@ -2,7 +2,6 @@ import 'package:example/config/styles.dart';
 import 'package:laia_annotations/laia_annotations.dart';
 import 'package:example/models/accessright.dart';
 import 'package:example/models/drone.dart';
-import 'package:example/models/dronestracking.dart';
 import 'package:example/models/flightplan.dart';
 import 'package:example/models/role.dart';
 import 'package:flutter/foundation.dart';

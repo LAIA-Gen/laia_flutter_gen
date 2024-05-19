@@ -13,6 +13,7 @@ import 'dart:convert';
 import 'package:collection/collection.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:example/models/drone.dart';
+import 'package:example/generic/flightplan_widgets.dart';
 
 part 'flightplan.g.dart';
 
@@ -23,7 +24,7 @@ part 'flightplan.g.dart';
 @ElementWidgetGen(defaultFieldsDetail: [['name'], ['mission_details'], ['departure_time'], ['arrival_time'], ['droneId'], ['approved'], ['route']], auth: false)
 @CopyWith()
 class FlightPlan {
-  @Field(editable: true, fieldDescription: "Status of the Flightplan approval", fieldName: "Approved", placeholder: "Toggle the Approving status")
+  @Field(editable: true, fieldDescription: "Status of the Flightplan approval", fieldName: "Approved", placeholder: "Toggle the Approving status", widget: "flightplanApprovedWidget")
   final bool? approved;
   @Field(editable: true, fieldDescription: "Arrival Datetime of the FlightPlan", fieldName: "Arrival Time", placeholder: "Select a Datetime")
   final DateTime? arrival_time;

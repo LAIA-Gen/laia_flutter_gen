@@ -1,5 +1,4 @@
 RoleHomeWidget
 AccessRightHomeWidget
 DroneHomeWidget
-DronesTrackingHomeWidget
 FlightPlanHomeWidget
