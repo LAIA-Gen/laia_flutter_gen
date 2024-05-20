@@ -12,33 +12,42 @@ import 'package:example/config/styles.dart';
 import 'dart:convert';
 import 'package:collection/collection.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:example/models/manufacturer.dart';
+import 'package:example/models/operator.dart';
+import 'package:example/models/dronetype.dart';
 
 part 'drone.g.dart';
 
 @JsonSerializable()
 @RiverpodGenAnnotation(auth: false)
 @HomeWidgetElementGenAnnotation()
-@ListWidgetGenAnnotation(defaultFields: ['name', 'model', 'capabilities', 'alerts'], )
-@ElementWidgetGen(defaultFieldsDetail: [['name'], ['model'], ['capabilities'], ['alerts']], auth: false)
+@ListWidgetGenAnnotation(defaultFields: ['name', 'type', 'model', 'capabilities', 'manufacturer', 'operatorId'], )
+@ElementWidgetGen(auth: false)
 @CopyWith()
 class Drone {
-  @Field(editable: true, fieldDescription: "Drone's Alerts", fieldName: "Alerts", placeholder: "Drone's Alerts")
-  final Map<String, dynamic>? alerts;
   @Field(editable: true, fieldDescription: "These are the Capabilities of the Drone", fieldName: "Capabilities", placeholder: "Describe the Capabilities of the Drone")
-  final String? capabilities;
+  final String capabilities;
   @Field(fieldName: 'id')
   final String? id;
+  @Field(editable: true, fieldDescription: "This is the drone Manufacturer", fieldName: "Manufacturer", placeholder: "Select the Manufacturer", relation: "Manufacturer")
+  final String? manufacturer;
   @Field(editable: true, fieldDescription: "This is the Model of the Drone", fieldName: "Model", placeholder: "Enter the Model of the Drone")
-  final String? model;
+  final String model;
   @Field(editable: true, fieldDescription: "This is the Drone Name", fieldName: "Name", placeholder: "Write the Name of your Drone")
   final String name;
+  @Field(editable: true, fieldDescription: "This is the Operator of the Drone", fieldName: "Operator", placeholder: "Select the Operator of the Drone", relation: "Operator")
+  final String? operatorId;
+  @Field(editable: true, fieldDescription: "This is the Type of the Drone", fieldName: "Drone Type", placeholder: "Select the Type of the Drone", relation: "DroneType")
+  final String type;
 
   Drone({
-    this.alerts,
-    this.capabilities,
+    required this.capabilities,
     this.id,
-    this.model,
-    required this.name
+    this.manufacturer,
+    required this.model,
+    required this.name,
+    this.operatorId,
+    required this.type
   });
 
   factory Drone.fromJson(Map<String, dynamic> json) => _$DroneFromJson(json);

@@ -1,4 +1,4 @@
-
+import 'package:example/models/operator.dart';
 import 'package:example/screens/home.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -28,7 +28,32 @@ class MyApp extends StatelessWidget {
           bodyMedium: TextStyle(color: Colors.black),
         ),
       ),
-      home: Home(),
+      home: SplashScreen(),
+    );
+  }
+}
+
+class SplashScreen extends ConsumerWidget {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final AsyncValue<bool> tokenVerificationResult = ref.watch(verifyTokenOperatorProvider);
+
+    return Scaffold(
+      body: tokenVerificationResult.when(
+        data: (isValid) {
+          if (isValid) {
+            return Home();
+          } else {
+            return OperatorLoginWidget();
+          }
+        },
+        loading: () => Center(
+          child: CircularProgressIndicator(),
+        ),
+        error: (error, stackTrace) {
+          return Container();
+        },
+      ),
     );
   }
 }

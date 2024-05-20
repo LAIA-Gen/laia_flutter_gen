@@ -1,174 +1,202 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'drone.dart';
+part of 'operator.dart';
 
 // **************************************************************************
 // CopyWithGenerator
 // **************************************************************************
 
-abstract class _$DroneCWProxy {
-  Drone capabilities(String capabilities);
+abstract class _$OperatorCWProxy {
+  Operator address(Point? address);
 
-  Drone id(String? id);
+  Operator contactInformation(String? contactInformation);
 
-  Drone manufacturer(String? manufacturer);
+  Operator drones(List<String>? drones);
 
-  Drone model(String model);
+  Operator email(String email);
 
-  Drone name(String name);
+  Operator id(String? id);
 
-  Drone operatorId(String? operatorId);
+  Operator identity(String? identity);
 
-  Drone type(String type);
+  Operator name(String name);
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Drone(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  Operator password(String password);
+
+  Operator roles(List<String>? roles);
+
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Operator(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
   /// Usage
   /// ```dart
-  /// Drone(...).copyWith(id: 12, name: "My name")
+  /// Operator(...).copyWith(id: 12, name: "My name")
   /// ````
-  Drone call({
-    String? capabilities,
+  Operator call({
+    Point? address,
+    String? contactInformation,
+    List<String>? drones,
+    String? email,
     String? id,
-    String? manufacturer,
-    String? model,
+    String? identity,
     String? name,
-    String? operatorId,
-    String? type,
+    String? password,
+    List<String>? roles,
   });
 }
 
-/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfDrone.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfDrone.copyWith.fieldName(...)`
-class _$DroneCWProxyImpl implements _$DroneCWProxy {
-  final Drone _value;
+/// Proxy class for `copyWith` functionality. This is a callable class and can be used as follows: `instanceOfOperator.copyWith(...)`. Additionally contains functions for specific fields e.g. `instanceOfOperator.copyWith.fieldName(...)`
+class _$OperatorCWProxyImpl implements _$OperatorCWProxy {
+  final Operator _value;
 
-  const _$DroneCWProxyImpl(this._value);
-
-  @override
-  Drone capabilities(String capabilities) => this(capabilities: capabilities);
+  const _$OperatorCWProxyImpl(this._value);
 
   @override
-  Drone id(String? id) => this(id: id);
+  Operator address(Point? address) => this(address: address);
 
   @override
-  Drone manufacturer(String? manufacturer) => this(manufacturer: manufacturer);
+  Operator contactInformation(String? contactInformation) =>
+      this(contactInformation: contactInformation);
 
   @override
-  Drone model(String model) => this(model: model);
+  Operator drones(List<String>? drones) => this(drones: drones);
 
   @override
-  Drone name(String name) => this(name: name);
+  Operator email(String email) => this(email: email);
 
   @override
-  Drone operatorId(String? operatorId) => this(operatorId: operatorId);
+  Operator id(String? id) => this(id: id);
 
   @override
-  Drone type(String type) => this(type: type);
+  Operator identity(String? identity) => this(identity: identity);
+
+  @override
+  Operator name(String name) => this(name: name);
+
+  @override
+  Operator password(String password) => this(password: password);
+
+  @override
+  Operator roles(List<String>? roles) => this(roles: roles);
 
   @override
 
-  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Drone(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
+  /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `Operator(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
   ///
   /// Usage
   /// ```dart
-  /// Drone(...).copyWith(id: 12, name: "My name")
+  /// Operator(...).copyWith(id: 12, name: "My name")
   /// ````
-  Drone call({
-    Object? capabilities = const $CopyWithPlaceholder(),
+  Operator call({
+    Object? address = const $CopyWithPlaceholder(),
+    Object? contactInformation = const $CopyWithPlaceholder(),
+    Object? drones = const $CopyWithPlaceholder(),
+    Object? email = const $CopyWithPlaceholder(),
     Object? id = const $CopyWithPlaceholder(),
-    Object? manufacturer = const $CopyWithPlaceholder(),
-    Object? model = const $CopyWithPlaceholder(),
+    Object? identity = const $CopyWithPlaceholder(),
     Object? name = const $CopyWithPlaceholder(),
-    Object? operatorId = const $CopyWithPlaceholder(),
-    Object? type = const $CopyWithPlaceholder(),
+    Object? password = const $CopyWithPlaceholder(),
+    Object? roles = const $CopyWithPlaceholder(),
   }) {
-    return Drone(
-      capabilities:
-          capabilities == const $CopyWithPlaceholder() || capabilities == null
-              ? _value.capabilities
-              // ignore: cast_nullable_to_non_nullable
-              : capabilities as String,
+    return Operator(
+      address: address == const $CopyWithPlaceholder()
+          ? _value.address
+          // ignore: cast_nullable_to_non_nullable
+          : address as Point?,
+      contactInformation: contactInformation == const $CopyWithPlaceholder()
+          ? _value.contactInformation
+          // ignore: cast_nullable_to_non_nullable
+          : contactInformation as String?,
+      drones: drones == const $CopyWithPlaceholder()
+          ? _value.drones
+          // ignore: cast_nullable_to_non_nullable
+          : drones as List<String>?,
+      email: email == const $CopyWithPlaceholder() || email == null
+          ? _value.email
+          // ignore: cast_nullable_to_non_nullable
+          : email as String,
       id: id == const $CopyWithPlaceholder()
           ? _value.id
           // ignore: cast_nullable_to_non_nullable
           : id as String?,
-      manufacturer: manufacturer == const $CopyWithPlaceholder()
-          ? _value.manufacturer
+      identity: identity == const $CopyWithPlaceholder()
+          ? _value.identity
           // ignore: cast_nullable_to_non_nullable
-          : manufacturer as String?,
-      model: model == const $CopyWithPlaceholder() || model == null
-          ? _value.model
-          // ignore: cast_nullable_to_non_nullable
-          : model as String,
+          : identity as String?,
       name: name == const $CopyWithPlaceholder() || name == null
           ? _value.name
           // ignore: cast_nullable_to_non_nullable
           : name as String,
-      operatorId: operatorId == const $CopyWithPlaceholder()
-          ? _value.operatorId
+      password: password == const $CopyWithPlaceholder() || password == null
+          ? _value.password
           // ignore: cast_nullable_to_non_nullable
-          : operatorId as String?,
-      type: type == const $CopyWithPlaceholder() || type == null
-          ? _value.type
+          : password as String,
+      roles: roles == const $CopyWithPlaceholder()
+          ? _value.roles
           // ignore: cast_nullable_to_non_nullable
-          : type as String,
+          : roles as List<String>?,
     );
   }
 }
 
-extension $DroneCopyWith on Drone {
-  /// Returns a callable class that can be used as follows: `instanceOfDrone.copyWith(...)` or like so:`instanceOfDrone.copyWith.fieldName(...)`.
+extension $OperatorCopyWith on Operator {
+  /// Returns a callable class that can be used as follows: `instanceOfOperator.copyWith(...)` or like so:`instanceOfOperator.copyWith.fieldName(...)`.
   // ignore: library_private_types_in_public_api
-  _$DroneCWProxy get copyWith => _$DroneCWProxyImpl(this);
+  _$OperatorCWProxy get copyWith => _$OperatorCWProxyImpl(this);
 }
 
 // **************************************************************************
 // ElementWidgetGenerator
 // **************************************************************************
 
-class DroneWidget extends StatefulWidget {
-  final Drone? element;
+class OperatorWidget extends StatefulWidget {
+  final Operator? element;
   final bool isEditing;
 
-  const DroneWidget({this.element, required this.isEditing, Key? key})
+  const OperatorWidget({this.element, required this.isEditing, Key? key})
       : super(key: key);
 
   @override
-  _DroneWidgetState createState() => _DroneWidgetState();
+  _OperatorWidgetState createState() => _OperatorWidgetState();
 }
 
-class _DroneWidgetState extends State<DroneWidget> {
-  final GlobalKey<StringWidgetState> capabilitiesWidgetKey =
+class _OperatorWidgetState extends State<OperatorWidget> {
+  final GlobalKey<MapWidgetState> addressWidgetKey =
+      GlobalKey<MapWidgetState>();
+
+  final GlobalKey<StringWidgetState> contactInformationWidgetKey =
+      GlobalKey<StringWidgetState>();
+
+  final GlobalKey<DroneMultiFieldWidgetState> dronesWidgetKey =
+      GlobalKey<DroneMultiFieldWidgetState>();
+
+  final GlobalKey<StringWidgetState> emailWidgetKey =
       GlobalKey<StringWidgetState>();
 
   final GlobalKey<StringWidgetState> idWidgetKey =
       GlobalKey<StringWidgetState>();
 
-  final GlobalKey<ManufacturerFieldWidgetState> manufacturerWidgetKey =
-      GlobalKey<ManufacturerFieldWidgetState>();
-
-  final GlobalKey<StringWidgetState> modelWidgetKey =
+  final GlobalKey<StringWidgetState> identityWidgetKey =
       GlobalKey<StringWidgetState>();
 
   final GlobalKey<StringWidgetState> nameWidgetKey =
       GlobalKey<StringWidgetState>();
 
-  final GlobalKey<OperatorFieldWidgetState> operatorIdWidgetKey =
-      GlobalKey<OperatorFieldWidgetState>();
+  final GlobalKey<StringWidgetState> passwordWidgetKey =
+      GlobalKey<StringWidgetState>();
 
-  final GlobalKey<DroneTypeFieldWidgetState> typeWidgetKey =
-      GlobalKey<DroneTypeFieldWidgetState>();
+  final GlobalKey<RoleMultiFieldWidgetState> rolesWidgetKey =
+      GlobalKey<RoleMultiFieldWidgetState>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Drone'),
+        title: const Text('Operator'),
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => DroneListView()),
+            MaterialPageRoute(builder: (context) => OperatorListView()),
           ),
         ),
       ),
@@ -176,13 +204,41 @@ class _DroneWidgetState extends State<DroneWidget> {
         scrollDirection: Axis.vertical,
         child: Column(
           children: [
+            MapWidget(
+                key: addressWidgetKey,
+                fieldName: "Address",
+                fieldDescription: "The address of the Drone Operator",
+                editable: true,
+                placeholder: "Enter the address of the Drone Operator",
+                value: widget.element?.address ??
+                    Point(
+                        type: "Feature",
+                        geometry: GeometryPoint(coordinates: [], type: "Point"),
+                        properties: {}),
+                uspaceMap: false),
             StringWidget(
-              key: capabilitiesWidgetKey,
-              fieldName: "Capabilities",
-              fieldDescription: "These are the Capabilities of the Drone",
+              key: contactInformationWidgetKey,
+              fieldName: "Contact Information",
+              fieldDescription: "Contact Information of the Operator",
               editable: true,
-              placeholder: "Describe the Capabilities of the Drone",
-              value: widget.element?.capabilities,
+              placeholder: "Provide Contact Information for the Operator",
+              value: widget.element?.contactInformation,
+            ),
+            DroneMultiFieldWidget(
+              key: dronesWidgetKey,
+              fieldName: "Drones",
+              fieldDescription: "These are the Drones of the Operator",
+              editable: true,
+              placeholder: "List the Drones operated by this Operator",
+              values: widget.element?.drones,
+            ),
+            StringWidget(
+              key: emailWidgetKey,
+              fieldName: "email",
+              fieldDescription: "This is the email",
+              editable: true,
+              placeholder: "Type the email",
+              value: widget.element?.email,
             ),
             StringWidget(
               key: idWidgetKey,
@@ -192,102 +248,112 @@ class _DroneWidgetState extends State<DroneWidget> {
               placeholder: "Type the id",
               value: widget.element?.id,
             ),
-            ManufacturerFieldWidget(
-              key: manufacturerWidgetKey,
-              fieldName: "Manufacturer",
-              fieldDescription: "This is the drone Manufacturer",
-              editable: true,
-              placeholder: "Select the Manufacturer",
-              value: widget.element?.manufacturer,
-            ),
             StringWidget(
-              key: modelWidgetKey,
-              fieldName: "Model",
-              fieldDescription: "This is the Model of the Drone",
+              key: identityWidgetKey,
+              fieldName: "Identity",
+              fieldDescription: "This is the Identity of the Operator",
               editable: true,
-              placeholder: "Enter the Model of the Drone",
-              value: widget.element?.model,
+              placeholder: "Enter the Identity of the Operator",
+              value: widget.element?.identity,
             ),
             StringWidget(
               key: nameWidgetKey,
               fieldName: "Name",
-              fieldDescription: "This is the Drone Name",
+              fieldDescription: "This is the name of the Drone Operator",
               editable: true,
-              placeholder: "Write the Name of your Drone",
+              placeholder: "Write the Name of the Drone Operator",
               value: widget.element?.name,
             ),
-            OperatorFieldWidget(
-              key: operatorIdWidgetKey,
-              fieldName: "Operator",
-              fieldDescription: "This is the Operator of the Drone",
+            StringWidget(
+              key: passwordWidgetKey,
+              fieldName: "password",
+              fieldDescription: "This is the password",
               editable: true,
-              placeholder: "Select the Operator of the Drone",
-              value: widget.element?.operatorId,
+              placeholder: "Type the password",
+              value: widget.element?.password,
             ),
-            DroneTypeFieldWidget(
-              key: typeWidgetKey,
-              fieldName: "Drone Type",
-              fieldDescription: "This is the Type of the Drone",
+            RoleMultiFieldWidget(
+              key: rolesWidgetKey,
+              fieldName: "roles",
+              fieldDescription: "This is the roles",
               editable: true,
-              placeholder: "Select the Type of the Drone",
-              value: widget.element?.type,
+              placeholder: "Type the roles",
+              values: widget.element?.roles,
             ),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          String? updatedcapabilities =
-              capabilitiesWidgetKey.currentState?.getUpdatedValue();
+          dynamic updatedaddress =
+              addressWidgetKey.currentState?.getUpdatedValue();
+
+          updatedaddress = Point(
+              type: "Feature",
+              geometry: GeometryPoint(
+                  coordinates: updatedaddress.geometry.coordinates,
+                  type: updatedaddress.geometry.type),
+              properties: updatedaddress.properties);
+
+          String? updatedcontactInformation =
+              contactInformationWidgetKey.currentState?.getUpdatedValue();
+
+          List<String>? updateddrones =
+              dronesWidgetKey.currentState?.getUpdatedValue();
+
+          String? updatedemail = emailWidgetKey.currentState?.getUpdatedValue();
 
           String? updatedid = idWidgetKey.currentState?.getUpdatedValue();
 
-          String? updatedmanufacturer =
-              manufacturerWidgetKey.currentState?.getUpdatedValue();
-
-          String? updatedmodel = modelWidgetKey.currentState?.getUpdatedValue();
+          String? updatedidentity =
+              identityWidgetKey.currentState?.getUpdatedValue();
 
           String? updatedname = nameWidgetKey.currentState?.getUpdatedValue();
 
-          String? updatedoperatorId =
-              operatorIdWidgetKey.currentState?.getUpdatedValue();
+          String? updatedpassword =
+              passwordWidgetKey.currentState?.getUpdatedValue();
 
-          String? updatedtype = typeWidgetKey.currentState?.getUpdatedValue();
+          List<String>? updatedroles =
+              rolesWidgetKey.currentState?.getUpdatedValue();
 
-          Drone updatedDrone = widget.element ??
-              Drone(
-                capabilities: updatedcapabilities ?? '',
+          Operator updatedOperator = widget.element ??
+              Operator(
+                address: updatedaddress ?? '',
+                contactInformation: updatedcontactInformation ?? '',
+                drones: updateddrones ?? [''],
+                email: updatedemail ?? '',
                 id: updatedid ?? '',
-                manufacturer: updatedmanufacturer ?? '',
-                model: updatedmodel ?? '',
+                identity: updatedidentity ?? '',
                 name: updatedname ?? '',
-                operatorId: updatedoperatorId ?? '',
-                type: updatedtype ?? '',
+                password: updatedpassword ?? '',
+                roles: updatedroles ?? [''],
               );
 
-          updatedDrone = updatedDrone.copyWith(
-              capabilities: updatedcapabilities,
+          updatedOperator = updatedOperator.copyWith(
+              address: updatedaddress,
+              contactInformation: updatedcontactInformation,
+              drones: updateddrones,
+              email: updatedemail,
               id: updatedid,
-              manufacturer: updatedmanufacturer,
-              model: updatedmodel,
+              identity: updatedidentity,
               name: updatedname,
-              operatorId: updatedoperatorId,
-              type: updatedtype);
+              password: updatedpassword,
+              roles: updatedroles);
           var container = ProviderContainer();
           try {
             if (widget.isEditing) {
-              await container
-                  .read(updateDroneProvider(Tuple2(updatedDrone, context)));
-              print('Drone updated successfully');
-              CustomSnackBar.show(context, 'Drone updated successfully');
+              await container.read(
+                  updateOperatorProvider(Tuple2(updatedOperator, context)));
+              print('Operator updated successfully');
+              CustomSnackBar.show(context, 'Operator updated successfully');
             } else {
-              await container
-                  .read(createDroneProvider(Tuple2(updatedDrone, context)));
-              print('Drone created successfully');
-              CustomSnackBar.show(context, 'Drone created successfully');
+              await container.read(
+                  createOperatorProvider(Tuple2(updatedOperator, context)));
+              print('Operator created successfully');
+              CustomSnackBar.show(context, 'Operator created successfully');
             }
           } catch (error) {
-            print('Failed to update Drone: $error');
+            print('Failed to update Operator: $error');
           }
         },
         child: Icon(Icons.save),
@@ -296,14 +362,14 @@ class _DroneWidgetState extends State<DroneWidget> {
   }
 }
 
-class DroneFieldWidget extends StatefulWidget {
+class OperatorFieldWidget extends StatefulWidget {
   final String fieldName;
   final String fieldDescription;
   final bool editable;
   final String placeholder;
   final String? value;
 
-  const DroneFieldWidget({
+  const OperatorFieldWidget({
     Key? key,
     required this.fieldName,
     required this.fieldDescription,
@@ -313,15 +379,15 @@ class DroneFieldWidget extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  DroneFieldWidgetState createState() => DroneFieldWidgetState();
+  OperatorFieldWidgetState createState() => OperatorFieldWidgetState();
 }
 
-class DroneFieldWidgetState extends State<DroneFieldWidget> {
+class OperatorFieldWidgetState extends State<OperatorFieldWidget> {
   final TextEditingController _typeAheadController = TextEditingController();
   bool isValueChanged = false;
   late String? initialValue;
   late String currentValue;
-  late List<Drone> options;
+  late List<Operator> options;
 
   @override
   void initState() {
@@ -333,8 +399,9 @@ class DroneFieldWidgetState extends State<DroneFieldWidget> {
     super.initState();
     initialValue = widget.value;
     currentValue = initialValue ?? '';
-    Drone drone = await container.read(getDroneProvider(widget.value!).future);
-    _typeAheadController.text = '${drone.name} <id: ${drone.id}>';
+    Operator operator =
+        await container.read(getOperatorProvider(widget.value!).future);
+    _typeAheadController.text = '${operator.name} <id: ${operator.id}>';
   }
 
   String? getUpdatedValue() {
@@ -376,30 +443,31 @@ class DroneFieldWidgetState extends State<DroneFieldWidget> {
                 children: [
                   widget.editable
                       ? Expanded(
-                          child: TypeAheadField<Drone>(
+                          child: TypeAheadField<Operator>(
                             controller: _typeAheadController,
                             suggestionsCallback: (String pattern) async {
-                              final dronePaginationData = await container.read(
-                                  getAllDroneProvider(container
-                                          .read(dronePaginationProvider))
+                              final operatorPaginationData = await container
+                                  .read(getAllOperatorProvider(container
+                                          .read(operatorPaginationProvider))
                                       .future);
-                              final options = dronePaginationData.items;
+                              final options = operatorPaginationData.items;
                               return options
-                                  .where((drone) =>
-                                      drone.name!
+                                  .where((operator) =>
+                                      operator.name!
                                           .toLowerCase()
                                           .contains(pattern.toLowerCase()) ||
-                                      drone.id
+                                      operator.id
                                           .toString()
                                           .contains(pattern.toLowerCase()))
                                   .toList();
                             },
-                            itemBuilder: (context, drone) {
+                            itemBuilder: (context, operator) {
                               return ListTile(
-                                title: Text('${drone.name} <id: ${drone.id}>'),
+                                title: Text(
+                                    '${operator.name} <id: ${operator.id}>'),
                               );
                             },
-                            onSelected: (Drone value) {
+                            onSelected: (Operator value) {
                               setState(() {
                                 isValueChanged = value.id != initialValue;
                                 currentValue = value.id!;
@@ -434,20 +502,20 @@ class DroneFieldWidgetState extends State<DroneFieldWidget> {
           child: ElevatedButton(
             onPressed: () async {
               try {
-                Drone drone = await container
-                    .read(getDroneProvider(widget.value!).future);
+                Operator operator = await container
+                    .read(getOperatorProvider(widget.value!).future);
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) =>
-                        DroneWidget(element: drone, isEditing: true),
+                        OperatorWidget(element: operator, isEditing: true),
                   ),
                 );
               } catch (error) {
-                print('Failed to fetch drone: $error');
+                print('Failed to fetch operator: $error');
               }
             },
-            child: const Text('View Drone'),
+            child: const Text('View Operator'),
           ),
         ),
       ],
@@ -455,14 +523,14 @@ class DroneFieldWidgetState extends State<DroneFieldWidget> {
   }
 }
 
-class DroneMultiFieldWidget extends StatefulWidget {
+class OperatorMultiFieldWidget extends StatefulWidget {
   final String fieldName;
   final String fieldDescription;
   final bool editable;
   final String placeholder;
   final List<String>? values;
 
-  const DroneMultiFieldWidget({
+  const OperatorMultiFieldWidget({
     Key? key,
     required this.fieldName,
     required this.fieldDescription,
@@ -472,15 +540,16 @@ class DroneMultiFieldWidget extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  DroneMultiFieldWidgetState createState() => DroneMultiFieldWidgetState();
+  OperatorMultiFieldWidgetState createState() =>
+      OperatorMultiFieldWidgetState();
 }
 
-class DroneMultiFieldWidgetState extends State<DroneMultiFieldWidget> {
+class OperatorMultiFieldWidgetState extends State<OperatorMultiFieldWidget> {
   final TextEditingController _typeAheadController = TextEditingController();
   bool isValueChanged = false;
   late List<String> initialValues = [];
   late List<String> currentValues = [];
-  late List<Drone> options = [];
+  late List<Operator> options = [];
 
   @override
   void initState() {
@@ -493,13 +562,13 @@ class DroneMultiFieldWidgetState extends State<DroneMultiFieldWidget> {
     initialValues = widget.values ?? [];
     currentValues = initialValues;
     if (widget.values != null) {
-      List<Drone> droneList = await Future.wait(
+      List<Operator> operatorList = await Future.wait(
         (widget.values ?? []).where((value) => value != '').map((value) async {
-          return await container.read(getDroneProvider(value).future);
+          return await container.read(getOperatorProvider(value).future);
         }),
       );
-      String concatenatedText = '${droneList.map((drone) {
-        return '${drone.name} <id: ${drone.id}>';
+      String concatenatedText = '${operatorList.map((operator) {
+        return '${operator.name} <id: ${operator.id}>';
       }).join(', ')}, ';
       _typeAheadController.text = concatenatedText;
     } else {
@@ -546,7 +615,7 @@ class DroneMultiFieldWidgetState extends State<DroneMultiFieldWidget> {
                 children: [
                   widget.editable
                       ? Expanded(
-                          child: TypeAheadField<Drone>(
+                          child: TypeAheadField<Operator>(
                             controller: _typeAheadController,
                             suggestionsCallback: (String pattern) async {
                               final idRegex =
@@ -573,46 +642,47 @@ class DroneMultiFieldWidgetState extends State<DroneMultiFieldWidget> {
                               }
                               final inputParts = pattern.split(',').last.trim();
                               container
-                                  .read(dronePaginationProvider.notifier)
+                                  .read(operatorPaginationProvider.notifier)
                                   .setFilters({
                                 'id': {'\$nin': currentValues}
                               });
-                              final dronePaginationData = await container.read(
-                                  getAllDroneProvider(container
-                                          .read(dronePaginationProvider))
+                              final operatorPaginationData = await container
+                                  .read(getAllOperatorProvider(container
+                                          .read(operatorPaginationProvider))
                                       .future);
-                              final options = dronePaginationData.items;
+                              final options = operatorPaginationData.items;
                               return options
-                                  .where((drone) =>
-                                      drone.name!
+                                  .where((operator) =>
+                                      operator.name!
                                           .toLowerCase()
                                           .contains(inputParts.toLowerCase()) ||
-                                      drone.id
+                                      operator.id
                                           .toString()
                                           .toLowerCase()
                                           .contains(inputParts.toLowerCase()))
                                   .toList();
                             },
-                            itemBuilder: (context, drone) {
+                            itemBuilder: (context, operator) {
                               return ListTile(
-                                title: Text('${drone.name} <id: ${drone.id}>'),
+                                title: Text(
+                                    '${operator.name} <id: ${operator.id}>'),
                               );
                             },
-                            onSelected: (Drone value) async {
+                            onSelected: (Operator value) async {
                               isValueChanged =
                                   !initialValues.contains(value.id);
                               currentValues.add(value.id!);
 
-                              List<Drone> droneList = await Future.wait(
+                              List<Operator> operatorList = await Future.wait(
                                   (currentValues)
                                       .where((value) => value != '')
                                       .map((value) async {
                                 return await container
-                                    .read(getDroneProvider(value).future);
+                                    .read(getOperatorProvider(value).future);
                               }));
                               String concatenatedText =
-                                  '${droneList.map((drone) {
-                                return '${drone.name} <id: ${drone.id}>';
+                                  '${operatorList.map((operator) {
+                                return '${operator.name} <id: ${operator.id}>';
                               }).join(', ')}, ';
 
                               setState(() {
@@ -656,17 +726,277 @@ class DroneMultiFieldWidgetState extends State<DroneMultiFieldWidget> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => DroneListView(extraFilters: query),
+                    builder: (context) => OperatorListView(extraFilters: query),
                   ),
                 );
               } catch (error) {
-                print('Failed to fetch drones: $error');
+                print('Failed to fetch operators: $error');
               }
             },
-            child: const Text('View Drones'),
+            child: const Text('View Operators'),
           ),
         ),
       ],
+    );
+  }
+}
+
+class OperatorLoginWidget extends StatefulWidget {
+  final Operator? element;
+
+  const OperatorLoginWidget({this.element, Key? key}) : super(key: key);
+
+  @override
+  _OperatorLoginWidgetState createState() => _OperatorLoginWidgetState();
+}
+
+class _OperatorLoginWidgetState extends State<OperatorLoginWidget> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  bool _isPasswordVisible = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Log In'),
+        centerTitle: true,
+      ),
+      body: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(height: MediaQuery.of(context).size.height * 0.2),
+              _buildTextField(
+                controller: _emailController,
+                labelText: 'Email',
+              ),
+              _buildTextField(
+                controller: _passwordController,
+                labelText: 'Password',
+                isPassword: true,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 16.0),
+                child: ElevatedButton(
+                  onPressed: () async {
+                    var container = ProviderContainer();
+                    var loginData = Auth(
+                        email: _emailController.text,
+                        password: _passwordController.text);
+                    try {
+                      AuthResult loginResult = await container
+                          .read(loginOperatorProvider(loginData).future);
+                      if (loginResult.success) {
+                        Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(builder: (context) => Home()),
+                        );
+                      } else {
+                        CustomSnackBar.show(context, loginResult.errorMessage);
+                      }
+                    } catch (error) {
+                      print(error);
+                    }
+                  },
+                  child: const Text('Login'),
+                ),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                        builder: (context) => OperatorRegisterWidget()),
+                  );
+                },
+                child: const Text("I don't have an account: Register"),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTextField({
+    required TextEditingController controller,
+    required String labelText,
+    bool isPassword = false,
+  }) {
+    return Container(
+      padding: const EdgeInsets.all(8.0),
+      margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10.0),
+        color: Styles.secondaryColor,
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: TextField(
+          controller: controller,
+          obscureText: isPassword && !_isPasswordVisible,
+          decoration: InputDecoration(
+            labelText: labelText,
+            suffixIcon: isPassword
+                ? IconButton(
+                    icon: Icon(
+                      _isPasswordVisible
+                          ? Icons.visibility
+                          : Icons.visibility_off,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _isPasswordVisible = !_isPasswordVisible;
+                      });
+                    },
+                  )
+                : null,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class OperatorRegisterWidget extends StatefulWidget {
+  final Operator? element;
+
+  const OperatorRegisterWidget({this.element, Key? key}) : super(key: key);
+
+  @override
+  _OperatorRegisterWidgetState createState() => _OperatorRegisterWidgetState();
+}
+
+class _OperatorRegisterWidgetState extends State<OperatorRegisterWidget> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
+
+  final TextEditingController _nameController = TextEditingController();
+  bool _isPasswordVisible = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Register'),
+        centerTitle: true,
+      ),
+      body: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(height: MediaQuery.of(context).size.height * 0.2),
+              _buildTextField(
+                controller: _emailController,
+                labelText: 'Email',
+              ),
+              _buildTextField(
+                controller: _passwordController,
+                labelText: 'Password',
+                isPassword: true,
+              ),
+              _buildTextField(
+                controller: _confirmPasswordController,
+                labelText: 'Confirm password',
+                isPassword: true,
+              ),
+              _buildTextField(
+                controller: _nameController,
+                labelText: 'name',
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 16.0),
+                child: ElevatedButton(
+                  onPressed: () async {
+                    if (_passwordController.text !=
+                        _confirmPasswordController.text) {
+                      CustomSnackBar.show(context, "Passwords do not match");
+                      return;
+                    }
+                    var container = ProviderContainer();
+                    var registerData = Operator(
+                      email: _emailController.text,
+                      password: _passwordController.text,
+                      name: _nameController.text,
+                    );
+                    try {
+                      AuthResult registerResult = await container
+                          .read(registerOperatorProvider(registerData).future);
+                      if (registerResult.success) {
+                        Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(builder: (context) => Home()),
+                        );
+                      } else {
+                        CustomSnackBar.show(
+                            context, registerResult.errorMessage);
+                      }
+                    } catch (error) {
+                      print(error);
+                    }
+                  },
+                  child: Text('Register'),
+                ),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                        builder: (context) => OperatorLoginWidget()),
+                  );
+                },
+                child: Text("I already have an account: LogIn"),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTextField({
+    required TextEditingController controller,
+    required String labelText,
+    bool isPassword = false,
+  }) {
+    return Container(
+      padding: const EdgeInsets.all(8.0),
+      margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10.0),
+        color: Styles.secondaryColor,
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: TextField(
+          controller: controller,
+          obscureText: isPassword && !_isPasswordVisible,
+          decoration: InputDecoration(
+            labelText: labelText,
+            suffixIcon: isPassword
+                ? IconButton(
+                    icon: Icon(
+                      _isPasswordVisible
+                          ? Icons.visibility
+                          : Icons.visibility_off,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _isPasswordVisible = !_isPasswordVisible;
+                      });
+                    },
+                  )
+                : null,
+          ),
+        ),
+      ),
     );
   }
 }
@@ -675,15 +1005,15 @@ class DroneMultiFieldWidgetState extends State<DroneMultiFieldWidget> {
 // HomeWidgetElementGenerator
 // **************************************************************************
 
-class DroneHomeWidget extends StatelessWidget {
-  const DroneHomeWidget({super.key});
+class OperatorHomeWidget extends StatelessWidget {
+  const OperatorHomeWidget({super.key});
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => DroneListView()),
+          MaterialPageRoute(builder: (context) => OperatorListView()),
         );
       },
       child: Container(
@@ -697,14 +1027,14 @@ class DroneHomeWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image.asset(
-              'assets/drone.png',
+              'assets/operator.png',
               width: 40.0,
               height: 40.0,
               color: Colors.white,
             ),
             const SizedBox(height: 8.0),
             const Text(
-              "Drone",
+              "Operator",
               style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
@@ -721,43 +1051,51 @@ class DroneHomeWidget extends StatelessWidget {
 // JsonSerializableGenerator
 // **************************************************************************
 
-Drone _$DroneFromJson(Map<String, dynamic> json) => Drone(
-      capabilities: json['capabilities'] as String,
+Operator _$OperatorFromJson(Map<String, dynamic> json) => Operator(
+      address: json['address'] == null
+          ? null
+          : Point.fromJson(json['address'] as Map<String, dynamic>),
+      contactInformation: json['contactInformation'] as String?,
+      drones:
+          (json['drones'] as List<dynamic>?)?.map((e) => e as String).toList(),
+      email: json['email'] as String,
       id: json['id'] as String?,
-      manufacturer: json['manufacturer'] as String?,
-      model: json['model'] as String,
+      identity: json['identity'] as String?,
       name: json['name'] as String,
-      operatorId: json['operatorId'] as String?,
-      type: json['type'] as String,
+      password: json['password'] as String,
+      roles:
+          (json['roles'] as List<dynamic>?)?.map((e) => e as String).toList(),
     );
 
-Map<String, dynamic> _$DroneToJson(Drone instance) => <String, dynamic>{
-      'capabilities': instance.capabilities,
+Map<String, dynamic> _$OperatorToJson(Operator instance) => <String, dynamic>{
+      'address': instance.address,
+      'contactInformation': instance.contactInformation,
+      'drones': instance.drones,
+      'email': instance.email,
       'id': instance.id,
-      'manufacturer': instance.manufacturer,
-      'model': instance.model,
+      'identity': instance.identity,
       'name': instance.name,
-      'operatorId': instance.operatorId,
-      'type': instance.type,
+      'password': instance.password,
+      'roles': instance.roles,
     };
 
 // **************************************************************************
 // ListWidgetGenerator
 // **************************************************************************
 
-class DroneListView extends ConsumerStatefulWidget {
+class OperatorListView extends ConsumerStatefulWidget {
   final Map<String, dynamic>? extraFilters;
   final Map<String, dynamic> currentFilters = {};
   late bool _initialized = false;
   late List<bool> selectedStates;
 
-  DroneListView({Key? key, this.extraFilters}) : super(key: key);
+  OperatorListView({Key? key, this.extraFilters}) : super(key: key);
 
   @override
-  _DroneListViewState createState() => _DroneListViewState();
+  _OperatorListViewState createState() => _OperatorListViewState();
 }
 
-class _DroneListViewState extends ConsumerState<DroneListView> {
+class _OperatorListViewState extends ConsumerState<OperatorListView> {
   @override
   void initState() {
     super.initState();
@@ -768,22 +1106,23 @@ class _DroneListViewState extends ConsumerState<DroneListView> {
         });
       }
       ref
-          .read(dronePaginationProvider.notifier)
+          .read(operatorPaginationProvider.notifier)
           .setFilters(widget.extraFilters!);
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final paginationState = ref.watch(dronePaginationProvider);
+    final paginationState = ref.watch(operatorPaginationProvider);
 
-    final dronesAsyncValue = ref.watch(getAllDroneProvider(paginationState));
+    final operatorsAsyncValue =
+        ref.watch(getAllOperatorProvider(paginationState));
 
     final Map<String, int> columnSortStates =
-        ref.watch(dronePaginationProvider.notifier).getOrders();
+        ref.watch(operatorPaginationProvider.notifier).getOrders();
 
     final Map<String, dynamic> fieldsFilterStates =
-        ref.watch(dronePaginationProvider.notifier).getFilters();
+        ref.watch(operatorPaginationProvider.notifier).getFilters();
 
     void onSort(String columnName) {
       var state = columnSortStates[columnName];
@@ -794,13 +1133,13 @@ class _DroneListViewState extends ConsumerState<DroneListView> {
       } else if (state == -1) {
         columnSortStates.remove(columnName);
       }
-      ref.read(dronePaginationProvider.notifier).setOrders(columnSortStates);
+      ref.read(operatorPaginationProvider.notifier).setOrders(columnSortStates);
     }
 
     void onFilter(String fieldName, dynamic filterValue) {
       widget.currentFilters[fieldName] = filterValue;
       ref
-          .read(dronePaginationProvider.notifier)
+          .read(operatorPaginationProvider.notifier)
           .setFilters(widget.currentFilters);
     }
 
@@ -810,48 +1149,35 @@ class _DroneListViewState extends ConsumerState<DroneListView> {
       }
     }
 
-    Future<List<Manufacturer>> fetchManufacturerList(List<String>? ids) async {
+    Future<List<Drone>> fetchDroneList(List<String>? ids) async {
       if (ids == null || ids.isEmpty) {
         return [];
       }
       final nonEmptyIds = ids.where((id) => id.isNotEmpty).toList();
-      List<Manufacturer> manufacturerList = await Future.wait(
+      List<Drone> droneList = await Future.wait(
         nonEmptyIds.map((id) async {
-          return await ref.read(getManufacturerProvider(id).future);
+          return await ref.read(getDroneProvider(id).future);
         }),
       );
-      return manufacturerList;
+      return droneList;
     }
 
-    Future<List<Operator>> fetchOperatorList(List<String>? ids) async {
+    Future<List<Role>> fetchRoleList(List<String>? ids) async {
       if (ids == null || ids.isEmpty) {
         return [];
       }
       final nonEmptyIds = ids.where((id) => id.isNotEmpty).toList();
-      List<Operator> operatorList = await Future.wait(
+      List<Role> roleList = await Future.wait(
         nonEmptyIds.map((id) async {
-          return await ref.read(getOperatorProvider(id).future);
+          return await ref.read(getRoleProvider(id).future);
         }),
       );
-      return operatorList;
-    }
-
-    Future<List<DroneType>> fetchDroneTypeList(List<String>? ids) async {
-      if (ids == null || ids.isEmpty) {
-        return [];
-      }
-      final nonEmptyIds = ids.where((id) => id.isNotEmpty).toList();
-      List<DroneType> dronetypeList = await Future.wait(
-        nonEmptyIds.map((id) async {
-          return await ref.read(getDroneTypeProvider(id).future);
-        }),
-      );
-      return dronetypeList;
+      return roleList;
     }
 
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Drone List'),
+          title: const Text('Operator List'),
           actions: [
             Container(
               margin: const EdgeInsets.only(right: 10),
@@ -860,7 +1186,7 @@ class _DroneListViewState extends ConsumerState<DroneListView> {
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const DroneWidget(
+                      builder: (context) => const OperatorWidget(
                         isEditing: false,
                       ),
                     ),
@@ -892,20 +1218,20 @@ class _DroneListViewState extends ConsumerState<DroneListView> {
                     return Colors.transparent;
                   }),
                 ),
-                child: const Text('Create Drone'),
+                child: const Text('Create Operator'),
               ),
             ),
           ],
         ),
-        body: dronesAsyncValue.when(
+        body: operatorsAsyncValue.when(
           loading: () => const CircularProgressIndicator(),
           error: (error, stackTrace) => Text('Error: $error'),
-          data: (DronePaginationData data) {
-            final drones = data.items;
+          data: (OperatorPaginationData data) {
+            final operators = data.items;
 
             if (!widget._initialized) {
               widget.selectedStates =
-                  List.generate(drones.length, (index) => false);
+                  List.generate(operators.length, (index) => false);
               widget._initialized = true;
             }
 
@@ -914,13 +1240,15 @@ class _DroneListViewState extends ConsumerState<DroneListView> {
                 children: [
                   CustomSearchBar(
                     fields: const {
-                      'capabilities': 'String',
+                      'address': 'Point?',
+                      'contactInformation': 'String?',
+                      'drones': 'List<String>?',
+                      'email': 'String',
                       'id': 'String?',
-                      'manufacturer': 'String?',
-                      'model': 'String',
+                      'identity': 'String?',
                       'name': 'String',
-                      'operatorId': 'String?',
-                      'type': 'String'
+                      'password': 'String',
+                      'roles': 'List<String>?'
                     },
                     filters: fieldsFilterStates,
                     onFilterChanged: onFilter,
@@ -930,7 +1258,9 @@ class _DroneListViewState extends ConsumerState<DroneListView> {
                     IconButton(
                       icon: const Icon(Icons.refresh, color: Colors.grey),
                       onPressed: () {
-                        ref.read(dronePaginationProvider.notifier).setPage(1);
+                        ref
+                            .read(operatorPaginationProvider.notifier)
+                            .setPage(1);
                       },
                     ),
                     Container(
@@ -945,11 +1275,12 @@ class _DroneListViewState extends ConsumerState<DroneListView> {
                                       widget.selectedStates[index] ? index : -1,
                                 ).where((index) => index != -1).toList();
 
-                                List<Drone> selectedDrones = selectedIndices
-                                    .map((index) => drones[index])
-                                    .toList();
+                                List<Operator> selectedOperators =
+                                    selectedIndices
+                                        .map((index) => operators[index])
+                                        .toList();
                                 _onDeleteElement(
-                                    selectedDrones, ref, paginationState);
+                                    selectedOperators, ref, paginationState);
                               }
                             : null,
                         style: ButtonStyle(
@@ -1046,91 +1377,17 @@ class _DroneListViewState extends ConsumerState<DroneListView> {
                                                 MainAxisAlignment.center,
                                             children: [
                                               const Text(
-                                                'Drone Type',
+                                                'Address',
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.bold,
                                                     color: Color.fromARGB(
                                                         255, 94, 54, 54)),
                                                 textAlign: TextAlign.center,
                                               ),
-                                              if (columnSortStates['type'] !=
+                                              if (columnSortStates['address'] !=
                                                   null) ...[
                                                 Icon(
-                                                  columnSortStates['type'] == 1
-                                                      ? Icons
-                                                          .arrow_drop_up_rounded
-                                                      : Icons
-                                                          .arrow_drop_down_rounded,
-                                                  color: Colors.black,
-                                                ),
-                                                Text(
-                                                  '${columnSortStates.keys.toList().indexOf('type') + 1}',
-                                                  style: const TextStyle(
-                                                      fontSize: 10),
-                                                ),
-                                              ],
-                                            ],
-                                          ),
-                                        ),
-                                        onSort: (columnIndex, ascending) =>
-                                            {onSort('type')},
-                                      ),
-                                      DataColumn(
-                                        label: Expanded(
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              const Text(
-                                                'Model',
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Color.fromARGB(
-                                                        255, 94, 54, 54)),
-                                                textAlign: TextAlign.center,
-                                              ),
-                                              if (columnSortStates['model'] !=
-                                                  null) ...[
-                                                Icon(
-                                                  columnSortStates['model'] == 1
-                                                      ? Icons
-                                                          .arrow_drop_up_rounded
-                                                      : Icons
-                                                          .arrow_drop_down_rounded,
-                                                  color: Colors.black,
-                                                ),
-                                                Text(
-                                                  '${columnSortStates.keys.toList().indexOf('model') + 1}',
-                                                  style: const TextStyle(
-                                                      fontSize: 10),
-                                                ),
-                                              ],
-                                            ],
-                                          ),
-                                        ),
-                                        onSort: (columnIndex, ascending) =>
-                                            {onSort('model')},
-                                      ),
-                                      DataColumn(
-                                        label: Expanded(
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              const Text(
-                                                'Capabilities',
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Color.fromARGB(
-                                                        255, 94, 54, 54)),
-                                                textAlign: TextAlign.center,
-                                              ),
-                                              if (columnSortStates[
-                                                      'capabilities'] !=
-                                                  null) ...[
-                                                Icon(
-                                                  columnSortStates[
-                                                              'capabilities'] ==
+                                                  columnSortStates['address'] ==
                                                           1
                                                       ? Icons
                                                           .arrow_drop_up_rounded
@@ -1139,7 +1396,7 @@ class _DroneListViewState extends ConsumerState<DroneListView> {
                                                   color: Colors.black,
                                                 ),
                                                 Text(
-                                                  '${columnSortStates.keys.toList().indexOf('capabilities') + 1}',
+                                                  '${columnSortStates.keys.toList().indexOf('address') + 1}',
                                                   style: const TextStyle(
                                                       fontSize: 10),
                                                 ),
@@ -1148,7 +1405,7 @@ class _DroneListViewState extends ConsumerState<DroneListView> {
                                           ),
                                         ),
                                         onSort: (columnIndex, ascending) =>
-                                            {onSort('capabilities')},
+                                            {onSort('address')},
                                       ),
                                       DataColumn(
                                         label: Expanded(
@@ -1157,7 +1414,7 @@ class _DroneListViewState extends ConsumerState<DroneListView> {
                                                 MainAxisAlignment.center,
                                             children: [
                                               const Text(
-                                                'Manufacturer',
+                                                'Identity',
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.bold,
                                                     color: Color.fromARGB(
@@ -1165,11 +1422,11 @@ class _DroneListViewState extends ConsumerState<DroneListView> {
                                                 textAlign: TextAlign.center,
                                               ),
                                               if (columnSortStates[
-                                                      'manufacturer'] !=
+                                                      'identity'] !=
                                                   null) ...[
                                                 Icon(
                                                   columnSortStates[
-                                                              'manufacturer'] ==
+                                                              'identity'] ==
                                                           1
                                                       ? Icons
                                                           .arrow_drop_up_rounded
@@ -1178,7 +1435,7 @@ class _DroneListViewState extends ConsumerState<DroneListView> {
                                                   color: Colors.black,
                                                 ),
                                                 Text(
-                                                  '${columnSortStates.keys.toList().indexOf('manufacturer') + 1}',
+                                                  '${columnSortStates.keys.toList().indexOf('identity') + 1}',
                                                   style: const TextStyle(
                                                       fontSize: 10),
                                                 ),
@@ -1187,7 +1444,7 @@ class _DroneListViewState extends ConsumerState<DroneListView> {
                                           ),
                                         ),
                                         onSort: (columnIndex, ascending) =>
-                                            {onSort('manufacturer')},
+                                            {onSort('identity')},
                                       ),
                                       DataColumn(
                                         label: Expanded(
@@ -1196,7 +1453,7 @@ class _DroneListViewState extends ConsumerState<DroneListView> {
                                                 MainAxisAlignment.center,
                                             children: [
                                               const Text(
-                                                'Operator',
+                                                'Contact Information',
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.bold,
                                                     color: Color.fromARGB(
@@ -1204,11 +1461,11 @@ class _DroneListViewState extends ConsumerState<DroneListView> {
                                                 textAlign: TextAlign.center,
                                               ),
                                               if (columnSortStates[
-                                                      'operatorId'] !=
+                                                      'contactInformation'] !=
                                                   null) ...[
                                                 Icon(
                                                   columnSortStates[
-                                                              'operatorId'] ==
+                                                              'contactInformation'] ==
                                                           1
                                                       ? Icons
                                                           .arrow_drop_up_rounded
@@ -1217,7 +1474,7 @@ class _DroneListViewState extends ConsumerState<DroneListView> {
                                                   color: Colors.black,
                                                 ),
                                                 Text(
-                                                  '${columnSortStates.keys.toList().indexOf('operatorId') + 1}',
+                                                  '${columnSortStates.keys.toList().indexOf('contactInformation') + 1}',
                                                   style: const TextStyle(
                                                       fontSize: 10),
                                                 ),
@@ -1226,12 +1483,49 @@ class _DroneListViewState extends ConsumerState<DroneListView> {
                                           ),
                                         ),
                                         onSort: (columnIndex, ascending) =>
-                                            {onSort('operatorId')},
+                                            {onSort('contactInformation')},
+                                      ),
+                                      DataColumn(
+                                        label: Expanded(
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              const Text(
+                                                'Drones',
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Color.fromARGB(
+                                                        255, 94, 54, 54)),
+                                                textAlign: TextAlign.center,
+                                              ),
+                                              if (columnSortStates['drones'] !=
+                                                  null) ...[
+                                                Icon(
+                                                  columnSortStates['drones'] ==
+                                                          1
+                                                      ? Icons
+                                                          .arrow_drop_up_rounded
+                                                      : Icons
+                                                          .arrow_drop_down_rounded,
+                                                  color: Colors.black,
+                                                ),
+                                                Text(
+                                                  '${columnSortStates.keys.toList().indexOf('drones') + 1}',
+                                                  style: const TextStyle(
+                                                      fontSize: 10),
+                                                ),
+                                              ],
+                                            ],
+                                          ),
+                                        ),
+                                        onSort: (columnIndex, ascending) =>
+                                            {onSort('drones')},
                                       ),
                                     ],
-                                    rows: List<DataRow>.generate(drones.length,
-                                        (index) {
-                                      var drone = drones[index];
+                                    rows: List<DataRow>.generate(
+                                        operators.length, (index) {
+                                      var operator = operators[index];
 
                                       return DataRow(
                                         selected: widget.selectedStates[index],
@@ -1239,140 +1533,110 @@ class _DroneListViewState extends ConsumerState<DroneListView> {
                                           DataCell(
                                             Center(
                                                 child: Text(
-                                                    drone.name.toString())),
+                                                    operator.name.toString())),
                                             onTap: () =>
-                                                {_navigateElement(drone)},
+                                                {_navigateElement(operator)},
                                           ),
                                           DataCell(
                                             Center(
-                                              child: FutureBuilder<
-                                                  List<DroneType>>(
-                                                future: fetchDroneTypeList(
-                                                    [drone.type ?? '']),
-                                                builder: (context, snapshot) {
-                                                  if (snapshot.connectionState ==
-                                                          ConnectionState
-                                                              .waiting ||
-                                                      snapshot.data == null) {
-                                                    return const CircularProgressIndicator();
-                                                  } else {
-                                                    return Wrap(
-                                                      spacing: 4,
-                                                      children: snapshot.data!
-                                                          .map((dronetype) {
-                                                        return ElevatedButton(
-                                                          onPressed: () {
-                                                            Navigator.push(
-                                                              context,
-                                                              MaterialPageRoute(
-                                                                builder:
-                                                                    (context) =>
-                                                                        DroneTypeWidget(
-                                                                  element:
-                                                                      dronetype,
-                                                                  isEditing:
-                                                                      true,
-                                                                ),
-                                                              ),
-                                                            );
-                                                          },
-                                                          style: ButtonStyle(
-                                                            shape: MaterialStateProperty
-                                                                .all<
-                                                                    RoundedRectangleBorder>(
-                                                              RoundedRectangleBorder(
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            5),
-                                                              ),
-                                                            ),
-                                                            padding:
-                                                                MaterialStateProperty
-                                                                    .all<
-                                                                        EdgeInsetsGeometry>(
-                                                              EdgeInsets
-                                                                  .symmetric(
-                                                                      horizontal:
-                                                                          1,
-                                                                      vertical:
-                                                                          1),
-                                                            ),
-                                                            backgroundColor:
-                                                                MaterialStateProperty
-                                                                    .all<Color>(
-                                                                        Styles
-                                                                            .buttonPrimaryColor),
-                                                            elevation: MaterialStateProperty
-                                                                .resolveWith<
-                                                                        double>(
-                                                                    (states) {
-                                                              if (states.contains(
-                                                                      MaterialState
-                                                                          .hovered) ||
-                                                                  states.contains(
-                                                                      MaterialState
-                                                                          .pressed)) {
-                                                                return 0;
-                                                              }
-                                                              return 0;
-                                                            }),
-                                                            foregroundColor:
-                                                                MaterialStateProperty
-                                                                    .all<Color>(
-                                                                        Colors
-                                                                            .white),
-                                                            overlayColor:
-                                                                MaterialStateProperty
-                                                                    .resolveWith<
-                                                                            Color>(
-                                                                        (states) {
-                                                              if (states.contains(
-                                                                  MaterialState
-                                                                      .hovered)) {
-                                                                return Styles
-                                                                    .buttonPrimaryColorHover;
-                                                              }
-                                                              return Colors
-                                                                  .transparent;
-                                                            }),
-                                                          ),
-                                                          child: Text(
-                                                            dronetype.name!,
-                                                            style: TextStyle(
-                                                                color: Colors
-                                                                    .white),
-                                                          ),
-                                                        );
-                                                      }).toList(),
-                                                    );
+                                                child: ElevatedButton(
+                                              onPressed: () {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        MapScreenView(PointView(
+                                                            operator
+                                                                .address!
+                                                                .geometry
+                                                                .coordinates,
+                                                            operator.address!
+                                                                .properties,
+                                                            MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .height,
+                                                            false)),
+                                                  ),
+                                                );
+                                              },
+                                              style: ButtonStyle(
+                                                shape:
+                                                    MaterialStateProperty.all<
+                                                        RoundedRectangleBorder>(
+                                                  RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            5),
+                                                  ),
+                                                ),
+                                                padding: MaterialStateProperty
+                                                    .all<EdgeInsetsGeometry>(
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 1,
+                                                      vertical: 1),
+                                                ),
+                                                backgroundColor:
+                                                    MaterialStateProperty
+                                                        .all<Color>(Styles
+                                                            .buttonPrimaryColor),
+                                                elevation: MaterialStateProperty
+                                                    .resolveWith<double>(
+                                                        (states) {
+                                                  if (states.contains(
+                                                          MaterialState
+                                                              .hovered) ||
+                                                      states.contains(
+                                                          MaterialState
+                                                              .pressed)) {
+                                                    return 0;
                                                   }
-                                                },
+                                                  return 0;
+                                                }),
+                                                foregroundColor:
+                                                    MaterialStateProperty.all<
+                                                        Color>(Colors.white),
+                                                overlayColor:
+                                                    MaterialStateProperty
+                                                        .resolveWith<Color>(
+                                                            (states) {
+                                                  if (states.contains(
+                                                      MaterialState.hovered)) {
+                                                    return Styles
+                                                        .buttonPrimaryColorHover;
+                                                  }
+                                                  return Colors.transparent;
+                                                }),
                                               ),
-                                            ),
+                                              child: const Text(
+                                                "Point?",
+                                                style: TextStyle(
+                                                    color: Colors.white),
+                                              ),
+                                            )),
                                             onTap: () =>
-                                                {_navigateElement(drone)},
+                                                {_navigateElement(operator)},
                                           ),
                                           DataCell(
                                             Center(
-                                                child: Text(
-                                                    drone.model.toString())),
-                                            onTap: () =>
-                                                {_navigateElement(drone)},
-                                          ),
-                                          DataCell(
-                                            Center(
-                                                child: Text(drone.capabilities
+                                                child: Text(operator.identity
                                                     .toString())),
                                             onTap: () =>
-                                                {_navigateElement(drone)},
+                                                {_navigateElement(operator)},
                                           ),
                                           DataCell(
                                             Center(
-                                              child: FutureBuilder<
-                                                  List<Manufacturer>>(
-                                                future: fetchManufacturerList(
-                                                    [drone.manufacturer ?? '']),
+                                                child: Text(operator
+                                                    .contactInformation
+                                                    .toString())),
+                                            onTap: () =>
+                                                {_navigateElement(operator)},
+                                          ),
+                                          DataCell(
+                                            Center(
+                                              child: FutureBuilder<List<Drone>>(
+                                                future: fetchDroneList(
+                                                    operator.drones),
                                                 builder: (context, snapshot) {
                                                   if (snapshot.connectionState ==
                                                           ConnectionState
@@ -1383,7 +1647,7 @@ class _DroneListViewState extends ConsumerState<DroneListView> {
                                                     return Wrap(
                                                       spacing: 4,
                                                       children: snapshot.data!
-                                                          .map((manufacturer) {
+                                                          .map((drone) {
                                                         return ElevatedButton(
                                                           onPressed: () {
                                                             Navigator.push(
@@ -1391,9 +1655,9 @@ class _DroneListViewState extends ConsumerState<DroneListView> {
                                                               MaterialPageRoute(
                                                                 builder:
                                                                     (context) =>
-                                                                        ManufacturerWidget(
+                                                                        DroneWidget(
                                                                   element:
-                                                                      manufacturer,
+                                                                      drone,
                                                                   isEditing:
                                                                       true,
                                                                 ),
@@ -1462,7 +1726,7 @@ class _DroneListViewState extends ConsumerState<DroneListView> {
                                                             }),
                                                           ),
                                                           child: Text(
-                                                            manufacturer.name!,
+                                                            drone.name!,
                                                             style: TextStyle(
                                                                 color: Colors
                                                                     .white),
@@ -1475,117 +1739,7 @@ class _DroneListViewState extends ConsumerState<DroneListView> {
                                               ),
                                             ),
                                             onTap: () =>
-                                                {_navigateElement(drone)},
-                                          ),
-                                          DataCell(
-                                            Center(
-                                              child:
-                                                  FutureBuilder<List<Operator>>(
-                                                future: fetchOperatorList(
-                                                    [drone.operatorId ?? '']),
-                                                builder: (context, snapshot) {
-                                                  if (snapshot.connectionState ==
-                                                          ConnectionState
-                                                              .waiting ||
-                                                      snapshot.data == null) {
-                                                    return const CircularProgressIndicator();
-                                                  } else {
-                                                    return Wrap(
-                                                      spacing: 4,
-                                                      children: snapshot.data!
-                                                          .map((operator) {
-                                                        return ElevatedButton(
-                                                          onPressed: () {
-                                                            Navigator.push(
-                                                              context,
-                                                              MaterialPageRoute(
-                                                                builder:
-                                                                    (context) =>
-                                                                        OperatorWidget(
-                                                                  element:
-                                                                      operator,
-                                                                  isEditing:
-                                                                      true,
-                                                                ),
-                                                              ),
-                                                            );
-                                                          },
-                                                          style: ButtonStyle(
-                                                            shape: MaterialStateProperty
-                                                                .all<
-                                                                    RoundedRectangleBorder>(
-                                                              RoundedRectangleBorder(
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            5),
-                                                              ),
-                                                            ),
-                                                            padding:
-                                                                MaterialStateProperty
-                                                                    .all<
-                                                                        EdgeInsetsGeometry>(
-                                                              EdgeInsets
-                                                                  .symmetric(
-                                                                      horizontal:
-                                                                          1,
-                                                                      vertical:
-                                                                          1),
-                                                            ),
-                                                            backgroundColor:
-                                                                MaterialStateProperty
-                                                                    .all<Color>(
-                                                                        Styles
-                                                                            .buttonPrimaryColor),
-                                                            elevation: MaterialStateProperty
-                                                                .resolveWith<
-                                                                        double>(
-                                                                    (states) {
-                                                              if (states.contains(
-                                                                      MaterialState
-                                                                          .hovered) ||
-                                                                  states.contains(
-                                                                      MaterialState
-                                                                          .pressed)) {
-                                                                return 0;
-                                                              }
-                                                              return 0;
-                                                            }),
-                                                            foregroundColor:
-                                                                MaterialStateProperty
-                                                                    .all<Color>(
-                                                                        Colors
-                                                                            .white),
-                                                            overlayColor:
-                                                                MaterialStateProperty
-                                                                    .resolveWith<
-                                                                            Color>(
-                                                                        (states) {
-                                                              if (states.contains(
-                                                                  MaterialState
-                                                                      .hovered)) {
-                                                                return Styles
-                                                                    .buttonPrimaryColorHover;
-                                                              }
-                                                              return Colors
-                                                                  .transparent;
-                                                            }),
-                                                          ),
-                                                          child: Text(
-                                                            operator.name!,
-                                                            style: TextStyle(
-                                                                color: Colors
-                                                                    .white),
-                                                          ),
-                                                        );
-                                                      }).toList(),
-                                                    );
-                                                  }
-                                                },
-                                              ),
-                                            ),
-                                            onTap: () =>
-                                                {_navigateElement(drone)},
+                                                {_navigateElement(operator)},
                                           ),
                                         ],
                                         onSelectChanged: (selected) {
@@ -1618,22 +1772,23 @@ class _DroneListViewState extends ConsumerState<DroneListView> {
   }
 
   void _onPageButtonPressed(int pageNumber, WidgetRef ref,
-      DronePaginationState paginationState, int maxPages) {
+      OperatorPaginationState paginationState, int maxPages) {
     if (pageNumber <= maxPages) {
-      ref.read(dronePaginationProvider.notifier).setPage(pageNumber);
+      ref.read(operatorPaginationProvider.notifier).setPage(pageNumber);
     }
   }
 
-  void _navigateElement(Drone drone) {
+  void _navigateElement(Operator operator) {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
-          builder: (context) => DroneWidget(element: drone, isEditing: true)),
+          builder: (context) =>
+              OperatorWidget(element: operator, isEditing: true)),
     );
   }
 
-  void _onDeleteElement(
-      List<Drone> drones, WidgetRef ref, DronePaginationState paginationState) {
+  void _onDeleteElement(List<Operator> operators, WidgetRef ref,
+      OperatorPaginationState paginationState) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -1649,7 +1804,7 @@ class _DroneListViewState extends ConsumerState<DroneListView> {
             ),
             TextButton(
               onPressed: () {
-                _deleteRecords(drones, ref, paginationState);
+                _deleteRecords(operators, ref, paginationState);
                 Navigator.of(context).pop();
                 setState(() {});
               },
@@ -1661,40 +1816,41 @@ class _DroneListViewState extends ConsumerState<DroneListView> {
     );
   }
 
-  Future<void> _deleteRecords(List<Drone> drones, WidgetRef ref,
-      DronePaginationState paginationState) async {
-    for (var drone in drones) {
-      await ref.read(deleteDroneProvider(drone.id!).future);
+  Future<void> _deleteRecords(List<Operator> operators, WidgetRef ref,
+      OperatorPaginationState paginationState) async {
+    for (var operator in operators) {
+      await ref.read(deleteOperatorProvider(operator.id!).future);
     }
     setState(() {
       widget._initialized = false;
     });
-    ref.read(dronePaginationProvider.notifier).setPage(1);
+    ref.read(operatorPaginationProvider.notifier).setPage(1);
   }
 }
 
-class DronePaginationState {
+class OperatorPaginationState {
   final Tuple2<int, int> pagination;
   final Map<String, int> orders;
   final Map<String, dynamic> filters;
 
-  DronePaginationState({
+  OperatorPaginationState({
     required this.pagination,
     required this.orders,
     required this.filters,
   });
 }
 
-class DronePaginationNotifier extends StateNotifier<DronePaginationState> {
-  DronePaginationNotifier()
-      : super(DronePaginationState(
+class OperatorPaginationNotifier
+    extends StateNotifier<OperatorPaginationState> {
+  OperatorPaginationNotifier()
+      : super(OperatorPaginationState(
           pagination: const Tuple2<int, int>(0, 10),
           orders: {},
           filters: {},
         ));
 
   void setPage(int page) {
-    state = DronePaginationState(
+    state = OperatorPaginationState(
       pagination: Tuple2(page * state.pagination.item2 - state.pagination.item2,
           state.pagination.item2),
       orders: state.orders,
@@ -1703,7 +1859,7 @@ class DronePaginationNotifier extends StateNotifier<DronePaginationState> {
   }
 
   void setOrders(Map<String, int> newOrders) {
-    state = DronePaginationState(
+    state = OperatorPaginationState(
       pagination: Tuple2(state.pagination.item1, state.pagination.item2),
       orders: newOrders,
       filters: state.filters,
@@ -1711,7 +1867,7 @@ class DronePaginationNotifier extends StateNotifier<DronePaginationState> {
   }
 
   void setFilters(Map<String, dynamic> newFilters) {
-    state = DronePaginationState(
+    state = OperatorPaginationState(
       pagination: Tuple2(state.pagination.item1, state.pagination.item2),
       orders: state.orders,
       filters: newFilters,
@@ -1727,76 +1883,77 @@ class DronePaginationNotifier extends StateNotifier<DronePaginationState> {
   }
 }
 
-final dronePaginationProvider =
-    StateNotifierProvider<DronePaginationNotifier, DronePaginationState>(
-  (ref) => DronePaginationNotifier(),
+final operatorPaginationProvider =
+    StateNotifierProvider<OperatorPaginationNotifier, OperatorPaginationState>(
+  (ref) => OperatorPaginationNotifier(),
 );
 
 // **************************************************************************
 // RiverpodCustomGenerator
 // **************************************************************************
 
-final getDroneProvider =
-    FutureProvider.autoDispose.family<Drone, String>((ref, droneId) async {
-  final json = await http.get(Uri.parse('$baseURL/drone/$droneId'));
+final getOperatorProvider = FutureProvider.autoDispose
+    .family<Operator, String>((ref, operatorId) async {
+  final json = await http.get(Uri.parse('$baseURL/operator/$operatorId'));
   final jsonData = jsonDecode(json.body);
-  return Drone.fromJson(jsonData);
+  return Operator.fromJson(jsonData);
 });
 
-final createDroneProvider = FutureProvider.autoDispose
-    .family<void, Tuple2<Drone, BuildContext>>((ref, tuple) async {
-  Drone droneInstance = tuple.item1;
+final createOperatorProvider = FutureProvider.autoDispose
+    .family<void, Tuple2<Operator, BuildContext>>((ref, tuple) async {
+  Operator operatorInstance = tuple.item1;
   BuildContext context = tuple.item2;
 
   final response = await http.post(
-    Uri.parse('$baseURL/drone'),
+    Uri.parse('$baseURL/operator'),
     headers: {'Content-Type': 'application/json'},
-    body: jsonEncode(droneInstance.toJson()),
+    body: jsonEncode(operatorInstance.toJson()),
   );
   if (response.statusCode != 200) {
     CustomSnackBar.show(context, jsonDecode(response.body)['detail']);
   }
 });
 
-final updateDroneProvider = FutureProvider.autoDispose
-    .family<void, Tuple2<Drone, BuildContext>>((ref, tuple) async {
-  Drone droneInstance = tuple.item1;
+final updateOperatorProvider = FutureProvider.autoDispose
+    .family<void, Tuple2<Operator, BuildContext>>((ref, tuple) async {
+  Operator operatorInstance = tuple.item1;
   BuildContext context = tuple.item2;
 
   final response = await http.put(
-    Uri.parse('$baseURL/drone/${droneInstance.id}'),
+    Uri.parse('$baseURL/operator/${operatorInstance.id}'),
     headers: {'Content-Type': 'application/json'},
-    body: jsonEncode(droneInstance.toJson()),
+    body: jsonEncode(operatorInstance.toJson()),
   );
   if (response.statusCode != 200) {
     CustomSnackBar.show(context, jsonDecode(response.body)['detail']);
   }
 });
 
-final deleteDroneProvider =
-    FutureProvider.autoDispose.family<void, String>((ref, droneId) async {
+final deleteOperatorProvider =
+    FutureProvider.autoDispose.family<void, String>((ref, operatorId) async {
   final response = await http.delete(
-    Uri.parse('$baseURL/drone/$droneId'),
+    Uri.parse('$baseURL/operator/$operatorId'),
   );
   if (response.statusCode != 200) {
-    throw Exception('Failed to delete Drone');
+    throw Exception('Failed to delete Operator');
   }
 });
 
-class DronePaginationData {
-  final List<Drone> items;
+class OperatorPaginationData {
+  final List<Operator> items;
   final int currentPage;
   final int maxPages;
 
-  DronePaginationData({
+  OperatorPaginationData({
     required this.items,
     required this.currentPage,
     required this.maxPages,
   });
 }
 
-final getAllDroneProvider = FutureProvider.autoDispose
-    .family<DronePaginationData, DronePaginationState>((ref, state) async {
+final getAllOperatorProvider = FutureProvider.autoDispose
+    .family<OperatorPaginationData, OperatorPaginationState>(
+        (ref, state) async {
   final fixedQuery = {
     if (state.orders.isNotEmpty) 'orders': state.orders,
     if (state.filters.isNotEmpty)
@@ -1806,16 +1963,103 @@ final getAllDroneProvider = FutureProvider.autoDispose
 
   final json = await http.post(
       Uri.parse(
-          '$baseURL/drones?skip=${state.pagination.item1}&limit=${state.pagination.item2}'),
+          '$baseURL/operators?skip=${state.pagination.item1}&limit=${state.pagination.item2}'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode(fixedQuery));
   final jsonData = jsonDecode(json.body);
 
-  return DronePaginationData(
+  return OperatorPaginationData(
     items: (jsonData['items'] as List)
-        .map((data) => Drone.fromJson(data))
+        .map((data) => Operator.fromJson(data))
         .toList(),
     currentPage: jsonData['current_page'],
     maxPages: jsonData['max_pages'],
   );
+});
+
+class Auth {
+  final String email;
+  final String password;
+
+  Auth({required this.email, required this.password});
+
+  Map<String, dynamic> toJson() {
+    return {
+      'email': email,
+      'password': password,
+    };
+  }
+}
+
+class AuthResult {
+  final bool success;
+  final String? errorMessage;
+  final Operator? operator;
+
+  AuthResult(this.success, {this.errorMessage, this.operator});
+}
+
+final loginOperatorProvider =
+    FutureProvider.autoDispose.family<AuthResult, Auth>((ref, auth) async {
+  final response = await http.post(
+    Uri.parse('$baseURL/auth/login/operator/'),
+    headers: {'Content-Type': 'application/json'},
+    body: jsonEncode(auth.toJson()),
+  );
+  if (response.statusCode != 200) {
+    return AuthResult(false, errorMessage: 'Incorrect email or password.');
+  }
+
+  final responseData = jsonDecode(response.body);
+  final token = responseData['token'];
+
+  final prefs = await SharedPreferences.getInstance();
+  await prefs.setString('token', token);
+
+  return AuthResult(true, operator: Operator.fromJson(responseData['user']));
+});
+
+final registerOperatorProvider = FutureProvider.autoDispose
+    .family<AuthResult, Operator>((ref, operator) async {
+  final response = await http.post(
+    Uri.parse('$baseURL/auth/register/operator/'),
+    headers: {'Content-Type': 'application/json'},
+    body: jsonEncode(operator.toJson()),
+  );
+  if (response.statusCode != 200) {
+    return AuthResult(false, errorMessage: jsonDecode(response.body)['detail']);
+  }
+
+  final responseData = jsonDecode(response.body);
+  final token = responseData['token'];
+
+  final prefs = await SharedPreferences.getInstance();
+  await prefs.setString('token', token);
+
+  return AuthResult(true, operator: Operator.fromJson(responseData['user']));
+});
+
+final verifyTokenOperatorProvider =
+    FutureProvider.autoDispose<bool>((ref) async {
+  try {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+
+    if (token == null) {
+      return false;
+    }
+
+    final response = await http.get(
+      Uri.parse('$baseURL/auth/verify/operator/$token'),
+      headers: {'Authorization': 'Bearer $token'},
+    );
+
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      return false;
+    }
+  } catch (e) {
+    return false;
+  }
 });
