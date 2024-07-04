@@ -1,0 +1,6 @@
+DroneTypeHomeWidget
+OperatorHomeWidget
+RoleHomeWidget
+DroneHomeWidget
+ManufacturerHomeWidget
+AccessRightHomeWidget

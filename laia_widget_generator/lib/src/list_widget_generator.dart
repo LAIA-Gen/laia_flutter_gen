@@ -164,7 +164,9 @@ class _${className}ListViewState extends ConsumerState<${className}ListView> {
         ),
       body: ${classNamePlural}AsyncValue.when(
         loading: () => const CircularProgressIndicator(),
-        error: (error, stackTrace) => Text('Error: \$error'),
+        error: (error, stackTrace) => Center(
+          child: Text('You have no access to these records...'),
+        ),
         data: (${className}PaginationData data) {
           final $classNamePlural = data.items;
 

@@ -126,10 +126,19 @@ class _RoleWidgetState extends State<RoleWidget> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
+          var initialRole = widget.element;
+          Map<String, dynamic> updates = {};
+          updates['id'] = widget.element?.id;
+
           String? updatedname = nameWidgetKey.currentState?.getUpdatedValue();
+
+          if (updatedname != initialRole?.name) {
+            updates['name'] = updatedname;
+          }
 
           String? updatedid = idWidgetKey.currentState?.getUpdatedValue();
 
+          updates['id'] = updatedid;
           Role updatedRole = widget.element ??
               Role(
                 name: updatedname ?? '',
@@ -140,15 +149,15 @@ class _RoleWidgetState extends State<RoleWidget> {
           var container = ProviderContainer();
           try {
             if (widget.isEditing) {
-              await container
-                  .read(updateRoleProvider(Tuple2(updatedRole, context)));
-              print('Role updated successfully');
-              CustomSnackBar.show(context, 'Role updated successfully');
+              if (updates.isNotEmpty) {
+                await container
+                    .read(updateRoleProvider(Tuple2(updates, context)));
+              } else {
+                CustomSnackBar.show(context, "No changes were detected");
+              }
             } else {
               await container
                   .read(createRoleProvider(Tuple2(updatedRole, context)));
-              print('Role created successfully');
-              CustomSnackBar.show(context, 'Role created successfully');
             }
           } catch (error) {
             print('Failed to update Role: $error');
@@ -713,7 +722,9 @@ class _RoleListViewState extends ConsumerState<RoleListView> {
         ),
         body: rolesAsyncValue.when(
           loading: () => const CircularProgressIndicator(),
-          error: (error, stackTrace) => Text('Error: $error'),
+          error: (error, stackTrace) => Center(
+            child: Text('You have no access to these records...'),
+          ),
           data: (RolePaginationData data) {
             final roles = data.items;
 
@@ -1054,46 +1065,55 @@ final rolePaginationProvider =
 
 final getRoleProvider =
     FutureProvider.autoDispose.family<Role, String>((ref, roleId) async {
-  final json = await http.get(Uri.parse('$baseURL/role/$roleId'));
+  final headers = await getHeaders();
+  final json =
+      await http.get(Uri.parse('$baseURL/role/$roleId'), headers: headers);
   final jsonData = jsonDecode(json.body);
   return Role.fromJson(jsonData);
 });
 
 final createRoleProvider = FutureProvider.autoDispose
     .family<void, Tuple2<Role, BuildContext>>((ref, tuple) async {
+  final headers = await getHeaders();
   Role roleInstance = tuple.item1;
   BuildContext context = tuple.item2;
 
   final response = await http.post(
     Uri.parse('$baseURL/role'),
-    headers: {'Content-Type': 'application/json'},
+    headers: headers,
     body: jsonEncode(roleInstance.toJson()),
   );
   if (response.statusCode != 200) {
     CustomSnackBar.show(context, jsonDecode(response.body)['detail']);
+  } else {
+    CustomSnackBar.show(context, 'Role created successfully');
   }
 });
 
 final updateRoleProvider = FutureProvider.autoDispose
-    .family<void, Tuple2<Role, BuildContext>>((ref, tuple) async {
-  Role roleInstance = tuple.item1;
+    .family<void, Tuple2<Map<String, dynamic>, BuildContext>>(
+        (ref, tuple) async {
+  final headers = await getHeaders();
+  Map<String, dynamic> roleInstance = tuple.item1;
   BuildContext context = tuple.item2;
 
   final response = await http.put(
-    Uri.parse('$baseURL/role/${roleInstance.id}'),
-    headers: {'Content-Type': 'application/json'},
-    body: jsonEncode(roleInstance.toJson()),
+    Uri.parse('$baseURL/role/${roleInstance['id']}'),
+    headers: headers,
+    body: jsonEncode(roleInstance),
   );
   if (response.statusCode != 200) {
     CustomSnackBar.show(context, jsonDecode(response.body)['detail']);
+  } else {
+    CustomSnackBar.show(context, 'Role updated successfully');
   }
 });
 
 final deleteRoleProvider =
     FutureProvider.autoDispose.family<void, String>((ref, roleId) async {
-  final response = await http.delete(
-    Uri.parse('$baseURL/role/$roleId'),
-  );
+  final headers = await getHeaders();
+  final response =
+      await http.delete(Uri.parse('$baseURL/role/$roleId'), headers: headers);
   if (response.statusCode != 200) {
     throw Exception('Failed to delete Role');
   }
@@ -1113,6 +1133,7 @@ class RolePaginationData {
 
 final getAllRoleProvider = FutureProvider.autoDispose
     .family<RolePaginationData, RolePaginationState>((ref, state) async {
+  final headers = await getHeaders();
   final fixedQuery = {
     if (state.orders.isNotEmpty) 'orders': state.orders,
     if (state.filters.isNotEmpty)
@@ -1123,7 +1144,7 @@ final getAllRoleProvider = FutureProvider.autoDispose
   final json = await http.post(
       Uri.parse(
           '$baseURL/roles?skip=${state.pagination.item1}&limit=${state.pagination.item2}'),
-      headers: {'Content-Type': 'application/json'},
+      headers: headers,
       body: jsonEncode(fixedQuery));
   final jsonData = jsonDecode(json.body);
 

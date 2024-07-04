@@ -542,14 +542,14 @@ packages:
       path: "../laia_riverpod_custom_generator"
       relative: true
     source: path
-    version: "0.0.10"
+    version: "0.0.12"
   laia_widget_generator:
     dependency: "direct dev"
     description:
       path: "../laia_widget_generator"
       relative: true
     source: path
-    version: "0.0.15"
+    version: "0.0.19"
   latlong2:
     dependency: "direct main"
     description:

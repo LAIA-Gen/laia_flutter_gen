@@ -38,9 +38,9 @@ class RiverpodCustomGenerator extends GeneratorForAnnotation<RiverpodGenAnnotati
       deletePath = deletePath.replaceAll('{element_id}', '\$${classNameLowercase}Id');
     }
     if (updatePath == '') {
-      updatePath = '/$classNameLowercase/\${${classNameLowercase}Instance.id}';
+      updatePath = "/$classNameLowercase/\${${classNameLowercase}Instance['id']}";
     } else {
-      updatePath = updatePath.replaceAll('{element_id}', '\${${classNameLowercase}Instance.id}');
+      updatePath = updatePath.replaceAll('{element_id}', "\${${classNameLowercase}Instance['id']}");
     }
     if (createPath == '') {
       createPath = '/$classNameLowercase';
@@ -52,42 +52,51 @@ class RiverpodCustomGenerator extends GeneratorForAnnotation<RiverpodGenAnnotati
     final buffer = StringBuffer();
     buffer.writeln('''
       final get${className}Provider = FutureProvider.autoDispose.family<$className, String>((ref, ${classNameLowercase}Id) async {
-        final json = await http.get(Uri.parse('\$baseURL$getPath'));
+        final headers = await getHeaders();
+        final json = await http.get(Uri.parse('\$baseURL$getPath'), headers: headers);
         final jsonData = jsonDecode(json.body);
         return $className.fromJson(jsonData);
       });
 
       final create${className}Provider = FutureProvider.autoDispose.family<void, Tuple2<$className, BuildContext>>((ref, tuple) async {
+        final headers = await getHeaders();
         $className ${classNameLowercase}Instance = tuple.item1;
         BuildContext context = tuple.item2;
 
         final response = await http.post(
           Uri.parse('\$baseURL$createPath'),
-          headers: {'Content-Type': 'application/json'},
+          headers: headers,
           body: jsonEncode(${classNameLowercase}Instance.toJson()),
         );
         if (response.statusCode != 200) {
           CustomSnackBar.show(context, jsonDecode(response.body)['detail']);
+        } else {
+          CustomSnackBar.show(context, '$className created successfully');
         }
       });
 
-      final update${className}Provider = FutureProvider.autoDispose.family<void, Tuple2<$className, BuildContext>>((ref, tuple) async {
-        $className ${classNameLowercase}Instance = tuple.item1;
+      final update${className}Provider = FutureProvider.autoDispose.family<void, Tuple2<Map<String,dynamic>, BuildContext>>((ref, tuple) async {
+        final headers = await getHeaders();
+        Map<String,dynamic> ${classNameLowercase}Instance = tuple.item1;
         BuildContext context = tuple.item2;
 
         final response = await http.put(
           Uri.parse('\$baseURL$updatePath'),
-          headers: {'Content-Type': 'application/json'},
-          body: jsonEncode(${classNameLowercase}Instance.toJson()),
+          headers: headers,
+          body: jsonEncode(${classNameLowercase}Instance),
         );
         if (response.statusCode != 200) {
           CustomSnackBar.show(context, jsonDecode(response.body)['detail']);
+        } else {
+          CustomSnackBar.show(context, '$className updated successfully');
         }
       });
 
       final delete${className}Provider = FutureProvider.autoDispose.family<void, String>((ref, ${classNameLowercase}Id) async {
+        final headers = await getHeaders();
         final response = await http.delete(
           Uri.parse('\$baseURL$deletePath'),
+          headers: headers
         );
         if (response.statusCode != 200) {
           throw Exception('Failed to delete $className');
@@ -107,6 +116,7 @@ class RiverpodCustomGenerator extends GeneratorForAnnotation<RiverpodGenAnnotati
       }
 
       final getAll${className}Provider = FutureProvider.autoDispose.family<${className}PaginationData, ${className}PaginationState>((ref, state) async {
+        final headers = await getHeaders();
         final fixedQuery = {
           if (state.orders.isNotEmpty) 'orders': state.orders,
           if (state.filters.isNotEmpty) 'filters': Map.from(state.filters)
@@ -115,7 +125,7 @@ class RiverpodCustomGenerator extends GeneratorForAnnotation<RiverpodGenAnnotati
 
         final json = await http.post(Uri.parse(
           '\$baseURL$getAllPath?skip=\${state.pagination.item1}&limit=\${state.pagination.item2}'),
-          headers: {'Content-Type': 'application/json'},
+          headers: headers,
           body: jsonEncode(fixedQuery));
         final jsonData = jsonDecode(json.body);
 

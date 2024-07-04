@@ -114,6 +114,8 @@ class _${visitor.className}WidgetState extends State<${visitor.className}Widget>
         case 'Polygon?':
           widget = 'MapWidget';
           break;
+        case 'dynamic':
+          widget = 'JsonWidget';
         default: 
           widget = 'DefaultWidget';
           break;
@@ -260,6 +262,8 @@ class _${visitor.className}WidgetState extends State<${visitor.className}Widget>
         case 'Polygon?':
           widget = 'MapWidget';
           break;
+        case 'dynamic':
+          widget = 'JsonWidget';
         default:
           widget = 'DefaultWidget';
           break;
@@ -346,6 +350,9 @@ class _${visitor.className}WidgetState extends State<${visitor.className}Widget>
     buffer.writeln('''
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
+          var initial${visitor.className} = widget.element;
+          Map<String, dynamic> updates = {};
+          updates['id'] = widget.element?.id;
           ''');
         final List<String> updatedFields = [];
         for (var fieldName in visitor.fields.keys) {
@@ -422,6 +429,15 @@ class _${visitor.className}WidgetState extends State<${visitor.className}Widget>
                 break;
               
             }
+            if (fieldName == 'id') {
+              buffer.writeln('''updates['id'] = updatedid;''');
+            } else {
+              buffer.writeln('''
+if (updated$fieldName != initial${visitor.className}?.$fieldName) {
+  updates['$fieldName'] = updated$fieldName;
+}
+''');
+            }
           }
         }
     
@@ -487,13 +503,14 @@ class _${visitor.className}WidgetState extends State<${visitor.className}Widget>
           var container = ProviderContainer();
           try {
             if (widget.isEditing) {
-              await container.read(update${visitor.className}Provider(Tuple2(updated${visitor.className}, context)));
-              print('${visitor.className} updated successfully');
-              CustomSnackBar.show(context, '${visitor.className} updated successfully');
+              if(updates.isNotEmpty) {
+                await container.read(
+                  update${visitor.className}Provider(Tuple2(updates, context)));
+              } else {
+                CustomSnackBar.show(context, "No changes were detected");
+              }
             } else {
               await container.read(create${visitor.className}Provider(Tuple2(updated${visitor.className}, context)));
-              print('${visitor.className} created successfully');
-              CustomSnackBar.show(context, '${visitor.className} created successfully');
             }
           } catch (error) {
             print('Failed to update ${visitor.className}: \$error');

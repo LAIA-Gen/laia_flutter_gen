@@ -268,20 +268,44 @@ class _ManufacturerWidgetState extends State<ManufacturerWidget> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
+          var initialManufacturer = widget.element;
+          Map<String, dynamic> updates = {};
+          updates['id'] = widget.element?.id;
+
           String? updatedcertifications_compliance =
               certifications_complianceWidgetKey.currentState
                   ?.getUpdatedValue();
 
+          if (updatedcertifications_compliance !=
+              initialManufacturer?.certifications_compliance) {
+            updates['certifications_compliance'] =
+                updatedcertifications_compliance;
+          }
+
           String? updatedcontact_information =
               contact_informationWidgetKey.currentState?.getUpdatedValue();
+
+          if (updatedcontact_information !=
+              initialManufacturer?.contact_information) {
+            updates['contact_information'] = updatedcontact_information;
+          }
 
           String? updatedcountry =
               countryWidgetKey.currentState?.getUpdatedValue();
 
+          if (updatedcountry != initialManufacturer?.country) {
+            updates['country'] = updatedcountry;
+          }
+
           String? updatedid = idWidgetKey.currentState?.getUpdatedValue();
 
+          updates['id'] = updatedid;
           String? updatedinformation =
               informationWidgetKey.currentState?.getUpdatedValue();
+
+          if (updatedinformation != initialManufacturer?.information) {
+            updates['information'] = updatedinformation;
+          }
 
           dynamic updatedlocation =
               locationWidgetKey.currentState?.getUpdatedValue();
@@ -293,10 +317,22 @@ class _ManufacturerWidgetState extends State<ManufacturerWidget> {
                   type: updatedlocation.geometry.type),
               properties: updatedlocation.properties);
 
+          if (updatedlocation != initialManufacturer?.location) {
+            updates['location'] = updatedlocation;
+          }
+
           String? updatedname = nameWidgetKey.currentState?.getUpdatedValue();
+
+          if (updatedname != initialManufacturer?.name) {
+            updates['name'] = updatedname;
+          }
 
           String? updatedtarget_market =
               target_marketWidgetKey.currentState?.getUpdatedValue();
+
+          if (updatedtarget_market != initialManufacturer?.target_market) {
+            updates['target_market'] = updatedtarget_market;
+          }
 
           Manufacturer updatedManufacturer = widget.element ??
               Manufacturer(
@@ -323,15 +359,15 @@ class _ManufacturerWidgetState extends State<ManufacturerWidget> {
           var container = ProviderContainer();
           try {
             if (widget.isEditing) {
-              await container.read(updateManufacturerProvider(
-                  Tuple2(updatedManufacturer, context)));
-              print('Manufacturer updated successfully');
-              CustomSnackBar.show(context, 'Manufacturer updated successfully');
+              if (updates.isNotEmpty) {
+                await container
+                    .read(updateManufacturerProvider(Tuple2(updates, context)));
+              } else {
+                CustomSnackBar.show(context, "No changes were detected");
+              }
             } else {
               await container.read(createManufacturerProvider(
                   Tuple2(updatedManufacturer, context)));
-              print('Manufacturer created successfully');
-              CustomSnackBar.show(context, 'Manufacturer created successfully');
             }
           } catch (error) {
             print('Failed to update Manufacturer: $error');
@@ -921,7 +957,9 @@ class _ManufacturerListViewState extends ConsumerState<ManufacturerListView> {
         ),
         body: manufacturersAsyncValue.when(
           loading: () => const CircularProgressIndicator(),
-          error: (error, stackTrace) => Text('Error: $error'),
+          error: (error, stackTrace) => Center(
+            child: Text('You have no access to these records...'),
+          ),
           data: (ManufacturerPaginationData data) {
             final manufacturers = data.items;
 
@@ -1593,47 +1631,57 @@ final manufacturerPaginationProvider = StateNotifierProvider<
 
 final getManufacturerProvider = FutureProvider.autoDispose
     .family<Manufacturer, String>((ref, manufacturerId) async {
-  final json =
-      await http.get(Uri.parse('$baseURL/manufacturer/$manufacturerId'));
+  final headers = await getHeaders();
+  final json = await http.get(
+      Uri.parse('$baseURL/manufacturer/$manufacturerId'),
+      headers: headers);
   final jsonData = jsonDecode(json.body);
   return Manufacturer.fromJson(jsonData);
 });
 
 final createManufacturerProvider = FutureProvider.autoDispose
     .family<void, Tuple2<Manufacturer, BuildContext>>((ref, tuple) async {
+  final headers = await getHeaders();
   Manufacturer manufacturerInstance = tuple.item1;
   BuildContext context = tuple.item2;
 
   final response = await http.post(
     Uri.parse('$baseURL/manufacturer'),
-    headers: {'Content-Type': 'application/json'},
+    headers: headers,
     body: jsonEncode(manufacturerInstance.toJson()),
   );
   if (response.statusCode != 200) {
     CustomSnackBar.show(context, jsonDecode(response.body)['detail']);
+  } else {
+    CustomSnackBar.show(context, 'Manufacturer created successfully');
   }
 });
 
 final updateManufacturerProvider = FutureProvider.autoDispose
-    .family<void, Tuple2<Manufacturer, BuildContext>>((ref, tuple) async {
-  Manufacturer manufacturerInstance = tuple.item1;
+    .family<void, Tuple2<Map<String, dynamic>, BuildContext>>(
+        (ref, tuple) async {
+  final headers = await getHeaders();
+  Map<String, dynamic> manufacturerInstance = tuple.item1;
   BuildContext context = tuple.item2;
 
   final response = await http.put(
-    Uri.parse('$baseURL/manufacturer/${manufacturerInstance.id}'),
-    headers: {'Content-Type': 'application/json'},
-    body: jsonEncode(manufacturerInstance.toJson()),
+    Uri.parse('$baseURL/manufacturer/${manufacturerInstance['id']}'),
+    headers: headers,
+    body: jsonEncode(manufacturerInstance),
   );
   if (response.statusCode != 200) {
     CustomSnackBar.show(context, jsonDecode(response.body)['detail']);
+  } else {
+    CustomSnackBar.show(context, 'Manufacturer updated successfully');
   }
 });
 
 final deleteManufacturerProvider = FutureProvider.autoDispose
     .family<void, String>((ref, manufacturerId) async {
+  final headers = await getHeaders();
   final response = await http.delete(
-    Uri.parse('$baseURL/manufacturer/$manufacturerId'),
-  );
+      Uri.parse('$baseURL/manufacturer/$manufacturerId'),
+      headers: headers);
   if (response.statusCode != 200) {
     throw Exception('Failed to delete Manufacturer');
   }
@@ -1654,6 +1702,7 @@ class ManufacturerPaginationData {
 final getAllManufacturerProvider = FutureProvider.autoDispose
     .family<ManufacturerPaginationData, ManufacturerPaginationState>(
         (ref, state) async {
+  final headers = await getHeaders();
   final fixedQuery = {
     if (state.orders.isNotEmpty) 'orders': state.orders,
     if (state.filters.isNotEmpty)
@@ -1664,7 +1713,7 @@ final getAllManufacturerProvider = FutureProvider.autoDispose
   final json = await http.post(
       Uri.parse(
           '$baseURL/manufacturers?skip=${state.pagination.item1}&limit=${state.pagination.item2}'),
-      headers: {'Content-Type': 'application/json'},
+      headers: headers,
       body: jsonEncode(fixedQuery));
   final jsonData = jsonDecode(json.body);
 

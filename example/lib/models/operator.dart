@@ -22,8 +22,8 @@ part 'operator.g.dart';
 @JsonSerializable()
 @RiverpodGenAnnotation(auth: true)
 @HomeWidgetElementGenAnnotation()
-@ListWidgetGenAnnotation(defaultFields: ['name', 'address', 'identity', 'contactInformation', 'drones'], )
-@ElementWidgetGen(auth: true)
+@ListWidgetGenAnnotation(defaultFields: ['name', 'address', 'identity', 'contactInformation', 'drones'])
+@ElementWidgetGen(auth: true, defaultFieldsDetail: [['name'], ['email'], ['password'], ['address'], ['identity'], ['contactInformation'], ['roles'], ['drones']])
 @CopyWith()
 class Operator {
   @Field(editable: true, fieldDescription: "The address of the Drone Operator", fieldName: "Address", placeholder: "Enter the address of the Drone Operator")

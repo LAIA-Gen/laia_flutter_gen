@@ -164,17 +164,17 @@ class _AccessRightWidgetState extends State<AccessRightWidget> {
   final GlobalKey<ModelsSelectableWidgetState> modelWidgetKey =
       GlobalKey<ModelsSelectableWidgetState>();
 
-  final GlobalKey<DefaultWidgetState> operationsWidgetKey =
-      GlobalKey<DefaultWidgetState>();
+  final GlobalKey<JsonWidgetState> operationsWidgetKey =
+      GlobalKey<JsonWidgetState>();
 
-  final GlobalKey<DefaultWidgetState> fields_createWidgetKey =
-      GlobalKey<DefaultWidgetState>();
+  final GlobalKey<JsonWidgetState> fields_createWidgetKey =
+      GlobalKey<JsonWidgetState>();
 
-  final GlobalKey<DefaultWidgetState> fields_editWidgetKey =
-      GlobalKey<DefaultWidgetState>();
+  final GlobalKey<JsonWidgetState> fields_editWidgetKey =
+      GlobalKey<JsonWidgetState>();
 
-  final GlobalKey<DefaultWidgetState> fields_visibleWidgetKey =
-      GlobalKey<DefaultWidgetState>();
+  final GlobalKey<JsonWidgetState> fields_visibleWidgetKey =
+      GlobalKey<JsonWidgetState>();
 
   final GlobalKey<StringWidgetState> idWidgetKey =
       GlobalKey<StringWidgetState>();
@@ -220,7 +220,7 @@ class _AccessRightWidgetState extends State<AccessRightWidget> {
               placeholder: "Type the model",
               value: widget.element?.model,
             ),
-            DefaultWidget(
+            JsonWidget(
               key: operationsWidgetKey,
               fieldName: "Operations Permitted",
               fieldDescription: "This is the operations",
@@ -229,7 +229,7 @@ class _AccessRightWidgetState extends State<AccessRightWidget> {
                   "{'create': 1, 'read': 1, 'update': 0, 'delete': 0, 'search': 1}",
               value: widget.element?.operations,
             ),
-            DefaultWidget(
+            JsonWidget(
               key: fields_createWidgetKey,
               fieldName: "Fields Creation",
               fieldDescription: "This is the fields_create",
@@ -237,7 +237,7 @@ class _AccessRightWidgetState extends State<AccessRightWidget> {
               placeholder: "{'field_1': 1, 'field_2': 1, 'field_3': 0, ...}",
               value: widget.element?.fields_create,
             ),
-            DefaultWidget(
+            JsonWidget(
               key: fields_editWidgetKey,
               fieldName: "Fields Edition",
               fieldDescription: "This is the fields_edit",
@@ -245,7 +245,7 @@ class _AccessRightWidgetState extends State<AccessRightWidget> {
               placeholder: "{'field_1': 1, 'field_2': 1, 'field_3': 0, ...}",
               value: widget.element?.fields_edit,
             ),
-            DefaultWidget(
+            JsonWidget(
               key: fields_visibleWidgetKey,
               fieldName: "Fields Visibility",
               fieldDescription: "This is the fields_visible",
@@ -266,26 +266,59 @@ class _AccessRightWidgetState extends State<AccessRightWidget> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
+          var initialAccessRight = widget.element;
+          Map<String, dynamic> updates = {};
+          updates['id'] = widget.element?.id;
+
           String? updatedname = nameWidgetKey.currentState?.getUpdatedValue();
+
+          if (updatedname != initialAccessRight?.name) {
+            updates['name'] = updatedname;
+          }
 
           String? updatedrole = roleWidgetKey.currentState?.getUpdatedValue();
 
+          if (updatedrole != initialAccessRight?.role) {
+            updates['role'] = updatedrole;
+          }
+
           String? updatedmodel = modelWidgetKey.currentState?.getUpdatedValue();
+
+          if (updatedmodel != initialAccessRight?.model) {
+            updates['model'] = updatedmodel;
+          }
 
           dynamic updatedoperations =
               operationsWidgetKey.currentState?.getUpdatedValue();
 
+          if (updatedoperations != initialAccessRight?.operations) {
+            updates['operations'] = updatedoperations;
+          }
+
           dynamic updatedfields_create =
               fields_createWidgetKey.currentState?.getUpdatedValue();
+
+          if (updatedfields_create != initialAccessRight?.fields_create) {
+            updates['fields_create'] = updatedfields_create;
+          }
 
           dynamic updatedfields_edit =
               fields_editWidgetKey.currentState?.getUpdatedValue();
 
+          if (updatedfields_edit != initialAccessRight?.fields_edit) {
+            updates['fields_edit'] = updatedfields_edit;
+          }
+
           dynamic updatedfields_visible =
               fields_visibleWidgetKey.currentState?.getUpdatedValue();
 
+          if (updatedfields_visible != initialAccessRight?.fields_visible) {
+            updates['fields_visible'] = updatedfields_visible;
+          }
+
           String? updatedid = idWidgetKey.currentState?.getUpdatedValue();
 
+          updates['id'] = updatedid;
           AccessRight updatedAccessRight = widget.element ??
               AccessRight(
                 name: updatedname ?? '',
@@ -310,15 +343,15 @@ class _AccessRightWidgetState extends State<AccessRightWidget> {
           var container = ProviderContainer();
           try {
             if (widget.isEditing) {
-              await container.read(updateAccessRightProvider(
-                  Tuple2(updatedAccessRight, context)));
-              print('AccessRight updated successfully');
-              CustomSnackBar.show(context, 'AccessRight updated successfully');
+              if (updates.isNotEmpty) {
+                await container
+                    .read(updateAccessRightProvider(Tuple2(updates, context)));
+              } else {
+                CustomSnackBar.show(context, "No changes were detected");
+              }
             } else {
               await container.read(createAccessRightProvider(
                   Tuple2(updatedAccessRight, context)));
-              print('AccessRight created successfully');
-              CustomSnackBar.show(context, 'AccessRight created successfully');
             }
           } catch (error) {
             print('Failed to update AccessRight: $error');
@@ -919,7 +952,9 @@ class _AccessRightListViewState extends ConsumerState<AccessRightListView> {
         ),
         body: accessrightsAsyncValue.when(
           loading: () => const CircularProgressIndicator(),
-          error: (error, stackTrace) => Text('Error: $error'),
+          error: (error, stackTrace) => Center(
+            child: Text('You have no access to these records...'),
+          ),
           data: (AccessRightPaginationData data) {
             final accessrights = data.items;
 
@@ -1649,46 +1684,56 @@ final accessrightPaginationProvider = StateNotifierProvider<
 
 final getAccessRightProvider = FutureProvider.autoDispose
     .family<AccessRight, String>((ref, accessrightId) async {
-  final json = await http.get(Uri.parse('$baseURL/accessright/$accessrightId'));
+  final headers = await getHeaders();
+  final json = await http.get(Uri.parse('$baseURL/accessright/$accessrightId'),
+      headers: headers);
   final jsonData = jsonDecode(json.body);
   return AccessRight.fromJson(jsonData);
 });
 
 final createAccessRightProvider = FutureProvider.autoDispose
     .family<void, Tuple2<AccessRight, BuildContext>>((ref, tuple) async {
+  final headers = await getHeaders();
   AccessRight accessrightInstance = tuple.item1;
   BuildContext context = tuple.item2;
 
   final response = await http.post(
     Uri.parse('$baseURL/accessright'),
-    headers: {'Content-Type': 'application/json'},
+    headers: headers,
     body: jsonEncode(accessrightInstance.toJson()),
   );
   if (response.statusCode != 200) {
     CustomSnackBar.show(context, jsonDecode(response.body)['detail']);
+  } else {
+    CustomSnackBar.show(context, 'AccessRight created successfully');
   }
 });
 
 final updateAccessRightProvider = FutureProvider.autoDispose
-    .family<void, Tuple2<AccessRight, BuildContext>>((ref, tuple) async {
-  AccessRight accessrightInstance = tuple.item1;
+    .family<void, Tuple2<Map<String, dynamic>, BuildContext>>(
+        (ref, tuple) async {
+  final headers = await getHeaders();
+  Map<String, dynamic> accessrightInstance = tuple.item1;
   BuildContext context = tuple.item2;
 
   final response = await http.put(
-    Uri.parse('$baseURL/accessright/${accessrightInstance.id}'),
-    headers: {'Content-Type': 'application/json'},
-    body: jsonEncode(accessrightInstance.toJson()),
+    Uri.parse('$baseURL/accessright/${accessrightInstance['id']}'),
+    headers: headers,
+    body: jsonEncode(accessrightInstance),
   );
   if (response.statusCode != 200) {
     CustomSnackBar.show(context, jsonDecode(response.body)['detail']);
+  } else {
+    CustomSnackBar.show(context, 'AccessRight updated successfully');
   }
 });
 
 final deleteAccessRightProvider =
     FutureProvider.autoDispose.family<void, String>((ref, accessrightId) async {
+  final headers = await getHeaders();
   final response = await http.delete(
-    Uri.parse('$baseURL/accessright/$accessrightId'),
-  );
+      Uri.parse('$baseURL/accessright/$accessrightId'),
+      headers: headers);
   if (response.statusCode != 200) {
     throw Exception('Failed to delete AccessRight');
   }
@@ -1709,6 +1754,7 @@ class AccessRightPaginationData {
 final getAllAccessRightProvider = FutureProvider.autoDispose
     .family<AccessRightPaginationData, AccessRightPaginationState>(
         (ref, state) async {
+  final headers = await getHeaders();
   final fixedQuery = {
     if (state.orders.isNotEmpty) 'orders': state.orders,
     if (state.filters.isNotEmpty)
@@ -1719,7 +1765,7 @@ final getAllAccessRightProvider = FutureProvider.autoDispose
   final json = await http.post(
       Uri.parse(
           '$baseURL/accessrights?skip=${state.pagination.item1}&limit=${state.pagination.item2}'),
-      headers: {'Content-Type': 'application/json'},
+      headers: headers,
       body: jsonEncode(fixedQuery));
   final jsonData = jsonDecode(json.body);
 

@@ -160,32 +160,29 @@ class OperatorWidget extends StatefulWidget {
 }
 
 class _OperatorWidgetState extends State<OperatorWidget> {
-  final GlobalKey<MapWidgetState> addressWidgetKey =
-      GlobalKey<MapWidgetState>();
-
-  final GlobalKey<StringWidgetState> contactInformationWidgetKey =
+  final GlobalKey<StringWidgetState> nameWidgetKey =
       GlobalKey<StringWidgetState>();
-
-  final GlobalKey<DroneMultiFieldWidgetState> dronesWidgetKey =
-      GlobalKey<DroneMultiFieldWidgetState>();
 
   final GlobalKey<StringWidgetState> emailWidgetKey =
-      GlobalKey<StringWidgetState>();
-
-  final GlobalKey<StringWidgetState> idWidgetKey =
-      GlobalKey<StringWidgetState>();
-
-  final GlobalKey<StringWidgetState> identityWidgetKey =
-      GlobalKey<StringWidgetState>();
-
-  final GlobalKey<StringWidgetState> nameWidgetKey =
       GlobalKey<StringWidgetState>();
 
   final GlobalKey<StringWidgetState> passwordWidgetKey =
       GlobalKey<StringWidgetState>();
 
+  final GlobalKey<MapWidgetState> addressWidgetKey =
+      GlobalKey<MapWidgetState>();
+
+  final GlobalKey<StringWidgetState> identityWidgetKey =
+      GlobalKey<StringWidgetState>();
+
+  final GlobalKey<StringWidgetState> contactInformationWidgetKey =
+      GlobalKey<StringWidgetState>();
+
   final GlobalKey<RoleMultiFieldWidgetState> rolesWidgetKey =
       GlobalKey<RoleMultiFieldWidgetState>();
+
+  final GlobalKey<DroneMultiFieldWidgetState> dronesWidgetKey =
+      GlobalKey<DroneMultiFieldWidgetState>();
 
   @override
   Widget build(BuildContext context) {
@@ -204,87 +201,140 @@ class _OperatorWidgetState extends State<OperatorWidget> {
         scrollDirection: Axis.vertical,
         child: Column(
           children: [
-            MapWidget(
-                key: addressWidgetKey,
-                fieldName: "Address",
-                fieldDescription: "The address of the Drone Operator",
-                editable: true,
-                placeholder: "Enter the address of the Drone Operator",
-                value: widget.element?.address ??
-                    Point(
-                        type: "Feature",
-                        geometry: GeometryPoint(coordinates: [], type: "Point"),
-                        properties: {}),
-                uspaceMap: false),
-            StringWidget(
-              key: contactInformationWidgetKey,
-              fieldName: "Contact Information",
-              fieldDescription: "Contact Information of the Operator",
-              editable: true,
-              placeholder: "Provide Contact Information for the Operator",
-              value: widget.element?.contactInformation,
+            Row(
+              children: [
+                Expanded(
+                  flex: 100,
+                  child: StringWidget(
+                    key: nameWidgetKey,
+                    fieldName: "Name",
+                    fieldDescription: "This is the name of the Drone Operator",
+                    editable: true,
+                    placeholder: "Write the Name of the Drone Operator",
+                    value: widget.element?.name,
+                  ),
+                ),
+              ],
             ),
-            DroneMultiFieldWidget(
-              key: dronesWidgetKey,
-              fieldName: "Drones",
-              fieldDescription: "These are the Drones of the Operator",
-              editable: true,
-              placeholder: "List the Drones operated by this Operator",
-              values: widget.element?.drones,
+            Row(
+              children: [
+                Expanded(
+                  flex: 100,
+                  child: StringWidget(
+                    key: emailWidgetKey,
+                    fieldName: "email",
+                    fieldDescription: "This is the email",
+                    editable: true,
+                    placeholder: "Type the email",
+                    value: widget.element?.email,
+                  ),
+                ),
+              ],
             ),
-            StringWidget(
-              key: emailWidgetKey,
-              fieldName: "email",
-              fieldDescription: "This is the email",
-              editable: true,
-              placeholder: "Type the email",
-              value: widget.element?.email,
+            Row(
+              children: [
+                Expanded(
+                  flex: 100,
+                  child: StringWidget(
+                    key: passwordWidgetKey,
+                    fieldName: "password",
+                    fieldDescription: "This is the password",
+                    editable: true,
+                    placeholder: "Type the password",
+                    value: widget.element?.password,
+                  ),
+                ),
+              ],
             ),
-            StringWidget(
-              key: idWidgetKey,
-              fieldName: "id",
-              fieldDescription: "This is the id",
-              editable: true,
-              placeholder: "Type the id",
-              value: widget.element?.id,
+            Row(
+              children: [
+                Expanded(
+                  flex: 100,
+                  child: MapWidget(
+                      key: addressWidgetKey,
+                      fieldName: "Address",
+                      fieldDescription: "The address of the Drone Operator",
+                      editable: true,
+                      placeholder: "Enter the address of the Drone Operator",
+                      value: widget.element?.address ??
+                          Point(
+                              type: "Feature",
+                              geometry:
+                                  GeometryPoint(coordinates: [], type: "Point"),
+                              properties: {}),
+                      uspaceMap: false),
+                ),
+              ],
             ),
-            StringWidget(
-              key: identityWidgetKey,
-              fieldName: "Identity",
-              fieldDescription: "This is the Identity of the Operator",
-              editable: true,
-              placeholder: "Enter the Identity of the Operator",
-              value: widget.element?.identity,
+            Row(
+              children: [
+                Expanded(
+                  flex: 100,
+                  child: StringWidget(
+                    key: identityWidgetKey,
+                    fieldName: "Identity",
+                    fieldDescription: "This is the Identity of the Operator",
+                    editable: true,
+                    placeholder: "Enter the Identity of the Operator",
+                    value: widget.element?.identity,
+                  ),
+                ),
+              ],
             ),
-            StringWidget(
-              key: nameWidgetKey,
-              fieldName: "Name",
-              fieldDescription: "This is the name of the Drone Operator",
-              editable: true,
-              placeholder: "Write the Name of the Drone Operator",
-              value: widget.element?.name,
+            Row(
+              children: [
+                Expanded(
+                  flex: 100,
+                  child: StringWidget(
+                    key: contactInformationWidgetKey,
+                    fieldName: "Contact Information",
+                    fieldDescription: "Contact Information of the Operator",
+                    editable: true,
+                    placeholder: "Provide Contact Information for the Operator",
+                    value: widget.element?.contactInformation,
+                  ),
+                ),
+              ],
             ),
-            StringWidget(
-              key: passwordWidgetKey,
-              fieldName: "password",
-              fieldDescription: "This is the password",
-              editable: true,
-              placeholder: "Type the password",
-              value: widget.element?.password,
+            Row(
+              children: [
+                Expanded(
+                  flex: 100,
+                  child: RoleMultiFieldWidget(
+                    key: rolesWidgetKey,
+                    fieldName: "roles",
+                    fieldDescription: "This is the roles",
+                    editable: true,
+                    placeholder: "Type the roles",
+                    values: widget.element?.roles,
+                  ),
+                ),
+              ],
             ),
-            RoleMultiFieldWidget(
-              key: rolesWidgetKey,
-              fieldName: "roles",
-              fieldDescription: "This is the roles",
-              editable: true,
-              placeholder: "Type the roles",
-              values: widget.element?.roles,
+            Row(
+              children: [
+                Expanded(
+                  flex: 100,
+                  child: DroneMultiFieldWidget(
+                    key: dronesWidgetKey,
+                    fieldName: "Drones",
+                    fieldDescription: "These are the Drones of the Operator",
+                    editable: true,
+                    placeholder: "List the Drones operated by this Operator",
+                    values: widget.element?.drones,
+                  ),
+                ),
+              ],
             ),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
+          var initialOperator = widget.element;
+          Map<String, dynamic> updates = {};
+          updates['id'] = widget.element?.id;
+
           dynamic updatedaddress =
               addressWidgetKey.currentState?.getUpdatedValue();
 
@@ -295,26 +345,57 @@ class _OperatorWidgetState extends State<OperatorWidget> {
                   type: updatedaddress.geometry.type),
               properties: updatedaddress.properties);
 
+          if (updatedaddress != initialOperator?.address) {
+            updates['address'] = updatedaddress;
+          }
+
           String? updatedcontactInformation =
               contactInformationWidgetKey.currentState?.getUpdatedValue();
+
+          if (updatedcontactInformation !=
+              initialOperator?.contactInformation) {
+            updates['contactInformation'] = updatedcontactInformation;
+          }
 
           List<String>? updateddrones =
               dronesWidgetKey.currentState?.getUpdatedValue();
 
+          if (updateddrones != initialOperator?.drones) {
+            updates['drones'] = updateddrones;
+          }
+
           String? updatedemail = emailWidgetKey.currentState?.getUpdatedValue();
 
-          String? updatedid = idWidgetKey.currentState?.getUpdatedValue();
+          if (updatedemail != initialOperator?.email) {
+            updates['email'] = updatedemail;
+          }
 
           String? updatedidentity =
               identityWidgetKey.currentState?.getUpdatedValue();
 
+          if (updatedidentity != initialOperator?.identity) {
+            updates['identity'] = updatedidentity;
+          }
+
           String? updatedname = nameWidgetKey.currentState?.getUpdatedValue();
+
+          if (updatedname != initialOperator?.name) {
+            updates['name'] = updatedname;
+          }
 
           String? updatedpassword =
               passwordWidgetKey.currentState?.getUpdatedValue();
 
+          if (updatedpassword != initialOperator?.password) {
+            updates['password'] = updatedpassword;
+          }
+
           List<String>? updatedroles =
               rolesWidgetKey.currentState?.getUpdatedValue();
+
+          if (updatedroles != initialOperator?.roles) {
+            updates['roles'] = updatedroles;
+          }
 
           Operator updatedOperator = widget.element ??
               Operator(
@@ -322,7 +403,6 @@ class _OperatorWidgetState extends State<OperatorWidget> {
                 contactInformation: updatedcontactInformation ?? '',
                 drones: updateddrones ?? [''],
                 email: updatedemail ?? '',
-                id: updatedid ?? '',
                 identity: updatedidentity ?? '',
                 name: updatedname ?? '',
                 password: updatedpassword ?? '',
@@ -334,7 +414,6 @@ class _OperatorWidgetState extends State<OperatorWidget> {
               contactInformation: updatedcontactInformation,
               drones: updateddrones,
               email: updatedemail,
-              id: updatedid,
               identity: updatedidentity,
               name: updatedname,
               password: updatedpassword,
@@ -342,15 +421,15 @@ class _OperatorWidgetState extends State<OperatorWidget> {
           var container = ProviderContainer();
           try {
             if (widget.isEditing) {
-              await container.read(
-                  updateOperatorProvider(Tuple2(updatedOperator, context)));
-              print('Operator updated successfully');
-              CustomSnackBar.show(context, 'Operator updated successfully');
+              if (updates.isNotEmpty) {
+                await container
+                    .read(updateOperatorProvider(Tuple2(updates, context)));
+              } else {
+                CustomSnackBar.show(context, "No changes were detected");
+              }
             } else {
               await container.read(
                   createOperatorProvider(Tuple2(updatedOperator, context)));
-              print('Operator created successfully');
-              CustomSnackBar.show(context, 'Operator created successfully');
             }
           } catch (error) {
             print('Failed to update Operator: $error');
@@ -1225,7 +1304,9 @@ class _OperatorListViewState extends ConsumerState<OperatorListView> {
         ),
         body: operatorsAsyncValue.when(
           loading: () => const CircularProgressIndicator(),
-          error: (error, stackTrace) => Text('Error: $error'),
+          error: (error, stackTrace) => Center(
+            child: Text('You have no access to these records...'),
+          ),
           data: (OperatorPaginationData data) {
             final operators = data.items;
 
@@ -1894,46 +1975,55 @@ final operatorPaginationProvider =
 
 final getOperatorProvider = FutureProvider.autoDispose
     .family<Operator, String>((ref, operatorId) async {
-  final json = await http.get(Uri.parse('$baseURL/operator/$operatorId'));
+  final headers = await getHeaders();
+  final json = await http.get(Uri.parse('$baseURL/operator/$operatorId'),
+      headers: headers);
   final jsonData = jsonDecode(json.body);
   return Operator.fromJson(jsonData);
 });
 
 final createOperatorProvider = FutureProvider.autoDispose
     .family<void, Tuple2<Operator, BuildContext>>((ref, tuple) async {
+  final headers = await getHeaders();
   Operator operatorInstance = tuple.item1;
   BuildContext context = tuple.item2;
 
   final response = await http.post(
     Uri.parse('$baseURL/operator'),
-    headers: {'Content-Type': 'application/json'},
+    headers: headers,
     body: jsonEncode(operatorInstance.toJson()),
   );
   if (response.statusCode != 200) {
     CustomSnackBar.show(context, jsonDecode(response.body)['detail']);
+  } else {
+    CustomSnackBar.show(context, 'Operator created successfully');
   }
 });
 
 final updateOperatorProvider = FutureProvider.autoDispose
-    .family<void, Tuple2<Operator, BuildContext>>((ref, tuple) async {
-  Operator operatorInstance = tuple.item1;
+    .family<void, Tuple2<Map<String, dynamic>, BuildContext>>(
+        (ref, tuple) async {
+  final headers = await getHeaders();
+  Map<String, dynamic> operatorInstance = tuple.item1;
   BuildContext context = tuple.item2;
 
   final response = await http.put(
-    Uri.parse('$baseURL/operator/${operatorInstance.id}'),
-    headers: {'Content-Type': 'application/json'},
-    body: jsonEncode(operatorInstance.toJson()),
+    Uri.parse('$baseURL/operator/${operatorInstance['id']}'),
+    headers: headers,
+    body: jsonEncode(operatorInstance),
   );
   if (response.statusCode != 200) {
     CustomSnackBar.show(context, jsonDecode(response.body)['detail']);
+  } else {
+    CustomSnackBar.show(context, 'Operator updated successfully');
   }
 });
 
 final deleteOperatorProvider =
     FutureProvider.autoDispose.family<void, String>((ref, operatorId) async {
-  final response = await http.delete(
-    Uri.parse('$baseURL/operator/$operatorId'),
-  );
+  final headers = await getHeaders();
+  final response = await http.delete(Uri.parse('$baseURL/operator/$operatorId'),
+      headers: headers);
   if (response.statusCode != 200) {
     throw Exception('Failed to delete Operator');
   }
@@ -1954,6 +2044,7 @@ class OperatorPaginationData {
 final getAllOperatorProvider = FutureProvider.autoDispose
     .family<OperatorPaginationData, OperatorPaginationState>(
         (ref, state) async {
+  final headers = await getHeaders();
   final fixedQuery = {
     if (state.orders.isNotEmpty) 'orders': state.orders,
     if (state.filters.isNotEmpty)
@@ -1964,7 +2055,7 @@ final getAllOperatorProvider = FutureProvider.autoDispose
   final json = await http.post(
       Uri.parse(
           '$baseURL/operators?skip=${state.pagination.item1}&limit=${state.pagination.item2}'),
-      headers: {'Content-Type': 'application/json'},
+      headers: headers,
       body: jsonEncode(fixedQuery));
   final jsonData = jsonDecode(json.body);
 

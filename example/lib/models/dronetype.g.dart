@@ -148,12 +148,25 @@ class _DroneTypeWidgetState extends State<DroneTypeWidget> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
+          var initialDroneType = widget.element;
+          Map<String, dynamic> updates = {};
+          updates['id'] = widget.element?.id;
+
           String? updateddescription =
               descriptionWidgetKey.currentState?.getUpdatedValue();
 
+          if (updateddescription != initialDroneType?.description) {
+            updates['description'] = updateddescription;
+          }
+
           String? updatedid = idWidgetKey.currentState?.getUpdatedValue();
 
+          updates['id'] = updatedid;
           String? updatedname = nameWidgetKey.currentState?.getUpdatedValue();
+
+          if (updatedname != initialDroneType?.name) {
+            updates['name'] = updatedname;
+          }
 
           DroneType updatedDroneType = widget.element ??
               DroneType(
@@ -169,15 +182,15 @@ class _DroneTypeWidgetState extends State<DroneTypeWidget> {
           var container = ProviderContainer();
           try {
             if (widget.isEditing) {
-              await container.read(
-                  updateDroneTypeProvider(Tuple2(updatedDroneType, context)));
-              print('DroneType updated successfully');
-              CustomSnackBar.show(context, 'DroneType updated successfully');
+              if (updates.isNotEmpty) {
+                await container
+                    .read(updateDroneTypeProvider(Tuple2(updates, context)));
+              } else {
+                CustomSnackBar.show(context, "No changes were detected");
+              }
             } else {
               await container.read(
                   createDroneTypeProvider(Tuple2(updatedDroneType, context)));
-              print('DroneType created successfully');
-              CustomSnackBar.show(context, 'DroneType created successfully');
             }
           } catch (error) {
             print('Failed to update DroneType: $error');
@@ -753,7 +766,9 @@ class _DroneTypeListViewState extends ConsumerState<DroneTypeListView> {
         ),
         body: dronetypesAsyncValue.when(
           loading: () => const CircularProgressIndicator(),
-          error: (error, stackTrace) => Text('Error: $error'),
+          error: (error, stackTrace) => Center(
+            child: Text('You have no access to these records...'),
+          ),
           data: (DroneTypePaginationData data) {
             final dronetypes = data.items;
 
@@ -1107,46 +1122,55 @@ final dronetypePaginationProvider = StateNotifierProvider<
 
 final getDroneTypeProvider = FutureProvider.autoDispose
     .family<DroneType, String>((ref, dronetypeId) async {
-  final json = await http.get(Uri.parse('$baseURL/dronetype/$dronetypeId'));
+  final headers = await getHeaders();
+  final json = await http.get(Uri.parse('$baseURL/dronetype/$dronetypeId'),
+      headers: headers);
   final jsonData = jsonDecode(json.body);
   return DroneType.fromJson(jsonData);
 });
 
 final createDroneTypeProvider = FutureProvider.autoDispose
     .family<void, Tuple2<DroneType, BuildContext>>((ref, tuple) async {
+  final headers = await getHeaders();
   DroneType dronetypeInstance = tuple.item1;
   BuildContext context = tuple.item2;
 
   final response = await http.post(
     Uri.parse('$baseURL/dronetype'),
-    headers: {'Content-Type': 'application/json'},
+    headers: headers,
     body: jsonEncode(dronetypeInstance.toJson()),
   );
   if (response.statusCode != 200) {
     CustomSnackBar.show(context, jsonDecode(response.body)['detail']);
+  } else {
+    CustomSnackBar.show(context, 'DroneType created successfully');
   }
 });
 
 final updateDroneTypeProvider = FutureProvider.autoDispose
-    .family<void, Tuple2<DroneType, BuildContext>>((ref, tuple) async {
-  DroneType dronetypeInstance = tuple.item1;
+    .family<void, Tuple2<Map<String, dynamic>, BuildContext>>(
+        (ref, tuple) async {
+  final headers = await getHeaders();
+  Map<String, dynamic> dronetypeInstance = tuple.item1;
   BuildContext context = tuple.item2;
 
   final response = await http.put(
-    Uri.parse('$baseURL/dronetype/${dronetypeInstance.id}'),
-    headers: {'Content-Type': 'application/json'},
-    body: jsonEncode(dronetypeInstance.toJson()),
+    Uri.parse('$baseURL/dronetype/${dronetypeInstance['id']}'),
+    headers: headers,
+    body: jsonEncode(dronetypeInstance),
   );
   if (response.statusCode != 200) {
     CustomSnackBar.show(context, jsonDecode(response.body)['detail']);
+  } else {
+    CustomSnackBar.show(context, 'DroneType updated successfully');
   }
 });
 
 final deleteDroneTypeProvider =
     FutureProvider.autoDispose.family<void, String>((ref, dronetypeId) async {
-  final response = await http.delete(
-    Uri.parse('$baseURL/dronetype/$dronetypeId'),
-  );
+  final headers = await getHeaders();
+  final response = await http
+      .delete(Uri.parse('$baseURL/dronetype/$dronetypeId'), headers: headers);
   if (response.statusCode != 200) {
     throw Exception('Failed to delete DroneType');
   }
@@ -1167,6 +1191,7 @@ class DroneTypePaginationData {
 final getAllDroneTypeProvider = FutureProvider.autoDispose
     .family<DroneTypePaginationData, DroneTypePaginationState>(
         (ref, state) async {
+  final headers = await getHeaders();
   final fixedQuery = {
     if (state.orders.isNotEmpty) 'orders': state.orders,
     if (state.filters.isNotEmpty)
@@ -1177,7 +1202,7 @@ final getAllDroneTypeProvider = FutureProvider.autoDispose
   final json = await http.post(
       Uri.parse(
           '$baseURL/dronetypes?skip=${state.pagination.item1}&limit=${state.pagination.item2}'),
-      headers: {'Content-Type': 'application/json'},
+      headers: headers,
       body: jsonEncode(fixedQuery));
   final jsonData = jsonDecode(json.body);
 
