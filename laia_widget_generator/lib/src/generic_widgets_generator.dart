@@ -2157,7 +2157,7 @@ class BoolWidgetState extends State<BoolWidget> {
       }
     }
 
-    final models = classNames.isNotEmpty ? "[${classNames.map((className) => "\"$className\"").join(", ")}]" : "[]";
+    final models = classNames.isNotEmpty ? "[${classNames.map((className) => "\"${className.toLowerCase()}\"").join(", ")}]" : "[]";
 
     buffer.writeln("""
 class ModelsSelectableWidget extends StatefulWidget {
@@ -2319,7 +2319,7 @@ class JsonWidgetState extends State<JsonWidget> {
   }
 
   Map<String, dynamic> getUpdatedValue() {
-    return isValueChanged ? json.decode(currentValue) : json.decode(initialValue);
+    return isValueChanged ? json.decode(currentValue) : initialValue;
   }
 
   @override

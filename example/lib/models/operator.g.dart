@@ -364,6 +364,7 @@ class _OperatorWidgetState extends State<OperatorWidget> {
             updates['drones'] = updateddrones;
           }
 
+          updates['email'] = widget.element?.email;
           String? updatedemail = emailWidgetKey.currentState?.getUpdatedValue();
 
           if (updatedemail != initialOperator?.email) {
@@ -377,12 +378,14 @@ class _OperatorWidgetState extends State<OperatorWidget> {
             updates['identity'] = updatedidentity;
           }
 
+          updates['name'] = widget.element?.name;
           String? updatedname = nameWidgetKey.currentState?.getUpdatedValue();
 
           if (updatedname != initialOperator?.name) {
             updates['name'] = updatedname;
           }
 
+          updates['password'] = widget.element?.password;
           String? updatedpassword =
               passwordWidgetKey.currentState?.getUpdatedValue();
 

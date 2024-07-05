@@ -241,6 +241,7 @@ class _DroneWidgetState extends State<DroneWidget> {
           Map<String, dynamic> updates = {};
           updates['id'] = widget.element?.id;
 
+          updates['capabilities'] = widget.element?.capabilities;
           String? updatedcapabilities =
               capabilitiesWidgetKey.currentState?.getUpdatedValue();
 
@@ -258,12 +259,14 @@ class _DroneWidgetState extends State<DroneWidget> {
             updates['manufacturer'] = updatedmanufacturer;
           }
 
+          updates['model'] = widget.element?.model;
           String? updatedmodel = modelWidgetKey.currentState?.getUpdatedValue();
 
           if (updatedmodel != initialDrone?.model) {
             updates['model'] = updatedmodel;
           }
 
+          updates['name'] = widget.element?.name;
           String? updatedname = nameWidgetKey.currentState?.getUpdatedValue();
 
           if (updatedname != initialDrone?.name) {
@@ -277,6 +280,7 @@ class _DroneWidgetState extends State<DroneWidget> {
             updates['operatorId'] = updatedoperatorId;
           }
 
+          updates['type'] = widget.element?.type;
           String? updatedtype = typeWidgetKey.currentState?.getUpdatedValue();
 
           if (updatedtype != initialDrone?.type) {

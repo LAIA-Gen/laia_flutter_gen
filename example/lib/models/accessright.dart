@@ -37,6 +37,8 @@ class AccessRight {
   final dynamic fields_edit;
   @Field(fieldName: "Fields Visibility", placeholder: "{'field_1': 1, 'field_2': 1, 'field_3': 0, ...}")
   final dynamic fields_visible;
+  @Field(fieldName: "Only applies to own records")
+  final bool owner;
   @Field(fieldName: 'id')
   final String id;
 
@@ -48,6 +50,7 @@ class AccessRight {
     required this.fields_create,
     required this.fields_edit,
     required this.fields_visible,
+    required this.owner,
     required this.id
   });
 

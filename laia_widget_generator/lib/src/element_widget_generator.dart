@@ -369,36 +369,66 @@ class _${visitor.className}WidgetState extends State<${visitor.className}Widget>
 
             switch (fieldType) {
               case 'int':
+                buffer.writeln('''
+            updates['$fieldName'] = widget.element?.$fieldName;
+            int? updated$fieldName = ${fieldName}WidgetKey.currentState?.getUpdatedValue();
+  ''');         updatedFields.add('$fieldName: updated$fieldName');
+                break;
               case 'int?':
                 buffer.writeln('''
             int? updated$fieldName = ${fieldName}WidgetKey.currentState?.getUpdatedValue();
   ''');         updatedFields.add('$fieldName: updated$fieldName');
                 break;
               case 'double':
+                buffer.writeln('''
+            updates['$fieldName'] = widget.element?.$fieldName;
+            double? updated$fieldName = ${fieldName}WidgetKey.currentState?.getUpdatedValue();
+  ''');         updatedFields.add('$fieldName: updated$fieldName');
+                break;
               case 'double?':
                 buffer.writeln('''
             double? updated$fieldName = ${fieldName}WidgetKey.currentState?.getUpdatedValue();
   ''');         updatedFields.add('$fieldName: updated$fieldName');
                 break;
               case 'String':
+                buffer.writeln('''
+            updates['$fieldName'] = widget.element?.$fieldName;
+            String? updated$fieldName = ${fieldName}WidgetKey.currentState?.getUpdatedValue();
+  ''');         updatedFields.add('$fieldName: updated$fieldName');
+                break;
               case 'String?':
                 buffer.writeln('''
             String? updated$fieldName = ${fieldName}WidgetKey.currentState?.getUpdatedValue();
   ''');         updatedFields.add('$fieldName: updated$fieldName');
                 break;
               case 'List<String>':
+                buffer.writeln('''
+            updates['$fieldName'] = widget.element?.$fieldName;
+            List<String>? updated$fieldName = ${fieldName}WidgetKey.currentState?.getUpdatedValue();
+  ''');         updatedFields.add('$fieldName: updated$fieldName');
+                break;
               case 'List<String>?':
                 buffer.writeln('''
             List<String>? updated$fieldName = ${fieldName}WidgetKey.currentState?.getUpdatedValue();
   ''');         updatedFields.add('$fieldName: updated$fieldName');
                 break;
               case 'DateTime':
+                buffer.writeln('''
+            updates['$fieldName'] = widget.element?.$fieldName;
+            DateTime? updated$fieldName = ${fieldName}WidgetKey.currentState?.getUpdatedValue();
+  ''');         updatedFields.add('$fieldName: updated$fieldName');
+                break;
               case 'DateTime?':
                 buffer.writeln('''
             DateTime? updated$fieldName = ${fieldName}WidgetKey.currentState?.getUpdatedValue();
   ''');         updatedFields.add('$fieldName: updated$fieldName');
                 break;
               case 'bool':
+                buffer.writeln('''
+            updates['$fieldName'] = widget.element?.$fieldName;
+            bool? updated$fieldName = ${fieldName}WidgetKey.currentState?.getUpdatedValue();
+  ''');         updatedFields.add('$fieldName: updated$fieldName');
+                break;
               case 'bool?':
                 buffer.writeln('''
             bool? updated$fieldName = ${fieldName}WidgetKey.currentState?.getUpdatedValue();
@@ -410,6 +440,13 @@ class _${visitor.className}WidgetState extends State<${visitor.className}Widget>
               case 'MultiPolygon':
               case 'Point':
               case 'Polygon':
+                buffer.writeln('''
+            updates['$fieldName'] = widget.element?.$fieldName;
+            dynamic updated$fieldName = ${fieldName}WidgetKey.currentState?.getUpdatedValue();
+
+            updated$fieldName = ${fieldType.replaceAll("?", "")}(type: "Feature", geometry: Geometry${fieldType.replaceAll("?", "")}(coordinates:updated$fieldName.geometry.coordinates, type: updated$fieldName.geometry.type), properties: updated$fieldName.properties);
+  ''');         updatedFields.add('$fieldName: updated$fieldName');
+                break;
               case 'LineString?':
               case 'MultiLineString?':
               case 'MultiPoint?':

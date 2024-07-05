@@ -130,12 +130,14 @@ class _RoleWidgetState extends State<RoleWidget> {
           Map<String, dynamic> updates = {};
           updates['id'] = widget.element?.id;
 
+          updates['name'] = widget.element?.name;
           String? updatedname = nameWidgetKey.currentState?.getUpdatedValue();
 
           if (updatedname != initialRole?.name) {
             updates['name'] = updatedname;
           }
 
+          updates['id'] = widget.element?.id;
           String? updatedid = idWidgetKey.currentState?.getUpdatedValue();
 
           updates['id'] = updatedid;

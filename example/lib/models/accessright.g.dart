@@ -21,6 +21,8 @@ abstract class _$AccessRightCWProxy {
 
   AccessRight operations(dynamic operations);
 
+  AccessRight owner(bool owner);
+
   AccessRight role(String role);
 
   /// This function **does support** nullification of nullable fields. All `null` values passed to `non-nullable` fields will be ignored. You can also use `AccessRight(...).copyWith.fieldName(...)` to override fields one at a time with nullification support.
@@ -37,6 +39,7 @@ abstract class _$AccessRightCWProxy {
     String? model,
     String? name,
     dynamic? operations,
+    bool? owner,
     String? role,
   });
 }
@@ -72,6 +75,9 @@ class _$AccessRightCWProxyImpl implements _$AccessRightCWProxy {
   AccessRight operations(dynamic operations) => this(operations: operations);
 
   @override
+  AccessRight owner(bool owner) => this(owner: owner);
+
+  @override
   AccessRight role(String role) => this(role: role);
 
   @override
@@ -90,6 +96,7 @@ class _$AccessRightCWProxyImpl implements _$AccessRightCWProxy {
     Object? model = const $CopyWithPlaceholder(),
     Object? name = const $CopyWithPlaceholder(),
     Object? operations = const $CopyWithPlaceholder(),
+    Object? owner = const $CopyWithPlaceholder(),
     Object? role = const $CopyWithPlaceholder(),
   }) {
     return AccessRight(
@@ -125,6 +132,10 @@ class _$AccessRightCWProxyImpl implements _$AccessRightCWProxy {
               ? _value.operations
               // ignore: cast_nullable_to_non_nullable
               : operations as dynamic,
+      owner: owner == const $CopyWithPlaceholder() || owner == null
+          ? _value.owner
+          // ignore: cast_nullable_to_non_nullable
+          : owner as bool,
       role: role == const $CopyWithPlaceholder() || role == null
           ? _value.role
           // ignore: cast_nullable_to_non_nullable
@@ -175,6 +186,9 @@ class _AccessRightWidgetState extends State<AccessRightWidget> {
 
   final GlobalKey<JsonWidgetState> fields_visibleWidgetKey =
       GlobalKey<JsonWidgetState>();
+
+  final GlobalKey<BoolWidgetState> ownerWidgetKey =
+      GlobalKey<BoolWidgetState>();
 
   final GlobalKey<StringWidgetState> idWidgetKey =
       GlobalKey<StringWidgetState>();
@@ -253,6 +267,13 @@ class _AccessRightWidgetState extends State<AccessRightWidget> {
               placeholder: "{'field_1': 1, 'field_2': 1, 'field_3': 0, ...}",
               value: widget.element?.fields_visible,
             ),
+            BoolWidget(
+              key: ownerWidgetKey,
+              fieldName: "Only applies to own records",
+              fieldDescription: "This is the owner",
+              editable: true,
+              value: widget.element?.owner,
+            ),
             StringWidget(
               key: idWidgetKey,
               fieldName: "id",
@@ -270,18 +291,21 @@ class _AccessRightWidgetState extends State<AccessRightWidget> {
           Map<String, dynamic> updates = {};
           updates['id'] = widget.element?.id;
 
+          updates['name'] = widget.element?.name;
           String? updatedname = nameWidgetKey.currentState?.getUpdatedValue();
 
           if (updatedname != initialAccessRight?.name) {
             updates['name'] = updatedname;
           }
 
+          updates['role'] = widget.element?.role;
           String? updatedrole = roleWidgetKey.currentState?.getUpdatedValue();
 
           if (updatedrole != initialAccessRight?.role) {
             updates['role'] = updatedrole;
           }
 
+          updates['model'] = widget.element?.model;
           String? updatedmodel = modelWidgetKey.currentState?.getUpdatedValue();
 
           if (updatedmodel != initialAccessRight?.model) {
@@ -316,6 +340,14 @@ class _AccessRightWidgetState extends State<AccessRightWidget> {
             updates['fields_visible'] = updatedfields_visible;
           }
 
+          updates['owner'] = widget.element?.owner;
+          bool? updatedowner = ownerWidgetKey.currentState?.getUpdatedValue();
+
+          if (updatedowner != initialAccessRight?.owner) {
+            updates['owner'] = updatedowner;
+          }
+
+          updates['id'] = widget.element?.id;
           String? updatedid = idWidgetKey.currentState?.getUpdatedValue();
 
           updates['id'] = updatedid;
@@ -328,6 +360,7 @@ class _AccessRightWidgetState extends State<AccessRightWidget> {
                 fields_create: updatedfields_create ?? '',
                 fields_edit: updatedfields_edit ?? '',
                 fields_visible: updatedfields_visible ?? '',
+                owner: updatedowner ?? false,
                 id: updatedid ?? '',
               );
 
@@ -339,6 +372,7 @@ class _AccessRightWidgetState extends State<AccessRightWidget> {
               fields_create: updatedfields_create,
               fields_edit: updatedfields_edit,
               fields_visible: updatedfields_visible,
+              owner: updatedowner,
               id: updatedid);
           var container = ProviderContainer();
           try {
@@ -802,6 +836,7 @@ AccessRight _$AccessRightFromJson(Map<String, dynamic> json) => AccessRight(
       fields_create: json['fields_create'],
       fields_edit: json['fields_edit'],
       fields_visible: json['fields_visible'],
+      owner: json['owner'] as bool,
       id: json['id'] as String,
     );
 
@@ -814,6 +849,7 @@ Map<String, dynamic> _$AccessRightToJson(AccessRight instance) =>
       'fields_create': instance.fields_create,
       'fields_edit': instance.fields_edit,
       'fields_visible': instance.fields_visible,
+      'owner': instance.owner,
       'id': instance.id,
     };
 
@@ -976,6 +1012,7 @@ class _AccessRightListViewState extends ConsumerState<AccessRightListView> {
                       'fields_create': 'dynamic',
                       'fields_edit': 'dynamic',
                       'fields_visible': 'dynamic',
+                      'owner': 'bool',
                       'id': 'String'
                     },
                     filters: fieldsFilterStates,
@@ -1333,6 +1370,42 @@ class _AccessRightListViewState extends ConsumerState<AccessRightListView> {
                                                 MainAxisAlignment.center,
                                             children: [
                                               const Text(
+                                                'Only applies to own records',
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Color.fromARGB(
+                                                        255, 94, 54, 54)),
+                                                textAlign: TextAlign.center,
+                                              ),
+                                              if (columnSortStates['owner'] !=
+                                                  null) ...[
+                                                Icon(
+                                                  columnSortStates['owner'] == 1
+                                                      ? Icons
+                                                          .arrow_drop_up_rounded
+                                                      : Icons
+                                                          .arrow_drop_down_rounded,
+                                                  color: Colors.black,
+                                                ),
+                                                Text(
+                                                  '${columnSortStates.keys.toList().indexOf('owner') + 1}',
+                                                  style: const TextStyle(
+                                                      fontSize: 10),
+                                                ),
+                                              ],
+                                            ],
+                                          ),
+                                        ),
+                                        onSort: (columnIndex, ascending) =>
+                                            {onSort('owner')},
+                                      ),
+                                      DataColumn(
+                                        label: Expanded(
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              const Text(
                                                 'id',
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.bold,
@@ -1520,6 +1593,13 @@ class _AccessRightListViewState extends ConsumerState<AccessRightListView> {
                                             Center(
                                                 child: Text(accessright
                                                     .fields_visible
+                                                    .toString())),
+                                            onTap: () =>
+                                                {_navigateElement(accessright)},
+                                          ),
+                                          DataCell(
+                                            Center(
+                                                child: Text(accessright.owner
                                                     .toString())),
                                             onTap: () =>
                                                 {_navigateElement(accessright)},

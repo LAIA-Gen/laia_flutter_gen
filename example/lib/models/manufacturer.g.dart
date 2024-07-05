@@ -321,6 +321,7 @@ class _ManufacturerWidgetState extends State<ManufacturerWidget> {
             updates['location'] = updatedlocation;
           }
 
+          updates['name'] = widget.element?.name;
           String? updatedname = nameWidgetKey.currentState?.getUpdatedValue();
 
           if (updatedname != initialManufacturer?.name) {

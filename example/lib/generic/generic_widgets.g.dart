@@ -2173,12 +2173,12 @@ class ModelsSelectableWidget extends StatefulWidget {
 class ModelsSelectableWidgetState extends State<ModelsSelectableWidget> {
   List<String> options = [
     "",
-    "DroneType",
-    "Operator",
-    "Role",
-    "Drone",
-    "Manufacturer",
-    "AccessRight"
+    "dronetype",
+    "operator",
+    "role",
+    "drone",
+    "manufacturer",
+    "accessright"
   ];
   bool isValueChanged = false;
   late String? initialValue;
@@ -2307,9 +2307,7 @@ class JsonWidgetState extends State<JsonWidget> {
   }
 
   Map<String, dynamic> getUpdatedValue() {
-    return isValueChanged
-        ? json.decode(currentValue)
-        : json.decode(initialValue);
+    return isValueChanged ? json.decode(currentValue) : initialValue;
   }
 
   @override
