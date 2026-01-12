@@ -166,11 +166,10 @@ class _${visitor.className}WidgetState extends State<${visitor.className}Widget>
           title: const Text('${visitor.className}'),
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.black),
-            onPressed: () => Navigator.pushReplacement(
+            onPressed: () => Navigator.push(
               context,
-              MaterialPageRoute(
-                  builder: (context) => ${visitor.className}ListView()),
-            ),
+              PageRouteBuilder(pageBuilder: (_, __, ___) => ${visitor.className}ListView()),
+            )
           ), 
         ),
         body: SingleChildScrollView(
@@ -998,8 +997,9 @@ class _${visitor.className}LoginWidgetState extends State<${visitor.className}Lo
                   if (!mounted) return;
 
                   if (result.success) {
-                    Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(builder: (_) => Home()),
+                    Navigator.push(
+                      context,
+                      PageRouteBuilder(pageBuilder: (_, __, ___) => Home()),
                     );
                   } else {
                     CustomSnackBar.show(context, result.errorMessage);
@@ -1028,8 +1028,10 @@ class _${visitor.className}LoginWidgetState extends State<${visitor.className}Lo
                 padding: const EdgeInsets.symmetric(horizontal: 5),
                 child: TextButton(
                   onPressed: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(builder: (_) => UserRegisterWidget()),
+                    Navigator.push(
+                      context,
+                      PageRouteBuilder(
+                          pageBuilder: (_, __, ___) => UserRegisterWidget()),
                     );
                   },
                   child: Text('Register', style: Theme.of(context).textTheme.labelSmall),
@@ -1057,9 +1059,9 @@ class ${visitor.className}RegisterWidget extends StatefulWidget {
 class _${visitor.className}RegisterWidgetState extends State<${visitor.className}RegisterWidget> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _confirmController = TextEditingController();
   ''');
-
+  
   for (var fieldName in visitor.fields.keys) {
     String fieldType = visitor.fields[fieldName];
 
@@ -1070,56 +1072,159 @@ class _${visitor.className}RegisterWidgetState extends State<${visitor.className
 
   buffer.writeln('''
   bool _isPasswordVisible = false;
+  bool _isConfirmVisible = false;
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Register'),
-        centerTitle: true,
-      ),
-      body: SingleChildScrollView(
-        scrollDirection: Axis.vertical,
-        child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            SizedBox(height: MediaQuery.of(context).size.height*0.2),
-            _buildTextField(
-              controller: _emailController,
-              labelText: 'Email',
-            ),
-            _buildTextField(
-              controller: _passwordController,
-              labelText: 'Password',
-              isPassword: true,
-            ),
-            _buildTextField(
-              controller: _confirmPasswordController,
-              labelText: 'Confirm password',
-              isPassword: true,
-            ),
-            ''');
+  // Reglas password (según la imagen)
+  bool get _hasUppercase => RegExp(r'[A-Z]').hasMatch(_passwordController.text);
+  bool get _hasNumber => RegExp(r'\\d').hasMatch(_passwordController.text);
+  bool get _hasMinLen => _passwordController.text.length >= 8;
+  bool get _passwordsMatch =>
+      _passwordController.text.isNotEmpty &&
+      _passwordController.text == _confirmController.text;
 
+  bool get _canSubmit =>
+      _emailController.text.trim().isNotEmpty &&
+  ''');
   for (var fieldName in visitor.fields.keys) {
     String fieldType = visitor.fields[fieldName];
 
-    if (fieldType == "String" && fieldName != 'email' && fieldName != 'password') {
+    if (fieldType == "String" && fieldName != 'email' && fieldName != 'password' && fieldName != 'id') {
+      buffer.writeln(''' _${fieldName}Controller.text.trim().isNotEmpty &&''');
+    }
+  }
+  buffer.writeln('''
+      _hasUppercase &&
+      _hasNumber &&
+      _hasMinLen &&
+      _passwordsMatch;
+
+  @override
+  void initState() {
+    super.initState();
+    _passwordController.addListener(_onChanged);
+    _confirmController.addListener(_onChanged);
+    _emailController.addListener(_onChanged);
+    ''');
+    for (var fieldName in visitor.fields.keys) {
+      String fieldType = visitor.fields[fieldName];
+
+      if (fieldType == "String" && fieldName != 'email' && fieldName != 'password' && fieldName != 'id') {
+        buffer.writeln(''' _${fieldName}Controller..addListener(_onChanged);''');
+      }
+    }
+    buffer.writeln('''
+  }
+
+  void _onChanged() {
+    if (mounted) setState(() {});
+  }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.removeListener(_onChanged);
+    _confirmController.removeListener(_onChanged);
+    _passwordController.dispose();
+    _confirmController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AuthScaffold(
+      topLeftBrand: Image.asset(
+        'assets/logo_purple.png',
+        width: 80,
+      ),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text('Register', style: Theme.of(context).textTheme.headlineLarge),
+              const SizedBox(height: 8),
+              Text('Register to create an account', style: Theme.of(context).textTheme.bodyMedium),
+              const SizedBox(height: 24),
+              // Email
+              TextField(
+                controller: _emailController,
+                keyboardType: TextInputType.emailAddress,
+                decoration: const InputDecoration(
+                  hintText: 'Email',
+                  prefixIcon: Icon(Icons.mail_outline),
+                ),
+              ),
+              const SizedBox(height: 14),
+              // Password
+              TextField(
+                controller: _passwordController,
+                obscureText: !_isPasswordVisible,
+                decoration: InputDecoration(
+                  hintText: 'Password',
+                  prefixIcon: const Icon(Icons.lock_outline),
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                    ),
+                    onPressed: () => setState(() {
+                      _isPasswordVisible = !_isPasswordVisible;
+                    }),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 14),
+              // Confirm password
+              TextField(
+                controller: _confirmController,
+                obscureText: !_isConfirmVisible,
+                decoration: InputDecoration(
+                  hintText: 'Confirm password',
+                  prefixIcon: const Icon(Icons.lock_outline),
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      _isConfirmVisible ? Icons.visibility : Icons.visibility_off,
+                    ),
+                    onPressed: () => setState(() {
+                      _isConfirmVisible = !_isConfirmVisible;
+                    }),
+                  ),
+                ),
+              ),
+              ''');
+
+  for (var fieldName in visitor.fields.keys) {
+    String fieldType = visitor.fields[fieldName];
+    
+    String capitalize(String s) => s.isEmpty ? s : s[0].toUpperCase() + s.substring(1);
+
+    if (fieldType == "String" && fieldName != 'email' && fieldName != 'password' && fieldName != 'id') {
       buffer.writeln('''
-            _buildTextField(
+            const SizedBox(height: 14),
+            TextField(
               controller: _${fieldName}Controller,
-              labelText: '$fieldName',
+              decoration: const InputDecoration(
+                hintText: '${capitalize(fieldName)}',
+                prefixIcon: Icon(Icons.text_format),
+              ),
             ),
 ''');
     }
   }
   buffer.writeln('''
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 16.0),
+            const SizedBox(height: 12),   
+            // Reglas password (como en la imagen)
+            _PasswordRules(
+              hasUppercase: _hasUppercase,
+              hasNumber: _hasNumber,
+              hasMinLen: _hasMinLen,
+            ),
+            const SizedBox(height: 18),
+            SizedBox(
+              width: 230,
               child: ElevatedButton(
-                onPressed: () async {
-                  if (_passwordController.text != _confirmPasswordController.text) {
+                onPressed: _canSubmit ? () async {
+                  if (_passwordController.text != _confirmController.text) {
                     CustomSnackBar.show(context, "Passwords do not match");
                     return;
                   }
@@ -1152,8 +1257,9 @@ class _${visitor.className}RegisterWidgetState extends State<${visitor.className
                   try {
                     AuthResult registerResult = await container.read(register${visitor.className}Provider(registerData).future);
                     if (registerResult.success) {
-                      Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(builder: (context) => Home()),
+                      Navigator.push(
+                        context,
+                        PageRouteBuilder(pageBuilder: (_, __, ___) => Home()),
                       );
                     } else {
                       CustomSnackBar.show(context, registerResult.errorMessage);
@@ -1161,17 +1267,32 @@ class _${visitor.className}RegisterWidgetState extends State<${visitor.className
                   } catch (error) {
                     print(error);
                   }
-                },
+                } : null,
                 child: Text('Register'),
               ),
             ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => ${visitor.className}LoginWidget()),
-                );
-              },
-              child: Text("I already have an account: LogIn"),
+            const SizedBox(height: 40),
+
+            Text("I already have an account", style: Theme.of(context).textTheme.bodySmall),
+
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const SizedBox(width: 88, child: Divider(color: AppColors.indigo)),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  child: TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        PageRouteBuilder(pageBuilder: (_, __, ___) => UserLoginWidget()),
+                      );
+                    },
+                    child: Text('Log In', style: Theme.of(context).textTheme.labelSmall),
+                  ),
+                ),
+                const SizedBox(width: 88, child: Divider(color: AppColors.indigo)),
+              ],
             ),
           ],
         ),
@@ -1179,42 +1300,77 @@ class _${visitor.className}RegisterWidgetState extends State<${visitor.className
     ),);
   }
 
-  Widget _buildTextField({
-    required TextEditingController controller,
-    required String labelText,
-    bool isPassword = false,
-  }) {
-    return Container(
-      padding: const EdgeInsets.all(8.0),
-      margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10.0),
-        color: Styles.secondaryColor,
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: TextField(
-          controller: controller,
-          obscureText: isPassword && !_isPasswordVisible,
-          decoration: InputDecoration(
-            labelText: labelText,
-            suffixIcon: isPassword
-                ? IconButton(
-                    icon: Icon(
-                      _isPasswordVisible
-                          ? Icons.visibility
-                          : Icons.visibility_off,
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        _isPasswordVisible = !_isPasswordVisible;
-                      });
-                    },
-                  )
-                : null,
-          ),
+}
+
+class _PasswordRules extends StatelessWidget {
+  final bool hasUppercase;
+  final bool hasNumber;
+  final bool hasMinLen;
+
+  const _PasswordRules({
+    required this.hasUppercase,
+    required this.hasNumber,
+    required this.hasMinLen,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        _RuleRow(
+          ok: hasUppercase,
+          text: 'At least 1 uppercase',
+          highlightWhenOk: true,
         ),
-      ),
+        const SizedBox(height: 4),
+        _RuleRow(
+          ok: hasNumber,
+          text: 'At least 1 number',
+          highlightWhenOk: true,
+        ),
+        const SizedBox(height: 4),
+        _RuleRow(
+          ok: hasMinLen,
+          text: 'At least 8 characters',
+          highlightWhenOk: true,
+        ),
+      ],
+    );
+  }
+}
+
+class _RuleRow extends StatelessWidget {
+  final bool ok;
+  final String text;
+  final bool highlightWhenOk;
+
+  const _RuleRow({
+    required this.ok,
+    required this.text,
+    this.highlightWhenOk = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+
+    final icon = ok ? Icons.check_circle : Icons.radio_button_unchecked;
+    final color = ok ? cs.primary : AppColors.muted;
+    final textColor = (ok && highlightWhenOk) ? cs.primary : AppColors.muted;
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Icon(icon, size: 16, color: color),
+        const SizedBox(width: 8),
+        Text(
+          text,
+          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                color: textColor,
+                fontWeight: ok ? FontWeight.w600 : FontWeight.w400,
+              ),
+        ),
+      ],
     );
   }
 }

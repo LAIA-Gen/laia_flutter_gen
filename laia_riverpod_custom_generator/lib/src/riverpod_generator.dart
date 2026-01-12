@@ -191,12 +191,8 @@ final register${className}Provider = FutureProvider.autoDispose.family<AuthResul
   }
 
   final responseData = jsonDecode(response.body);
-  final token = responseData['token'];
 
-  final prefs = await SharedPreferences.getInstance();
-  await prefs.setString('token', token);
-
-  return AuthResult(true, $classNameLowercase: $className.fromJson(responseData['user']));
+  return AuthResult(true, $classNameLowercase: $className.fromJson(responseData));
 });
 
 final verifyToken${className}Provider = FutureProvider.autoDispose<bool>((ref) async {

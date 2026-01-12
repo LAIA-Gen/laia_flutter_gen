@@ -124,13 +124,11 @@ class _${className}ListViewState extends ConsumerState<${className}ListView> {
               margin: const EdgeInsets.only(right: 10),
               child: ElevatedButton(
               onPressed: () {
-                Navigator.pushReplacement(
+                Navigator.push(
                   context,
-                  MaterialPageRoute(
-                    builder: (context) => const ${className}Widget(
-                      isEditing: false,
-                    ),
-                  ),
+                  PageRouteBuilder(pageBuilder: (_, __, ___) => ${className}Widget(
+                    isEditing: false,
+                  )),
                 );
               },
               style: ButtonStyle(
@@ -628,13 +626,11 @@ onTap: () => {
   }
 
   void _navigateElement($className $classNameLowercase) {
-    Navigator.pushReplacement(
+    Navigator.push(
       context,
-      MaterialPageRoute(
-          builder: (context) =>
-              ${className}Widget(
-                  element: $classNameLowercase,
-                  isEditing: true)),
+      PageRouteBuilder(pageBuilder: (_, __, ___) => ${className}Widget(
+        element: $classNameLowercase,
+        isEditing: true)),
     );
   }
 
