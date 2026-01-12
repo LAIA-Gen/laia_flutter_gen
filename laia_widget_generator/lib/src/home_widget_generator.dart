@@ -74,7 +74,7 @@ class DynamicLogInScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('LAIA'),
+        title: const Text('LAIA_NEW_DESIGN'),
         centerTitle: true,
       ),
       body: Center(

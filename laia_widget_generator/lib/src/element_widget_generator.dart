@@ -920,109 +920,125 @@ class ${visitor.className}LoginWidget extends StatefulWidget {
 }
 
 class _${visitor.className}LoginWidgetState extends State<${visitor.className}LoginWidget> {
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
   bool _isPasswordVisible = false;
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Log In'),
-        centerTitle: true,
-      ),
-      body: SingleChildScrollView(
-        scrollDirection: Axis.vertical,
-        child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            SizedBox(height: MediaQuery.of(context).size.height*0.2),
-            _buildTextField(
-              controller: _emailController,
-              labelText: 'Email',
-            ),
-            _buildTextField(
-              controller: _passwordController,
-              labelText: 'Password',
-              isPassword: true,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 16.0),
-              child: ElevatedButton(
-                onPressed: () async {
-                  var container = ProviderContainer();
-                  var loginData = Auth(
-                    email: _emailController.text,
-                    password: _passwordController.text
-                  );
-                  try {
-                    AuthResult loginResult = await container.read(login${visitor.className}Provider(loginData).future);
-                    if (loginResult.success) {
-                      Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(builder: (context) => Home()),
-                      );
-                    } else {
-                      CustomSnackBar.show(context, loginResult.errorMessage);
-                    }
-                  } catch (error) {
-                    print(error);
-                  }
-                },
-                child: const Text('Login'),
-              ),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => ${visitor.className}RegisterWidget()),
-                );
-              },
-              child: const Text("I don't have an account: Register"),
-            ),
-          ],
-        ),
-      ),
-    ),);
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
   }
 
-  Widget _buildTextField({
-    required TextEditingController controller,
-    required String labelText,
-    bool isPassword = false,
-  }) {
-    return Container(
-      padding: const EdgeInsets.all(8.0),
-      margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10.0),
-        color: Styles.secondaryColor,
+  @override
+  Widget build(BuildContext context) {
+    return AuthScaffold(
+      topLeftBrand: Image.asset(
+        'assets/logo_purple.png',
+        width: 80,
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: TextField(
-          controller: controller,
-          obscureText: isPassword && !_isPasswordVisible,
-          decoration: InputDecoration(
-            labelText: labelText,
-            suffixIcon: isPassword
-                ? IconButton(
-                    icon: Icon(
-                      _isPasswordVisible
-                          ? Icons.visibility
-                          : Icons.visibility_off,
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        _isPasswordVisible = !_isPasswordVisible;
-                      });
-                    },
-                  )
-                : null,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            'Log In',
+            style: Theme.of(context).textTheme.headlineLarge
           ),
-        ),
+          const SizedBox(height: 8),
+          Text(
+            'Log in to access your account',
+            style: Theme.of(context).textTheme.bodyMedium
+          ),
+          const SizedBox(height: 70),
+
+          TextField(
+            controller: _emailController,
+            keyboardType: TextInputType.emailAddress,
+            decoration: const InputDecoration(
+              hintText: 'Email',
+              prefixIcon: Icon(Icons.mail_outline),
+            ),
+          ),
+          const SizedBox(height: 14),
+
+          TextField(
+            controller: _passwordController,
+            obscureText: !_isPasswordVisible,
+            decoration: InputDecoration(
+              hintText: 'Password',
+              prefixIcon: const Icon(Icons.lock_outline),
+              suffixIcon: IconButton(
+                icon: Icon(
+                  _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                ),
+                onPressed: () => setState(() {
+                  _isPasswordVisible = !_isPasswordVisible;
+                }),
+              ),
+            ),
+          ),
+
+          const SizedBox(height: 20),
+
+          SizedBox(
+            width: 230,
+            child: ElevatedButton(
+              onPressed: () async {
+                final container = ProviderContainer();
+                final loginData = Auth(
+                  email: _emailController.text.trim(),
+                  password: _passwordController.text,
+                );
+
+                try {
+                  final result =
+                      await container.read(loginUserProvider(loginData).future);
+
+                  if (!mounted) return;
+
+                  if (result.success) {
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(builder: (_) => Home()),
+                    );
+                  } else {
+                    CustomSnackBar.show(context, result.errorMessage);
+                  }
+                } catch (e) {
+                  // opcional: snackbar genérico
+                  debugPrint(e.toString());
+                }
+              },
+              child: Text('Log In'),
+            ),
+          ),
+
+          const SizedBox(height: 40),
+
+          Text(
+            "I don’t have an account",
+            style: Theme.of(context).textTheme.bodySmall
+          ),
+
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const SizedBox(width: 88, child: Divider(color: AppColors.indigo)),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 5),
+                child: TextButton(
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(builder: (_) => UserRegisterWidget()),
+                    );
+                  },
+                  child: Text('Register', style: Theme.of(context).textTheme.labelSmall),
+                ),
+              ),
+              const SizedBox(width: 88, child: Divider(color: AppColors.indigo)),
+            ],
+          ),
+        ],
       ),
     );
   }

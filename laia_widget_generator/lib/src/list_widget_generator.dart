@@ -15,6 +15,7 @@ class ListWidgetGenerator extends GeneratorForAnnotation<ListWidgetGenAnnotation
     ConstantReader annotation, 
     BuildStep buildStep,
   ) {
+    print("GENERATING LIST WIDGET");
     final buffer = StringBuffer();
     final visitor = ModelVisitor();
     element.visitChildren(visitor);
@@ -311,7 +312,12 @@ class _${className}ListViewState extends ConsumerState<${className}ListView> {
       }
   } else {
       for (var defaultField in defaultFields) {
+        print('DEFAULT FIELD: $defaultField');
           var field = classElement.fields.firstWhere((f) => f.name == defaultField);
+          if (field == null) {
+            print('Default field $defaultField not found in ${classElement.name}');
+            continue;
+          }
           if (_fieldChecker.hasAnnotationOfExact(field)) {
               String nameValue = _fieldChecker
                   .firstAnnotationOfExact(field)
