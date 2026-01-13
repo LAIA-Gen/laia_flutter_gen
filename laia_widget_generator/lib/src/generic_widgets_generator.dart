@@ -2411,6 +2411,289 @@ Future<Map<String, String>> getHeaders() async {
 }
 """);
 
+// **************************************************************************
+// Home Cards Grid
+// **************************************************************************
+
+    buffer.writeln('''
+class AppCardItem {
+  final String title;
+  final Widget icon; 
+  final VoidCallback onTap;
+
+  const AppCardItem({
+    required this.title,
+    required this.icon,
+    required this.onTap,
+  });
+}
+
+class AppCardsGrid extends StatelessWidget {
+  final List<AppCardItem> items;
+
+  const AppCardsGrid({super.key, required this.items});
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, c) {
+        final width = c.maxWidth;
+
+        final maxTileWidth = width >= 800 ? 220.0 : 160.0;
+
+        final aspectRatio = width >= 800 ? 1.2 : 0.9;
+
+        return GridView.builder(
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 18),
+          itemCount: items.length,
+          gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+            maxCrossAxisExtent: maxTileWidth, 
+            crossAxisSpacing: 18,
+            mainAxisSpacing: 18,
+            childAspectRatio: aspectRatio,
+          ),
+          itemBuilder: (context, index) => _AppCard(item: items[index]),
+        );
+      },
+    );
+  }
+}
+
+
+class _AppCard extends StatelessWidget {
+  final AppCardItem item;
+
+  const _AppCard({required this.item});
+
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final tileW = constraints.maxWidth;
+
+        final box = (tileW * 0.42).clamp(66.0, 120.0);
+        final iconSize = (box * 0.52).clamp(28.0, 46.0);
+
+        return InkWell(
+          borderRadius: BorderRadius.circular(18),
+          onTap: item.onTap,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  width: box,
+                  height: box,
+                  decoration: BoxDecoration(
+                    color: AppColors.bg,
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Center(
+                    child: IconTheme(
+                      data: IconThemeData(color: cs.primary, size: iconSize),
+                      child: item.icon,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  item.title,
+                  textAlign: TextAlign.center,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: AppColors.muted,
+                        fontWeight: FontWeight.w500,
+                      ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+''');
+
+// **************************************************************************
+// Profile Menu Button
+// **************************************************************************   
+
+    buffer.writeln('''
+class ProfileMenuButton extends StatelessWidget {
+  final String? avatarUrl;
+  final VoidCallback onViewProfile;
+  final VoidCallback onSettings;
+  final VoidCallback onLogout;
+
+  const ProfileMenuButton({
+    super.key,
+    this.avatarUrl,
+    required this.onViewProfile,
+    required this.onSettings,
+    required this.onLogout,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+
+    return MenuAnchor(
+      alignmentOffset: const Offset(-70, 0),
+      style: MenuStyle(
+        backgroundColor: const WidgetStatePropertyAll(AppColors.bg),
+        elevation: const WidgetStatePropertyAll(0),
+        shape: WidgetStatePropertyAll(
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+        ),
+        padding: const WidgetStatePropertyAll(EdgeInsets.all(0)),
+      ),
+      builder: (context, controller, _) {
+        final open = controller.isOpen;
+
+        return InkWell(
+          borderRadius: BorderRadius.circular(18),
+          onTap: () => open ? controller.close() : controller.open(),
+          child: Ink(
+            padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 2),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border.all(
+                color: AppColors.outline,
+              ),
+              borderRadius: BorderRadius.circular(18),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _Avatar(avatarUrl: avatarUrl),
+                const SizedBox(width: 20),
+                Icon(
+                  open ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+                  color: cs.primary,
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+      menuChildren: [
+        _MenuItem(
+          icon: Icons.person_outline,
+          text: 'View Profile',
+          onTap: () {
+            Navigator.of(context).pop();
+            onViewProfile();
+          },
+        ),
+        const _MenuDivider(),
+        _MenuItem(
+          icon: Icons.settings_outlined,
+          text: 'Settings',
+          onTap: () {
+            Navigator.of(context).pop();
+            onSettings();
+          },
+        ),
+        const _MenuDivider(),
+        _MenuItem(
+          text: 'Log out',
+          trailing: const Icon(Icons.logout, size: 18, color: AppColors.muted),
+          onTap: () {
+            Navigator.of(context).pop();
+            onLogout();
+          },
+        ),
+      ],
+    );
+  }
+}
+
+class _Avatar extends StatelessWidget {
+  final String? avatarUrl;
+  const _Avatar({this.avatarUrl});
+
+  @override
+  Widget build(BuildContext context) {
+    return CircleAvatar(
+      radius: 14,
+      backgroundColor: AppColors.lavender,
+      foregroundImage: (avatarUrl != null && avatarUrl!.isNotEmpty)
+          ? NetworkImage(avatarUrl!)
+          : null,
+      child: (avatarUrl == null || avatarUrl!.isEmpty)
+          ? const Icon(Icons.person, size: 16, color: Colors.white)
+          : null,
+    );
+  }
+}
+
+class _MenuDivider extends StatelessWidget {
+  const _MenuDivider();
+
+  @override
+  Widget build(BuildContext context) {
+    return Divider(
+      height: 1,
+      thickness: 1,
+      color: AppColors.bg, // suave
+    );
+  }
+}
+
+class _MenuItem extends StatelessWidget {
+  final IconData? icon;
+  final String text;
+  final Widget? trailing;
+  final VoidCallback onTap;
+
+  const _MenuItem({
+    this.icon,
+    required this.text,
+    required this.onTap,
+    this.trailing,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+
+    return InkWell(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+        child: Row(
+          children: [
+            if (icon != null) Icon(icon, size: 18, color: AppColors.muted),
+            if (icon != null) const SizedBox(width: 10),
+            Expanded(
+              child: Text(
+                text,
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: AppColors.muted,
+                      fontWeight: FontWeight.w500,
+                    ),
+              ),
+            ),
+            if (trailing != null) ...[
+              const SizedBox(width: 8),
+              IconTheme(
+                data: IconThemeData(color: cs.primary),
+                child: trailing!,
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+}
+''');
+
     return buffer.toString();
   }
 }

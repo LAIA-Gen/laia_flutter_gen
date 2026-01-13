@@ -934,7 +934,7 @@ class _${visitor.className}LoginWidgetState extends State<${visitor.className}Lo
   Widget build(BuildContext context) {
     return AuthScaffold(
       topLeftBrand: Image.asset(
-        'assets/logo_purple.png',
+        'assets/logo.png',
         width: 80,
       ),
       child: Column(
@@ -1133,7 +1133,7 @@ class _${visitor.className}RegisterWidgetState extends State<${visitor.className
   Widget build(BuildContext context) {
     return AuthScaffold(
       topLeftBrand: Image.asset(
-        'assets/logo_purple.png',
+        'assets/logo.png',
         width: 80,
       ),
       child: SingleChildScrollView(
