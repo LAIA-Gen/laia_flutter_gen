@@ -2694,6 +2694,1073 @@ class _MenuItem extends StatelessWidget {
 }
 ''');
 
+// **************************************************************************
+// Tasks Widget
+// **************************************************************************
+
+    buffer.writeln('''
+enum TaskStatus { todo, inProgress, done }
+enum TaskPriority { high, mid, low, done }
+enum TasksViewMode { list, board }
+
+class TaskItem {
+  final String title;
+  final DateTime dueDate;
+  final String tag;
+  final TaskPriority priority;
+  final bool checked;
+
+  const TaskItem({
+    required this.title,
+    required this.dueDate,
+    required this.tag,
+    required this.priority,
+    this.checked = false,
+  });
+}
+
+class TaskSection {
+  final TaskStatus status;
+  final List<TaskItem> items;
+
+  const TaskSection({required this.status, required this.items});
+}
+
+class TasksWidget extends StatefulWidget {
+  final List<TaskSection> sections;
+  final List<BoardTask> boardTasks; 
+
+  const TasksWidget({super.key, required this.sections, required this.boardTasks});
+
+  @override
+  State<TasksWidget> createState() => _TasksWidgetState();
+}
+
+class _TasksWidgetState extends State<TasksWidget> {
+  final _searchController = TextEditingController();
+
+  bool _todoOpen = true;
+  bool _progressOpen = true;
+  bool _doneOpen = true;
+
+  TasksViewMode _mode = TasksViewMode.list;
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final isWide = MediaQuery.sizeOf(context).width >= 900;
+
+    final query = _searchController.text.trim().toLowerCase();
+    List<TaskSection> filtered = widget.sections
+        .map((s) => TaskSection(
+              status: s.status,
+              items: s.items.where((t) {
+                if (query.isEmpty) return true;
+                return t.title.toLowerCase().contains(query) ||
+                    t.tag.toLowerCase().contains(query);
+              }).toList(),
+            ))
+        .toList();
+    
+    final filteredBoard = widget.boardTasks.where((t) {
+      if (query.isEmpty) return true;
+      return t.title.toLowerCase().contains(query) ||
+          t.tag.toLowerCase().contains(query);
+    }).toList();
+
+    return SingleChildScrollView(
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 18),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'My Tasks',
+            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                  color: AppColors.indigo,
+                  fontWeight: FontWeight.w700,
+                ),
+          ),
+          const SizedBox(height: 18),
+          _TopBar(
+            controller: _searchController,
+            onChanged: (_) => setState(() {}),
+            onLeftChanged: () => setState(() => _mode = TasksViewMode.list),
+            onRightChanged: () => setState(() => _mode = TasksViewMode.board),
+            mode: _mode,
+          ),
+          const SizedBox(height: 18),
+          if (_mode == TasksViewMode.board)
+            TasksBoardView(tasks: filteredBoard)
+          else ...[
+            _Section(
+              title: 'To Do',
+              count: _count(filtered, TaskStatus.todo),
+              isOpen: _todoOpen,
+              onToggle: () => setState(() => _todoOpen = !_todoOpen),
+              children: _buildRows(
+                context,
+                section: _get(filtered, TaskStatus.todo),
+                isWide: isWide,
+                showHeader: true,
+              ),
+            ),
+            const SizedBox(height: 18),
+
+            _Section(
+              title: 'In progress',
+              count: _count(filtered, TaskStatus.inProgress),
+              isOpen: _progressOpen,
+              onToggle: () => setState(() => _progressOpen = !_progressOpen),
+              children: _buildRows(
+                context,
+                section: _get(filtered, TaskStatus.inProgress),
+                isWide: isWide,
+                showHeader: true,
+              ),
+            ),
+            const SizedBox(height: 18),
+
+            _Section(
+              title: 'Done',
+              count: _count(filtered, TaskStatus.done),
+              isOpen: _doneOpen,
+              onToggle: () => setState(() => _doneOpen = !_doneOpen),
+              children: _buildRows(
+                context,
+                section: _get(filtered, TaskStatus.done),
+                isWide: isWide,
+                showHeader: true,
+                doneStyle: true,
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  TaskSection _get(List<TaskSection> sections, TaskStatus status) =>
+      sections.firstWhere((s) => s.status == status,
+          orElse: () => TaskSection(status: status, items: const []));
+
+  int _count(List<TaskSection> sections, TaskStatus status) =>
+      _get(sections, status).items.length;
+
+  Widget _buildRows(
+    BuildContext context, {
+    required TaskSection section,
+    required bool isWide,
+    required bool showHeader,
+    bool doneStyle = false,
+  }) {
+    if (section.items.isEmpty) {
+      return Padding(
+        padding: const EdgeInsets.only(top: 10),
+        child: Text(
+          'No tasks',
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: AppColors.muted,
+              ),
+        ),
+      );
+    }
+
+    return Column(
+      children: [
+        if (showHeader)
+          _HeaderRow(isWide: isWide, doneStyle: doneStyle),
+        const SizedBox(height: 6),
+        ...section.items.map(
+          (t) => _TaskRow(
+            task: t,
+            isWide: isWide,
+            doneStyle: doneStyle,
+            onToggle: () {
+              // aquí puedes manejar el check real
+            },
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _TopBar extends StatelessWidget {
+  final TextEditingController controller;
+  final ValueChanged<String> onChanged;
+  final VoidCallback onLeftChanged;
+  final VoidCallback onRightChanged;
+  final TasksViewMode mode;
+
+  const _TopBar({required this.controller, required this.onChanged, required this.onLeftChanged, required this.onRightChanged, this.mode = TasksViewMode.list});
+
+  @override
+  Widget build(BuildContext context) {
+    final isWide = MediaQuery.sizeOf(context).width >= 900;
+
+    return Row(
+      children: [
+        Expanded(
+          child: TextField(
+            controller: controller,
+            onChanged: onChanged,
+            decoration: InputDecoration(
+              hintText: 'Search task, tags, or other',
+              prefixIcon: const Icon(Icons.search),
+            ),
+          ),
+        ),
+        if (isWide) ...[
+          const SizedBox(width: 16),
+          _SegmentButton(
+            leftText: 'List',
+            rightText: 'Board',
+            onLeft: onLeftChanged,
+            onRight: onRightChanged,
+            mode: mode,
+          ),
+          const SizedBox(width: 10),
+          _IconPill(
+            icon: Icons.swap_vert,
+            onTap: () {},
+          ),
+          const SizedBox(width: 10),
+          _TextIconPill(
+            icon: Icons.tune,
+            text: 'Filter',
+            onTap: () {},
+          ),
+          const SizedBox(width: 10),
+          _PrimarySquareButton(
+            icon: Icons.add,
+            onTap: () {},
+          ),
+        ] else ...[
+          const SizedBox(width: 12),
+          _PrimarySquareButton(
+            icon: Icons.add,
+            onTap: () {},
+          ),
+        ],
+      ],
+    );
+  }
+}
+
+class _SegmentButton extends StatelessWidget {
+  final String leftText;
+  final String rightText;
+  final VoidCallback onLeft;
+  final VoidCallback onRight;
+  final TasksViewMode mode;
+
+  const _SegmentButton({
+    required this.leftText,
+    required this.rightText,
+    required this.onLeft,
+    required this.onRight,
+    this.mode = TasksViewMode.list,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 40,
+      decoration: BoxDecoration(
+        color: AppColors.bg,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Row(
+        children: [
+          _SegItem(text: leftText, selected: mode == TasksViewMode.list, onTap: onLeft),
+          _SegItem(text: rightText, selected: mode == TasksViewMode.board, onTap: onRight),
+        ],
+      ),
+    );
+  }
+}
+
+class _SegItem extends StatelessWidget {
+  final String text;
+  final bool selected;
+  final VoidCallback onTap;
+
+  const _SegItem({
+    required this.text,
+    required this.selected,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      borderRadius: BorderRadius.circular(12),
+      onTap: onTap,
+      child: Container(
+        width: 72,
+        height: 40,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: selected ? AppColors.lavender : Colors.transparent,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Text(
+          text,
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: AppColors.indigo,
+                fontWeight: FontWeight.w600,
+              ),
+        ),
+      ),
+    );
+  }
+}
+
+class _IconPill extends StatelessWidget {
+  final IconData icon;
+  final VoidCallback onTap;
+
+  const _IconPill({required this.icon, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      borderRadius: BorderRadius.circular(12),
+      onTap: onTap,
+      child: Container(
+        width: 40,
+        height: 40,
+        decoration: BoxDecoration(
+          color: AppColors.bg,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Icon(icon, color: AppColors.indigo),
+      ),
+    );
+  }
+}
+
+class _TextIconPill extends StatelessWidget {
+  final IconData icon;
+  final String text;
+  final VoidCallback onTap;
+
+  const _TextIconPill({
+    required this.icon,
+    required this.text,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      borderRadius: BorderRadius.circular(12),
+      onTap: onTap,
+      child: Container(
+        height: 40,
+        padding: const EdgeInsets.symmetric(horizontal: 14),
+        decoration: BoxDecoration(
+          color: AppColors.bg,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Row(
+          children: [
+            Icon(icon, color: AppColors.indigo, size: 18),
+            const SizedBox(width: 8),
+            Text(
+              text,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: AppColors.indigo,
+                    fontWeight: FontWeight.w600,
+                  ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _PrimarySquareButton extends StatelessWidget {
+  final IconData icon;
+  final VoidCallback onTap;
+
+  const _PrimarySquareButton({required this.icon, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+
+    return InkWell(
+      borderRadius: BorderRadius.circular(12),
+      onTap: onTap,
+      child: Container(
+        width: 44,
+        height: 44,
+        decoration: BoxDecoration(
+          color: cs.primary,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Icon(icon, color: Colors.white),
+      ),
+    );
+  }
+}
+
+class _Section extends StatelessWidget {
+  final String title;
+  final int count;
+  final bool isOpen;
+  final VoidCallback onToggle;
+  final Widget children;
+
+  const _Section({
+    required this.title,
+    required this.count,
+    required this.isOpen,
+    required this.onToggle,
+    required this.children,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        InkWell(
+          onTap: onToggle,
+          child: Row(
+            children: [
+              Icon(
+                isOpen ? Icons.keyboard_arrow_down : Icons.keyboard_arrow_right,
+                color: AppColors.indigo,
+              ),
+              const SizedBox(width: 6),
+              Text(
+                title,
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      color: AppColors.indigo,
+                      fontWeight: FontWeight.w700,
+                    ),
+              ),
+              const SizedBox(width: 10),
+              Text(
+                '(\$count)',
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      color: AppColors.muted,
+                      fontWeight: FontWeight.w500,
+                    ),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 10),
+        Container(height: 1, color: AppColors.outline),
+        if (isOpen) ...[
+          const SizedBox(height: 12),
+          children,
+        ],
+      ],
+    );
+  }
+}
+
+class _HeaderRow extends StatelessWidget {
+  final bool isWide;
+  final bool doneStyle;
+
+  const _HeaderRow({required this.isWide, required this.doneStyle});
+
+  @override
+  Widget build(BuildContext context) {
+    final style = Theme.of(context).textTheme.bodyMedium?.copyWith(
+          color: AppColors.muted,
+          fontWeight: FontWeight.w500,
+        );
+
+    if (!isWide) return const SizedBox.shrink();
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 6),
+      child: Row(
+        children: [
+          Expanded(flex: 6, child: Text('Task', style: style)),
+          Expanded(flex: 1, child: Container()),
+          Expanded(flex: 1, child: Text('Due date', style: style, textAlign: TextAlign.center)),
+          Expanded(flex: 1, child: Container()),
+          Expanded(flex: 2, child: Text('Task Tag', style: style, textAlign: TextAlign.center)),
+          Expanded(flex: 1, child: Container()),
+          Expanded(flex: 2, child: Text('Priority', style: style, textAlign: TextAlign.center)),
+        ],
+      ),
+    );
+  }
+}
+
+class _TaskRow extends StatelessWidget {
+  final TaskItem task;
+  final bool isWide;
+  final bool doneStyle;
+  final VoidCallback onToggle;
+
+  const _TaskRow({
+    required this.task,
+    required this.isWide,
+    required this.doneStyle,
+    required this.onToggle,
+  });
+
+  String _fmt(DateTime d) {
+    const months = [
+      'Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'
+    ];
+    return '\${d.day.toString().padLeft(2, '0')} \${months[d.month - 1]}';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final titleStyle = Theme.of(context).textTheme.bodyLarge?.copyWith(
+          color: doneStyle ? AppColors.muted : AppColors.indigo,
+          fontWeight: FontWeight.w500,
+          decoration: doneStyle ? TextDecoration.lineThrough : null,
+        );
+
+    final row = Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      child: isWide
+          ? Row(
+              children: [
+                Expanded(
+                  flex: 6,
+                  child: Row(
+                    children: [
+                      _CheckBoxLike(
+                        checked: task.checked || doneStyle,
+                        done: doneStyle,
+                        onTap: onToggle,
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(child: Text(task.title, style: titleStyle)),
+                    ],
+                  ),
+                ),
+                Expanded(flex: 1, child: Container()),
+                Expanded(
+                  flex: 1,
+                  child: _DueDateChip(dateText: _fmt(task.dueDate), done: doneStyle),
+                ),
+                Expanded(flex: 1, child: Container()),
+                Expanded(
+                  flex: 2,
+                  child: _TagChip(text: task.tag, done: doneStyle),
+                ),
+                Expanded(flex: 1, child: Container()),
+                Expanded(
+                  flex: 2,
+                  child: _PriorityChip(priority: doneStyle ? TaskPriority.done : task.priority),
+                ),
+              ],
+            )
+          : Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    _CheckBoxLike(
+                      checked: task.checked || doneStyle,
+                      done: doneStyle,
+                      onTap: onToggle,
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(child: Text(task.title, style: titleStyle)),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                Wrap(
+                  spacing: 10,
+                  runSpacing: 10,
+                  children: [
+                    _DueDateChip(dateText: _fmt(task.dueDate), done: doneStyle),
+                    _TagChip(text: task.tag, done: doneStyle),
+                    _PriorityChip(priority: doneStyle ? TaskPriority.done : task.priority),
+                  ],
+                ),
+              ],
+            ),
+    );
+
+    return row;
+  }
+}
+
+class _CheckBoxLike extends StatelessWidget {
+  final bool checked;
+  final bool done;
+  final VoidCallback onTap;
+
+  const _CheckBoxLike({
+    required this.checked,
+    required this.done,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      borderRadius: BorderRadius.circular(6),
+      onTap: onTap,
+      child: Container(
+        width: 20,
+        height: 20,
+        decoration: BoxDecoration(
+          color: checked ? AppColors.successBg : Colors.transparent,
+          borderRadius: BorderRadius.circular(6),
+          border: Border.all(
+            color: checked ? Colors.transparent : AppColors.outline,
+          ),
+        ),
+        child: checked
+            ? const Icon(Icons.check, size: 16, color: AppColors.success)
+            : null,
+      ),
+    );
+  }
+}
+
+class _DueDateChip extends StatelessWidget {
+  final String dateText;
+  final bool done;
+
+  const _DueDateChip({required this.dateText, required this.done});
+
+  @override
+  Widget build(BuildContext context) {
+    return _Pill(
+      icon: Icons.calendar_month_outlined,
+      text: dateText,
+      muted: done,
+      dueDate: true,
+    );
+  }
+}
+
+class _TagChip extends StatelessWidget {
+  final String text;
+  final bool done;
+
+  const _TagChip({required this.text, required this.done});
+
+  @override
+  Widget build(BuildContext context) {
+    return _Pill(
+      text: text,
+      muted: done,
+    );
+  }
+}
+
+class _PriorityChip extends StatelessWidget {
+  final TaskPriority priority;
+
+  const _PriorityChip({required this.priority});
+
+  @override
+  Widget build(BuildContext context) {
+    switch (priority) {
+      case TaskPriority.high:
+        return const _Pill(
+          icon: Icons.flag_outlined,
+          text: 'High',
+          bg: AppColors.errorBg,
+          fg: AppColors.error,
+        );
+      case TaskPriority.mid:
+        return const _Pill(
+          icon: Icons.flag_outlined,
+          text: 'Mid',
+          bg: AppColors.warningBg,
+          fg: AppColors.warning,
+        );
+      case TaskPriority.low:
+        return const _Pill(
+          icon: Icons.flag_outlined,
+          text: 'Low',
+          bg: AppColors.successBg,
+          fg: AppColors.success,
+        );
+      case TaskPriority.done:
+        return const _Pill(
+          icon: Icons.flag_outlined,
+          text: 'Done',
+          bg: AppColors.successBg,
+          fg: AppColors.success,
+        );
+    }
+  }
+}
+
+class _Pill extends StatelessWidget {
+  final IconData? icon;
+  final String text;
+  final Color? bg;
+  final Color? fg;
+  final bool muted;
+  final bool dueDate;
+
+  const _Pill({
+    required this.text,
+    this.icon,
+    this.bg,
+    this.fg,
+    this.muted = false,
+    this.dueDate = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    var background = muted ? AppColors.bg : (bg ?? AppColors.bg);
+    background = dueDate ? AppColors.surface : background;
+    final foreground = muted ? AppColors.muted : (fg ?? AppColors.indigo);
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      decoration: BoxDecoration(
+        color: background,
+        borderRadius: BorderRadius.circular(14),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          if (icon != null) ...[
+            Icon(icon, size: 18, color: foreground),
+            const SizedBox(width: 8),
+          ],
+          Text(
+            text,
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: foreground,
+                  fontWeight: FontWeight.w600,
+                ),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+enum BoardStatus { todo, inProgress, done }
+
+class BoardTask {
+  final String title;
+  final BoardStatus status;
+  final int progress; // 0..100
+  final DateTime dueDate;
+  final String tag; // "Work"
+  final TaskPriority priority;
+  final int comments;
+  final bool checked;
+
+  const BoardTask({
+    required this.title,
+    required this.status,
+    required this.progress,
+    required this.dueDate,
+    required this.tag,
+    required this.priority,
+    required this.comments,
+    this.checked = false,
+  });
+}
+
+class TasksBoardView extends StatelessWidget {
+  final List<BoardTask> tasks;
+
+  const TasksBoardView({super.key, required this.tasks});
+
+  @override
+  Widget build(BuildContext context) {
+    final isWide = MediaQuery.sizeOf(context).width >= 1000;
+
+    final todo = tasks.where((t) => t.status == BoardStatus.todo).toList();
+    final prog = tasks.where((t) => t.status == BoardStatus.inProgress).toList();
+    final done = tasks.where((t) => t.status == BoardStatus.done).toList();
+
+    // En móvil: scroll horizontal de columnas
+    return isWide
+        ? Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(child: _BoardColumn(title: 'To Do', count: todo.length, tasks: todo)),
+              const SizedBox(width: 18),
+              Expanded(child: _BoardColumn(title: 'In progress', count: prog.length, tasks: prog)),
+              const SizedBox(width: 18),
+              Expanded(child: _BoardColumn(title: 'Done', count: done.length, tasks: done)),
+            ],
+          )
+        : SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.only(bottom: 8),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(width: 340, child: _BoardColumn(title: 'To Do', count: todo.length, tasks: todo)),
+                const SizedBox(width: 16),
+                SizedBox(width: 340, child: _BoardColumn(title: 'In progress', count: prog.length, tasks: prog)),
+                const SizedBox(width: 16),
+                SizedBox(width: 340, child: _BoardColumn(title: 'Done', count: done.length, tasks: done)),
+              ],
+            ),
+          );
+  }
+}
+
+class _BoardColumn extends StatefulWidget {
+  final String title;
+  final int count;
+  final List<BoardTask> tasks;
+
+  const _BoardColumn({
+    required this.title,
+    required this.count,
+    required this.tasks,
+  });
+
+  @override
+  State<_BoardColumn> createState() => _BoardColumnState();
+}
+
+class _BoardColumnState extends State<_BoardColumn> {
+  bool _open = true;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        // Header columna
+        InkWell(
+          onTap: () => setState(() => _open = !_open),
+          child: Row(
+            children: [
+              Icon(
+                _open ? Icons.keyboard_arrow_down : Icons.keyboard_arrow_right,
+                color: AppColors.indigo,
+              ),
+              const SizedBox(width: 6),
+              Text(
+                widget.title,
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      color: AppColors.indigo,
+                      fontWeight: FontWeight.w700,
+                    ),
+              ),
+              const SizedBox(width: 10),
+              Text(
+                '(\${widget.count})',
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      color: AppColors.muted,
+                      fontWeight: FontWeight.w500,
+                    ),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 10),
+        Container(height: 1, color: AppColors.outline),
+        const SizedBox(height: 14),
+
+        if (_open)
+          ...widget.tasks.map((t) => Padding(
+                padding: const EdgeInsets.only(bottom: 14),
+                child: _TaskCard(task: t),
+              )),
+      ],
+    );
+  }
+}
+
+class _TaskCard extends StatelessWidget {
+  final BoardTask task;
+
+  const _TaskCard({required this.task});
+
+  Color _cardBg() {
+    switch (task.status) {
+      case BoardStatus.todo:
+        return AppColors.bg; // suave lila/gris
+      case BoardStatus.inProgress:
+        return AppColors.warningBg.withOpacity(0.35); // beige suave
+      case BoardStatus.done:
+        return AppColors.successBg.withOpacity(0.35); // verde suave
+    }
+  }
+
+  Color _progressColor() {
+    switch (task.status) {
+      case BoardStatus.todo:
+        return AppColors.indigo;
+      case BoardStatus.inProgress:
+        return AppColors.warning;
+      case BoardStatus.done:
+        return AppColors.success;
+    }
+  }
+
+  String _fmt(DateTime d) {
+    const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    return '\${d.day.toString().padLeft(2, '0')} \${months[d.month - 1]}';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+
+    final titleColor = task.status == BoardStatus.done ? AppColors.muted : AppColors.indigo;
+    final iconColor = task.status == BoardStatus.done ? AppColors.muted : AppColors.indigo;
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: _cardBg(),
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Column(
+        children: [
+          // Top row: checkbox + title + kebab
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _CheckBoxLike(
+                checked: task.checked || task.status == BoardStatus.done,
+                done: task.status == BoardStatus.done,
+                onTap: () {},
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  task.title,
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        color: titleColor,
+                        fontWeight: FontWeight.w700,
+                      ),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Icon(Icons.more_vert, color: AppColors.muted),
+            ],
+          ),
+          const SizedBox(height: 18),
+
+          // Progress label
+          Row(
+            children: [
+              Text(
+                'Progress',
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: AppColors.muted,
+                      fontWeight: FontWeight.w500,
+                    ),
+              ),
+              const Spacer(),
+              Text(
+                '\${task.progress} %',
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: AppColors.indigo,
+                      fontWeight: FontWeight.w600,
+                    ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+
+          // Progress bar
+          ClipRRect(
+            borderRadius: BorderRadius.circular(999),
+            child: LinearProgressIndicator(
+              value: (task.progress.clamp(0, 100)) / 100.0,
+              minHeight: 4,
+              backgroundColor: AppColors.outline,
+              valueColor: AlwaysStoppedAnimation<Color>(_progressColor()),
+            ),
+          ),
+          const SizedBox(height: 18),
+
+          // Tag + Priority chips
+          Row(
+            children: [
+              _SoftChip(
+                text: task.tag,
+                fg: AppColors.indigo,
+                bg: AppColors.surface,
+              ),
+              const SizedBox(width: 12),
+              _PriorityChip(priority: task.priority),
+            ],
+          ),
+          const SizedBox(height: 18),
+
+          // Bottom row: date + comments
+          Row(
+            children: [
+              Icon(Icons.calendar_month_outlined, size: 18, color: iconColor),
+              const SizedBox(width: 8),
+              Text(
+                _fmt(task.dueDate),
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: iconColor,
+                      fontWeight: FontWeight.w600,
+                    ),
+              ),
+              const Spacer(),
+              Icon(Icons.chat_bubble_outline, size: 18, color: AppColors.muted),
+              const SizedBox(width: 6),
+              Text(
+                '(\${task.comments})',
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: AppColors.muted,
+                      fontWeight: FontWeight.w600,
+                    ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _SoftChip extends StatelessWidget {
+  final String text;
+  final Color fg;
+  final Color bg;
+
+  const _SoftChip({required this.text, required this.fg, required this.bg});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+      decoration: BoxDecoration(
+        color: bg,
+        borderRadius: BorderRadius.circular(14),
+      ),
+      child: Text(
+        text,
+        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              color: fg,
+              fontWeight: FontWeight.w700,
+            ),
+      ),
+    );
+  }
+}
+''');
+
     return buffer.toString();
   }
 }
