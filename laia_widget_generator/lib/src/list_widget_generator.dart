@@ -132,6 +132,20 @@ class _${className}ListViewState extends ConsumerState<${className}ListView> {
     }
 
     buffer.writeln('''return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Navigator.push(
+            context,
+            PageRouteBuilder(
+              pageBuilder: (_, __, ___) => Home(),
+            ),
+          ),
+        ),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+      ),
       body: ${classNamePlural}AsyncValue.when(
         loading: () => const CircularProgressIndicator(),
         error: (error, stackTrace) => Center(

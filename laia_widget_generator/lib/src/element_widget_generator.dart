@@ -163,19 +163,33 @@ class _${visitor.className}WidgetState extends State<${visitor.className}Widget>
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('${visitor.className}'),
+          automaticallyImplyLeading: false,
           leading: IconButton(
-            icon: Icon(Icons.arrow_back, color: Colors.black),
+            icon: Icon(Icons.arrow_back),
             onPressed: () => Navigator.push(
               context,
-              PageRouteBuilder(pageBuilder: (_, __, ___) => ${visitor.className}ListView()),
-            )
+              PageRouteBuilder(
+                pageBuilder: (_, __, ___) => ${visitor.className}ListView(),
+              ),
+            ),
           ), 
         ),
         body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: Column(
           children: [
+            Center(
+              child: Text(
+                '${visitor.className}',
+                style: Theme.of(context)
+                    .textTheme
+                    .headlineSmall
+                    ?.copyWith(
+                      color: AppColors.indigo,
+                      fontWeight: FontWeight.w700,
+                    ),
+              ),
+            ),
 ''');
     fieldWidgetCode(var field) {
       var bufferfieldWidget = StringBuffer();
@@ -287,7 +301,7 @@ class _${visitor.className}WidgetState extends State<${visitor.className}Widget>
           multiRelation = true;
         }
       }
-
+      
       bufferfieldWidget.writeln('''
           $widget(
             key: ${fieldName}WidgetKey,
@@ -321,6 +335,8 @@ class _${visitor.className}WidgetState extends State<${visitor.className}Widget>
     }
     if (defaultFieldsDetail.isEmpty) {
       for (var field in classElement.fields) {
+        final name = field.name;
+        if (name == 'id' || name == 'owner' || name == 'Shard') continue;
         buffer.writeln(fieldWidgetCode(field));
       }
     } else {
@@ -343,12 +359,11 @@ class _${visitor.className}WidgetState extends State<${visitor.className}Widget>
                 ),''');
       }
     }
-    buffer.writeln('],');
-    buffer.writeln('),');
-    buffer.writeln('),');
     buffer.writeln('''
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
+              const SizedBox(height: 16),
+              SaveButton(
+                text: 'Save',
+                onTap: () async {
           var initial${visitor.className} = widget.element;
           Map<String, dynamic> updates = {};
           updates['id'] = widget.element?.id;
@@ -552,9 +567,13 @@ if (updated$fieldName != initial${visitor.className}?.$fieldName) {
             print('Failed to update ${visitor.className}: \$error');
           }
         },
-        child: Icon(Icons.save),
-      ),
-''');
+              ),
+              const SizedBox(height: 80),
+      ''');
+    buffer.writeln('],');
+    buffer.writeln('),');
+    buffer.writeln('),');
+  
     buffer.writeln(');');
     buffer.writeln('}');
     buffer.writeln('}');
@@ -781,7 +800,7 @@ class ${visitor.className}MultiFieldWidgetState extends State<${visitor.classNam
           margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10.0),
-              color: Styles.secondaryColor),
+              color: AppColors.surface),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -807,6 +826,54 @@ class ${visitor.className}MultiFieldWidgetState extends State<${visitor.classNam
                       ? Expanded(
                           child: TypeAheadField<${visitor.className}>(
                             controller: _typeAheadController,
+                            builder: (context, controller, focusNode) {
+                              return Container(
+                                height: 44,
+                                decoration: BoxDecoration(
+                                  color: AppColors.surface,
+                                  borderRadius: BorderRadius.circular(14),
+                                  border: Border.all(color: AppColors.surface),
+                                ),
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      child: TextField(
+                                        controller: controller,
+                                        focusNode: focusNode,
+                                        decoration: InputDecoration(
+                                          hintText: '',
+                                          contentPadding: const EdgeInsets.symmetric(
+                                              horizontal: 16, vertical: 12),
+                                          border: OutlineInputBorder(
+                                            borderRadius: BorderRadius.circular(14),
+                                            borderSide: const BorderSide(
+                                              color: AppColors.muted,
+                                            ),
+                                          ),
+                                          enabledBorder: OutlineInputBorder(
+                                            borderRadius: BorderRadius.circular(14),
+                                            borderSide: const BorderSide(
+                                              color: AppColors.muted,
+                                            ),
+                                          ),
+                                          focusedBorder: OutlineInputBorder(
+                                            borderRadius: BorderRadius.circular(14),
+                                            borderSide: const BorderSide(
+                                              color: AppColors.indigo,
+                                              width: 1.2,
+                                            ),
+                                          ),
+                                          fillColor: AppColors.surface,
+                                          focusColor: AppColors.surface,
+                                          hoverColor: AppColors.surface
+                                        ),
+                                      )
+                                    )
+                                  ]
+                                )
+                              );
+                            },
+
                             suggestionsCallback: (String pattern) async {
                               final idRegex = RegExp(r'<id:\\\s*([a-fA-F0-9]+)\\\s*>');
                               final matches = idRegex.allMatches(pattern);

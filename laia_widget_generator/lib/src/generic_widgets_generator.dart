@@ -85,7 +85,7 @@ class IntWidgetState extends State<IntWidget> {
           margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10.0),
-            color: Styles.secondaryColor
+            color: AppColors.surface
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -116,7 +116,31 @@ class IntWidgetState extends State<IntWidget> {
                               FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
                             ],
                             decoration: InputDecoration(
-                              hintText: widget.placeholder,
+                                hintText: widget.placeholder,
+                                contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: 16, vertical: 12),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(14),
+                                  borderSide: const BorderSide(
+                                    color: AppColors.muted,
+                                  ),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(14),
+                                  borderSide: const BorderSide(
+                                    color: AppColors.muted,
+                                  ),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(14),
+                                  borderSide: const BorderSide(
+                                    color: AppColors.indigo,
+                                    width: 1.2,
+                                  ),
+                                ),
+                                fillColor: AppColors.surface,
+                                focusColor: AppColors.surface,
+                                hoverColor: AppColors.surface
                             ),
                             initialValue: widget.value?.toString(),
                             onChanged: (newValue) {
@@ -1326,7 +1350,7 @@ class DoubleWidgetState extends State<DoubleWidget> {
           margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10.0),
-            color: Styles.secondaryColor
+            color: AppColors.surface
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -1357,7 +1381,31 @@ class DoubleWidgetState extends State<DoubleWidget> {
                               FilteringTextInputFormatter.allow(RegExp(r'[0-9.]')),
                             ],
                             decoration: InputDecoration(
-                              hintText: widget.placeholder,
+                                hintText: widget.placeholder,
+                                contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: 16, vertical: 12),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(14),
+                                  borderSide: const BorderSide(
+                                    color: AppColors.muted,
+                                  ),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(14),
+                                  borderSide: const BorderSide(
+                                    color: AppColors.muted,
+                                  ),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(14),
+                                  borderSide: const BorderSide(
+                                    color: AppColors.indigo,
+                                    width: 1.2,
+                                  ),
+                                ),
+                                fillColor: AppColors.surface,
+                                focusColor: AppColors.surface,
+                                hoverColor: AppColors.surface
                             ),
                             initialValue: widget.value?.toString(),
                             onChanged: (newValue) {
@@ -1445,7 +1493,7 @@ class StringWidgetState extends State<StringWidget> {
           margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10.0),
-            color: Styles.secondaryColor
+            color: AppColors.surface
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -1473,6 +1521,30 @@ class StringWidgetState extends State<StringWidget> {
                           child: TextFormField(
                             decoration: InputDecoration(
                               hintText: widget.placeholder,
+                              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(14),
+                                borderSide: const BorderSide(
+                                  color: AppColors.muted,
+                                ),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(14),
+                                borderSide: const BorderSide(
+                                  color:  AppColors.muted,
+                                ),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(14),
+                                borderSide: const BorderSide(
+                                  color: AppColors.indigo,
+                                  width: 1.2,
+                                ),
+                              ),
+                              fillColor: AppColors.surface,
+                              focusColor: AppColors.surface,
+                              hoverColor: AppColors.surface
                             ),
                             initialValue: widget.value,
                             onChanged: (newValue) {
@@ -1597,7 +1669,7 @@ class DateTimeWidgetState extends State<DateTimeWidget> {
           margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10.0),
-            color: Styles.secondaryColor
+            color: AppColors.surface
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -3870,6 +3942,46 @@ class PillButton extends StatelessWidget {
                 const SizedBox(width: 50),
                 Icon(trailing, size: 15, color: foreground),
               ],
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class SaveButton extends StatelessWidget {
+  final String text;
+  final VoidCallback? onTap;
+
+  const SaveButton({
+    required this.text,
+    this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+
+    return Opacity(
+      opacity: 1,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(14),
+        onTap: onTap,
+        child: Container(
+          height: 35,
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          decoration: BoxDecoration(
+            color: AppColors.bg,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(Icons.save, size: 20, color: AppColors.indigo),
+              const SizedBox(width: 10),
+              Text(text, style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: AppColors.indigo,
+                  )),
             ],
           ),
         ),
