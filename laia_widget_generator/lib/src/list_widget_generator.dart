@@ -33,6 +33,17 @@ class ListWidgetGenerator extends GeneratorForAnnotation<ListWidgetGenAnnotation
       widget = "${className}Widget";
     }
 
+    // Avatar field (image on defaultFields)
+    var avatarField = '';
+    for (var field in classElement.fields) {
+      if (_fieldChecker.hasAnnotationOfExact(field)) {
+        avatarField = _fieldChecker
+            .firstAnnotationOfExact(field)
+            ?.getField('image')
+            ?.toStringValue() ?? '';
+      }
+    }
+
     buffer.writeln('''
 class ${className}ListView extends ConsumerStatefulWidget {
   final Map<String, dynamic>? extraFilters;
@@ -47,6 +58,8 @@ class ${className}ListView extends ConsumerStatefulWidget {
 }
 
 class _${className}ListViewState extends ConsumerState<${className}ListView> {
+  final GlobalKey<CustomSearchBarState> _searchBarKey = GlobalKey<CustomSearchBarState>();
+
   @override
   void initState() {
     super.initState();
@@ -62,6 +75,8 @@ class _${className}ListViewState extends ConsumerState<${className}ListView> {
 
   @override
   Widget build(BuildContext context) {
+    final isWide = MediaQuery.sizeOf(context).width >= 900;
+
     final paginationState = ref.watch(${classNameLowercase}PaginationProvider);
 
     final ${classNamePlural}AsyncValue =
@@ -117,50 +132,6 @@ class _${className}ListViewState extends ConsumerState<${className}ListView> {
     }
 
     buffer.writeln('''return Scaffold(
-      appBar: AppBar(
-        title: const Text('$className List'),
-        actions: [
-          Container(
-              margin: const EdgeInsets.only(right: 10),
-              child: ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  PageRouteBuilder(pageBuilder: (_, __, ___) => ${className}Widget(
-                    isEditing: false,
-                  )),
-                );
-              },
-              style: ButtonStyle(
-                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                  RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                ),
-                backgroundColor: MaterialStateProperty.all<Color>(
-                    Styles.buttonPrimaryColor),
-                elevation:
-                    MaterialStateProperty.resolveWith<double>((states) {
-                  if (states.contains(MaterialState.hovered) ||
-                      states.contains(MaterialState.pressed)) {
-                    return 0;
-                  }
-                  return 0;
-                }),
-                foregroundColor:
-                    MaterialStateProperty.all<Color>(Colors.white),
-                overlayColor:
-                    MaterialStateProperty.resolveWith<Color>((states) {
-                  if (states.contains(MaterialState.hovered)) {
-                    return Styles.buttonPrimaryColorHover;
-                  }
-                  return Colors.transparent;
-                }),
-              ),
-              child: const Text('Create $className'),
-            ),),
-          ],
-        ),
       body: ${classNamePlural}AsyncValue.when(
         loading: () => const CircularProgressIndicator(),
         error: (error, stackTrace) => Center(
@@ -174,11 +145,64 @@ class _${className}ListViewState extends ConsumerState<${className}ListView> {
             widget._initialized = true;
           }
 
-          return Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            CustomSearchBar(
-              fields: const {''');
+          final allSelected = $classNamePlural.isNotEmpty && widget.selectedStates.every((e) => e);
+          final anySelected = widget.selectedStates.any((e) => e);
+
+          void toggleAll(bool value) {
+            setState(() {
+              widget.selectedStates = List.generate($classNamePlural.length, (_) => value);
+            });
+          }
+
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 18),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                // --- Title ---
+                Center(
+                  child: Text(
+                    '$className List',
+                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                          color: AppColors.indigo,
+                          fontWeight: FontWeight.w700,
+                        ),
+                  ),
+                ),
+                const SizedBox(height: 22),
+                // --- Top actions row: left filters, right add ---
+                Row(
+                  children: [
+                    PillButton(
+                      icon: Icons.tune,
+                      text: 'Add Filters',
+                      onTap: () {
+                        _searchBarKey.currentState?.addFilterRow();
+                      },
+                      bg: AppColors.lavender,
+                    ),
+                    const Spacer(),
+                    PillButton(
+                      text: 'Add $className',
+                      trailing: Icons.add,
+                      filled: true,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          PageRouteBuilder(
+                            pageBuilder: (_, __, ___) => ${className}Widget(isEditing: false),
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 22),
+
+                CustomSearchBar(
+                  key: _searchBarKey,
+                  showAddButton: false,
+                  fields: const {''');
 
     bool isFirstField = true;
 
@@ -197,424 +221,59 @@ class _${className}ListViewState extends ConsumerState<${className}ListView> {
               onFilterChanged: onFilter,
               onFilterRemove: onFilterRemove,
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                IconButton(
-                  icon: const Icon(Icons.refresh, color: Colors.grey),
-                  onPressed: () {
-                    ref.read(${classNameLowercase}PaginationProvider.notifier).setPage(1);
-                  },
-                ),
-                Container(
-                  margin: const EdgeInsets.only(right: 10, left: 10, bottom: 5),
-                  child: ElevatedButton(
-                  onPressed: widget.selectedStates.contains(true)
-                    ? () {
-                        List<int> selectedIndices = List.generate(
-                          widget.selectedStates.length,
-                          (index) => widget.selectedStates[index] ? index : -1,
-                        ).where((index) => index != -1).toList();
-
-                        List<$className> selected${className}s = selectedIndices.map((index) => $classNamePlural[index]).toList();
-                        _onDeleteElement(selected${className}s, ref, paginationState);
-                      }
-                    : null,
-                  style: ButtonStyle(
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                    ),
-                    backgroundColor: MaterialStateProperty.all<Color>(
-                      widget.selectedStates.contains(true)
-                        ?
-                        const Color.fromARGB(255, 224, 210, 210): 
-                        const Color.fromARGB(255, 202, 202, 202)),
-                    elevation:
-                        MaterialStateProperty.resolveWith<double>((states) {
-                      if (states.contains(MaterialState.hovered) ||
-                          states.contains(MaterialState.pressed)) {
-                        return 0;
-                      }
-                      return 0;
-                    }),
-                    foregroundColor:
-                        MaterialStateProperty.all<Color>(Colors.white),
-                    overlayColor:
-                        MaterialStateProperty.resolveWith<Color>((states) {
-                      if (states.contains(MaterialState.hovered)) {
-                        return const Color.fromARGB(255, 194, 165, 165);
-                      }
-                      return Colors.transparent;
-                    }),
-                  ),
-                  child: const Text('Delete'),
-                ),
-              ),]
-            ),
+            const SizedBox(height: 18),
+            _${className}HeaderRow(isWide: isWide),
+            Container(height: 1, color: AppColors.outline),
+            const SizedBox(height: 12),
             Expanded(
-              child: ListView(
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      SingleChildScrollView(
-                        scrollDirection: Axis.vertical,
-                        child: SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: SizedBox(
-                          width: MediaQuery.of(context).size.width > 1500 ? MediaQuery.of(context).size.width : 1500,
-                          child: DataTable(
-                            columns: [''');
+              child: ListView.separated(
+                itemCount: $classNamePlural.length,
+                separatorBuilder: (_, __) =>
+                    Container(height: 1, color: AppColors.outline.withOpacity(0.5)),
+                itemBuilder: (context, index) {
+                  final u = $classNamePlural[index];
+                  return _${className}ListRow(
+                    ''');
+    // Here we add the fields to the row
     if (defaultFields.isEmpty) {
       for (var field in classElement.fields) {
-          if (_fieldChecker.hasAnnotationOfExact(field)) {
-              String nameValue = _fieldChecker
-                  .firstAnnotationOfExact(field)
-                  ?.getField('fieldName')
-                  ?.toStringValue() ?? '';
-
-              var fieldName = field.name;
-              if (nameValue.isNotEmpty) {
-                  fieldName = nameValue;
-              }
-              buffer.writeln('''
-                DataColumn(
-                  label: Expanded(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [ 
-                        const Text('$fieldName', style: TextStyle(fontWeight: FontWeight.bold, color: Color.fromARGB(255, 94, 54, 54)), textAlign: TextAlign.center,),
-                        if (columnSortStates['${field.name}'] != null) ...[
-                          Icon(
-                            columnSortStates['${field.name}'] == 1
-                                ? Icons.arrow_drop_up_rounded 
-                                : Icons.arrow_drop_down_rounded,
-                            color: Colors.black,
-                          ),
-                          Text(
-                            '\${columnSortStates.keys.toList().indexOf('${field.name}') + 1}',
-                            style: const TextStyle(fontSize: 10),
-                          ),
-                        ],
-                      ],
-                    ),
-                  ), 
-                  onSort:(columnIndex, ascending) => {
-                    onSort('${field.name}')
-                  },
-                ),
-              ''');
-          }
+        if (_fieldChecker.hasAnnotationOfExact(field)) {
+          buffer.writeln('    ${field.name}$className: u.${field.name},');
+        }
       }
   } else {
       for (var defaultField in defaultFields) {
-        print('DEFAULT FIELD: $defaultField');
-          var field = classElement.fields.firstWhere((f) => f.name == defaultField);
-          if (field == null) {
-            print('Default field $defaultField not found in ${classElement.name}');
-            continue;
-          }
-          if (_fieldChecker.hasAnnotationOfExact(field)) {
-              String nameValue = _fieldChecker
-                  .firstAnnotationOfExact(field)
-                  ?.getField('fieldName')
-                  ?.toStringValue() ?? '';
-
-              var fieldName = field.name;
-              if (nameValue.isNotEmpty) {
-                  fieldName = nameValue;
-              }
-              buffer.writeln('''
-                DataColumn(
-                  label: Expanded(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [ 
-                        const Text('$fieldName', style: TextStyle(fontWeight: FontWeight.bold, color: Color.fromARGB(255, 94, 54, 54)), textAlign: TextAlign.center,),
-                        if (columnSortStates['${field.name}'] != null) ...[
-                          Icon(
-                            columnSortStates['${field.name}'] == 1
-                                ? Icons.arrow_drop_up_rounded 
-                                : Icons.arrow_drop_down_rounded,
-                            color: Colors.black,
-                          ),
-                          Text(
-                            '\${columnSortStates.keys.toList().indexOf('${field.name}') + 1}',
-                            style: const TextStyle(fontSize: 10),
-                          ),
-                        ],
-                      ],
-                    ),
-                  ), 
-                  onSort:(columnIndex, ascending) => {
-                    onSort('${field.name}')
-                  },
-                ),
-              ''');
-              }
+        var field = classElement.fields.firstWhere((f) => f.name == defaultField);
+        if (field == null) {
+          print('Default field $defaultField not found in ${classElement.name}');
+          continue;
+        }
+        if (_fieldChecker.hasAnnotationOfExact(field)) {
+          buffer.writeln('    ${field.name}$className: u.${field.name},');
+        }
       }
   }
     buffer.writeln('''
-        ],
-        rows: List<DataRow>.generate($classNamePlural.length, (index) {
-          var $classNameLowercase = $classNamePlural[index];
-          
-          return DataRow(
-            selected: widget.selectedStates[index],
-            cells: [
-''');
-
-    for (var field in defaultFields.isEmpty ? visitor.fields.keys : defaultFields) {
-      var field_info = classElement.fields.firstWhere((element) => element.name == field);
-      var fieldType = field_info.type.toString();
-      String relation = '';
-      relation = _fieldChecker
-              .firstAnnotationOfExact(field_info)
-              ?.getField('relation')
-              ?.toStringValue() ?? relation;
-      bool uspaceMap = false;
-      uspaceMap = _fieldChecker
-              .firstAnnotationOfExact(field_info)
-              !.getField('uspaceMap')?.toBoolValue() ?? uspaceMap;
-      if (relation != '') {
-        if (fieldType == 'String' || fieldType == 'String?') {
-            buffer.writeln('''
-DataCell(Center(
-  child: FutureBuilder<List<$relation>>(
-    future: fetch${relation}List([$classNameLowercase.$field ?? '']),
-    builder: (context, snapshot) {
-      if (snapshot.connectionState ==
-              ConnectionState.waiting ||
-          snapshot.data == null) {
-        return const CircularProgressIndicator();
-      } else {
-        return Wrap(
-          spacing: 4,
-          children: snapshot.data!.map((${relation.toLowerCase()}) {
-            return ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ${relation}Widget(
-                      element: ${relation.toLowerCase()},
-                      isEditing: true,
-                    ),
-                  ),
-                );
-              },
-              style: ButtonStyle(
-                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                  RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                ),
-                padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
-                  EdgeInsets.symmetric(horizontal: 1, vertical: 1),
-                ),
-                backgroundColor: MaterialStateProperty.all<Color>(
-                    Styles.buttonPrimaryColor),
-                elevation:
-                    MaterialStateProperty.resolveWith<double>((states) {
-                  if (states.contains(MaterialState.hovered) ||
-                      states.contains(MaterialState.pressed)) {
-                    return 0;
-                  }
-                  return 0;
-                }),
-                foregroundColor:
-                    MaterialStateProperty.all<Color>(Colors.white),
-                overlayColor:
-                    MaterialStateProperty.resolveWith<Color>((states) {
-                  if (states.contains(MaterialState.hovered)) {
-                    return Styles.buttonPrimaryColorHover;
-                  }
-                  return Colors.transparent;
-                }),
-              ),
-              child: Text(
-                ${relation.toLowerCase()}.name!,
-                style: TextStyle(color: Colors.white),
-              ),
-            );
-          }).toList(),
-        );
-      }
-    },
-  ),
-),
-onTap: () => {
-  _navigateElement($classNameLowercase)
-},
-),
-''');
-        }
-        else {
-            buffer.writeln('''
-DataCell(Center(
-  child: FutureBuilder<List<$relation>>(
-    future: fetch${relation}List($classNameLowercase.$field),
-    builder: (context, snapshot) {
-      if (snapshot.connectionState ==
-              ConnectionState.waiting ||
-          snapshot.data == null) {
-        return const CircularProgressIndicator();
-      } else {
-        return Wrap(
-          spacing: 4,
-          children: snapshot.data!.map((${relation.toLowerCase()}) {
-            return ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ${relation}Widget(
-                      element: ${relation.toLowerCase()},
-                      isEditing: true,
-                    ),
-                  ),
-                );
-              },
-              style: ButtonStyle(
-                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                  RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                ),
-                padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
-                  EdgeInsets.symmetric(horizontal: 1, vertical: 1),
-                ),
-                backgroundColor: MaterialStateProperty.all<Color>(
-                    Styles.buttonPrimaryColor),
-                elevation:
-                    MaterialStateProperty.resolveWith<double>((states) {
-                  if (states.contains(MaterialState.hovered) ||
-                      states.contains(MaterialState.pressed)) {
-                    return 0;
-                  }
-                  return 0;
-                }),
-                foregroundColor:
-                    MaterialStateProperty.all<Color>(Colors.white),
-                overlayColor:
-                    MaterialStateProperty.resolveWith<Color>((states) {
-                  if (states.contains(MaterialState.hovered)) {
-                    return Styles.buttonPrimaryColorHover;
-                  }
-                  return Colors.transparent;
-                }),
-              ),
-              child: Text(
-                ${relation.toLowerCase()}.name!,
-                style: TextStyle(color: Colors.white),
-              ),
-            );
-          }).toList(),
-        );
-      }
-    },
-  ),
-),
-onTap: () => {
-  _navigateElement($classNameLowercase)
-},
-),
-''');
-          }
-      } else {
-        if ( fieldType == "LineString" || fieldType == "MultiLineString" || fieldType == "MultiPoint" || fieldType == "MultiPolygon" || fieldType == "Point" || fieldType == "Polygon" ||
-            fieldType == "LineString?" || fieldType == "MultiLineString?" || fieldType == "MultiPoint?" || fieldType == "MultiPolygon?" || fieldType == "Point?" || fieldType == "Polygon?" ) {
-          buffer.writeln('''
-          DataCell(Center(
-                    child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => MapScreenView(${fieldType.replaceAll("?", "")}View(
-                          $classNameLowercase.$field!.geometry.coordinates, $classNameLowercase.$field!.properties, MediaQuery.of(context).size.height, $uspaceMap)),
-                      ),
-                    );
-                  },
-                  style: ButtonStyle(
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                    ),
-                    padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
-                      const EdgeInsets.symmetric(horizontal: 1, vertical: 1),
-                    ),
-                    backgroundColor: MaterialStateProperty.all<Color>(
-                        Styles.buttonPrimaryColor),
-                    elevation:
-                        MaterialStateProperty.resolveWith<double>((states) {
-                      if (states.contains(MaterialState.hovered) ||
-                          states.contains(MaterialState.pressed)) {
-                        return 0;
+                    onMenuSelected: (value) async {
+                      if (value == 'edit') {
+                        _navigateElement(u);
+                      } else if (value == 'delete') {
+                        _onDeleteElement([u], ref, paginationState);
                       }
-                      return 0;
-                    }),
-                    foregroundColor:
-                        MaterialStateProperty.all<Color>(Colors.white),
-                    overlayColor:
-                        MaterialStateProperty.resolveWith<Color>((states) {
-                      if (states.contains(MaterialState.hovered)) {
-                        return Styles.buttonPrimaryColorHover;
-                      }
-                      return Colors.transparent;
-                    }),
-                  ),
-                  child: const Text(
-                    "$fieldType",
-                    style: TextStyle(color: Colors.white),
-                  ),
-                )),
-                onTap: () => {
-                  _navigateElement($classNameLowercase)
+                    },
+                  );
                 },
-                ),
-        ''');
-        }
-        else {
-          buffer.writeln('''
-          DataCell(Center(child: Text($classNameLowercase.$field.toString())),
-          onTap: () => {
-            _navigateElement($classNameLowercase)
-          },
-          ),
-        ''');
-        }
-      }
-    }
-
-    buffer.writeln('''
-                        ],
-                            onSelectChanged: (selected) {
-                              setState(() {
-                                widget.selectedStates[index] = selected!;
-                              });
-                            },
-                          );
-                        }).toList(),
-                      ),
-                    ),
-                  ),),
-                  const SizedBox(height: 8),
-                ],
               ),
-            ],
-          ),
-        ),
+            ),
+            const SizedBox(height: 18),
           CustomPagination(
             currentPage: data.currentPage,
             maxPages: data.maxPages,
             onPageSelected: (pageNumber) => _onPageButtonPressed(
                 pageNumber, ref, paginationState, data.maxPages),
           )
-        ]);
+        ])
+      );
       },
     ));
   }
@@ -729,6 +388,203 @@ final ${classNameLowercase}PaginationProvider =
     StateNotifierProvider<${className}PaginationNotifier, ${className}PaginationState>(
   (ref) => ${className}PaginationNotifier(),
 );
+
+class _${className}HeaderRow extends StatelessWidget {
+  final bool isWide;
+
+  const _${className}HeaderRow({required this.isWide});
+
+  @override
+  Widget build(BuildContext context) {
+    final style = Theme.of(context).textTheme.titleSmall?.copyWith(
+          color: AppColors.indigo,
+          fontWeight: FontWeight.w700,
+        );
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 14),
+      child: Row(
+        children: [
+          // left spacer (avatar column)
+          const SizedBox(width: 56),
+''');
+    if (defaultFields.isEmpty) {
+      for (var field in classElement.fields) {
+        if (_fieldChecker.hasAnnotationOfExact(field)) {
+          String nameValue = _fieldChecker
+                  .firstAnnotationOfExact(field)
+                  ?.getField('fieldName')
+                  ?.toStringValue() ?? '';
+
+          var fieldName = field.name;
+          if (nameValue.isNotEmpty) {
+              fieldName = nameValue;
+          }
+          buffer.writeln('''
+          Expanded(flex: 2, child: Text('$fieldName', style: style)),
+          ''');
+        }
+      }
+  } else {
+      for (var defaultField in defaultFields) {
+        var field = classElement.fields.firstWhere((f) => f.name == defaultField);
+        if (field == null) {
+          print('Default field $defaultField not found in ${classElement.name}');
+          continue;
+        }
+        if (_fieldChecker.hasAnnotationOfExact(field)) {
+          String nameValue = _fieldChecker
+            .firstAnnotationOfExact(field)
+            ?.getField('fieldName')
+            ?.toStringValue() ?? '';
+
+          var fieldName = field.name;
+          if (nameValue.isNotEmpty) {
+              fieldName = nameValue;
+          }
+          buffer.writeln('''
+          Expanded(flex: 2, child: Text('$fieldName', style: style)),
+          ''');
+        }
+      }
+  }
+    buffer.writeln('''
+
+          const SizedBox(width: 36), // menu
+        ],
+      ),
+    );
+  }
+}
+
+class _${className}ListRow extends StatelessWidget {
+''');
+    // Here we add the fields to the constructor
+    if (defaultFields.isEmpty) {
+      for (var field in classElement.fields) {
+        if (_fieldChecker.hasAnnotationOfExact(field)) {
+          buffer.writeln('  final ${field.type} ${field.name}$className;');
+        }
+      }
+  } else {
+      for (var defaultField in defaultFields) {
+        var field = classElement.fields.firstWhere((f) => f.name == defaultField);
+        if (field == null) {
+          print('Default field $defaultField not found in ${classElement.name}');
+          continue;
+        }
+        if (_fieldChecker.hasAnnotationOfExact(field)) {
+          buffer.writeln('  final ${field.type} ${field.name}$className;');
+        }
+      }
+  }
+
+    buffer.writeln('''
+  final ValueChanged<String> onMenuSelected;
+
+  const _${className}ListRow({
+''');
+    // Here we add the fields to the constructor
+    if (defaultFields.isEmpty) {
+      for (var field in classElement.fields) {
+        if (_fieldChecker.hasAnnotationOfExact(field)) {
+          buffer.writeln('    required this.${field.name}$className,');
+        }
+      }
+  } else {
+      for (var defaultField in defaultFields) {
+        var field = classElement.fields.firstWhere((f) => f.name == defaultField);
+        if (field == null) {
+          print('Default field $defaultField not found in ${classElement.name}');
+          continue;
+        }
+        if (_fieldChecker.hasAnnotationOfExact(field)) {
+          buffer.writeln('    required this.${field.name}$className,');
+        }
+      }
+  }
+    buffer.writeln('''
+    required this.onMenuSelected,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final textStyle = Theme.of(context).textTheme.bodyLarge?.copyWith(
+          color: AppColors.muted, // gris texto como en la captura
+          fontWeight: FontWeight.w500,
+        );
+
+    return InkWell(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 14),
+        child: Row(
+          children: [
+            const SizedBox(width: 56),
+
+''');    // Here we add the fields to the row
+    if (defaultFields.isEmpty) {
+      for (var field in classElement.fields) {
+        if (_fieldChecker.hasAnnotationOfExact(field)) {
+          buffer.writeln('''
+            Expanded(
+              flex: 2,
+              child: Text(${field.name}$className.toString(), style: textStyle),
+            ),
+          ''');
+        }
+      }
+  } else {
+      for (var defaultField in defaultFields) {
+        var field = classElement.fields.firstWhere((f) => f.name == defaultField);
+        if (field == null) {
+          print('Default field $defaultField not found in ${classElement.name}');
+          continue;
+        }
+        if (_fieldChecker.hasAnnotationOfExact(field)) {
+          buffer.writeln('''
+            Expanded(
+              flex: 2,
+              child: Text(${field.name}$className.toString(), style: textStyle),
+            ),
+          ''');
+        }
+      }
+  }
+    buffer.writeln('''
+
+            // 3 dots menu
+            SizedBox(
+              width: 36,
+              child: Align(
+                alignment: Alignment.centerRight,
+                child: PopupMenuButton<String>(
+                  icon: Icon(Icons.more_vert, color: AppColors.muted),
+                  elevation: 2,
+                  color: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                  onSelected: onMenuSelected,
+                  itemBuilder: (_) => const [
+                    PopupMenuItem(
+                      value: 'edit',
+                      child: Text('Edit'),
+                    ),
+                    PopupMenuItem(
+                      value: 'delete',
+                      child: Text('Delete'),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 ''');
 
 

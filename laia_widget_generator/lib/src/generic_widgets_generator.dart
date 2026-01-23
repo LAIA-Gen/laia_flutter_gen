@@ -1747,19 +1747,22 @@ class CustomSearchBar extends StatefulWidget {
   final Function(String, dynamic) onFilterChanged;
   final Function(String, dynamic) onFilterRemove;
 
+  final bool showAddButton;
+
   const CustomSearchBar({
     Key? key,
     required this.fields,
     required this.filters,
     required this.onFilterChanged,
     required this.onFilterRemove,
+    this.showAddButton = true,
   }) : super(key: key);
 
   @override
-  _CustomSearchBarState createState() => _CustomSearchBarState();
+  CustomSearchBarState createState() => CustomSearchBarState();
 }
 
-class _CustomSearchBarState extends State<CustomSearchBar> {
+class CustomSearchBarState extends State<CustomSearchBar> {
   List<SearchRow> searchRows = [];
 
   @override
@@ -1785,16 +1788,25 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
       });
     });
   }
+
+  void addFilterRow() {
+    if (!_canAddRow()) return;
+
+    setState(() {
+      final newRow = SearchRow();
+      final available = _getAvailableFields(newRow);
+      if (available.isNotEmpty) {
+        newRow.selectedField = available.first;
+        widget.onFilterChanged(newRow.selectedField ?? '', '');
+      }
+      searchRows.add(newRow);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(2),
-      decoration: BoxDecoration(
-        border: const Border(
-          bottom: BorderSide(color: Color.fromARGB(255, 233, 233, 233), width: 1.0),
-        ),
-        borderRadius: BorderRadius.circular(4.0),
-      ),
       child: Column(
         children: [
           for (var i = 0; i < searchRows.length; i++)
@@ -1802,6 +1814,7 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
               margin: const EdgeInsets.only(top: 5),
               child: _buildSearchRow(searchRows[i], i),
             ),
+          if (widget.showAddButton)
           Row(
             children: [
               Container(
@@ -1841,99 +1854,119 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
   }
 
   Widget _buildSearchRow(SearchRow searchRow, int index) {
-    List<String> availableFields = _getAvailableFields(searchRow);
+    final availableFields = _getAvailableFields(searchRow);
+    final selected = searchRow.selectedField ?? (availableFields.isNotEmpty ? availableFields.first : null);
 
-    return Row(
-      children: [
-        const SizedBox(width: 2),
-        SizedBox(
-          height: 35,
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(10),
-              border: Border.all(
-                color: const Color.fromARGB(255, 218, 218, 218),
-                width: 1.0,
-              ),
-            ),
-            child: DropdownButton<String>(
-              value: searchRow.selectedField ?? availableFields.first,
-              dropdownColor: Colors.white,
-              items: availableFields.map((String field) {
-                return DropdownMenuItem<String>(
-                  value: field,
-                  child: SizedBox(
-                    child: Center(
-                      child: Text(field),
-                    ),
-                  ),
-                );
-              }).toList(),
-              onChanged: (String? newSelectedField) {
-                widget.onFilterRemove(
-                    searchRow.selectedField!, searchRow.filterValue ?? '');
-                setState(() {
-                  searchRow.selectedField = newSelectedField;
-                });
+    return Container(
+      height: 56,
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: AppColors.muted, width: 1),
+      ),
+      child: Row(
+        children: [
+          const SizedBox(width: 14),
+          const Icon(Icons.search, color: AppColors.muted),
+          const SizedBox(width: 12),
 
-                if (newSelectedField != null) {
-                  _filterChanged(index);
-                }
-              },
-              icon: const Icon(Icons.arrow_drop_down),
-              underline: const SizedBox(),
-            ),
-          ),
-        ),
-        const SizedBox(width: 5),
-        Expanded(
-          child: SizedBox(
-            height: 35,
+          Expanded(
             child: TextFormField(
               controller: searchRow.textEditingController,
-              textAlignVertical: TextAlignVertical.center,
-              decoration: InputDecoration(
-                hintText: 'Enter search value',
-                contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 5),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: const BorderSide(
-                    color: Color.fromARGB(255, 218, 218, 218),
-                  ),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: const BorderSide(
-                    color: Color.fromARGB(255, 218, 218, 218),
-                  ),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: const BorderSide(
-                    color: Color.fromARGB(255, 218, 218, 218),
-                    width: 1.0,
-                  ),
-                ),
+              decoration: const InputDecoration(
+                hintText: 'Search',
+                border: InputBorder.none,
+                enabledBorder: InputBorder.none,
+                focusedBorder: InputBorder.none,
+                disabledBorder: InputBorder.none,
+                errorBorder: InputBorder.none,
+                focusedErrorBorder: InputBorder.none,
+                fillColor: AppColors.surface,
+                focusColor: AppColors.surface,
+                hoverColor: AppColors.surface,
+                isDense: true,
               ),
-              onEditingComplete: () {
-                if (searchRow.selectedField != null) {
-                  _filterChanged(index);
-                }
-              },
+              onFieldSubmitted: (_) => _filterChanged(index),
+              onEditingComplete: () => _filterChanged(index),
             ),
           ),
-        ),
-        IconButton(
-          icon: const Icon(Icons.delete_outline),
-          onPressed: () {
-            _removeRow(index);
-            widget.onFilterRemove(
-                searchRow.selectedField!, searchRow.filterValue ?? '');
-          },
-        ),
-      ],
+
+          Container(
+            width: 1,
+            height: 30,
+            color: AppColors.muted,
+          ),
+
+          SizedBox(
+            width: 160,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: DropdownButtonHideUnderline(
+                child: DropdownButton<String>(
+                  isExpanded: true,
+                  value: selected,
+                  icon: const Icon(Icons.keyboard_arrow_down, color: AppColors.muted),
+                  items: availableFields.map((field) {
+                    return DropdownMenuItem<String>(
+                      value: field,
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              field,
+                              overflow: TextOverflow.ellipsis,
+                              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                color: AppColors.muted,
+                                fontWeight: FontWeight.w500,
+                              )
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }).toList(),
+                  onChanged: (newSelectedField) {
+                    if (newSelectedField == null) return;
+
+                    if (searchRow.selectedField != null) {
+                      widget.onFilterRemove(searchRow.selectedField!, searchRow.filterValue ?? '');
+                    }
+
+                    setState(() {
+                      searchRow.selectedField = newSelectedField;
+                    });
+
+                    _filterChanged(index);
+                  },
+                ),
+              ),
+            ),
+          ),
+
+          Container(
+            width: 1,
+            height: 30,
+            color: AppColors.muted,
+          ),
+
+          IconButton(
+            tooltip: 'Remove filter',
+            icon: const Icon(Icons.delete_outline, color: AppColors.muted),
+            onPressed: () {
+              final field = searchRow.selectedField;
+              final val = searchRow.filterValue ?? '';
+
+              _removeRow(index);
+
+              if (field != null) {
+                widget.onFilterRemove(field, val);
+              }
+            },
+          ),
+
+          const SizedBox(width: 6),
+        ],
+      ),
     );
   }
 
@@ -3755,6 +3788,91 @@ class _SoftChip extends StatelessWidget {
               color: fg,
               fontWeight: FontWeight.w700,
             ),
+      ),
+    );
+  }
+}
+
+IconData iconForModel(String modelName) {
+  final name = modelName.toLowerCase();
+
+  if (name.contains('user') || name.contains('role')) {
+    return Icons.person_outline;
+  }
+  if (name.contains('product') || name.contains('item')) {
+    return Icons.inventory_2_outlined;
+  }
+  if (name.contains('order') || name.contains('invoice')) {
+    return Icons.payments_outlined;
+  }
+  if (name.contains('log') || name.contains('event')) {
+    return Icons.description_outlined;
+  }
+  if (name.contains('config') || name.contains('setting')) {
+    return Icons.settings_outlined;
+  }
+
+  return Icons.storage_outlined;
+}
+
+class PillButton extends StatelessWidget {
+  final IconData? icon;
+  final IconData? trailing;
+  final String text;
+  final VoidCallback? onTap;
+  final bool filled;
+  final bool enabled;
+  final Color? bg;
+  final Color? fg;
+
+  const PillButton({
+    this.icon,
+    this.trailing,
+    required this.text,
+    this.onTap,
+    this.filled = false,
+    this.enabled = true,
+    this.bg,
+    this.fg,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+
+    final background = bg ?? (filled ? AppColors.bg : AppColors.bg);
+    final foreground = fg ?? (filled ? AppColors.indigo : AppColors.indigo);
+
+    return Opacity(
+      opacity: enabled ? 1 : 0.55,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(14),
+        onTap: enabled ? onTap : null,
+        child: Container(
+          height: 35,
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          decoration: BoxDecoration(
+            color: background,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (icon != null) ...[
+                Icon(icon, size: 15, color: foreground),
+                const SizedBox(width: 10),
+              ],
+              Text(
+                text,
+                style: Theme.of(context).textTheme.labelSmall
+              ),
+              if (trailing != null) ...[
+                const SizedBox(width: 50),
+                Icon(trailing, size: 15, color: foreground),
+              ],
+            ],
+          ),
+        ),
       ),
     );
   }

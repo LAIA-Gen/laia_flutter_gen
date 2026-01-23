@@ -26,46 +26,43 @@ class HomeWidgetGenerator extends GeneratorForAnnotation<HomeWidgetGenAnnotation
 
     buffer.writeln("Widget dashboardWidget(BuildContext context) {");
     buffer.writeln('''
-          int crossAxisCount = _isMobile(MediaQuery.of(context)) ? 3 : 5;
-  
-  return CustomScrollView(
-    slivers: [
-      SliverPadding(
-        padding: const EdgeInsets.all(20),
-        sliver: SliverGrid(
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: crossAxisCount,
-            crossAxisSpacing: 10,
-            mainAxisSpacing: 10,
-          ),
-          delegate: SliverChildBuilderDelegate(
-            (BuildContext context, int index) {
-              return _dashboardWidgets[index];
-            },
-            childCount: _dashboardWidgets.length,
-          ),
-        ),
+  return AppCardsGrid(
+    items: [
+''');
+
+for (String line in lines) {
+  final widgetName = line.trim();
+
+  if (widgetName.contains('Update') || widgetName.contains('UpdateHomeWidget')) continue;
+
+  final base = widgetName
+      .replaceAll('HomeWidget', '')
+      .replaceAll('Widget', '');
+
+  final listViewName = '${base}ListView';
+
+  buffer.writeln('''
+      AppCardItem(
+        title: '$base',
+        icon: Icon(iconForModel('$base')),
+        onTap: () {
+          Navigator.push(
+            context,
+            PageRouteBuilder(pageBuilder: (_, __, ___) => $listViewName()),
+          );
+        },
       ),
+''');
+}
+
+buffer.writeln('''
     ],
   );
 }
+''');
+    
 
-bool _isMobile(MediaQueryData mediaQuery) {
-  final Size screenSize = mediaQuery.size;
-  return (defaultTargetPlatform == TargetPlatform.iOS ||
-      defaultTargetPlatform == TargetPlatform.android) ||
-      screenSize.width < screenSize.height;
-}
-
-List<Widget> _dashboardWidgets = [''');
-    for (String line in lines) {
-      String widgetName = line.trim();
-      buffer.writeln('$widgetName(),');
-    }
-    buffer.writeln('''
-];
-
-class DynamicLogInScreen extends StatelessWidget {
+    buffer.writeln('''class DynamicLogInScreen extends StatelessWidget {
   final Map<String, StatefulWidget> widgetMap;
 
   DynamicLogInScreen({required this.widgetMap});
