@@ -257,6 +257,8 @@ class _${className}ListViewState extends ConsumerState<${className}ListView> {
       }
   } else {
       for (var defaultField in defaultFields) {
+        print("defaultField: $defaultField");
+        print("classElement.fields: ${classElement.fields.map((f) => f.name).toList()}");
         var field = classElement.fields.firstWhere((f) => f.name == defaultField);
         if (field == null) {
           print('Default field $defaultField not found in ${classElement.name}');

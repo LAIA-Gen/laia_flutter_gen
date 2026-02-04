@@ -9,12 +9,14 @@ import 'package:source_gen/source_gen.dart';
 const _fieldChecker = TypeChecker.fromRuntime(Field);
 
 class ElementWidgetGenerator extends GeneratorForAnnotation<ElementWidgetGen> {
+  
   @override
   String generateForAnnotatedElement(
     Element element, 
     ConstantReader annotation, 
     BuildStep buildStep,
   ) {
+    print("EXECUTING ElementWidgetGenerator");
     final buffer = StringBuffer();
     final visitor = ModelVisitor();
     element.visitChildren(visitor);
@@ -153,6 +155,8 @@ class _${visitor.className}WidgetState extends State<${visitor.className}Widget>
       }
     } else {
       for (var defaultField in defaultFieldsDetailNames) {
+        print("defaultField: $defaultField");
+        print("classElement.fields: ${classElement.fields.map((f) => f.name).toList()}");
         var field = classElement.fields.firstWhere((f) => f.name == defaultField);
         buffer.writeln(globalKeyDeclarationCode(field));
       }
