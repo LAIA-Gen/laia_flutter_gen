@@ -1251,7 +1251,7 @@ class DefaultWidgetState extends State<DefaultWidget> {
       margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10.0),
-        color: Styles.secondaryColor
+        color: AppColors.surface
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1279,6 +1279,30 @@ class DefaultWidgetState extends State<DefaultWidget> {
                       child: TextFormField(
                         decoration: InputDecoration(
                           hintText: widget.placeholder,
+                          contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 12),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(14),
+                            borderSide: const BorderSide(
+                              color: AppColors.muted,
+                            ),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(14),
+                            borderSide: const BorderSide(
+                              color: AppColors.muted,
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(14),
+                            borderSide: const BorderSide(
+                              color: AppColors.indigo,
+                              width: 1.2,
+                            ),
+                          ),
+                          fillColor: AppColors.surface,
+                          focusColor: AppColors.surface,
+                          hoverColor: AppColors.surface
                         ),
                         initialValue: widget.value?.toString(),
                         onChanged: (newValue) {
@@ -2199,7 +2223,7 @@ class BoolWidgetState extends State<BoolWidget> {
           margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10.0),
-            color: Styles.secondaryColor,
+            color: AppColors.surface
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -2434,7 +2458,8 @@ class JsonWidgetState extends State<JsonWidget> {
       margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10.0),
-          color: Styles.secondaryColor),
+          color: AppColors.surface
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -2461,6 +2486,30 @@ class JsonWidgetState extends State<JsonWidget> {
                       child: TextFormField(
                         decoration: InputDecoration(
                           hintText: widget.placeholder,
+                          contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 12),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(14),
+                            borderSide: const BorderSide(
+                              color: AppColors.muted,
+                            ),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(14),
+                            borderSide: const BorderSide(
+                              color: AppColors.muted,
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(14),
+                            borderSide: const BorderSide(
+                              color: AppColors.indigo,
+                              width: 1.2,
+                            ),
+                          ),
+                          fillColor: AppColors.surface,
+                          focusColor: AppColors.surface,
+                          hoverColor: AppColors.surface
                         ),
                         initialValue: json.encode(widget.value),
                         onChanged: (newValue) {

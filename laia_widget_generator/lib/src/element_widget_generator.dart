@@ -622,7 +622,7 @@ class ${visitor.className}FieldWidgetState extends State<${visitor.className}Fie
     currentValue = initialValue ?? '';
     ${visitor.className} ${visitor.className.toLowerCase()} = await container.read(
                     get${visitor.className}Provider(widget.value!).future);
-    _typeAheadController.text = '\${${visitor.className.toLowerCase()}.name} <id: \${${visitor.className.toLowerCase()}.id}>';
+    _typeAheadController.text = '\${${visitor.className.toLowerCase()}.${visitor.fields.keys.toList()[0]}} <id: \${${visitor.className.toLowerCase()}.id}>';
   }
 
   String? getUpdatedValue() {
@@ -672,20 +672,20 @@ class ${visitor.className}FieldWidgetState extends State<${visitor.className}Fie
                               final options = ${visitor.className.toLowerCase()}PaginationData.items;
                               return options
                               .where((${visitor.className.toLowerCase()}) =>
-                                  ${visitor.className.toLowerCase()}.name!.toLowerCase().contains(pattern.toLowerCase()) ||
+                                  ${visitor.className.toLowerCase()}.${visitor.fields.keys.toList()[0]}!.toLowerCase().contains(pattern.toLowerCase()) ||
                                   ${visitor.className.toLowerCase()}.id.toString().contains(pattern.toLowerCase()))
                               .toList();
                             },
                             itemBuilder: (context, ${visitor.className.toLowerCase()}) {
                               return ListTile(
-                                title: Text('\${${visitor.className.toLowerCase()}.name} <id: \${${visitor.className.toLowerCase()}.id}>'),
+                                title: Text('\${${visitor.className.toLowerCase()}.${visitor.fields.keys.toList()[0]}} <id: \${${visitor.className.toLowerCase()}.id}>'),
                               );
                             },
                             onSelected: (${visitor.className} value) {
                               setState(() {
                                 isValueChanged = value.id != initialValue;
                                 currentValue = value.id!;
-                                _typeAheadController.text = '\${value.name} <id: \${value.id}>';
+                                _typeAheadController.text = '\${value.${visitor.fields.keys.toList()[0]}} <id: \${value.id}>';
                               });
                             },
                           ),
@@ -781,7 +781,7 @@ class ${visitor.className}MultiFieldWidgetState extends State<${visitor.classNam
         }),
       );
       String concatenatedText = '\${${visitor.className.toLowerCase()}List.map((${visitor.className.toLowerCase()}) {
-          return '\${${visitor.className.toLowerCase()}.name} <id: \${${visitor.className.toLowerCase()}.id}>';
+          return '\${${visitor.className.toLowerCase()}.${visitor.fields.keys.toList()[0]}} <id: \${${visitor.className.toLowerCase()}.id}>';
         }).join(', ')}, ';
         _typeAheadController.text = concatenatedText;
     } else {
@@ -902,13 +902,13 @@ class ${visitor.className}MultiFieldWidgetState extends State<${visitor.classNam
                               final options = ${visitor.className.toLowerCase()}PaginationData.items;
                               return options
                               .where((${visitor.className.toLowerCase()}) =>
-                                  ${visitor.className.toLowerCase()}.name!.toLowerCase().contains(inputParts.toLowerCase()) ||
+                                  ${visitor.className.toLowerCase()}.${visitor.fields.keys.toList()[0]}!.toLowerCase().contains(inputParts.toLowerCase()) ||
                                   ${visitor.className.toLowerCase()}.id.toString().toLowerCase().contains(inputParts.toLowerCase()))
                               .toList();
                             },
                             itemBuilder: (context, ${visitor.className.toLowerCase()}) {
                               return ListTile(
-                                title: Text('\${${visitor.className.toLowerCase()}.name} <id: \${${visitor.className.toLowerCase()}.id}>'),
+                                title: Text('\${${visitor.className.toLowerCase()}.${visitor.fields.keys.toList()[0]}} <id: \${${visitor.className.toLowerCase()}.id}>'),
                               );
                             },
                             onSelected: (${visitor.className} value) async {
@@ -920,7 +920,7 @@ class ${visitor.className}MultiFieldWidgetState extends State<${visitor.classNam
                                 return await container.read(get${visitor.className}Provider(value).future);
                               }));
                               String concatenatedText = '\${${visitor.className.toLowerCase()}List.map((${visitor.className.toLowerCase()}) {
-                                return '\${${visitor.className.toLowerCase()}.name} <id: \${${visitor.className.toLowerCase()}.id}>';
+                                return '\${${visitor.className.toLowerCase()}.${visitor.fields.keys.toList()[0]}} <id: \${${visitor.className.toLowerCase()}.id}>';
                               }).join(', ')}, ';
 
                               setState(() {
