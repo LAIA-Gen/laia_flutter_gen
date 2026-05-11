@@ -541,10 +541,14 @@ class _${className}ListRow extends StatelessWidget {
     if (defaultFields.isEmpty) {
       for (var field in classElement.fields) {
         if (_fieldChecker.hasAnnotationOfExact(field)) {
+          final isEnum = field.type.element is EnumElement;
+          final fieldText = isEnum
+              ? '${field.name}$className?.name ?? \'\''
+              : '${field.name}$className.toString()';
           buffer.writeln('''
             Expanded(
               flex: 2,
-              child: Text(${field.name}$className.toString(), style: textStyle),
+              child: Text($fieldText, style: textStyle),
             ),
           ''');
         }
@@ -557,10 +561,14 @@ class _${className}ListRow extends StatelessWidget {
           continue;
         }
         if (_fieldChecker.hasAnnotationOfExact(field)) {
+          final isEnum = field.type.element is EnumElement;
+          final fieldText = isEnum
+              ? '${field.name}$className?.name ?? \'\''
+              : '${field.name}$className.toString()';
           buffer.writeln('''
             Expanded(
               flex: 2,
-              child: Text(${field.name}$className.toString(), style: textStyle),
+              child: Text($fieldText, style: textStyle),
             ),
           ''');
         }

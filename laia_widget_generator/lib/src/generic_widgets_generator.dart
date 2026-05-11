@@ -2438,17 +2438,33 @@ class JsonWidget extends StatefulWidget {
 class JsonWidgetState extends State<JsonWidget> {
   bool isValueChanged = false;
   late dynamic initialValue;
-  late dynamic currentValue;
+  late String initialText;
+  late String currentValue;
 
   @override
   void initState() {
     super.initState();
     initialValue = widget.value;
-    currentValue = initialValue;
+    initialText = _encode(widget.value);
+    currentValue = initialText;
   }
 
-  Map<String, dynamic> getUpdatedValue() {
-    return isValueChanged ? json.decode(currentValue) : initialValue;
+  String _encode(dynamic value) {
+    if (value == null) {
+      return '{}';
+    }
+    try {
+      return const JsonEncoder.withIndent('  ').convert(value);
+    } catch (_) {
+      return value.toString();
+    }
+  }
+
+  dynamic getUpdatedValue() {
+    if (!isValueChanged) {
+      return initialValue;
+    }
+    return json.decode(currentValue);
   }
 
   @override
@@ -2484,6 +2500,8 @@ class JsonWidgetState extends State<JsonWidget> {
               widget.editable
                   ? Expanded(
                       child: TextFormField(
+                        minLines: 4,
+                        maxLines: 10,
                         decoration: InputDecoration(
                           hintText: widget.placeholder,
                           contentPadding: const EdgeInsets.symmetric(
@@ -2511,10 +2529,10 @@ class JsonWidgetState extends State<JsonWidget> {
                           focusColor: AppColors.surface,
                           hoverColor: AppColors.surface
                         ),
-                        initialValue: json.encode(widget.value),
+                        initialValue: initialText,
                         onChanged: (newValue) {
                           setState(() {
-                            isValueChanged = newValue != json.encode(initialValue);
+                            isValueChanged = newValue != initialText;
                             currentValue = newValue;
                           });
                         },
@@ -2522,12 +2540,206 @@ class JsonWidgetState extends State<JsonWidget> {
                     )
                   : Expanded(
                       child: Text(
-                        json.encode(widget.value) ?? widget.placeholder,
+                        initialText,
                         style: TextStyle(color: Colors.black),
                       ),
                     ),
             ],
           ),
+        ],
+      ),
+    );
+  }
+	}
+	""");
+
+// **************************************************************************
+// EmbeddedObjectWidget
+// **************************************************************************
+
+    buffer.writeln("""
+class EmbeddedObjectWidget<T> extends StatefulWidget {
+  final Key? key;
+  final String fieldName;
+  final String fieldDescription;
+  final bool editable;
+  final String placeholder;
+  final T? value;
+  final Widget child;
+  final T? Function() getValue;
+
+  EmbeddedObjectWidget({
+    this.key,
+    required this.fieldName,
+    required this.fieldDescription,
+    required this.editable,
+    required this.placeholder,
+    required this.value,
+    required this.child,
+    required this.getValue,
+  });
+
+  @override
+  EmbeddedObjectWidgetState<T> createState() => EmbeddedObjectWidgetState<T>();
+}
+
+class EmbeddedObjectWidgetState<T> extends State<EmbeddedObjectWidget<T>> {
+  T? getUpdatedValue() {
+    return widget.getValue();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+      margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10.0),
+          color: AppColors.surface
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "\${widget.fieldName}:",
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(width: 8.0),
+              Expanded(
+                child: Text(
+                  widget.fieldDescription,
+                  style: const TextStyle(color: Colors.grey),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8.0),
+          widget.child,
+        ],
+      ),
+    );
+  }
+}
+""");
+
+// **************************************************************************
+// EnumDropdownWidget
+// **************************************************************************
+
+    buffer.writeln("""
+class EnumDropdownWidget<T extends Enum> extends StatefulWidget {
+  final Key? key;
+  final String fieldName;
+  final String fieldDescription;
+  final bool editable;
+  final String placeholder;
+  final T? value;
+  final List<T> options;
+  final String Function(T value)? labelBuilder;
+
+  EnumDropdownWidget({
+    this.key,
+    required this.fieldName,
+    required this.fieldDescription,
+    required this.editable,
+    required this.placeholder,
+    required this.value,
+    required this.options,
+    this.labelBuilder,
+  });
+
+  @override
+  EnumDropdownWidgetState<T> createState() => EnumDropdownWidgetState<T>();
+}
+
+class EnumDropdownWidgetState<T extends Enum> extends State<EnumDropdownWidget<T>> {
+  bool isValueChanged = false;
+  T? initialValue;
+  T? currentValue;
+
+  @override
+  void initState() {
+    super.initState();
+    initialValue = widget.value;
+    currentValue = widget.value;
+  }
+
+  T? getUpdatedValue() {
+    return isValueChanged ? currentValue : initialValue;
+  }
+
+  String _label(T value) {
+    return widget.labelBuilder?.call(value) ?? value.name;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+      margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10.0),
+        color: AppColors.surface,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "\${widget.fieldName}:",
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(width: 8.0),
+              Expanded(
+                child: Text(
+                  widget.fieldDescription,
+                  style: const TextStyle(color: Colors.grey),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8.0),
+          widget.editable
+              ? DropdownButtonFormField<T>(
+                  value: currentValue,
+                  decoration: InputDecoration(
+                    hintText: widget.placeholder,
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(14),
+                      borderSide: const BorderSide(color: AppColors.muted),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(14),
+                      borderSide: const BorderSide(color: AppColors.muted),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(14),
+                      borderSide: const BorderSide(color: AppColors.indigo, width: 1.2),
+                    ),
+                    fillColor: AppColors.surface,
+                    focusColor: AppColors.surface,
+                    hoverColor: AppColors.surface,
+                  ),
+                  items: widget.options
+                      .map((option) => DropdownMenuItem<T>(
+                            value: option,
+                            child: Text(_label(option)),
+                          ))
+                      .toList(),
+                  onChanged: (value) {
+                    setState(() {
+                      currentValue = value;
+                      isValueChanged = value != initialValue;
+                    });
+                  },
+                )
+              : Text(currentValue == null ? widget.placeholder : _label(currentValue as T)),
         ],
       ),
     );
