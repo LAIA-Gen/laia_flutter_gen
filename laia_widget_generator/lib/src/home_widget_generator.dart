@@ -1,8 +1,7 @@
 // ignore_for_file: implementation_imports, depend_on_referenced_packages
 
-import 'dart:io';
-
 import 'package:analyzer/dart/element/element.dart';
+import 'package:build/build.dart';
 import 'package:laia_annotations/laia_annotations.dart';
 import 'package:build/src/builder/build_step.dart';
 import 'package:laia_widget_generator/src/model_visitor.dart';
@@ -10,19 +9,18 @@ import 'package:source_gen/source_gen.dart';
 
 class HomeWidgetGenerator extends GeneratorForAnnotation<HomeWidgetGenAnnotation> {
   @override
-  generateForAnnotatedElement(
-    Element element, 
-    ConstantReader annotation, 
+  Future<String> generateForAnnotatedElement(
+    Element element,
+    ConstantReader annotation,
     BuildStep buildStep
-  ) {
+  ) async {
     final buffer = StringBuffer();
     final visitor = ModelVisitor();
     element.visitChildren(visitor);
 
-    String filePath = '${Directory.current.path}/lib/home.txt';
-    File file = File(filePath);
-
-    List<String> lines = file.readAsLinesSync();
+    final homeTxtId = AssetId(buildStep.inputId.package, 'lib/home.txt');
+    final content = await buildStep.readAsString(homeTxtId);
+    final lines = content.split('\n');
 
     buffer.writeln("Widget dashboardWidget(BuildContext context) {");
     buffer.writeln('''
@@ -32,6 +30,7 @@ class HomeWidgetGenerator extends GeneratorForAnnotation<HomeWidgetGenAnnotation
 
 for (String line in lines) {
   final widgetName = line.trim();
+  if (widgetName.isEmpty) continue;
 
   if (widgetName.contains('Update') || widgetName.contains('UpdateHomeWidget')) continue;
 
@@ -60,7 +59,7 @@ buffer.writeln('''
   );
 }
 ''');
-    
+
 
     buffer.writeln('''class DynamicLogInScreen extends StatelessWidget {
   final Map<String, StatefulWidget> widgetMap;

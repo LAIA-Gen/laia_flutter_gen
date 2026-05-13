@@ -1,7 +1,5 @@
 // ignore_for_file: implementation_imports, depend_on_referenced_packages
 
-import 'dart:io';
-
 import 'package:analyzer/dart/element/element.dart';
 import 'package:laia_annotations/laia_annotations.dart';
 import 'package:build/src/builder/build_step.dart';
@@ -66,15 +64,6 @@ class HomeWidgetElementGenerator extends GeneratorForAnnotation<HomeWidgetElemen
     );
   }
 }''');
-
-    String filePath = '${Directory.current.path}/lib/home.txt';
-    File file = File(filePath);
-
-    String existingContent = file.existsSync() ? file.readAsStringSync() : '';
-
-    if (!existingContent.contains("${visitor.className}HomeWidget")) {
-      file.writeAsStringSync('${visitor.className}HomeWidget\n', mode: FileMode.append);
-    }
 
     return buffer.toString();
   }

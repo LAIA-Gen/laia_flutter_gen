@@ -62,24 +62,178 @@ class ElementWidgetGenerator extends GeneratorForAnnotation<ElementWidgetGen> {
       defaultFieldsDetailRows.add(currentRow);
     }
 
-    buffer.writeln('''
-class ${visitor.className}Widget extends StatefulWidget {
-  final ${visitor.className}? element;
-  final bool isEditing;
+	    buffer.writeln('''
+	class ${visitor.className}Widget extends StatefulWidget {
+	  final ${visitor.className}? element;
+	  final bool isEditing;
 
   const ${visitor.className}Widget({this.element, required this.isEditing, Key? key}) : super(key: key);
 
   @override
   _${visitor.className}WidgetState createState() => _${visitor.className}WidgetState();
-}
+	}
 
-class _${visitor.className}WidgetState extends State<${visitor.className}Widget> {''');
-    globalKeyDeclarationCode(var field) {
-      var bufferGlobalKey = StringBuffer();
-      String fieldName = field.name;
-      String fieldType = field.type.toString();
+	class _${visitor.className}WidgetState extends State<${visitor.className}Widget> {''');
+	    bool isEmbeddedObjectField(var field) {
+	      final fieldType = field.type.toString();
+	      final typeElement = field.type.element;
+	      final primitiveTypes = {
+	        'int',
+	        'int?',
+	        'String',
+	        'String?',
+	        'double',
+	        'double?',
+	        'DateTime',
+	        'DateTime?',
+	        'bool',
+	        'bool?',
+	        'dynamic',
+	        'Map<String, dynamic>',
+	        'Map<String, dynamic>?',
+	        'List<Map<String, dynamic>>',
+	        'List<Map<String, dynamic>>?',
+	        'List<String>',
+	        'List<String>?',
+	        'LineString',
+	        'MultiLineString',
+	        'MultiPoint',
+	        'MultiPolygon',
+	        'Point',
+	        'Polygon',
+	        'LineString?',
+	        'MultiLineString?',
+	        'MultiPoint?',
+	        'MultiPolygon?',
+	        'Point?',
+	        'Polygon?',
+	      };
+        if (fieldType.startsWith('List<') || fieldType.startsWith('Map<')) {
+          return false;
+        }
+	      return !primitiveTypes.contains(fieldType) && typeElement is! EnumElement;
+	    }
 
-      String widget = 'DefaultWidgetState';
+      bool isEnumField(var field) {
+        return field.type.element is EnumElement;
+      }
+
+      String normalizedType(String fieldType) {
+        return fieldType.replaceAll('?', '');
+      }
+
+      String capitalize(String value) {
+        if (value.isEmpty) {
+          return value;
+        }
+        return value[0].toUpperCase() + value.substring(1);
+      }
+
+      String embeddedKeyName(String parentFieldName, String fieldName) {
+        return '$parentFieldName${capitalize(fieldName)}WidgetKey';
+      }
+
+      List<FieldElement> embeddedFieldsFor(var field) {
+        final typeElement = field.type.element;
+        if (typeElement is! ClassElement) {
+          return const [];
+        }
+        return typeElement.fields
+            .where((nestedField) =>
+                !nestedField.isStatic &&
+                nestedField.name != 'id' &&
+                nestedField.name != 'owner' &&
+                nestedField.name != 'nicename')
+            .toList();
+      }
+
+      String widgetForField(var field) {
+        final fieldType = field.type.toString();
+        switch (fieldType) {
+          case 'int':
+          case 'int?':
+            return 'IntWidget';
+          case 'double':
+          case 'double?':
+            return 'DoubleWidget';
+          case 'String':
+          case 'String?':
+            return 'StringWidget';
+          case 'DateTime':
+          case 'DateTime?':
+            return 'DateTimeWidget';
+          case 'bool':
+          case 'bool?':
+            return 'BoolWidget';
+          case 'LineString':
+          case 'MultiLineString':
+          case 'MultiPoint':
+          case 'MultiPolygon':
+          case 'Point':
+          case 'Polygon':
+          case 'LineString?':
+          case 'MultiLineString?':
+          case 'MultiPoint?':
+          case 'MultiPolygon?':
+          case 'Point?':
+          case 'Polygon?':
+            return 'MapWidget';
+          case 'dynamic':
+            return 'JsonWidget';
+          default:
+            if (isEnumField(field)) {
+              return 'EnumDropdownWidget<${normalizedType(fieldType)}>';
+            }
+            if (isEmbeddedObjectField(field)) {
+              return 'EmbeddedObjectWidget<${normalizedType(fieldType)}>';
+            }
+            return 'DefaultWidget';
+        }
+      }
+
+      String widgetStateForField(var field) {
+        final widget = widgetForField(field);
+        if (widget.startsWith('EnumDropdownWidget<')) {
+          return widget.replaceFirst('EnumDropdownWidget', 'EnumDropdownWidgetState');
+        }
+        if (widget.startsWith('EmbeddedObjectWidget<')) {
+          return widget.replaceFirst('EmbeddedObjectWidget', 'EmbeddedObjectWidgetState');
+        }
+        return '${widget}State';
+      }
+
+      String fallbackForFieldType(String fieldType) {
+        switch (fieldType) {
+          case 'int':
+            return '0';
+          case 'double':
+            return '0.0';
+          case 'String':
+            return "''";
+          case 'DateTime':
+            return 'DateTime.now()';
+          case 'bool':
+            return 'false';
+          default:
+            return 'null';
+        }
+      }
+
+	    globalKeyDeclarationCode(var field) {
+	      var bufferGlobalKey = StringBuffer();
+	      String fieldName = field.name;
+	      String fieldType = field.type.toString();
+	      String normalizedFieldType = fieldType.replaceAll('?', '');
+
+	      String widget = 'DefaultWidgetState';
+	      String? widgetState;
+        if (isEmbeddedObjectField(field)) {
+          for (var nestedField in embeddedFieldsFor(field)) {
+            final nestedKeyName = embeddedKeyName(fieldName, nestedField.name);
+            final nestedState = widgetStateForField(nestedField);
+            bufferGlobalKey.writeln("final GlobalKey<$nestedState> $nestedKeyName = GlobalKey<$nestedState>();");
+          }
+        }
     
       switch (fieldType) {
         case 'int':
@@ -116,12 +270,21 @@ class _${visitor.className}WidgetState extends State<${visitor.className}Widget>
         case 'Polygon?':
           widget = 'MapWidget';
           break;
-        case 'dynamic':
-          widget = 'JsonWidget';
-        default: 
-          widget = 'DefaultWidget';
-          break;
-      }
+	        case 'dynamic':
+	          widget = 'JsonWidget';
+            break;
+	        default:
+            if (isEnumField(field)) {
+              widget = 'EnumDropdownWidget<$normalizedFieldType>';
+              widgetState = 'EnumDropdownWidgetState<$normalizedFieldType>';
+	          } else if (isEmbeddedObjectField(field)) {
+	            widget = 'EmbeddedObjectWidget<$normalizedFieldType>';
+	            widgetState = 'EmbeddedObjectWidgetState<$normalizedFieldType>';
+	          } else {
+	            widget = 'DefaultWidget';
+	          }
+	          break;
+	      }
 
       if (_fieldChecker.hasAnnotationOfExact(field)) {
         String widgetValue = _fieldChecker
@@ -130,6 +293,7 @@ class _${visitor.className}WidgetState extends State<${visitor.className}Widget>
               ?.toStringValue() ?? '';
         if (widgetValue.isNotEmpty) {
           widget = widgetValue;
+          widgetState = null;
         }
         String relation = '';
         relation = _fieldChecker
@@ -139,16 +303,19 @@ class _${visitor.className}WidgetState extends State<${visitor.className}Widget>
         if (relation != '') {
           if (fieldType == 'String' || fieldType == 'String?') {
             widget = '${relation}FieldWidget';
+            widgetState = null;
           }
-          else {
-            widget = '${relation}MultiFieldWidget';
-          }
-        }
-      }
+	          else {
+	            widget = '${relation}MultiFieldWidget';
+              widgetState = null;
+	          }
+	        }
+	      }
 
-      bufferGlobalKey.writeln("final GlobalKey<${widget}State> ${fieldName}WidgetKey = GlobalKey<${widget}State>();");
-      return bufferGlobalKey;
-    }
+	      widgetState ??= '${widget}State';
+	      bufferGlobalKey.writeln("final GlobalKey<$widgetState> ${fieldName}WidgetKey = GlobalKey<$widgetState>();");
+	      return bufferGlobalKey;
+	    }
     if (defaultFieldsDetail.isEmpty) {
       for (var field in classElement.fields) {
         buffer.writeln(globalKeyDeclarationCode(field));
@@ -195,13 +362,94 @@ class _${visitor.className}WidgetState extends State<${visitor.className}Widget>
               ),
             ),
 ''');
-    fieldWidgetCode(var field) {
-      var bufferfieldWidget = StringBuffer();
-      String fieldName = field.name;
-      String fieldDisplayName = fieldName;
-      String fieldType = field.type.toString();
-      String fieldAccessor = 'widget.element?.$fieldName';
-      String widget = 'defaultWidget';
+      embeddedFieldWidgetCode(var parentField, var nestedField) {
+        final bufferNested = StringBuffer();
+        final parentFieldName = parentField.name;
+        final nestedFieldName = nestedField.name;
+        final nestedFieldType = nestedField.type.toString();
+        final nestedWidget = widgetForField(nestedField);
+        final nestedKey = embeddedKeyName(parentFieldName, nestedFieldName);
+        final nestedDisplayName = nestedFieldName;
+        final nestedDescription = "This is the $nestedFieldName";
+        final nestedPlaceholder = 'Type the $nestedFieldName';
+        final nestedAccessor = 'widget.element?.$parentFieldName?.$nestedFieldName';
+
+        bufferNested.writeln('''
+              $nestedWidget(
+                key: $nestedKey,
+                fieldName: "$nestedDisplayName",
+                fieldDescription: "$nestedDescription",
+                editable: true,
+                ${nestedWidget == 'BoolWidget' ? "" : "placeholder: \"$nestedPlaceholder\","}''');
+
+        if (nestedWidget.startsWith('EnumDropdownWidget<')) {
+          final enumType = normalizedType(nestedFieldType);
+          bufferNested.writeln('''
+                value: $nestedAccessor,
+                options: $enumType.values,
+              ),''');
+        } else {
+          bufferNested.writeln('''
+                value: $nestedAccessor,
+              ),''');
+        }
+
+        return bufferNested.toString();
+      }
+
+      embeddedConstructorFieldCode(var parentField, var nestedField) {
+        final parentFieldName = parentField.name;
+        final nestedFieldName = nestedField.name;
+        final nestedFieldType = nestedField.type.toString();
+        final nestedKey = embeddedKeyName(parentFieldName, nestedFieldName);
+        final previousAccessor = 'widget.element?.$parentFieldName?.$nestedFieldName';
+        final currentAccessor = '$nestedKey.currentState?.getUpdatedValue()';
+        if (nestedFieldType.endsWith('?')) {
+          return '$nestedFieldName: $currentAccessor ?? $previousAccessor,';
+        }
+        return '$nestedFieldName: $currentAccessor ?? $previousAccessor ?? ${fallbackForFieldType(nestedFieldType)},';
+      }
+
+      embeddedObjectWidgetCode(var field, String fieldDisplayName, String fieldDescription, String placeholder, bool editable) {
+        final bufferEmbedded = StringBuffer();
+        final fieldName = field.name;
+        final fieldType = field.type.toString();
+        final normalizedFieldType = normalizedType(fieldType);
+        final nestedFields = embeddedFieldsFor(field);
+        final nestedWidgets = nestedFields.map((nestedField) => embeddedFieldWidgetCode(field, nestedField)).join('\n');
+        final nestedConstructorFields = nestedFields.map((nestedField) => embeddedConstructorFieldCode(field, nestedField)).join('\n');
+
+        bufferEmbedded.writeln('''
+          EmbeddedObjectWidget<$normalizedFieldType>(
+            key: ${fieldName}WidgetKey,
+            fieldName: "$fieldDisplayName",
+            fieldDescription: "$fieldDescription",
+            editable: $editable,
+            placeholder: "$placeholder",
+            value: widget.element?.$fieldName,
+            getValue: () {
+              return $normalizedFieldType(
+$nestedConstructorFields
+              );
+            },
+            child: Column(
+              children: [
+$nestedWidgets
+              ],
+            ),
+          ),
+      ''');
+        return bufferEmbedded.toString();
+      }
+
+	    fieldWidgetCode(var field) {
+	      var bufferfieldWidget = StringBuffer();
+	      String fieldName = field.name;
+	      String fieldDisplayName = fieldName;
+	      String fieldType = field.type.toString();
+	      String normalizedFieldType = fieldType.replaceAll('?', '');
+	      String fieldAccessor = 'widget.element?.$fieldName';
+	      String widget = 'defaultWidget';
       String fieldDescription = "This is the $fieldName";
       String placeholder = 'Type the $fieldName';
       bool uspaceMap = false;
@@ -279,12 +527,19 @@ class _${visitor.className}WidgetState extends State<${visitor.className}Widget>
         case 'Polygon?':
           widget = 'MapWidget';
           break;
-        case 'dynamic':
-          widget = 'JsonWidget';
-        default:
-          widget = 'DefaultWidget';
-          break;
-      }
+	        case 'dynamic':
+	          widget = 'JsonWidget';
+            break;
+	        default:
+            if (isEnumField(field)) {
+              widget = 'EnumDropdownWidget<$normalizedFieldType>';
+            } else if (isEmbeddedObjectField(field)) {
+              widget = 'EmbeddedObjectWidget<$normalizedFieldType>';
+            } else {
+              widget = 'DefaultWidget';
+            }
+	          break;
+	      }
 
       String widgetValue = _fieldChecker
             .firstAnnotationOfExact(field)
@@ -305,7 +560,13 @@ class _${visitor.className}WidgetState extends State<${visitor.className}Widget>
           multiRelation = true;
         }
       }
-      
+
+      print('[LAIA widget field] model=${visitor.className} field=$fieldName fieldType=$fieldType widget=$widget');
+
+      if (widget.startsWith("EmbeddedObjectWidget<")) {
+        return embeddedObjectWidgetCode(field, fieldDisplayName, fieldDescription, placeholder, editable);
+      }
+
       bufferfieldWidget.writeln('''
           $widget(
             key: ${fieldName}WidgetKey,
@@ -321,15 +582,21 @@ class _${visitor.className}WidgetState extends State<${visitor.className}Widget>
           ),
       ''');
       } else {
-        if (widget == "MapWidget") {
-          bufferfieldWidget.writeln('''
-            value: $fieldAccessor  ?? ${fieldType.replaceAll("?", "")}(type: "Feature", geometry: Geometry${fieldType.replaceAll("?", "")}(coordinates: [], type: "${fieldType.replaceAll("?", "")}"), properties: {}),
-            uspaceMap: $uspaceMap
-          ),
-      ''');
-        } else {
-          bufferfieldWidget.writeln('''
-            value: $fieldAccessor,
+	        if (widget == "MapWidget") {
+	          bufferfieldWidget.writeln('''
+	            value: $fieldAccessor  ?? ${fieldType.replaceAll("?", "")}(type: "Feature", geometry: Geometry${fieldType.replaceAll("?", "")}(coordinates: [], type: "${fieldType.replaceAll("?", "")}"), properties: {}),
+	            uspaceMap: $uspaceMap
+	          ),
+	      ''');
+	        } else if (widget.startsWith("EnumDropdownWidget<")) {
+	          bufferfieldWidget.writeln('''
+	            value: $fieldAccessor,
+              options: $normalizedFieldType.values,
+	          ),
+	      ''');
+	        } else {
+	          bufferfieldWidget.writeln('''
+	            value: $fieldAccessor,
           ),
       ''');
         }
@@ -465,23 +732,31 @@ class _${visitor.className}WidgetState extends State<${visitor.className}Widget>
             updated$fieldName = ${fieldType.replaceAll("?", "")}(type: "Feature", geometry: Geometry${fieldType.replaceAll("?", "")}(coordinates:updated$fieldName.geometry.coordinates, type: updated$fieldName.geometry.type), properties: updated$fieldName.properties);
   ''');         updatedFields.add('$fieldName: updated$fieldName');
                 break;
-              case 'LineString?':
+	              case 'LineString?':
               case 'MultiLineString?':
               case 'MultiPoint?':
               case 'MultiPolygon?':
               case 'Point?':
-              case 'Polygon?':
-                buffer.writeln('''
-            dynamic updated$fieldName = ${fieldName}WidgetKey.currentState?.getUpdatedValue();
+	              case 'Polygon?':
+	                buffer.writeln('''
+	            dynamic updated$fieldName = ${fieldName}WidgetKey.currentState?.getUpdatedValue();
 
-            updated$fieldName = ${fieldType.replaceAll("?", "")}(type: "Feature", geometry: Geometry${fieldType.replaceAll("?", "")}(coordinates:updated$fieldName.geometry.coordinates, type: updated$fieldName.geometry.type), properties: updated$fieldName.properties);
-  ''');         updatedFields.add('$fieldName: updated$fieldName');
-                break;
-              default:
-                buffer.writeln('''
-            dynamic updated$fieldName = ${fieldName}WidgetKey.currentState?.getUpdatedValue();
-  ''');         updatedFields.add('$fieldName: updated$fieldName');
-                break;
+	            updated$fieldName = ${fieldType.replaceAll("?", "")}(type: "Feature", geometry: Geometry${fieldType.replaceAll("?", "")}(coordinates:updated$fieldName.geometry.coordinates, type: updated$fieldName.geometry.type), properties: updated$fieldName.properties);
+	  ''');         updatedFields.add('$fieldName: updated$fieldName');
+	                break;
+	              default:
+	                if (fieldType.endsWith('?')) {
+	                  buffer.writeln('''
+	            $fieldType updated$fieldName = ${fieldName}WidgetKey.currentState?.getUpdatedValue();
+	  ''');
+	                } else {
+	                  buffer.writeln('''
+	            dynamic rawUpdated$fieldName = ${fieldName}WidgetKey.currentState?.getUpdatedValue();
+	            $fieldType updated$fieldName = rawUpdated$fieldName as $fieldType;
+	  ''');
+	                }
+	                updatedFields.add('$fieldName: updated$fieldName');
+	                break;
               
             }
             if (fieldName == 'id') {
@@ -539,13 +814,13 @@ if (updated$fieldName != initial${visitor.className}?.$fieldName) {
             buffer.writeln('''$fieldName: updated$fieldName ?? {},''');
             break;
           case 'List<String>':
-          case 'List<String>?':
-            buffer.writeln('''$fieldName: updated$fieldName ?? [''],''');
-            break;
-          default:
-            buffer.writeln('''$fieldName: updated$fieldName ?? '',''');
-                break;
-        }
+	          case 'List<String>?':
+	            buffer.writeln('''$fieldName: updated$fieldName ?? [''],''');
+	            break;
+	          default:
+	            buffer.writeln('''$fieldName: updated$fieldName,''');
+	                break;
+	        }
       }
     }
 
