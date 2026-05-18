@@ -121,6 +121,7 @@ class RiverpodCustomGenerator extends GeneratorForAnnotation<RiverpodGenAnnotati
           if (state.orders.isNotEmpty) 'orders': state.orders,
           if (state.filters.isNotEmpty) 'filters': Map.from(state.filters)
           ..removeWhere((key, value) => value == null || value == ''),
+          if (state.populate.isNotEmpty) 'populate': state.populate,
         };
 
         final json = await http.post(Uri.parse(
