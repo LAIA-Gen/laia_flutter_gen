@@ -11,8 +11,8 @@ const _fieldChecker = TypeChecker.fromRuntime(Field);
 class ListWidgetGenerator extends GeneratorForAnnotation<ListWidgetGenAnnotation> {
   @override
   String generateForAnnotatedElement(
-    Element element, 
-    ConstantReader annotation, 
+    Element element,
+    ConstantReader annotation,
     BuildStep buildStep,
   ) {
     print("GENERATING LIST WIDGET");
@@ -38,9 +38,9 @@ class ListWidgetGenerator extends GeneratorForAnnotation<ListWidgetGenAnnotation
     for (var field in classElement.fields) {
       if (_fieldChecker.hasAnnotationOfExact(field)) {
         avatarField = _fieldChecker
-            .firstAnnotationOfExact(field)
-            ?.getField('image')
-            ?.toStringValue() ?? '';
+                .firstAnnotationOfExact(field)
+                ?.getField('image')
+                ?.toStringValue() ?? '';
       }
     }
 
@@ -69,7 +69,7 @@ class _${className}ListViewState extends ConsumerState<${className}ListView> {
           widget.currentFilters[key] = value;
         });
       }
-      ref.read(${classNameLowercase}PaginationProvider.notifier).setFilters(widget.extraFilters!);
+      ref.read(${classNameLowercase}PaginationProvider.notifier).setFilters(widget.extraFilters ?? {});
     });
   }
 
@@ -223,13 +223,13 @@ class _${className}ListViewState extends ConsumerState<${className}ListView> {
     bool isFirstField = true;
 
     for (var field in classElement.fields) {
-        if (!isFirstField) {
-            buffer.write(', ');
-        } else {
-            isFirstField = false;
-        }
+      if (!isFirstField) {
+        buffer.write(', ');
+      } else {
+        isFirstField = false;
+      }
 
-        buffer.write("'${field.name}': '${field.type.toString()}'");
+      buffer.write("'${field.name}': '${field.type.toString()}'");
     }
 
     buffer.writeln('''},
@@ -257,7 +257,7 @@ class _${className}ListViewState extends ConsumerState<${className}ListView> {
           buffer.writeln('    ${field.name}$className: u.${field.name},');
         }
       }
-  } else {
+    } else {
       for (var defaultField in defaultFields) {
         print("defaultField: $defaultField");
         print("classElement.fields: ${classElement.fields.map((f) => f.name).toList()}");
@@ -272,7 +272,7 @@ class _${className}ListViewState extends ConsumerState<${className}ListView> {
           buffer.writeln('    ${field.name}$className: u.${field.name},');
         }
       }
-  }
+    }
     buffer.writeln('''
                     onMenuSelected: (value) async {
                       if (value == 'edit') {
@@ -304,11 +304,69 @@ class _${className}ListViewState extends ConsumerState<${className}ListView> {
     }
   }
 
+  /// Normalises a [$className] that came from the list (which may have
+  /// populated relation fields as Map / List<Map>) back to plain id Strings
+  /// so the edit form can work with typed values.
+  $className _normalizeForEdit($className $classNameLowercase) {
+    String? _extractId(dynamic v) {
+      if (v == null) return null;
+      if (v is String) return v;
+      if (v is Map) return v['id']?.toString() ?? v['_id']?.toString();
+      try { return (v as dynamic).id?.toString(); } catch (_) {}
+      return v.toString();
+    }
+    List<String>? _extractIds(dynamic v) {
+      if (v == null) return null;
+      if (v is List) {
+        return v.map<String>((e) => _extractId(e) ?? '').toList();
+      }
+      final single = _extractId(v);
+      return single != null ? [single] : null;
+    }
+    return $classNameLowercase.copyWith(
+''');
+
+    // For each relation field, emit the appropriate copyWith entry
+    for (var field in classElement.fields) {
+      if (!_fieldChecker.hasAnnotationOfExact(field)) continue;
+      final relation =
+          _fieldChecker
+              .firstAnnotationOfExact(field)
+              ?.getField('relation')
+              ?.toStringValue() ??
+          '';
+      if (relation.isEmpty) continue;
+
+      final fieldName = field.name;
+      final fieldType = field.type.toString();
+      final widgetValue = _fieldChecker
+          .firstAnnotationOfExact(field)
+          ?.getField('widget')
+          ?.toStringValue() ?? '';
+      // dynamic? fields go to MultiFieldWidget if isList is true (i.e. widget ends with MultiFieldWidget).
+      final isSingleString = fieldType == 'String' || fieldType == 'String?' || 
+          (relation.isNotEmpty && widgetValue.isNotEmpty && !widgetValue.endsWith('MultiFieldWidget'));
+
+      if (isSingleString) {
+        buffer.writeln(
+          '      $fieldName: _extractId($classNameLowercase.$fieldName as dynamic),',
+        );
+      } else {
+        buffer.writeln(
+          '      $fieldName: _extractIds($classNameLowercase.$fieldName as dynamic),',
+        );
+      }
+    }
+
+    buffer.writeln('''
+    );
+  }
+
   void _navigateElement($className $classNameLowercase) {
     Navigator.push(
       context,
       PageRouteBuilder(pageBuilder: (_, __, ___) => ${className}Widget(
-        element: $classNameLowercase,
+        element: _normalizeForEdit($classNameLowercase),
         isEditing: true)),
     );
   }
@@ -385,9 +443,9 @@ class ${className}PaginationNotifier extends StateNotifier<${className}Paginatio
         var field = fieldsList.first;
         if (_fieldChecker.hasAnnotationOfExact(field)) {
           String relation = _fieldChecker
-              .firstAnnotationOfExact(field)
-              ?.getField('relation')
-              ?.toStringValue() ?? '';
+                  .firstAnnotationOfExact(field)
+                  ?.getField('relation')
+                  ?.toStringValue() ?? '';
           if (relation.isNotEmpty) {
             if (!populateMap.containsKey(baseFieldName)) {
               populateMap[baseFieldName] = {
@@ -407,10 +465,10 @@ class ${className}PaginationNotifier extends StateNotifier<${className}Paginatio
       for (var field in classElement.fields) {
         if (_fieldChecker.hasAnnotationOfExact(field)) {
           String relation = _fieldChecker
-              .firstAnnotationOfExact(field)
-              ?.getField('relation')
-              ?.toStringValue() ?? '';
-              
+                  .firstAnnotationOfExact(field)
+                  ?.getField('relation')
+                  ?.toStringValue() ?? '';
+
           if (relation.isNotEmpty) {
             populateMap[field.name] = {
               'from': relation,
@@ -504,14 +562,14 @@ class _${className}HeaderRow extends StatelessWidget {
 
           var fieldName = field.name;
           if (nameValue.isNotEmpty) {
-              fieldName = nameValue;
+            fieldName = nameValue;
           }
           buffer.writeln('''
           Expanded(flex: 2, child: Text('$fieldName', style: style)),
           ''');
         }
       }
-  } else {
+    } else {
       for (var defaultField in defaultFields) {
         final parts = defaultField.split('.');
         final baseFieldName = parts[0];
@@ -523,24 +581,23 @@ class _${className}HeaderRow extends StatelessWidget {
         var field = fieldsList.first;
         if (_fieldChecker.hasAnnotationOfExact(field)) {
           String nameValue = _fieldChecker
-            .firstAnnotationOfExact(field)
-            ?.getField('fieldName')
-            ?.toStringValue() ?? '';
+                  .firstAnnotationOfExact(field)
+                  ?.getField('fieldName')
+                  ?.toStringValue() ?? '';
 
           var fieldName = field.name;
           if (nameValue.isNotEmpty) {
-              fieldName = nameValue;
+            fieldName = nameValue;
           }
           if (parts.length > 1) {
-              final nestedField = parts[1];
-              fieldName = nestedField[0].toUpperCase() + nestedField.substring(1);
+            fieldName = "${field.name}.${parts[1]}";
           }
           buffer.writeln('''
           Expanded(flex: 2, child: Text('$fieldName', style: style)),
           ''');
         }
       }
-  }
+    }
     buffer.writeln('''
 
           const SizedBox(width: 36), // menu
@@ -550,7 +607,7 @@ class _${className}HeaderRow extends StatelessWidget {
   }
 }
 
-class _${className}ListRow extends StatelessWidget {
+class _${className}ListRow extends ConsumerWidget {
 ''');
     // Here we add the fields to the constructor
     if (defaultFields.isEmpty) {
@@ -559,12 +616,12 @@ class _${className}ListRow extends StatelessWidget {
           buffer.writeln('  final ${field.type} ${field.name}$className;');
         }
       }
-  } else {
+    } else {
       Set<String> addedFields = {};
       for (var defaultField in defaultFields) {
         final baseFieldName = defaultField.split('.')[0];
         if (addedFields.contains(baseFieldName)) continue;
-        
+
         var fieldsList = classElement.fields.where((f) => f.name == baseFieldName);
         if (fieldsList.isEmpty) {
           print('Default field $defaultField not found in ${classElement.name}');
@@ -576,7 +633,7 @@ class _${className}ListRow extends StatelessWidget {
           addedFields.add(baseFieldName);
         }
       }
-  }
+    }
 
     buffer.writeln('''
   final ValueChanged<String> onMenuSelected;
@@ -590,12 +647,12 @@ class _${className}ListRow extends StatelessWidget {
           buffer.writeln('    required this.${field.name}$className,');
         }
       }
-  } else {
+    } else {
       Set<String> addedFields = {};
       for (var defaultField in defaultFields) {
         final baseFieldName = defaultField.split('.')[0];
         if (addedFields.contains(baseFieldName)) continue;
-        
+
         var fieldsList = classElement.fields.where((f) => f.name == baseFieldName);
         if (fieldsList.isEmpty) {
           print('Default field $defaultField not found in ${classElement.name}');
@@ -607,13 +664,13 @@ class _${className}ListRow extends StatelessWidget {
           addedFields.add(baseFieldName);
         }
       }
-  }
+    }
     buffer.writeln('''
     required this.onMenuSelected,
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final textStyle = Theme.of(context).textTheme.bodyLarge?.copyWith(
           color: AppColors.muted, // gris texto como en la captura
           fontWeight: FontWeight.w500,
@@ -634,7 +691,7 @@ class _${className}ListRow extends StatelessWidget {
           final isRelation = (_fieldChecker.firstAnnotationOfExact(field)?.getField('relation')?.toStringValue() ?? '').isNotEmpty;
           String fieldText = '';
           if (isRelation) {
-              fieldText = '''
+            fieldText = '''
               (() {
                 final dynamic val = ${field.name}$className;
                 if (val == null) return '';
@@ -658,9 +715,9 @@ class _${className}ListRow extends StatelessWidget {
               })()
               ''';
           } else {
-              fieldText = isEnum
-                  ? '${field.name}$className?.name ?? \'\''
-                  : '${field.name}$className.toString()';
+            fieldText = isEnum
+                ? '${field.name}$className?.name ?? \'\''
+                : '${field.name}$className.toString()';
           }
           buffer.writeln('''
             Expanded(
@@ -670,38 +727,66 @@ class _${className}ListRow extends StatelessWidget {
           ''');
         }
       }
-  } else {
+    } else {
       for (var defaultField in defaultFields) {
         final parts = defaultField.split('.');
         final baseFieldName = parts[0];
-        
+
         var fieldsList = classElement.fields.where((f) => f.name == baseFieldName);
         if (fieldsList.isEmpty) continue;
         var field = fieldsList.first;
 
         if (_fieldChecker.hasAnnotationOfExact(field)) {
           final isEnum = field.type.element is EnumElement;
-          final isRelation = (_fieldChecker.firstAnnotationOfExact(field)?.getField('relation')?.toStringValue() ?? '').isNotEmpty;
-          String fieldText = '';
-          if (parts.length > 1) {
+          final relation =
+              _fieldChecker
+                  .firstAnnotationOfExact(field)
+                  ?.getField('relation')
+                  ?.toStringValue() ??
+              '';
+          final isRelation = relation.isNotEmpty;
+          String cellChild = '';
+          if (parts.length > 1 && isRelation) {
+            final nestedField = parts[1];
+            cellChild =
+                '''
+              (() {
+                final dynamic val = ${field.name}$className;
+                if (val == null) return const SizedBox.shrink();
+                if (val is List) {
+                  if (val.isEmpty) return const SizedBox.shrink();
+                  final firstElem = val.first;
+                  if (firstElem is Map) {
+                    final titles = val.map((e) => (e as Map)['$nestedField']?.toString() ?? '').where((t) => t.isNotEmpty).join(', ');
+                    return Text(titles, style: textStyle);
+                  }
+                  return Text(val.join(', '), style: textStyle);
+                }
+                if (val is Map) {
+                  return Text(val['$nestedField']?.toString() ?? '', style: textStyle);
+                }
+                return Text(val.toString(), style: textStyle);
+              })()
+              ''';
+          } else {
+            String fieldText = '';
+            if (parts.length > 1) {
               final nestedField = parts[1];
-              final isList = field.type.isDartCoreList;
-              if (isList) {
-                  fieldText = '''
-                  ((${field.name}$className as List?)?.map((e) {
-                    if (e is Map) return e['$nestedField']?.toString() ?? '';
-                    try {
-                      return (e as dynamic).$nestedField?.toString() ?? '';
-                    } catch (_) {
-                      return e.toString();
-                    }
-                  }).join(', ') ?? '')
-                  ''';
-              } else {
-                  fieldText = '''
+              fieldText =
+                  '''
                   (() {
                     final val = ${field.name}$className;
                     if (val == null) return '';
+                    if (val is List) {
+                      return val.map((e) {
+                        if (e is Map) return e['$nestedField']?.toString() ?? '';
+                        try {
+                          return (e as dynamic).$nestedField?.toString() ?? '';
+                        } catch (_) {
+                          return e.toString();
+                        }
+                      }).join(', ');
+                    }
                     if (val is Map) return val['$nestedField']?.toString() ?? '';
                     try {
                       return (val as dynamic).$nestedField?.toString() ?? '';
@@ -710,54 +795,55 @@ class _${className}ListRow extends StatelessWidget {
                     }
                   })()
                   ''';
-              }
-          } else {
+            } else {
               if (isRelation) {
-                  fieldText = '''
-                  (() {
-                    final dynamic val = ${field.name}$className;
-                    if (val == null) return '';
-                    if (val is String) return val;
-                    if (val is List) {
-                      if (val.isEmpty) return '';
-                      if (val.first is String) return val.join(', ');
-                    }
-                    if (val is Map) return val['id']?.toString() ?? val['_id']?.toString() ?? val.toString();
-                    try {
-                      final id = (val as dynamic).id?.toString();
-                      if (id != null) return id;
-                    } catch (_) {}
-                    if (val is List) {
-                      return val.map((e) {
-                        final dynamic elem = e;
-                        if (elem is String) return elem;
-                        if (elem is Map) return elem['id']?.toString() ?? elem['_id']?.toString() ?? elem.toString();
+                fieldText = '''
+                      (() {
+                        final dynamic val = ${field.name}$className;
+                        if (val == null) return '';
+                        if (val is String) return val;
+                        if (val is List) {
+                          if (val.isEmpty) return '';
+                          if (val.first is String) return val.join(', ');
+                        }
+                        if (val is Map) return val['id']?.toString() ?? val['_id']?.toString() ?? val.toString();
                         try {
-                          final id = (elem as dynamic).id?.toString();
+                          final id = (val as dynamic).id?.toString();
                           if (id != null) return id;
                         } catch (_) {}
-                        return elem.toString();
-                      }).join(', ');
-                    }
-                    return val.toString();
-                  })()
-                  ''';
+                        if (val is List) {
+                          return val.map((e) {
+                            final dynamic elem = e;
+                            if (elem is String) return elem;
+                            if (elem is Map) return elem['id']?.toString() ?? elem['_id']?.toString() ?? elem.toString();
+                            try {
+                              final id = (elem as dynamic).id?.toString();
+                              if (id != null) return id;
+                            } catch (_) {}
+                            return elem.toString();
+                          }).join(', ');
+                        }
+                        return val.toString();
+                      })()
+                      ''';
               } else {
-                  fieldText = isEnum
-                      ? '${field.name}$className?.name ?? \'\''
-                      : '${field.name}$className.toString()';
+                fieldText = isEnum
+                    ? '${field.name}$className?.name ?? \'\''
+                    : '${field.name}$className.toString()';
               }
+            }
+            cellChild = 'Text($fieldText, style: textStyle)';
           }
-          
+
           buffer.writeln('''
             Expanded(
               flex: 2,
-              child: Text($fieldText, style: textStyle),
+              child: $cellChild,
             ),
           ''');
         }
       }
-  }
+    }
     buffer.writeln('''
 
             // 3 dots menu
@@ -794,7 +880,6 @@ class _${className}ListRow extends StatelessWidget {
 }
 
 ''');
-
 
     return buffer.toString();
   }
