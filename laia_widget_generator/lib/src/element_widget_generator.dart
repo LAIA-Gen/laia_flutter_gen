@@ -19,12 +19,22 @@ class ElementWidgetGenerator extends GeneratorForAnnotation<ElementWidgetGen> {
     final buffer = StringBuffer();
     final visitor = ModelVisitor();
     element.visitChildren(visitor);
+    final fieldsKeys = visitor.fields.keys.toList();
+    final displayField = fieldsKeys.firstWhere(
+      (k) => k.toLowerCase() == 'name' || k.toLowerCase() == 'title',
+      orElse: () => fieldsKeys.firstWhere(
+        (k) => k != 'id',
+        orElse: () => fieldsKeys.isNotEmpty ? fieldsKeys.first : 'id',
+      ),
+    );
     ClassElement classElement = element as ClassElement;
     final auth = annotation.read('auth').boolValue;
     final List<List<String>> defaultFieldsDetail = annotation
         .read('defaultFieldsDetail')
         .listValue
-        .map((element) => (element.toListValue() ?? []).map((e) => e.toStringValue() ?? '').toList())
+        .map((element) => (element.toListValue() ?? []).map((e) => e.toStringValue() ?? '')
+              .toList(),
+        )
         .toList();
 
     List<String> defaultFieldsDetailNames = [];
@@ -299,7 +309,7 @@ class ElementWidgetGenerator extends GeneratorForAnnotation<ElementWidgetGen> {
         String widgetValue = _fieldChecker
                 .firstAnnotationOfExact(field)
                 ?.getField('widget')
-                ?.toStringValue() ?? '';
+                  ?.toStringValue() ?? '';
         if (widgetValue.isNotEmpty) {
           widget = widgetValue;
           widgetState = null;
@@ -951,7 +961,7 @@ class ${visitor.className}FieldWidgetState extends State<${visitor.className}Fie
       try {
         ${visitor.className} ${visitor.className.toLowerCase()} = await container.read(
                         get${visitor.className}Provider(widget.value!).future);
-        _typeAheadController.text = '\${${visitor.className.toLowerCase()}.${visitor.fields.keys.toList()[1]}} <id: \${${visitor.className.toLowerCase()}.id}>';
+        _typeAheadController.text = '\${${visitor.className.toLowerCase()}.$displayField} <id: \${${visitor.className.toLowerCase()}.id}>';
       } catch (e) {
         debugPrint("Error loading ${visitor.className}: \$e");
         _typeAheadController.text = '<id: \${widget.value}>';
@@ -1055,20 +1065,20 @@ class ${visitor.className}FieldWidgetState extends State<${visitor.className}Fie
                               final options = ${visitor.className.toLowerCase()}PaginationData.items;
                               return options
                               .where((${visitor.className.toLowerCase()}) =>
-                                  ${visitor.className.toLowerCase()}.${visitor.fields.keys.toList()[1]}!.toLowerCase().contains(pattern.toLowerCase()) ||
+                                  ${visitor.className.toLowerCase()}.$displayField!.toLowerCase().contains(pattern.toLowerCase()) ||
                                   ${visitor.className.toLowerCase()}.id.toString().contains(pattern.toLowerCase()))
                               .toList();
                             },
                             itemBuilder: (context, ${visitor.className.toLowerCase()}) {
                               return ListTile(
-                                title: Text('\${${visitor.className.toLowerCase()}.${visitor.fields.keys.toList()[1]}} <id: \${${visitor.className.toLowerCase()}.id}>'),
+                                title: Text('\${${visitor.className.toLowerCase()}.$displayField} <id: \${${visitor.className.toLowerCase()}.id}>'),
                               );
                             },
                             onSelected: (${visitor.className} value) {
                               setState(() {
                                 isValueChanged = value.id != initialValue;
                                 currentValue = value.id!;
-                                _typeAheadController.text = '\${value.${visitor.fields.keys.toList()[1]}} <id: \${value.id}>';
+                                _typeAheadController.text = '\${value.$displayField} <id: \${value.id}>';
                               });
                             },
                           ),
@@ -1164,7 +1174,7 @@ class ${visitor.className}MultiFieldWidgetState extends State<${visitor.classNam
           if (value.isEmpty) continue;
           try {
             final item = await container.read(get${visitor.className}Provider(value).future);
-            displayTexts.add('\${item.${visitor.fields.keys.toList()[1]}} <id: \${item.id}>');
+            displayTexts.add('\${item.$displayField} <id: \${item.id}>');
           } catch (e) {
             debugPrint("Error loading ${visitor.className} item \$value: \$e");
             displayTexts.add('<id: \$value>');
@@ -1293,13 +1303,13 @@ class ${visitor.className}MultiFieldWidgetState extends State<${visitor.classNam
                               final options = ${visitor.className.toLowerCase()}PaginationData.items;
                               return options
                               .where((${visitor.className.toLowerCase()}) =>
-                                  ${visitor.className.toLowerCase()}.${visitor.fields.keys.toList()[1]}!.toLowerCase().contains(inputParts.toLowerCase()) ||
+                                  ${visitor.className.toLowerCase()}.$displayField!.toLowerCase().contains(inputParts.toLowerCase()) ||
                                   ${visitor.className.toLowerCase()}.id.toString().toLowerCase().contains(inputParts.toLowerCase()))
                               .toList();
                             },
                             itemBuilder: (context, ${visitor.className.toLowerCase()}) {
                               return ListTile(
-                                title: Text('\${${visitor.className.toLowerCase()}.${visitor.fields.keys.toList()[1]}} <id: \${${visitor.className.toLowerCase()}.id}>'),
+                                title: Text('\${${visitor.className.toLowerCase()}.$displayField} <id: \${${visitor.className.toLowerCase()}.id}>'),
                               );
                             },
                             onSelected: (${visitor.className} value) async {
@@ -1311,7 +1321,7 @@ class ${visitor.className}MultiFieldWidgetState extends State<${visitor.classNam
                                 return await container.read(get${visitor.className}Provider(value).future);
                               }));
                               String concatenatedText = '\${${visitor.className.toLowerCase()}List.map((${visitor.className.toLowerCase()}) {
-                                return '\${${visitor.className.toLowerCase()}.${visitor.fields.keys.toList()[1]}} <id: \${${visitor.className.toLowerCase()}.id}>';
+                                return '\${${visitor.className.toLowerCase()}.$displayField} <id: \${${visitor.className.toLowerCase()}.id}>';
                               }).join(', ')}, ';
 
                               setState(() {
@@ -1707,7 +1717,7 @@ class _${visitor.className}RegisterWidgetState extends State<${visitor.className
           buffer.writeln('''$fieldName: DateTime.now(),''');
         } else if (fieldType == "bool") {
           buffer.writeln('''$fieldName: false,''');
-        } else if (fieldType == "Map<String, dynamic>" || fieldType == "Map<String, dynamic>" || fieldType == "List<Map<String, dynamic>>") {
+        } else if (fieldType == "Map<String, dynamic>" || fieldType == "List<Map<String, dynamic>>") {
           buffer.writeln('''$fieldName: {},''');
         } else if (fieldType.contains('List') && !fieldType.contains('?')) {
           buffer.writeln('''$fieldName: [],''');
