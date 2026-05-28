@@ -20,19 +20,71 @@ class ElementWidgetGenerator extends GeneratorForAnnotation<ElementWidgetGen> {
     final visitor = ModelVisitor();
     element.visitChildren(visitor);
     final fieldsKeys = visitor.fields.keys.toList();
-    final displayField = fieldsKeys.firstWhere(
-      (k) => k.toLowerCase() == 'name' || k.toLowerCase() == 'title',
-      orElse: () => fieldsKeys.firstWhere(
+
+    String DisplayField(String varName) {
+      final List<String> fallbackKeys = [];
+      final nicenameKey = fieldsKeys.firstWhere(
+        (k) => k.toLowerCase() == 'nicename',
+        orElse: () => '',
+      );
+      if (nicenameKey.isNotEmpty) {
+        fallbackKeys.add(nicenameKey);
+      }
+      final nameTitleKey = fieldsKeys.firstWhere(
+        (k) => k.toLowerCase() == 'name' || k.toLowerCase() == 'title',
+        orElse: () => '',
+      );
+      if (nameTitleKey.isNotEmpty) {
+        fallbackKeys.add(nameTitleKey);
+      }
+      final notIdKey = fieldsKeys.firstWhere(
         (k) => k != 'id',
-        orElse: () => fieldsKeys.isNotEmpty ? fieldsKeys.first : 'id',
-      ),
-    );
+        orElse: () => '',
+      );
+      if (notIdKey.isNotEmpty) {
+        fallbackKeys.add(notIdKey);
+      }
+      if (fieldsKeys.isNotEmpty) {
+        fallbackKeys.add(fieldsKeys.first);
+      }
+      if (fieldsKeys.contains('id')) {
+        fallbackKeys.add('id');
+      }
+      final uniqueFallbackKeys = fallbackKeys.toSet().toList();
+      final List<String> chain = [];
+      for (final fieldName in uniqueFallbackKeys) {
+        final type = visitor.fields[fieldName] as String?;
+        final isNullable =
+            type == null || type.endsWith('?') || type == 'dynamic';
+        chain.add('$varName.$fieldName');
+        if (!isNullable) {
+          break;
+        }
+      }
+      if (chain.isEmpty) {
+        return "''";
+      }
+      final lastFieldName = uniqueFallbackKeys[chain.length - 1];
+      final lastType = visitor.fields[lastFieldName] as String?;
+      final lastIsNullable =
+          lastType == null || lastType.endsWith('?') || lastType == 'dynamic';
+      if (lastIsNullable) {
+        chain.add("''");
+      }
+      if (chain.length == 1) {
+        return '${chain[0]}.toString()';
+      }
+      return '(${chain.join(' ?? ')}).toString()';
+    }
+
     ClassElement classElement = element as ClassElement;
     final auth = annotation.read('auth').boolValue;
     final List<List<String>> defaultFieldsDetail = annotation
         .read('defaultFieldsDetail')
         .listValue
-        .map((element) => (element.toListValue() ?? []).map((e) => e.toStringValue() ?? '')
+        .map(
+          (element) => (element.toListValue() ?? [])
+              .map((e) => e.toStringValue() ?? '')
               .toList(),
         )
         .toList();
@@ -41,7 +93,6 @@ class ElementWidgetGenerator extends GeneratorForAnnotation<ElementWidgetGen> {
     List<int> defaultFieldsDetailWidths = [];
 
     defaultFieldsDetail.forEach((field) {
-
       String name = field[0];
       int width = field.length > 1 ? int.tryParse(field[1]) ?? 100 : 100;
 
@@ -71,7 +122,8 @@ class ElementWidgetGenerator extends GeneratorForAnnotation<ElementWidgetGen> {
       defaultFieldsDetailRows.add(currentRow);
     }
 
-    buffer.writeln('''
+    buffer.writeln(
+      '''
 	class ${visitor.className}Widget extends StatefulWidget {
 	  final ${visitor.className}? element;
 	  final bool isEditing;
@@ -82,7 +134,8 @@ class ElementWidgetGenerator extends GeneratorForAnnotation<ElementWidgetGen> {
   _${visitor.className}WidgetState createState() => _${visitor.className}WidgetState();
 	}
 
-	class _${visitor.className}WidgetState extends State<${visitor.className}Widget> {''');
+	class _${visitor.className}WidgetState extends State<${visitor.className}Widget> {''',
+    );
     bool isEmbeddedObjectField(var field) {
       final fieldType = field.type.toString();
       final typeElement = field.type.element;
@@ -158,11 +211,13 @@ class ElementWidgetGenerator extends GeneratorForAnnotation<ElementWidgetGen> {
         return const [];
       }
       return typeElement.fields
-          .where((nestedField) =>
+          .where(
+            (nestedField) =>
                 !nestedField.isStatic &&
                 nestedField.name != 'id' &&
                 nestedField.name != 'owner' &&
-                nestedField.name != 'nicename')
+                nestedField.name != 'nicename',
+          )
           .toList();
     }
 
@@ -213,10 +268,16 @@ class ElementWidgetGenerator extends GeneratorForAnnotation<ElementWidgetGen> {
     String widgetStateForField(var field) {
       final widget = widgetForField(field);
       if (widget.startsWith('EnumDropdownWidget<')) {
-        return widget.replaceFirst('EnumDropdownWidget', 'EnumDropdownWidgetState');
+        return widget.replaceFirst(
+          'EnumDropdownWidget',
+          'EnumDropdownWidgetState',
+        );
       }
       if (widget.startsWith('EmbeddedObjectWidget<')) {
-        return widget.replaceFirst('EmbeddedObjectWidget', 'EmbeddedObjectWidgetState');
+        return widget.replaceFirst(
+          'EmbeddedObjectWidget',
+          'EmbeddedObjectWidgetState',
+        );
       }
       return '${widget}State';
     }
@@ -250,7 +311,9 @@ class ElementWidgetGenerator extends GeneratorForAnnotation<ElementWidgetGen> {
         for (var nestedField in embeddedFieldsFor(field)) {
           final nestedKeyName = embeddedKeyName(fieldName, nestedField.name);
           final nestedState = widgetStateForField(nestedField);
-          bufferGlobalKey.writeln("final GlobalKey<$nestedState> $nestedKeyName = GlobalKey<$nestedState>();");
+          bufferGlobalKey.writeln(
+            "final GlobalKey<$nestedState> $nestedKeyName = GlobalKey<$nestedState>();",
+          );
         }
       }
 
@@ -306,19 +369,23 @@ class ElementWidgetGenerator extends GeneratorForAnnotation<ElementWidgetGen> {
       }
 
       if (_fieldChecker.hasAnnotationOfExact(field)) {
-        String widgetValue = _fieldChecker
+        String widgetValue =
+            _fieldChecker
                 .firstAnnotationOfExact(field)
                 ?.getField('widget')
-                  ?.toStringValue() ?? '';
+                ?.toStringValue() ??
+            '';
         if (widgetValue.isNotEmpty) {
           widget = widgetValue;
           widgetState = null;
         }
         String relation = '';
-        relation = _fieldChecker
+        relation =
+            _fieldChecker
                 .firstAnnotationOfExact(field)
                 ?.getField('relation')
-                ?.toStringValue() ?? relation;
+                ?.toStringValue() ??
+            relation;
         if (relation != '') {
           if (widgetValue.isNotEmpty) {
             widget = widgetValue;
@@ -334,9 +401,12 @@ class ElementWidgetGenerator extends GeneratorForAnnotation<ElementWidgetGen> {
       }
 
       widgetState ??= '${widget}State';
-      bufferGlobalKey.writeln("final GlobalKey<$widgetState> ${fieldName}WidgetKey = GlobalKey<$widgetState>();");
+      bufferGlobalKey.writeln(
+        "final GlobalKey<$widgetState> ${fieldName}WidgetKey = GlobalKey<$widgetState>();",
+      );
       return bufferGlobalKey;
     }
+
     if (defaultFieldsDetail.isEmpty) {
       for (var field in classElement.fields) {
         buffer.writeln(globalKeyDeclarationCode(field));
@@ -344,8 +414,12 @@ class ElementWidgetGenerator extends GeneratorForAnnotation<ElementWidgetGen> {
     } else {
       for (var defaultField in defaultFieldsDetailNames) {
         print("defaultField: $defaultField");
-        print("classElement.fields: ${classElement.fields.map((f) => f.name).toList()}");
-        var field = classElement.fields.firstWhere((f) => f.name == defaultField);
+        print(
+          "classElement.fields: ${classElement.fields.map((f) => f.name).toList()}",
+        );
+        var field = classElement.fields.firstWhere(
+          (f) => f.name == defaultField,
+        );
         buffer.writeln(globalKeyDeclarationCode(field));
       }
     }
@@ -393,15 +467,18 @@ class ElementWidgetGenerator extends GeneratorForAnnotation<ElementWidgetGen> {
       final nestedDisplayName = nestedFieldName;
       final nestedDescription = "This is the $nestedFieldName";
       final nestedPlaceholder = 'Type the $nestedFieldName';
-      final nestedAccessor = 'widget.element?.$parentFieldName?.$nestedFieldName';
+      final nestedAccessor =
+          'widget.element?.$parentFieldName?.$nestedFieldName';
 
-      bufferNested.writeln('''
+      bufferNested.writeln(
+        '''
               $nestedWidget(
                 key: $nestedKey,
                 fieldName: "$nestedDisplayName",
                 fieldDescription: "$nestedDescription",
                 editable: true,
-                ${nestedWidget == 'BoolWidget' ? "" : "placeholder: \"$nestedPlaceholder\","}''');
+                ${nestedWidget == 'BoolWidget' ? "" : "placeholder: \"$nestedPlaceholder\","}''',
+      );
 
       if (nestedWidget.startsWith('EnumDropdownWidget<')) {
         final enumType = normalizedType(nestedFieldType);
@@ -423,7 +500,8 @@ class ElementWidgetGenerator extends GeneratorForAnnotation<ElementWidgetGen> {
       final nestedFieldName = nestedField.name;
       final nestedFieldType = nestedField.type.toString();
       final nestedKey = embeddedKeyName(parentFieldName, nestedFieldName);
-      final previousAccessor = 'widget.element?.$parentFieldName?.$nestedFieldName';
+      final previousAccessor =
+          'widget.element?.$parentFieldName?.$nestedFieldName';
       final currentAccessor = '$nestedKey.currentState?.getUpdatedValue()';
       if (nestedFieldType.endsWith('?')) {
         return '$nestedFieldName: $currentAccessor ?? $previousAccessor,';
@@ -431,14 +509,26 @@ class ElementWidgetGenerator extends GeneratorForAnnotation<ElementWidgetGen> {
       return '$nestedFieldName: $currentAccessor ?? $previousAccessor ?? ${fallbackForFieldType(nestedFieldType)},';
     }
 
-    embeddedObjectWidgetCode(var field, String fieldDisplayName, String fieldDescription, String placeholder, bool editable) {
+    embeddedObjectWidgetCode(
+      var field,
+      String fieldDisplayName,
+      String fieldDescription,
+      String placeholder,
+      bool editable,
+    ) {
       final bufferEmbedded = StringBuffer();
       final fieldName = field.name;
       final fieldType = field.type.toString();
       final normalizedFieldType = normalizedType(fieldType);
       final nestedFields = embeddedFieldsFor(field);
-      final nestedWidgets = nestedFields.map((nestedField) => embeddedFieldWidgetCode(field, nestedField)).join('\n');
-      final nestedConstructorFields = nestedFields.map((nestedField) => embeddedConstructorFieldCode(field, nestedField)).join('\n');
+      final nestedWidgets = nestedFields
+          .map((nestedField) => embeddedFieldWidgetCode(field, nestedField))
+          .join('\n');
+      final nestedConstructorFields = nestedFields
+          .map(
+            (nestedField) => embeddedConstructorFieldCode(field, nestedField),
+          )
+          .join('\n');
 
       bufferEmbedded.writeln('''
           EmbeddedObjectWidget<$normalizedFieldType>(
@@ -478,39 +568,51 @@ $nestedWidgets
       String relation = '';
 
       if (_fieldChecker.hasAnnotationOfExact(field)) {
-        String fieldDisplayNameValue = _fieldChecker
+        String fieldDisplayNameValue =
+            _fieldChecker
                 .firstAnnotationOfExact(field)
                 ?.getField('fieldName')
-                ?.toStringValue() ?? '';
+                ?.toStringValue() ??
+            '';
         if (fieldDisplayNameValue.isNotEmpty) {
           fieldDisplayName = fieldDisplayNameValue;
         }
-        String fieldDescriptionValue = _fieldChecker
+        String fieldDescriptionValue =
+            _fieldChecker
                 .firstAnnotationOfExact(field)
                 ?.getField('fieldDescription')
-                ?.toStringValue() ?? fieldDescription;
+                ?.toStringValue() ??
+            fieldDescription;
         if (fieldDescriptionValue.isNotEmpty) {
           fieldDescription = fieldDescriptionValue;
         }
-        editable = _fieldChecker
+        editable =
+            _fieldChecker
                 .firstAnnotationOfExact(field)
                 ?.getField('editable')
-                ?.toBoolValue() ?? editable;
-        uspaceMap = _fieldChecker
+                ?.toBoolValue() ??
+            editable;
+        uspaceMap =
+            _fieldChecker
                 .firstAnnotationOfExact(field)
                 ?.getField('uspaceMap')
-                ?.toBoolValue() ?? uspaceMap;
-        String placeholderValue = _fieldChecker
+                ?.toBoolValue() ??
+            uspaceMap;
+        String placeholderValue =
+            _fieldChecker
                 .firstAnnotationOfExact(field)
                 ?.getField('placeholder')
-                ?.toStringValue() ?? placeholder;
+                ?.toStringValue() ??
+            placeholder;
         if (placeholderValue.isNotEmpty) {
           placeholder = placeholderValue;
         }
-        relation = _fieldChecker
+        relation =
+            _fieldChecker
                 .firstAnnotationOfExact(field)
                 ?.getField('relation')
-                ?.toStringValue() ?? relation;
+                ?.toStringValue() ??
+            relation;
       }
 
       switch (fieldType) {
@@ -562,10 +664,12 @@ $nestedWidgets
           break;
       }
 
-      String widgetValue = _fieldChecker
+      String widgetValue =
+          _fieldChecker
               .firstAnnotationOfExact(field)
               ?.getField('widget')
-              ?.toStringValue() ?? '';
+              ?.toStringValue() ??
+          '';
       if (widgetValue.isNotEmpty) {
         widget = widgetValue;
       }
@@ -586,7 +690,9 @@ $nestedWidgets
         }
       }
 
-      print('[LAIA widget field] model=${visitor.className} field=$fieldName fieldType=$fieldType widget=$widget');
+      print(
+        '[LAIA widget field] model=${visitor.className} field=$fieldName fieldType=$fieldType widget=$widget',
+      );
 
       if (widget.startsWith("EmbeddedObjectWidget<")) {
         return embeddedObjectWidgetCode(
@@ -598,14 +704,16 @@ $nestedWidgets
         );
       }
 
-      bufferfieldWidget.writeln('''
+      bufferfieldWidget.writeln(
+        '''
           $widget(
             key: ${fieldName}WidgetKey,
             fieldName: "$fieldDisplayName",
             fieldDescription: "$fieldDescription",
             editable: $editable,
             ${widget == 'BoolWidget' ? "" : "placeholder: \"$placeholder\","}
-            ${relation.isNotEmpty || widgetValue.isEmpty || widgetValue == "ModelsSelectableWidget" ? '' : 'elementId: widget.element?.id,'}''');
+            ${relation.isNotEmpty || widgetValue.isEmpty || widgetValue == "ModelsSelectableWidget" ? '' : 'elementId: widget.element?.id,'}''',
+      );
 
       if (multiRelation) {
         bufferfieldWidget.writeln('''
@@ -639,6 +747,7 @@ $nestedWidgets
       }
       return bufferfieldWidget;
     }
+
     if (defaultFieldsDetail.isEmpty) {
       for (var field in classElement.fields) {
         final name = field.name;
@@ -652,7 +761,9 @@ $nestedWidgets
                   children: [''');
 
         for (String fieldName in row) {
-          var field = classElement.fields.firstWhere((f) => f.name == fieldName);
+          var field = classElement.fields.firstWhere(
+            (f) => f.name == fieldName,
+          );
           buffer.writeln('''
                     Expanded(
                       flex: ${defaultFieldsDetailWidths[defaultFieldsDetailNames.indexOf(fieldName)]},
@@ -808,8 +919,10 @@ $nestedWidgets
       }
     }
 
-    buffer.writeln('''
-          ${visitor.className} updated${visitor.className} = widget.element ?? ${visitor.className}(''');
+    buffer.writeln(
+      '''
+          ${visitor.className} updated${visitor.className} = widget.element ?? ${visitor.className}(''',
+    );
 
     for (var fieldName in visitor.fields.keys) {
       var writeCode = false;
@@ -838,7 +951,9 @@ $nestedWidgets
             break;
           case 'DateTime':
           case 'DateTime?':
-            buffer.writeln('''$fieldName: updated$fieldName ?? DateTime.now(),''');
+            buffer.writeln(
+              '''$fieldName: updated$fieldName ?? DateTime.now(),''',
+            );
             break;
           case 'bool':
           case 'bool?':
@@ -961,7 +1076,7 @@ class ${visitor.className}FieldWidgetState extends State<${visitor.className}Fie
       try {
         ${visitor.className} ${visitor.className.toLowerCase()} = await container.read(
                         get${visitor.className}Provider(widget.value!).future);
-        _typeAheadController.text = '\${${visitor.className.toLowerCase()}.$displayField} <id: \${${visitor.className.toLowerCase()}.id}>';
+        _typeAheadController.text = '\${${DisplayField(visitor.className.toLowerCase())}} <id: \${${visitor.className.toLowerCase()}.id}>';
       } catch (e) {
         debugPrint("Error loading ${visitor.className}: \$e");
         _typeAheadController.text = '<id: \${widget.value}>';
@@ -1065,20 +1180,20 @@ class ${visitor.className}FieldWidgetState extends State<${visitor.className}Fie
                               final options = ${visitor.className.toLowerCase()}PaginationData.items;
                               return options
                               .where((${visitor.className.toLowerCase()}) =>
-                                  ${visitor.className.toLowerCase()}.$displayField!.toLowerCase().contains(pattern.toLowerCase()) ||
+                                  ${DisplayField(visitor.className.toLowerCase())}.toLowerCase().contains(pattern.toLowerCase()) ||
                                   ${visitor.className.toLowerCase()}.id.toString().contains(pattern.toLowerCase()))
                               .toList();
                             },
                             itemBuilder: (context, ${visitor.className.toLowerCase()}) {
                               return ListTile(
-                                title: Text('\${${visitor.className.toLowerCase()}.$displayField} <id: \${${visitor.className.toLowerCase()}.id}>'),
+                                title: Text('\${${DisplayField(visitor.className.toLowerCase())}} <id: \${${visitor.className.toLowerCase()}.id}>'),
                               );
                             },
                             onSelected: (${visitor.className} value) {
                               setState(() {
                                 isValueChanged = value.id != initialValue;
                                 currentValue = value.id!;
-                                _typeAheadController.text = '\${value.$displayField} <id: \${value.id}>';
+                                _typeAheadController.text = '\${${DisplayField('value')}} <id: \${value.id}>';
                               });
                             },
                           ),
@@ -1174,7 +1289,7 @@ class ${visitor.className}MultiFieldWidgetState extends State<${visitor.classNam
           if (value.isEmpty) continue;
           try {
             final item = await container.read(get${visitor.className}Provider(value).future);
-            displayTexts.add('\${item.$displayField} <id: \${item.id}>');
+            displayTexts.add('\${${DisplayField('item')}} <id: \${item.id}>');
           } catch (e) {
             debugPrint("Error loading ${visitor.className} item \$value: \$e");
             displayTexts.add('<id: \$value>');
@@ -1303,13 +1418,13 @@ class ${visitor.className}MultiFieldWidgetState extends State<${visitor.classNam
                               final options = ${visitor.className.toLowerCase()}PaginationData.items;
                               return options
                               .where((${visitor.className.toLowerCase()}) =>
-                                  ${visitor.className.toLowerCase()}.$displayField!.toLowerCase().contains(inputParts.toLowerCase()) ||
+                                  ${DisplayField(visitor.className.toLowerCase())}.toLowerCase().contains(inputParts.toLowerCase()) ||
                                   ${visitor.className.toLowerCase()}.id.toString().toLowerCase().contains(inputParts.toLowerCase()))
                               .toList();
                             },
                             itemBuilder: (context, ${visitor.className.toLowerCase()}) {
                               return ListTile(
-                                title: Text('\${${visitor.className.toLowerCase()}.$displayField} <id: \${${visitor.className.toLowerCase()}.id}>'),
+                                title: Text('\${${DisplayField(visitor.className.toLowerCase())}} <id: \${${visitor.className.toLowerCase()}.id}>'),
                               );
                             },
                             onSelected: (${visitor.className} value) async {
@@ -1321,7 +1436,7 @@ class ${visitor.className}MultiFieldWidgetState extends State<${visitor.classNam
                                 return await container.read(get${visitor.className}Provider(value).future);
                               }));
                               String concatenatedText = '\${${visitor.className.toLowerCase()}List.map((${visitor.className.toLowerCase()}) {
-                                return '\${${visitor.className.toLowerCase()}.$displayField} <id: \${${visitor.className.toLowerCase()}.id}>';
+                                return '\${${DisplayField(visitor.className.toLowerCase())}} <id: \${${visitor.className.toLowerCase()}.id}>';
                               }).join(', ')}, ';
 
                               setState(() {
@@ -1537,8 +1652,12 @@ class _${visitor.className}RegisterWidgetState extends State<${visitor.className
       for (var fieldName in visitor.fields.keys) {
         String fieldType = visitor.fields[fieldName];
 
-        if (fieldType == "String" && fieldName != 'email' && fieldName != 'password') {
-          buffer.writeln('''final TextEditingController _${fieldName}Controller = TextEditingController();''');
+        if (fieldType == "String" &&
+            fieldName != 'email' &&
+            fieldName != 'password') {
+          buffer.writeln(
+            '''final TextEditingController _${fieldName}Controller = TextEditingController();''',
+          );
         }
       }
 
@@ -1560,8 +1679,13 @@ class _${visitor.className}RegisterWidgetState extends State<${visitor.className
       for (var fieldName in visitor.fields.keys) {
         String fieldType = visitor.fields[fieldName];
 
-        if (fieldType == "String" && fieldName != 'email' && fieldName != 'password' && fieldName != 'id') {
-          buffer.writeln(''' _${fieldName}Controller.text.trim().isNotEmpty &&''');
+        if (fieldType == "String" &&
+            fieldName != 'email' &&
+            fieldName != 'password' &&
+            fieldName != 'id') {
+          buffer.writeln(
+            ''' _${fieldName}Controller.text.trim().isNotEmpty &&''',
+          );
         }
       }
       buffer.writeln('''
@@ -1580,8 +1704,13 @@ class _${visitor.className}RegisterWidgetState extends State<${visitor.className
       for (var fieldName in visitor.fields.keys) {
         String fieldType = visitor.fields[fieldName];
 
-        if (fieldType == "String" && fieldName != 'email' && fieldName != 'password' && fieldName != 'id') {
-          buffer.writeln(''' _${fieldName}Controller..addListener(_onChanged);''');
+        if (fieldType == "String" &&
+            fieldName != 'email' &&
+            fieldName != 'password' &&
+            fieldName != 'id') {
+          buffer.writeln(
+            ''' _${fieldName}Controller..addListener(_onChanged);''',
+          );
         }
       }
       buffer.writeln('''
@@ -1668,9 +1797,13 @@ class _${visitor.className}RegisterWidgetState extends State<${visitor.className
       for (var fieldName in visitor.fields.keys) {
         String fieldType = visitor.fields[fieldName];
 
-        String capitalize(String s) => s.isEmpty ? s : s[0].toUpperCase() + s.substring(1);
+        String capitalize(String s) =>
+            s.isEmpty ? s : s[0].toUpperCase() + s.substring(1);
 
-        if (fieldType == "String" && fieldName != 'email' && fieldName != 'password' && fieldName != 'id') {
+        if (fieldType == "String" &&
+            fieldName != 'email' &&
+            fieldName != 'password' &&
+            fieldName != 'id') {
           buffer.writeln('''
             const SizedBox(height: 14),
             TextField(
@@ -1707,7 +1840,9 @@ class _${visitor.className}RegisterWidgetState extends State<${visitor.className
       for (var fieldName in visitor.fields.keys) {
         String fieldType = visitor.fields[fieldName];
 
-        if (fieldType == "String" && fieldName != 'email' && fieldName != 'password') {
+        if (fieldType == "String" &&
+            fieldName != 'email' &&
+            fieldName != 'password') {
           buffer.writeln('''$fieldName: _${fieldName}Controller.text,''');
         } else if (fieldType == "int") {
           buffer.writeln('''$fieldName: 0,''');
@@ -1717,7 +1852,8 @@ class _${visitor.className}RegisterWidgetState extends State<${visitor.className
           buffer.writeln('''$fieldName: DateTime.now(),''');
         } else if (fieldType == "bool") {
           buffer.writeln('''$fieldName: false,''');
-        } else if (fieldType == "Map<String, dynamic>" || fieldType == "List<Map<String, dynamic>>") {
+        } else if (fieldType == "Map<String, dynamic>" ||
+            fieldType == "List<Map<String, dynamic>>") {
           buffer.writeln('''$fieldName: {},''');
         } else if (fieldType.contains('List') && !fieldType.contains('?')) {
           buffer.writeln('''$fieldName: [],''');
