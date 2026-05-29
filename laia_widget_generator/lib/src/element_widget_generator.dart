@@ -180,6 +180,17 @@ class ElementWidgetGenerator extends GeneratorForAnnotation<ElementWidgetGen> {
       return field.type.element is EnumElement;
     }
 
+    bool isEnumListField(var field) {
+      final type = field.type;
+      if (type.isDartCoreList) {
+        try {
+          final typeArg = (type as dynamic).typeArguments.first;
+          return typeArg.element is EnumElement;
+        } catch (_) {}
+      }
+      return false;
+    }
+
     bool isUIField(String fieldName) {
       if (defaultFieldsDetail.isEmpty) {
         return fieldName != 'id' &&
@@ -255,6 +266,10 @@ class ElementWidgetGenerator extends GeneratorForAnnotation<ElementWidgetGen> {
         case 'dynamic':
           return 'JsonWidget';
         default:
+          if (isEnumListField(field)) {
+            final innerType = fieldType.replaceAll('List<', '').replaceAll('>', '').replaceAll('?', '').trim();
+            return 'EnumMultiDropdownWidget<$innerType>';
+          }
           if (isEnumField(field)) {
             return 'EnumDropdownWidget<${normalizedType(fieldType)}>';
           }
@@ -267,6 +282,12 @@ class ElementWidgetGenerator extends GeneratorForAnnotation<ElementWidgetGen> {
 
     String widgetStateForField(var field) {
       final widget = widgetForField(field);
+      if (widget.startsWith('EnumMultiDropdownWidget<')) {
+        return widget.replaceFirst(
+          'EnumMultiDropdownWidget',
+          'EnumMultiDropdownWidgetState',
+        );
+      }
       if (widget.startsWith('EnumDropdownWidget<')) {
         return widget.replaceFirst(
           'EnumDropdownWidget',
@@ -356,7 +377,11 @@ class ElementWidgetGenerator extends GeneratorForAnnotation<ElementWidgetGen> {
           widget = 'JsonWidget';
           break;
         default:
-          if (isEnumField(field)) {
+          if (isEnumListField(field)) {
+            final innerType = fieldType.replaceAll('List<', '').replaceAll('>', '').replaceAll('?', '').trim();
+            widget = 'EnumMultiSelectWidget<$innerType>';
+            widgetState = 'EnumMultiSelectWidgetState<$innerType>';
+          } else if (isEnumField(field)) {
             widget = 'EnumDropdownWidget<$normalizedFieldType>';
             widgetState = 'EnumDropdownWidgetState<$normalizedFieldType>';
           } else if (isEmbeddedObjectField(field)) {
@@ -485,6 +510,12 @@ class ElementWidgetGenerator extends GeneratorForAnnotation<ElementWidgetGen> {
         bufferNested.writeln('''
                 value: $nestedAccessor,
                 options: $enumType.values,
+              ),''');
+      } else if (nestedWidget.startsWith('EnumMultiDropdownWidget<')) {
+        final innerType = nestedFieldType.replaceAll('List<', '').replaceAll('>', '').replaceAll('?', '').trim();
+        bufferNested.writeln('''
+                value: $nestedAccessor,
+                options: $innerType.values,
               ),''');
       } else {
         bufferNested.writeln('''
@@ -654,7 +685,10 @@ $nestedWidgets
           widget = 'JsonWidget';
           break;
         default:
-          if (isEnumField(field)) {
+          if (isEnumListField(field)) {
+            final innerType = fieldType.replaceAll('List<', '').replaceAll('>', '').replaceAll('?', '').trim();
+            widget = 'EnumMultiSelectWidget<$innerType>';
+          } else if (isEnumField(field)) {
             widget = 'EnumDropdownWidget<$normalizedFieldType>';
           } else if (isEmbeddedObjectField(field)) {
             widget = 'EmbeddedObjectWidget<$normalizedFieldType>';
@@ -731,6 +765,13 @@ $nestedWidgets
           bufferfieldWidget.writeln('''
 	            value: $fieldAccessor,
               options: $normalizedFieldType.values,
+	          ),
+	      ''');
+        } else if (widget.startsWith("EnumMultiDropdownWidget<")) {
+          final innerType = fieldType.replaceAll('List<', '').replaceAll('>', '').replaceAll('?', '').trim();
+          bufferfieldWidget.writeln('''
+	            value: $fieldAccessor ?? [],
+              options: $innerType.values,
 	          ),
 	      ''');
         } else if (relation != '') {

@@ -2748,6 +2748,182 @@ class EnumDropdownWidgetState<T extends Enum> extends State<EnumDropdownWidget<T
 """);
 
 // **************************************************************************
+// EnumMultiDropdownWidget
+// **************************************************************************
+
+    buffer.writeln("""
+class EnumMultiDropdownWidget<T extends Enum> extends StatefulWidget {
+  final Key? key;
+  final String fieldName;
+  final String fieldDescription;
+  final bool editable;
+  final String placeholder;
+  final List<T>? value;
+  final List<T> options;
+  final String Function(T value)? labelBuilder;
+
+  EnumMultiDropdownWidget({
+    this.key,
+    required this.fieldName,
+    required this.fieldDescription,
+    required this.editable,
+    required this.placeholder,
+    this.value,
+    required this.options,
+    this.labelBuilder,
+  });
+
+  @override
+  EnumMultiDropdownWidgetState<T> createState() => EnumMultiDropdownWidgetState<T>();
+}
+
+class EnumMultiDropdownWidgetState<T extends Enum> extends State<EnumMultiDropdownWidget<T>> {
+  bool isValueChanged = false;
+  late List<T> initialValue;
+  late List<T> currentValue;
+
+  @override
+  void initState() {
+    super.initState();
+    initialValue = List<T>.from(widget.value ?? []);
+    currentValue = List<T>.from(widget.value ?? []);
+  }
+
+  List<T> getUpdatedValue() {
+    return isValueChanged ? currentValue : initialValue;
+  }
+
+  String _label(T value) {
+    return widget.labelBuilder?.call(value) ?? value.name;
+  }
+
+  void _toggleOption(T option) {
+    setState(() {
+      if (currentValue.contains(option)) {
+        currentValue = currentValue.where((v) => v != option).toList();
+      } else {
+        currentValue = [...currentValue, option];
+      }
+      isValueChanged = !_listEquals(currentValue, initialValue);
+    });
+  }
+
+  bool _listEquals(List<T> a, List<T> b) {
+    if (a.length != b.length) return false;
+    for (int i = 0; i < a.length; i++) {
+      if (a[i] != b[i]) return false;
+    }
+    return true;
+  }
+
+  String get _displayText {
+    if (currentValue.isEmpty) return widget.placeholder;
+    return currentValue.map(_label).join(', ');
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+      margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10.0),
+        color: AppColors.surface,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "\${widget.fieldName}:",
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(width: 8.0),
+              Expanded(
+                child: Text(
+                  widget.fieldDescription,
+                  style: const TextStyle(color: Colors.grey),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8.0),
+          widget.editable
+              ? PopupMenuButton<T>(
+                  offset: const Offset(0, 48),
+                  color: AppColors.surface,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(14),
+                    side: const BorderSide(color: AppColors.muted),
+                  ),
+                  itemBuilder: (context) => widget.options
+                      .map((option) => PopupMenuItem<T>(
+                            value: option,
+                            enabled: false,
+                            padding: EdgeInsets.zero,
+                            child: StatefulBuilder(
+                              builder: (ctx, setMenuState) {
+                                final selected = currentValue.contains(option);
+                                return CheckboxListTile(
+                                  value: selected,
+                                  title: Text(_label(option)),
+                                  controlAffinity: ListTileControlAffinity.leading,
+                                  contentPadding: const EdgeInsets.symmetric(horizontal: 12),
+                                  onChanged: (_) {
+                                    setMenuState(() {});
+                                    _toggleOption(option);
+                                  },
+                                );
+                              },
+                            ),
+                          ))
+                      .toList(),
+                  child: InputDecorator(
+                    decoration: InputDecoration(
+                      hintText: widget.placeholder,
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(14),
+                        borderSide: const BorderSide(color: AppColors.muted),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(14),
+                        borderSide: const BorderSide(color: AppColors.muted),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(14),
+                        borderSide: const BorderSide(color: AppColors.indigo, width: 1.2),
+                      ),
+                      fillColor: AppColors.surface,
+                      focusColor: AppColors.surface,
+                      hoverColor: AppColors.surface,
+                      // Se fuerza el icono de flecha hacia abajo para clonar el Dropdown
+                      suffixIcon: const Icon(Icons.arrow_drop_down, color: Colors.grey), 
+                    ),
+                    child: Text(
+                      _displayText,
+                      style: currentValue.isEmpty
+                          ? const TextStyle(color: Colors.grey)
+                          : null,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                )
+              : Text(
+                  currentValue.isEmpty ? widget.placeholder : _displayText,
+                  // Agregado estilo gris si está vacío para emparejar con el comportamiento editable
+                  style: currentValue.isEmpty ? const TextStyle(color: Colors.grey) : null,
+                ),
+        ],
+      ),
+    );
+  }
+}
+""");
+
+// **************************************************************************
 // StringListWidget (TODO)
 // **************************************************************************
 
