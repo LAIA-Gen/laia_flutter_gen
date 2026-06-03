@@ -11,8 +11,8 @@ import 'package:source_gen/source_gen.dart';
 class GenericWidgetsGenerator extends GeneratorForAnnotation<GenericWidgetsGenAnnotation> {
   @override
   String generateForAnnotatedElement(
-    Element element, 
-    ConstantReader annotation, 
+    Element element,
+    ConstantReader annotation,
     BuildStep buildStep,
   ) {
     final buffer = StringBuffer();
@@ -31,6 +31,64 @@ class CustomSnackBar {
       backgroundColor: Styles.buttonPrimaryColorHover,
     );
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+}
+
+class KeepAliveWrapper extends StatefulWidget {
+  final Widget child;
+
+  const KeepAliveWrapper({Key? key, required this.child}) : super(key: key);
+
+  @override
+  _KeepAliveWrapperState createState() => _KeepAliveWrapperState();
+}
+
+class _KeepAliveWrapperState extends State<KeepAliveWrapper>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+
+  @override
+  Widget build(BuildContext context) {
+    super.build(context);
+    return widget.child;
+  }
+}
+''');
+
+    // **************************************************************************
+    // Tab Controller
+    // **************************************************************************
+
+    buffer.writeln('''
+class GenericTabsWidget extends StatelessWidget {
+  final List<String> tabLabels;
+  final List<Widget> tabViews;
+
+  const GenericTabsWidget({
+    Key? key,
+    required this.tabLabels,
+    required this.tabViews,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return DefaultTabController(
+      length: tabLabels.length,
+      child: Column(
+        children: [
+          TabBar(
+            isScrollable: true,
+            tabs: tabLabels.map((label) => Tab(text: label)).toList(),
+          ),
+          Expanded(
+            child: TabBarView(
+              children: tabViews,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
 ''');
@@ -176,11 +234,12 @@ class IntWidgetState extends State<IntWidget> {
 }
         ''');
 
-// **************************************************************************
-// MapWidget
-// **************************************************************************
+    // **************************************************************************
+    // MapWidget
+    // **************************************************************************
 
-    buffer.writeln('''
+    buffer.writeln(
+      '''
 class MapWidget extends StatefulWidget {
   final String fieldName;
   final String fieldDescription;
@@ -2830,93 +2889,101 @@ class EnumMultiDropdownWidgetState<T extends Enum> extends State<EnumMultiDropdo
         borderRadius: BorderRadius.circular(10.0),
         color: AppColors.surface,
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
+      child: LayoutBuilder(
+        builder: (context, boxConstraints) {
+          final width = boxConstraints.maxWidth;
+          return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                "\${widget.fieldName}:",
-                style: const TextStyle(fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(width: 8.0),
-              Expanded(
-                child: Text(
-                  widget.fieldDescription,
-                  style: const TextStyle(color: Colors.grey),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 8.0),
-          widget.editable
-              ? PopupMenuButton<T>(
-                  offset: const Offset(0, 48),
-                  color: AppColors.surface,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(14),
-                    side: const BorderSide(color: AppColors.muted),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "\${widget.fieldName}:",
+                    style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  itemBuilder: (context) => widget.options
-                      .map((option) => PopupMenuItem<T>(
-                            value: option,
-                            enabled: false,
-                            padding: EdgeInsets.zero,
-                            child: StatefulBuilder(
-                              builder: (ctx, setMenuState) {
-                                final selected = currentValue.contains(option);
-                                return CheckboxListTile(
-                                  value: selected,
-                                  title: Text(_label(option)),
-                                  controlAffinity: ListTileControlAffinity.leading,
-                                  contentPadding: const EdgeInsets.symmetric(horizontal: 12),
-                                  onChanged: (_) {
-                                    setMenuState(() {});
-                                    _toggleOption(option);
-                                  },
-                                );
-                              },
-                            ),
-                          ))
-                      .toList(),
-                  child: InputDecorator(
-                    decoration: InputDecoration(
-                      hintText: widget.placeholder,
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(14),
-                        borderSide: const BorderSide(color: AppColors.muted),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(14),
-                        borderSide: const BorderSide(color: AppColors.muted),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(14),
-                        borderSide: const BorderSide(color: AppColors.indigo, width: 1.2),
-                      ),
-                      fillColor: AppColors.surface,
-                      focusColor: AppColors.surface,
-                      hoverColor: AppColors.surface,
-                      // Se fuerza el icono de flecha hacia abajo para clonar el Dropdown
-                      suffixIcon: const Icon(Icons.arrow_drop_down, color: Colors.grey), 
-                    ),
+                  const SizedBox(width: 8.0),
+                  Expanded(
                     child: Text(
-                      _displayText,
-                      style: currentValue.isEmpty
-                          ? const TextStyle(color: Colors.grey)
-                          : null,
-                      overflow: TextOverflow.ellipsis,
+                      widget.fieldDescription,
+                      style: const TextStyle(color: Colors.grey),
                     ),
                   ),
-                )
-              : Text(
-                  currentValue.isEmpty ? widget.placeholder : _displayText,
-                  // Agregado estilo gris si está vacío para emparejar con el comportamiento editable
-                  style: currentValue.isEmpty ? const TextStyle(color: Colors.grey) : null,
-                ),
-        ],
+                ],
+              ),
+              const SizedBox(height: 8.0),
+              widget.editable
+                  ? PopupMenuButton<T>(
+                      position: PopupMenuPosition.over,
+                      constraints: BoxConstraints(
+                        minWidth: width,
+                        maxWidth: width,
+                      ),
+                      color: AppColors.surface,
+                      itemBuilder: (context) => widget.options
+                          .map((option) => PopupMenuItem<T>(
+                                value: option,
+                                enabled: false,
+                                padding: EdgeInsets.zero,
+                                child: StatefulBuilder(
+                                  builder: (ctx, setMenuState) {
+                                    final selected = currentValue.contains(option);
+                                    return CheckboxListTile(
+                                      activeColor: AppColors.indigo,
+                                      value: selected,
+                                      title: Text(
+                                        _label(option),
+                                        style: const TextStyle(
+                                          color: AppColors.indigo,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                      controlAffinity: ListTileControlAffinity.leading,
+                                      contentPadding: const EdgeInsets.symmetric(horizontal: 12),
+                                      onChanged: (_) {
+                                        setMenuState(() {});
+                                        _toggleOption(option);
+                                      },
+                                    );
+                                  },
+                                ),
+                              ))
+                          .toList(),
+                      child: InputDecorator(
+                        decoration: InputDecoration(
+                          hintText: widget.placeholder,
+                          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(14),
+                            borderSide: const BorderSide(color: AppColors.muted),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(14),
+                            borderSide: const BorderSide(color: AppColors.muted),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(14),
+                            borderSide: const BorderSide(color: AppColors.indigo, width: 1.2),
+                          ),
+                          fillColor: AppColors.surface,
+                          focusColor: AppColors.surface,
+                          hoverColor: AppColors.surface,
+                          // Se fuerza el icono de flecha hacia abajo para clonar el Dropdown
+                          suffixIcon: const Icon(Icons.arrow_drop_down, color: Colors.grey), 
+                        ),
+                        child: Text(
+                          _displayText,
+                          style: currentValue.isEmpty
+                              ? const TextStyle(color: Colors.grey)
+                              : null,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    )
+                  : Text(currentValue.isEmpty ? widget.placeholder : _displayText),
+            ],
+          );
+        },
       ),
     );
   }

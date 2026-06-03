@@ -1,7 +1,14 @@
+class ElementTab {
+  final String label;
+  final List<String> fields;
+  const ElementTab({required this.label, required this.fields});
+}
+
 class ElementWidgetGen {
   final bool auth;
   final List<List<String>> defaultFieldsDetail;
-  const ElementWidgetGen({ this.auth = false, this.defaultFieldsDetail = const []});
+  final List<ElementTab> tabs;
+  const ElementWidgetGen({this.auth = false, this.defaultFieldsDetail = const [], this.tabs = const []});
 }
 
 class Field {
