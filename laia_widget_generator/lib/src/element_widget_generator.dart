@@ -89,6 +89,24 @@ class ElementWidgetGenerator extends GeneratorForAnnotation<ElementWidgetGen> {
         )
         .toList();
 
+    final List<Map<String, dynamic>> tabs = [];
+    final tabsannotation = annotation.peek('tabs');
+    if (tabsannotation != null && !tabsannotation.isNull) {
+      for (final tabObj in tabsannotation.listValue) {
+        final tab = ConstantReader(tabObj);
+        final label = tab.read('label').stringValue;
+        final fields = tab.read('fields').listValue.map((e) => e.toStringValue() ?? '').toList();
+        tabs.add({
+          'label': label,
+          'fields': fields,
+        });
+      }
+    }
+
+    final List<String> allTabFields = tabs.isNotEmpty
+        ? tabs.expand((t) => t['fields'] as List<dynamic>).map((e) => e.toString()).toList()
+        : [];
+
     List<String> defaultFieldsDetailNames = [];
     List<int> defaultFieldsDetailWidths = [];
 
@@ -192,6 +210,10 @@ class ElementWidgetGenerator extends GeneratorForAnnotation<ElementWidgetGen> {
     }
 
     bool isUIField(String fieldName) {
+      if (tabs.isNotEmpty) {
+        return allTabFields.contains(fieldName) ||
+            allTabFields.any((tf) => tf.startsWith('$fieldName.'));
+      }
       if (defaultFieldsDetail.isEmpty) {
         return fieldName != 'id' &&
             fieldName != 'owner' &&
@@ -432,7 +454,15 @@ class ElementWidgetGenerator extends GeneratorForAnnotation<ElementWidgetGen> {
       return bufferGlobalKey;
     }
 
-    if (defaultFieldsDetail.isEmpty) {
+    if (tabs.isNotEmpty) {
+      for (var field in classElement.fields) {
+        final name = field.name;
+        if (name == 'id' || name == 'owner' || name == 'Shard') continue;
+        if (isUIField(name)) {
+          buffer.writeln(globalKeyDeclarationCode(field));
+        }
+      }
+    } else if (defaultFieldsDetail.isEmpty) {
       for (var field in classElement.fields) {
         buffer.writeln(globalKeyDeclarationCode(field));
       }
@@ -448,7 +478,49 @@ class ElementWidgetGenerator extends GeneratorForAnnotation<ElementWidgetGen> {
         buffer.writeln(globalKeyDeclarationCode(field));
       }
     }
-    buffer.writeln('''
+    if (tabs.isNotEmpty) {
+      buffer.writeln('''
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () => Navigator.push(
+              context,
+              PageRouteBuilder(
+                pageBuilder: (_, __, ___) => ${visitor.className}ListView(),
+              ),
+            ),
+          ), 
+        ),
+        body: Column(
+          children: [
+            const SizedBox(height: 16),
+            Center(
+              child: Text(
+                '${visitor.className}',
+                style: Theme.of(context)
+                    .textTheme
+                    .headlineSmall
+                    ?.copyWith(
+                      color: AppColors.indigo,
+                      fontWeight: FontWeight.w700,
+                    ),
+              ),
+            ),
+            const SizedBox(height: 16),
+            Expanded(
+              child: GenericTabsWidget(
+                tabLabels: const [
+                  ${tabs.map((t) => '"${t['label']}"').join(',\n')}
+                ],
+                tabViews: [
+''');
+    } else {
+      buffer.writeln('''
 
   @override
   Widget build(BuildContext context) {
@@ -482,6 +554,7 @@ class ElementWidgetGenerator extends GeneratorForAnnotation<ElementWidgetGen> {
               ),
             ),
 ''');
+    }
     embeddedFieldWidgetCode(var parentField, var nestedField) {
       final bufferNested = StringBuffer();
       final parentFieldName = parentField.name;
@@ -789,45 +862,82 @@ $nestedWidgets
       return bufferfieldWidget;
     }
 
-    if (defaultFieldsDetail.isEmpty) {
-      for (var field in classElement.fields) {
-        final name = field.name;
-        if (name == 'id' || name == 'owner' || name == 'Shard') continue;
-        buffer.writeln(fieldWidgetCode(field));
-      }
-    } else {
-      for (List<String> row in defaultFieldsDetailRows) {
+    if (tabs.isNotEmpty) {
+      for (var tab in tabs) {
+        final tabFields = tab['fields'] as List<dynamic>;
         buffer.writeln('''
-                Row(
-                  children: [''');
-
-        for (String fieldName in row) {
-          var field = classElement.fields.firstWhere(
-            (f) => f.name == fieldName,
-          );
-          buffer.writeln('''
-                    Expanded(
-                      flex: ${defaultFieldsDetailWidths[defaultFieldsDetailNames.indexOf(fieldName)]},
-                      child: ${fieldWidgetCode(field)}
-                    ),''');
+                    KeepAliveWrapper(
+                      child: SingleChildScrollView(
+                        child: Column(
+                          children: [
+        ''');
+        for (var field in classElement.fields) {
+          final name = field.name;
+          if (name == 'id' || name == 'owner' || name == 'Shard') continue;
+          if (tabFields.contains(name) || tabFields.any((tf) => tf.toString().startsWith('$name.'))) {
+            buffer.writeln(fieldWidgetCode(field));
+          }
         }
-
         buffer.writeln('''
-                  ],
-                ),''');
+                          ],
+                        ),
+                      ),
+                    ),
+        ''');
       }
-    }
-    buffer.writeln('''
+      buffer.writeln('''
+                ],
+              ),
+            ),
+            const SizedBox(height: 16),
+            SaveButton(
+              text: 'Save',
+              onTap: () async {
+        var initial${visitor.className} = widget.element;
+      ''');
+    } else {
+      if (defaultFieldsDetail.isEmpty) {
+        for (var field in classElement.fields) {
+          final name = field.name;
+          if (name == 'id' || name == 'owner' || name == 'Shard') continue;
+          buffer.writeln(fieldWidgetCode(field));
+        }
+      } else {
+        for (List<String> row in defaultFieldsDetailRows) {
+          buffer.writeln('''
+                  Row(
+                    children: [''');
+
+          for (String fieldName in row) {
+            var field = classElement.fields.firstWhere(
+              (f) => f.name == fieldName,
+            );
+            buffer.writeln('''
+                      Expanded(
+                        flex: ${defaultFieldsDetailWidths[defaultFieldsDetailNames.indexOf(fieldName)]},
+                        child: ${fieldWidgetCode(field)}
+                      ),''');
+          }
+
+          buffer.writeln('''
+                    ],
+                  ),''');
+        }
+      }
+      buffer.writeln('''
               const SizedBox(height: 16),
               SaveButton(
                 text: 'Save',
                 onTap: () async {
           var initial${visitor.className} = widget.element;
-          ''');
+      ''');
+    }
     final List<String> updatedFields = [];
     for (var fieldName in visitor.fields.keys) {
       var writeCode = false;
-      if (defaultFieldsDetail.isEmpty) {
+      if (tabs.isNotEmpty) {
+        writeCode = true;
+      } else if (defaultFieldsDetail.isEmpty) {
         writeCode = true;
       } else {
         if (defaultFieldsDetailNames.contains(fieldName)) {
@@ -967,7 +1077,9 @@ $nestedWidgets
 
     for (var fieldName in visitor.fields.keys) {
       var writeCode = false;
-      if (defaultFieldsDetail.isEmpty) {
+      if (tabs.isNotEmpty) {
+        writeCode = true;
+      } else if (defaultFieldsDetail.isEmpty) {
         writeCode = true;
       } else {
         if (defaultFieldsDetailNames.contains(fieldName)) {
@@ -1067,9 +1179,14 @@ $nestedWidgets
               ),
               const SizedBox(height: 80),
       ''');
-    buffer.writeln('],');
-    buffer.writeln('),');
-    buffer.writeln('),');
+    if (tabs.isNotEmpty) {
+      buffer.writeln('],');
+      buffer.writeln('),');
+    } else {
+      buffer.writeln('],');
+      buffer.writeln('),');
+      buffer.writeln('),');
+    }
 
     buffer.writeln(');');
     buffer.writeln('}');
