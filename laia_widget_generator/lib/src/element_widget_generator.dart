@@ -1779,7 +1779,7 @@ class _${visitor.className}LoginWidgetState extends State<${visitor.className}Lo
           ),
 
           const SizedBox(height: 40),
-
+/*
           Text(
             "I don’t have an account",
             style: Theme.of(context).textTheme.bodySmall
@@ -1805,7 +1805,7 @@ class _${visitor.className}LoginWidgetState extends State<${visitor.className}Lo
               const SizedBox(width: 88, child: Divider(color: AppColors.indigo)),
             ],
           ),
-
+*/
           if (_version.isNotEmpty) ...[
             const SizedBox(height: 16),
             Text(
