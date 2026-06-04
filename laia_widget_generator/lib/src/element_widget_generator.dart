@@ -1667,6 +1667,26 @@ class _${visitor.className}LoginWidgetState extends State<${visitor.className}Lo
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _isPasswordVisible = false;
+  String _version = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _loadVersion();
+  }
+
+  Future<void> _loadVersion() async {
+    try {
+      final packageInfo = await PackageInfo.fromPlatform();
+      if (mounted) {
+        setState(() {
+          _version = '\${packageInfo.version}';
+        });
+      }
+    } catch (e) {
+      debugPrint('Error loading version: \$e');
+    }
+  }
 
   @override
   void dispose() {
@@ -1785,6 +1805,14 @@ class _${visitor.className}LoginWidgetState extends State<${visitor.className}Lo
               const SizedBox(width: 88, child: Divider(color: AppColors.indigo)),
             ],
           ),
+
+          if (_version.isNotEmpty) ...[
+            const SizedBox(height: 16),
+            Text(
+              'v\$_version',
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey),
+            ),
+          ],
         ],
       ),
     );
