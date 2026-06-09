@@ -19,6 +19,7 @@ class Field {
   final String placeholder;
   final String relation;
   final bool uspaceMap;
+  final String format;
 
-  const Field({this.widget = '', this.fieldName = '', this.fieldDescription = '', this.editable = true, this.placeholder = '', this.relation = '', this.uspaceMap = false});
+  const Field({this.widget = '', this.fieldName = '', this.fieldDescription = '', this.editable = true, this.placeholder = '', this.relation = '', this.uspaceMap = false, this.format = ''});
 }

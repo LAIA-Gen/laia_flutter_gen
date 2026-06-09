@@ -1666,6 +1666,342 @@ class StringWidgetState extends State<StringWidget> {
         ''');
 
 // **************************************************************************
+// TextAreaWidget
+// **************************************************************************
+
+    buffer.writeln('''
+class TextAreaWidget extends StatefulWidget {
+  final String fieldName;
+  final String fieldDescription;
+  final bool editable;
+  final String placeholder;
+  final String? value;
+  final List<Widget>? additionalChildren;
+
+  const TextAreaWidget({
+    Key? key,
+    required this.fieldName,
+    required this.fieldDescription,
+    required this.editable,
+    required this.placeholder,
+    required this.value,
+    this.additionalChildren,
+  }) : super(key: key);
+
+  @override
+  TextAreaWidgetState createState() => TextAreaWidgetState();
+}
+
+class TextAreaWidgetState extends State<TextAreaWidget> {
+  bool isValueChanged = false;
+  late String? initialValue;
+  late String currentValue;
+
+  @override
+  void initState() {
+    super.initState();
+    initialValue = widget.value;
+    currentValue = initialValue ?? '';
+  }
+
+  String? getUpdatedValue() {
+    return isValueChanged ? currentValue : initialValue;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+          margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10.0),
+            color: AppColors.surface
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "\${widget.fieldName}:",
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(width: 8.0),
+                  Text(
+                    widget.fieldDescription,
+                    style: const TextStyle(color: Colors.grey),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8.0),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  widget.editable
+                      ? Expanded(
+                          child: TextFormField(
+                            minLines: 3,
+                            maxLines: 5,
+                            decoration: InputDecoration(
+                              hintText: widget.placeholder,
+                              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(14),
+                                borderSide: const BorderSide(
+                                  color: AppColors.muted,
+                                ),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(14),
+                                borderSide: const BorderSide(
+                                  color:  AppColors.muted,
+                                ),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(14),
+                                borderSide: const BorderSide(
+                                  color: AppColors.indigo,
+                                  width: 1.2,
+                                ),
+                              ),
+                              fillColor: AppColors.surface,
+                              focusColor: AppColors.surface,
+                              hoverColor: AppColors.surface
+                            ),
+                            initialValue: widget.value,
+                            onChanged: (newValue) {
+                              setState(() {
+                                isValueChanged = newValue != initialValue;
+                                currentValue = newValue;
+                              });
+                            },
+                          ),
+                        )
+                      : Text(widget.value ?? widget.placeholder),
+                ],
+              ),
+            ],
+          ),
+        ),
+        if (isValueChanged)
+          Positioned(
+            top: 0,
+            left: 0,
+            child: Container(
+              width: 20,
+              height: 20,
+              decoration: const BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.orange,
+              ),
+            ),
+          ),
+        if (widget.additionalChildren != null)
+          ...widget.additionalChildren!
+      ],
+    );
+  }
+}
+        ''');
+
+// **************************************************************************
+// RichTextWidget
+// ************************************************************************** 
+    buffer.writeln('''
+class RichTextWidget extends StatefulWidget{
+  final String fieldName;
+  final String fieldDescription;
+  final bool editable;
+  final String placeholder;
+  final String? value;
+
+  const RichTextWidget({
+    Key? key,
+    required this.fieldName,
+    required this.fieldDescription,
+    required this.editable,
+    required this.placeholder,
+    required this.value,
+  }) : super(key: key);
+
+  @override
+  RichTextWidgetState createState() => RichTextWidgetState();
+}
+class RichTextWidgetState extends State<RichTextWidget> {
+  final QuillController _controller = QuillController.basic(
+    config: const QuillControllerConfig(
+      clipboardConfig: QuillClipboardConfig(
+        enableExternalRichPaste: true,
+      ),
+    ),
+  );
+  late final FocusNode _focusNode;
+  bool isValueChanged = false;
+  late String? initialValue;
+  late String? currentValue;
+
+  @override
+  void initState() {
+    super.initState();
+    _focusNode = FocusNode();
+    initialValue = widget.value;
+    currentValue = initialValue;
+    _controller.readOnly = !widget.editable;
+
+    if (widget.value != null && widget.value!.isNotEmpty) {
+      try {
+        _controller.document = Document.fromJson(jsonDecode(widget.value!));
+      } catch (e) {
+        _controller.document = Document()..insert(0, widget.value!);
+      }
+    }
+
+    _controller.addListener(_onTextChanged);
+  }
+
+  @override
+  void didUpdateWidget(covariant RichTextWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.editable != widget.editable) {
+      _controller.readOnly = !widget.editable;
+    }
+  }
+
+  void _onTextChanged() {
+    final newJson = jsonEncode(_controller.document.toDelta().toJson());
+    if (newJson != initialValue) {
+      setState(() {
+        isValueChanged = true;
+        currentValue = newJson;
+      });
+    } else if (isValueChanged) {
+      setState(() {
+        isValueChanged = false;
+        currentValue = initialValue;
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _focusNode.dispose();
+    _controller.removeListener(_onTextChanged);
+    _controller.dispose();
+    super.dispose();
+  }
+
+  String? getUpdatedValue() {
+    return isValueChanged ? currentValue : initialValue;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+          margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10.0),
+            color: AppColors.surface,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "\${widget.fieldName}:",
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(width: 8.0),
+                  Text(
+                    widget.fieldDescription,
+                    style: const TextStyle(color: Colors.grey),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8.0),
+              widget.editable
+                  ? Column(
+                      children: [
+                        QuillSimpleToolbar(
+                          controller: _controller,
+                          config: const QuillSimpleToolbarConfig(
+                            showDividers: false,
+                            showCodeBlock: false,
+                            showListCheck: false,
+                            showIndent: false,
+                            showListBullets: false,
+                            showListNumbers: false,
+                            showLink: false,
+                          ),
+                        ),
+                        const SizedBox(height: 8.0),
+                        Container(
+                          height: 200,
+                          decoration: BoxDecoration(
+                            border: Border.all(color: AppColors.muted),
+                            borderRadius: BorderRadius.circular(14),
+                          ),
+                          padding: const EdgeInsets.all(12),
+                          child: QuillEditor.basic(
+                            controller: _controller,
+                            focusNode: _focusNode,
+                            config: QuillEditorConfig(
+                              placeholder: widget.placeholder,
+                              autoFocus: false,
+                              expands: true,
+                            ),
+                          ),
+                        ),
+                      ],
+                    )
+                  : Container(
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        border: Border.all(color: AppColors.muted.withOpacity(0.5)),
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                      padding: const EdgeInsets.all(12),
+                      child: QuillEditor.basic(
+                        controller: _controller,
+                        focusNode: _focusNode,
+                        config: const QuillEditorConfig(
+                          showCursor: false,
+                        ),
+                      ),
+                    ),
+
+            ],
+          ),
+        ),
+        if (isValueChanged)
+          Positioned(
+            top: 0,
+            left: 0,
+            child: Container(
+              width: 20,
+              height: 20,
+              decoration: const BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.orange,
+              ),
+            ),
+          ),
+      ],
+    );
+  }
+}
+        ''');
+
+
+// **************************************************************************
 // DateTimeWidget
 // **************************************************************************
 
