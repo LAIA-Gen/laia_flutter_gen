@@ -1666,6 +1666,149 @@ class StringWidgetState extends State<StringWidget> {
         ''');
 
 // **************************************************************************
+// TextAreaWidget
+// **************************************************************************
+
+    buffer.writeln('''
+class TextAreaWidget extends StatefulWidget {
+  final String fieldName;
+  final String fieldDescription;
+  final bool editable;
+  final String placeholder;
+  final String? value;
+  final List<Widget>? additionalChildren;
+
+  const TextAreaWidget({
+    Key? key,
+    required this.fieldName,
+    required this.fieldDescription,
+    required this.editable,
+    required this.placeholder,
+    required this.value,
+    this.additionalChildren,
+  }) : super(key: key);
+
+  @override
+  TextAreaWidgetState createState() => TextAreaWidgetState();
+}
+
+class TextAreaWidgetState extends State<TextAreaWidget> {
+  bool isValueChanged = false;
+  late String? initialValue;
+  late String currentValue;
+
+  @override
+  void initState() {
+    super.initState();
+    initialValue = widget.value;
+    currentValue = initialValue ?? '';
+  }
+
+  String? getUpdatedValue() {
+    return isValueChanged ? currentValue : initialValue;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+          margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10.0),
+            color: AppColors.surface
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "\${widget.fieldName}:",
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(width: 8.0),
+                  Text(
+                    widget.fieldDescription,
+                    style: const TextStyle(color: Colors.grey),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8.0),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  widget.editable
+                      ? Expanded(
+                          child: TextFormField(
+                            minLines: 3,
+                            maxLines: 5,
+                            decoration: InputDecoration(
+                              hintText: widget.placeholder,
+                              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(14),
+                                borderSide: const BorderSide(
+                                  color: AppColors.muted,
+                                ),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(14),
+                                borderSide: const BorderSide(
+                                  color:  AppColors.muted,
+                                ),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(14),
+                                borderSide: const BorderSide(
+                                  color: AppColors.indigo,
+                                  width: 1.2,
+                                ),
+                              ),
+                              fillColor: AppColors.surface,
+                              focusColor: AppColors.surface,
+                              hoverColor: AppColors.surface
+                            ),
+                            initialValue: widget.value,
+                            onChanged: (newValue) {
+                              setState(() {
+                                isValueChanged = newValue != initialValue;
+                                currentValue = newValue;
+                              });
+                            },
+                          ),
+                        )
+                      : Text(widget.value ?? widget.placeholder),
+                ],
+              ),
+            ],
+          ),
+        ),
+        if (isValueChanged)
+          Positioned(
+            top: 0,
+            left: 0,
+            child: Container(
+              width: 20,
+              height: 20,
+              decoration: const BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.orange,
+              ),
+            ),
+          ),
+        if (widget.additionalChildren != null)
+          ...widget.additionalChildren!
+      ],
+    );
+  }
+}
+        ''');
+
+// **************************************************************************
 // RichTextWidget
 // ************************************************************************** 
     buffer.writeln('''

@@ -276,6 +276,9 @@ class ElementWidgetGenerator extends GeneratorForAnnotation<ElementWidgetGen> {
           if(format == 'richText') {
             return 'RichTextWidget';
           }
+          else if(format == 'textArea') {
+            return 'TextAreaWidget';
+          }
           else {
             return 'StringWidget';
           }
@@ -390,6 +393,9 @@ class ElementWidgetGenerator extends GeneratorForAnnotation<ElementWidgetGen> {
         case 'String?':
           if(format == 'richText') {
             widget = 'RichTextWidget';
+          }
+          else if(format == 'textArea') {
+            widget = 'TextAreaWidget';
           }
           else {
             widget = 'StringWidget';
@@ -768,6 +774,9 @@ $nestedWidgets
         case 'String?':
           if(format == 'richText') {
             widget = 'RichTextWidget';
+          }
+          else if(format == 'textArea') {
+            widget = 'TextAreaWidget';
           }
           else {
             widget = 'StringWidget';
