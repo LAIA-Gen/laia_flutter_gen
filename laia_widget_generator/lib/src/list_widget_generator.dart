@@ -775,7 +775,7 @@ class _${className}ListRow extends ConsumerWidget {
               fieldText =
                   '''
                   (() {
-                    final val = ${field.name}$className;
+                    final dynamic val = ${field.name}$className;
                     if (val == null) return '';
                     if (val is List) {
                       return val.map((e) {

@@ -256,6 +256,14 @@ class ElementWidgetGenerator extends GeneratorForAnnotation<ElementWidgetGen> {
 
     String widgetForField(var field) {
       final fieldType = field.type.toString();
+      String format = '';
+      if (_fieldChecker.hasAnnotationOfExact(field)) {
+        format = _fieldChecker
+            .firstAnnotationOfExact(field)
+            ?.getField('format')
+            ?.toStringValue() ??
+            '';
+      }
       switch (fieldType) {
         case 'int':
         case 'int?':
@@ -265,7 +273,12 @@ class ElementWidgetGenerator extends GeneratorForAnnotation<ElementWidgetGen> {
           return 'DoubleWidget';
         case 'String':
         case 'String?':
-          return 'StringWidget';
+          if(format == 'richText') {
+            return 'RichTextWidget';
+          }
+          else {
+            return 'StringWidget';
+          }
         case 'DateTime':
         case 'DateTime?':
           return 'DateTimeWidget';
@@ -347,6 +360,14 @@ class ElementWidgetGenerator extends GeneratorForAnnotation<ElementWidgetGen> {
       String fieldName = field.name;
       String fieldType = field.type.toString();
       String normalizedFieldType = fieldType.replaceAll('?', '');
+      String format = '';
+      if (_fieldChecker.hasAnnotationOfExact(field)) {
+        format = _fieldChecker
+            .firstAnnotationOfExact(field)
+            ?.getField('format')
+            ?.toStringValue() ??
+            '';
+      }
 
       String widget = 'DefaultWidgetState';
       String? widgetState;
@@ -367,7 +388,12 @@ class ElementWidgetGenerator extends GeneratorForAnnotation<ElementWidgetGen> {
           break;
         case 'String':
         case 'String?':
-          widget = 'StringWidget';
+          if(format == 'richText') {
+            widget = 'RichTextWidget';
+          }
+          else {
+            widget = 'StringWidget';
+          }
           break;
         case 'double':
         case 'double?':
@@ -670,8 +696,18 @@ $nestedWidgets
       bool uspaceMap = false;
       bool editable = true;
       String relation = '';
+      String format = '';
 
       if (_fieldChecker.hasAnnotationOfExact(field)) {
+        String formatValue =
+            _fieldChecker
+                .firstAnnotationOfExact(field)
+                ?.getField('format')
+                ?.toStringValue() ??
+            '';
+        if (formatValue.isNotEmpty) {
+          format = formatValue;
+        }
         String fieldDisplayNameValue =
             _fieldChecker
                 .firstAnnotationOfExact(field)
@@ -730,7 +766,12 @@ $nestedWidgets
           break;
         case 'String':
         case 'String?':
-          widget = 'StringWidget';
+          if(format == 'richText') {
+            widget = 'RichTextWidget';
+          }
+          else {
+            widget = 'StringWidget';
+          }
           break;
         case 'DateTime':
         case 'DateTime?':
