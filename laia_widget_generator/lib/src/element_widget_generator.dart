@@ -982,6 +982,47 @@ $nestedWidgets
           var initial${visitor.className} = widget.element;
       ''');
     }
+    
+    final validationChecks = StringBuffer();
+    for (var fieldName in visitor.fields.keys) {
+      var processField= false;
+      if (tabs.isNotEmpty) {
+        processField = true;
+      } else if (defaultFieldsDetail.isEmpty) {
+        processField = true;
+      } else {
+        if (defaultFieldsDetailNames.contains(fieldName)) {
+          processField = true;
+        }
+      }
+      if (processField && isUIField(fieldName)) {
+        String fieldType = visitor.fields[fieldName];
+        if (!fieldType.endsWith('?')) {
+          var field = classElement.fields.firstWhere((f) => f.name == fieldName);
+          String fieldDisplayName = fieldName;
+          if (_fieldChecker.hasAnnotationOfExact(field)) {
+            String fieldDisplayNameValue = _fieldChecker
+                    .firstAnnotationOfExact(field)
+                    ?.getField('fieldName')
+                    ?.toStringValue() ??
+                '';
+            if (fieldDisplayNameValue.isNotEmpty) {
+              fieldDisplayName = fieldDisplayNameValue;
+            }
+          }
+          
+          validationChecks.writeln('''
+              final val$fieldName = ${fieldName}WidgetKey.currentState?.getUpdatedValue();
+              if (val$fieldName == null${fieldType == 'String' ? ' || val$fieldName.trim().isEmpty' : ''}) {
+                CustomSnackBar.show(context, "$fieldDisplayName is required");
+                return;
+              }
+            ''');
+        }
+      }
+    }
+    buffer.writeln(validationChecks.toString());
+
     final List<String> updatedFields = [];
     for (var fieldName in visitor.fields.keys) {
       var writeCode = false;
