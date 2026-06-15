@@ -1,4 +1,4 @@
-// ignore_for_file: implementation_imports, depend_on_referenced_packages
+﻿// ignore_for_file: implementation_imports, depend_on_referenced_packages
 
 import 'dart:io';
 
@@ -101,6 +101,7 @@ class GenericTabsWidget extends StatelessWidget {
 class IntWidget extends StatefulWidget {
   final String fieldName;
   final String fieldDescription;
+  final bool isRequired;
   final bool editable;
   final String placeholder;
   final int? value;
@@ -108,6 +109,7 @@ class IntWidget extends StatefulWidget {
   const IntWidget({
     Key? key,
     required this.fieldName,
+    this.isRequired = false,
     required this.fieldDescription,
     required this.editable,
     required this.placeholder,
@@ -174,6 +176,7 @@ class IntWidgetState extends State<IntWidget> {
                               FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
                             ],
                             decoration: InputDecoration(
+                              filled: true,
                                 hintText: widget.placeholder,
                                 contentPadding: const EdgeInsets.symmetric(
                                     horizontal: 16, vertical: 12),
@@ -196,7 +199,7 @@ class IntWidgetState extends State<IntWidget> {
                                     width: 1.2,
                                   ),
                                 ),
-                                fillColor: AppColors.surface,
+                                fillColor: widget.isRequired ? AppColors.indigo.withOpacity(0.12) : AppColors.surface,
                                 focusColor: AppColors.surface,
                                 hoverColor: AppColors.surface
                             ),
@@ -1270,6 +1273,7 @@ class DefaultWidget extends StatefulWidget {
   final Key? key;
   final String fieldName;
   final String fieldDescription;
+  final bool isRequired;
   final bool editable;
   final String placeholder;
   final dynamic value;
@@ -1277,6 +1281,7 @@ class DefaultWidget extends StatefulWidget {
   DefaultWidget({
     this.key,
     required this.fieldName,
+    this.isRequired = false,
     required this.fieldDescription,
     required this.editable,
     required this.placeholder,
@@ -1337,6 +1342,7 @@ class DefaultWidgetState extends State<DefaultWidget> {
                   ? Expanded(
                       child: TextFormField(
                         decoration: InputDecoration(
+                          filled: true,
                           hintText: widget.placeholder,
                           contentPadding: const EdgeInsets.symmetric(
                               horizontal: 16, vertical: 12),
@@ -1359,7 +1365,7 @@ class DefaultWidgetState extends State<DefaultWidget> {
                               width: 1.2,
                             ),
                           ),
-                          fillColor: AppColors.surface,
+                          fillColor: widget.isRequired ? AppColors.indigo.withOpacity(0.12) : AppColors.surface,
                           focusColor: AppColors.surface,
                           hoverColor: AppColors.surface
                         ),
@@ -1391,6 +1397,7 @@ class DefaultWidgetState extends State<DefaultWidget> {
 class DoubleWidget extends StatefulWidget {
   final String fieldName;
   final String fieldDescription;
+  final bool isRequired;
   final bool editable;
   final String placeholder;
   final double? value;
@@ -1398,6 +1405,7 @@ class DoubleWidget extends StatefulWidget {
   const DoubleWidget({
     Key? key,
     required this.fieldName,
+    this.isRequired = false,
     required this.fieldDescription,
     required this.editable,
     required this.placeholder,
@@ -1464,6 +1472,7 @@ class DoubleWidgetState extends State<DoubleWidget> {
                               FilteringTextInputFormatter.allow(RegExp(r'[0-9.]')),
                             ],
                             decoration: InputDecoration(
+                                filled: true,
                                 hintText: widget.placeholder,
                                 contentPadding: const EdgeInsets.symmetric(
                                     horizontal: 16, vertical: 12),
@@ -1486,7 +1495,7 @@ class DoubleWidgetState extends State<DoubleWidget> {
                                     width: 1.2,
                                   ),
                                 ),
-                                fillColor: AppColors.surface,
+                                fillColor: widget.isRequired ? AppColors.indigo.withOpacity(0.12) : AppColors.surface,
                                 focusColor: AppColors.surface,
                                 hoverColor: AppColors.surface
                             ),
@@ -1532,6 +1541,7 @@ class DoubleWidgetState extends State<DoubleWidget> {
 class StringWidget extends StatefulWidget {
   final String fieldName;
   final String fieldDescription;
+  final bool isRequired;
   final bool editable;
   final String placeholder;
   final String? value;
@@ -1540,6 +1550,7 @@ class StringWidget extends StatefulWidget {
   const StringWidget({
     Key? key,
     required this.fieldName,
+    this.isRequired = false,
     required this.fieldDescription,
     required this.editable,
     required this.placeholder,
@@ -1603,6 +1614,7 @@ class StringWidgetState extends State<StringWidget> {
                       ? Expanded(
                           child: TextFormField(
                             decoration: InputDecoration(
+                              filled: true,
                               hintText: widget.placeholder,
                               contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
 
@@ -1625,7 +1637,7 @@ class StringWidgetState extends State<StringWidget> {
                                   width: 1.2,
                                 ),
                               ),
-                              fillColor: AppColors.surface,
+                              fillColor: widget.isRequired ? AppColors.indigo.withOpacity(0.12) : AppColors.surface,
                               focusColor: AppColors.surface,
                               hoverColor: AppColors.surface
                             ),
@@ -1673,6 +1685,7 @@ class StringWidgetState extends State<StringWidget> {
 class TextAreaWidget extends StatefulWidget {
   final String fieldName;
   final String fieldDescription;
+  final bool isRequired;
   final bool editable;
   final String placeholder;
   final String? value;
@@ -1681,6 +1694,7 @@ class TextAreaWidget extends StatefulWidget {
   const TextAreaWidget({
     Key? key,
     required this.fieldName,
+    this.isRequired = false,
     required this.fieldDescription,
     required this.editable,
     required this.placeholder,
@@ -1746,6 +1760,7 @@ class TextAreaWidgetState extends State<TextAreaWidget> {
                             minLines: 3,
                             maxLines: 5,
                             decoration: InputDecoration(
+                              filled: true,
                               hintText: widget.placeholder,
                               contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
 
@@ -1768,7 +1783,7 @@ class TextAreaWidgetState extends State<TextAreaWidget> {
                                   width: 1.2,
                                 ),
                               ),
-                              fillColor: AppColors.surface,
+                              fillColor: widget.isRequired ? AppColors.indigo.withOpacity(0.12) : AppColors.surface,
                               focusColor: AppColors.surface,
                               hoverColor: AppColors.surface
                             ),
@@ -1815,6 +1830,7 @@ class TextAreaWidgetState extends State<TextAreaWidget> {
 class RichTextWidget extends StatefulWidget{
   final String fieldName;
   final String fieldDescription;
+  final bool isRequired;
   final bool editable;
   final String placeholder;
   final String? value;
@@ -1822,6 +1838,7 @@ class RichTextWidget extends StatefulWidget{
   const RichTextWidget({
     Key? key,
     required this.fieldName,
+    this.isRequired = false,
     required this.fieldDescription,
     required this.editable,
     required this.placeholder,
@@ -1948,6 +1965,7 @@ class RichTextWidgetState extends State<RichTextWidget> {
                           decoration: BoxDecoration(
                             border: Border.all(color: AppColors.muted),
                             borderRadius: BorderRadius.circular(14),
+                            color: widget.isRequired ? AppColors.indigo.withOpacity(0.12) : null,
                           ),
                           padding: const EdgeInsets.all(12),
                           child: QuillEditor.basic(
@@ -2009,6 +2027,7 @@ class RichTextWidgetState extends State<RichTextWidget> {
 class DateTimeWidget extends StatefulWidget {
   final String fieldName;
   final String fieldDescription;
+  final bool isRequired;
   final bool editable;
   final String placeholder;
   final DateTime? value;
@@ -2016,6 +2035,7 @@ class DateTimeWidget extends StatefulWidget {
   const DateTimeWidget({
     Key? key,
     required this.fieldName,
+    this.isRequired = false,
     required this.fieldDescription,
     required this.editable,
     required this.placeholder,
@@ -2687,6 +2707,7 @@ class BoolWidgetState extends State<BoolWidget> {
 class ModelsSelectableWidget extends StatefulWidget {
   final String fieldName;
   final String fieldDescription;
+  final bool isRequired;
   final bool editable;
   final String placeholder;
   final String? value;
@@ -2695,6 +2716,7 @@ class ModelsSelectableWidget extends StatefulWidget {
   const ModelsSelectableWidget({
     Key? key,
     required this.fieldName,
+    this.isRequired = false,
     required this.fieldDescription,
     required this.editable,
     required this.placeholder,
@@ -2759,6 +2781,7 @@ class ModelsSelectableWidgetState extends State<ModelsSelectableWidget> {
                       ? Expanded(
                           child: DropdownButtonFormField<String>(
                             decoration: InputDecoration(
+                              filled: true,
                               hintText: widget.placeholder,
                             ),
                             dropdownColor: Colors.white,
@@ -2813,6 +2836,7 @@ class JsonWidget extends StatefulWidget {
   final Key? key;
   final String fieldName;
   final String fieldDescription;
+  final bool isRequired;
   final bool editable;
   final String placeholder;
   final dynamic value;
@@ -2820,6 +2844,7 @@ class JsonWidget extends StatefulWidget {
   JsonWidget({
     this.key,
     required this.fieldName,
+    this.isRequired = false,
     required this.fieldDescription,
     required this.editable,
     required this.placeholder,
@@ -2898,6 +2923,7 @@ class JsonWidgetState extends State<JsonWidget> {
                         minLines: 4,
                         maxLines: 10,
                         decoration: InputDecoration(
+                          filled: true,
                           hintText: widget.placeholder,
                           contentPadding: const EdgeInsets.symmetric(
                               horizontal: 16, vertical: 12),
@@ -2920,7 +2946,7 @@ class JsonWidgetState extends State<JsonWidget> {
                               width: 1.2,
                             ),
                           ),
-                          fillColor: AppColors.surface,
+                          fillColor: widget.isRequired ? AppColors.indigo.withOpacity(0.12) : AppColors.surface,
                           focusColor: AppColors.surface,
                           hoverColor: AppColors.surface
                         ),
@@ -3029,6 +3055,7 @@ class EnumDropdownWidget<T extends Enum> extends StatefulWidget {
   final Key? key;
   final String fieldName;
   final String fieldDescription;
+  final bool isRequired;
   final bool editable;
   final String placeholder;
   final T? value;
@@ -3038,6 +3065,7 @@ class EnumDropdownWidget<T extends Enum> extends StatefulWidget {
   EnumDropdownWidget({
     this.key,
     required this.fieldName,
+    this.isRequired = false,
     required this.fieldDescription,
     required this.editable,
     required this.placeholder,
@@ -3103,6 +3131,7 @@ class EnumDropdownWidgetState<T extends Enum> extends State<EnumDropdownWidget<T
               ? DropdownButtonFormField<T>(
                   value: currentValue,
                   decoration: InputDecoration(
+                    filled: true,
                     hintText: widget.placeholder,
                     contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                     border: OutlineInputBorder(
@@ -3117,7 +3146,7 @@ class EnumDropdownWidgetState<T extends Enum> extends State<EnumDropdownWidget<T
                       borderRadius: BorderRadius.circular(14),
                       borderSide: const BorderSide(color: AppColors.indigo, width: 1.2),
                     ),
-                    fillColor: AppColors.surface,
+                    fillColor: widget.isRequired ? AppColors.indigo.withOpacity(0.12) : AppColors.surface,
                     focusColor: AppColors.surface,
                     hoverColor: AppColors.surface,
                   ),
@@ -3151,6 +3180,7 @@ class EnumMultiDropdownWidget<T extends Enum> extends StatefulWidget {
   final Key? key;
   final String fieldName;
   final String fieldDescription;
+  final bool isRequired;
   final bool editable;
   final String placeholder;
   final List<T>? value;
@@ -3160,6 +3190,7 @@ class EnumMultiDropdownWidget<T extends Enum> extends StatefulWidget {
   EnumMultiDropdownWidget({
     this.key,
     required this.fieldName,
+    this.isRequired = false,
     required this.fieldDescription,
     required this.editable,
     required this.placeholder,
@@ -3287,6 +3318,7 @@ class EnumMultiDropdownWidgetState<T extends Enum> extends State<EnumMultiDropdo
                           .toList(),
                       child: InputDecorator(
                         decoration: InputDecoration(
+                          filled: true,
                           hintText: widget.placeholder,
                           contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                           border: OutlineInputBorder(
@@ -3301,7 +3333,7 @@ class EnumMultiDropdownWidgetState<T extends Enum> extends State<EnumMultiDropdo
                             borderRadius: BorderRadius.circular(14),
                             borderSide: const BorderSide(color: AppColors.indigo, width: 1.2),
                           ),
-                          fillColor: AppColors.surface,
+                          fillColor: widget.isRequired ? AppColors.indigo.withOpacity(0.12) : AppColors.surface,
                           focusColor: AppColors.surface,
                           hoverColor: AppColors.surface,
                           // Se fuerza el icono de flecha hacia abajo para clonar el Dropdown

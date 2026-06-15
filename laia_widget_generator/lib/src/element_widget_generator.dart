@@ -259,9 +259,9 @@ class ElementWidgetGenerator extends GeneratorForAnnotation<ElementWidgetGen> {
       String format = '';
       if (_fieldChecker.hasAnnotationOfExact(field)) {
         format = _fieldChecker
-            .firstAnnotationOfExact(field)
-            ?.getField('format')
-            ?.toStringValue() ??
+                .firstAnnotationOfExact(field)
+                ?.getField('format')
+                ?.toStringValue() ??
             '';
       }
       switch (fieldType) {
@@ -366,9 +366,9 @@ class ElementWidgetGenerator extends GeneratorForAnnotation<ElementWidgetGen> {
       String format = '';
       if (_fieldChecker.hasAnnotationOfExact(field)) {
         format = _fieldChecker
-            .firstAnnotationOfExact(field)
-            ?.getField('format')
-            ?.toStringValue() ??
+                .firstAnnotationOfExact(field)
+                ?.getField('format')
+                ?.toStringValue() ??
             '';
       }
 
@@ -396,7 +396,7 @@ class ElementWidgetGenerator extends GeneratorForAnnotation<ElementWidgetGen> {
           }
           else if(format == 'textArea') {
             widget = 'TextAreaWidget';
-          }
+          } 
           else {
             widget = 'StringWidget';
           }
@@ -448,8 +448,8 @@ class ElementWidgetGenerator extends GeneratorForAnnotation<ElementWidgetGen> {
       }
 
       if (_fieldChecker.hasAnnotationOfExact(field)) {
-        String widgetValue =
-            _fieldChecker
+        String widgetValue = 
+        _fieldChecker
                 .firstAnnotationOfExact(field)
                 ?.getField('widget')
                 ?.toStringValue() ??
@@ -459,8 +459,8 @@ class ElementWidgetGenerator extends GeneratorForAnnotation<ElementWidgetGen> {
           widgetState = null;
         }
         String relation = '';
-        relation =
-            _fieldChecker
+        relation = 
+        _fieldChecker
                 .firstAnnotationOfExact(field)
                 ?.getField('relation')
                 ?.toStringValue() ??
@@ -606,6 +606,7 @@ class ElementWidgetGenerator extends GeneratorForAnnotation<ElementWidgetGen> {
                 key: $nestedKey,
                 fieldName: "$nestedDisplayName",
                 fieldDescription: "$nestedDescription",
+                ${(nestedWidget == 'BoolWidget' || nestedWidget == 'MapWidget' || nestedWidget.startsWith('EmbeddedObjectWidget')) ? '' : 'isRequired: ${!nestedFieldType.endsWith("?")},'}
                 editable: true,
                 ${nestedWidget == 'BoolWidget' ? "" : "placeholder: \"$nestedPlaceholder\","}''',
       );
@@ -705,8 +706,8 @@ $nestedWidgets
       String format = '';
 
       if (_fieldChecker.hasAnnotationOfExact(field)) {
-        String formatValue =
-            _fieldChecker
+        String formatValue = 
+        _fieldChecker
                 .firstAnnotationOfExact(field)
                 ?.getField('format')
                 ?.toStringValue() ??
@@ -714,8 +715,8 @@ $nestedWidgets
         if (formatValue.isNotEmpty) {
           format = formatValue;
         }
-        String fieldDisplayNameValue =
-            _fieldChecker
+        String fieldDisplayNameValue = 
+        _fieldChecker
                 .firstAnnotationOfExact(field)
                 ?.getField('fieldName')
                 ?.toStringValue() ??
@@ -723,8 +724,8 @@ $nestedWidgets
         if (fieldDisplayNameValue.isNotEmpty) {
           fieldDisplayName = fieldDisplayNameValue;
         }
-        String fieldDescriptionValue =
-            _fieldChecker
+        String fieldDescriptionValue = 
+        _fieldChecker
                 .firstAnnotationOfExact(field)
                 ?.getField('fieldDescription')
                 ?.toStringValue() ??
@@ -732,20 +733,20 @@ $nestedWidgets
         if (fieldDescriptionValue.isNotEmpty) {
           fieldDescription = fieldDescriptionValue;
         }
-        editable =
-            _fieldChecker
+        editable = 
+        _fieldChecker
                 .firstAnnotationOfExact(field)
                 ?.getField('editable')
                 ?.toBoolValue() ??
             editable;
-        uspaceMap =
-            _fieldChecker
+        uspaceMap = 
+        _fieldChecker
                 .firstAnnotationOfExact(field)
                 ?.getField('uspaceMap')
                 ?.toBoolValue() ??
             uspaceMap;
-        String placeholderValue =
-            _fieldChecker
+        String placeholderValue = 
+        _fieldChecker
                 .firstAnnotationOfExact(field)
                 ?.getField('placeholder')
                 ?.toStringValue() ??
@@ -753,13 +754,16 @@ $nestedWidgets
         if (placeholderValue.isNotEmpty) {
           placeholder = placeholderValue;
         }
-        relation =
-            _fieldChecker
+        relation = 
+        _fieldChecker
                 .firstAnnotationOfExact(field)
                 ?.getField('relation')
                 ?.toStringValue() ??
             relation;
       }
+
+      final fieldLabel =
+          !fieldType.endsWith('?') ? '$fieldDisplayName *' : fieldDisplayName;
 
       switch (fieldType) {
         case 'int':
@@ -777,7 +781,7 @@ $nestedWidgets
           }
           else if(format == 'textArea') {
             widget = 'TextAreaWidget';
-          }
+          } 
           else {
             widget = 'StringWidget';
           }
@@ -821,8 +825,8 @@ $nestedWidgets
           break;
       }
 
-      String widgetValue =
-          _fieldChecker
+      String widgetValue = 
+      _fieldChecker
               .firstAnnotationOfExact(field)
               ?.getField('widget')
               ?.toStringValue() ??
@@ -854,7 +858,7 @@ $nestedWidgets
       if (widget.startsWith("EmbeddedObjectWidget<")) {
         return embeddedObjectWidgetCode(
           field,
-          fieldDisplayName,
+          fieldLabel,
           fieldDescription,
           placeholder,
           editable,
@@ -865,8 +869,9 @@ $nestedWidgets
         '''
           $widget(
             key: ${fieldName}WidgetKey,
-            fieldName: "$fieldDisplayName",
+            fieldName: "$fieldLabel",
             fieldDescription: "$fieldDescription",
+            ${(widget == 'BoolWidget' || widget == 'MapWidget' || widget.startsWith('EmbeddedObjectWidget')) ? '' : 'isRequired: ${!fieldType.endsWith("?")},'}
             editable: $editable,
             ${widget == 'BoolWidget' ? "" : "placeholder: \"$placeholder\","}
             ${relation.isNotEmpty || widgetValue.isEmpty || widgetValue == "ModelsSelectableWidget" ? '' : 'elementId: widget.element?.id,'}''',
@@ -982,7 +987,7 @@ $nestedWidgets
           var initial${visitor.className} = widget.element;
       ''');
     }
-    
+
     final validationChecks = StringBuffer();
     for (var fieldName in visitor.fields.keys) {
       var processField= false;
@@ -1010,7 +1015,7 @@ $nestedWidgets
               fieldDisplayName = fieldDisplayNameValue;
             }
           }
-          
+
           validationChecks.writeln('''
               final val$fieldName = ${fieldName}WidgetKey.currentState?.getUpdatedValue();
               if (val$fieldName == null${fieldType == 'String' ? ' || val$fieldName.trim().isEmpty' : ''}) {
@@ -1287,6 +1292,7 @@ $nestedWidgets
 class ${visitor.className}FieldWidget extends StatefulWidget {
   final String fieldName;
   final String fieldDescription;
+  final bool isRequired;
   final bool editable;
   final String placeholder;
   final String? value;
@@ -1294,6 +1300,7 @@ class ${visitor.className}FieldWidget extends StatefulWidget {
   const ${visitor.className}FieldWidget({
     Key? key,
     required this.fieldName,
+    this.isRequired = false,
     required this.fieldDescription,
     required this.editable,
     required this.placeholder,
@@ -1413,7 +1420,8 @@ class ${visitor.className}FieldWidgetState extends State<${visitor.className}Fie
                                               width: 1.2,
                                             ),
                                           ),
-                                          fillColor: AppColors.surface,
+                                          filled: true,
+                                          fillColor: widget.isRequired ? AppColors.indigo.withOpacity(0.12) : AppColors.surface,
                                           focusColor: AppColors.surface,
                                           hoverColor: AppColors.surface
                                         ),
@@ -1497,6 +1505,7 @@ class ${visitor.className}FieldWidgetState extends State<${visitor.className}Fie
 class ${visitor.className}MultiFieldWidget extends StatefulWidget {
   final String fieldName;
   final String fieldDescription;
+  final bool isRequired;
   final bool editable;
   final String placeholder;
   final List<String>? values;
@@ -1504,6 +1513,7 @@ class ${visitor.className}MultiFieldWidget extends StatefulWidget {
   const ${visitor.className}MultiFieldWidget({
     Key? key,
     required this.fieldName,
+    this.isRequired = false,
     required this.fieldDescription,
     required this.editable,
     required this.placeholder,
@@ -1632,7 +1642,8 @@ class ${visitor.className}MultiFieldWidgetState extends State<${visitor.classNam
                                               width: 1.2,
                                             ),
                                           ),
-                                          fillColor: AppColors.surface,
+                                          filled: true,
+                                          fillColor: widget.isRequired ? AppColors.indigo.withOpacity(0.12) : AppColors.surface,
                                           focusColor: AppColors.surface,
                                           hoverColor: AppColors.surface
                                         ),
