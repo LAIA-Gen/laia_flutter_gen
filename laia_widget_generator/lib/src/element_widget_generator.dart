@@ -152,7 +152,9 @@ class ElementWidgetGenerator extends GeneratorForAnnotation<ElementWidgetGen> {
   _${visitor.className}WidgetState createState() => _${visitor.className}WidgetState();
 	}
 
-	class _${visitor.className}WidgetState extends State<${visitor.className}Widget> {''',
+	class _${visitor.className}WidgetState extends State<${visitor.className}Widget> {
+	  bool _showErrors = false;
+    ''',
     );
     bool isEmbeddedObjectField(var field) {
       final fieldType = field.type.toString();
@@ -259,9 +261,9 @@ class ElementWidgetGenerator extends GeneratorForAnnotation<ElementWidgetGen> {
       String format = '';
       if (_fieldChecker.hasAnnotationOfExact(field)) {
         format = _fieldChecker
-            .firstAnnotationOfExact(field)
-            ?.getField('format')
-            ?.toStringValue() ??
+                .firstAnnotationOfExact(field)
+                ?.getField('format')
+                ?.toStringValue() ??
             '';
       }
       switch (fieldType) {
@@ -366,9 +368,9 @@ class ElementWidgetGenerator extends GeneratorForAnnotation<ElementWidgetGen> {
       String format = '';
       if (_fieldChecker.hasAnnotationOfExact(field)) {
         format = _fieldChecker
-            .firstAnnotationOfExact(field)
-            ?.getField('format')
-            ?.toStringValue() ??
+                .firstAnnotationOfExact(field)
+                ?.getField('format')
+                ?.toStringValue() ??
             '';
       }
 
@@ -396,7 +398,7 @@ class ElementWidgetGenerator extends GeneratorForAnnotation<ElementWidgetGen> {
           }
           else if(format == 'textArea') {
             widget = 'TextAreaWidget';
-          }
+          } 
           else {
             widget = 'StringWidget';
           }
@@ -448,8 +450,8 @@ class ElementWidgetGenerator extends GeneratorForAnnotation<ElementWidgetGen> {
       }
 
       if (_fieldChecker.hasAnnotationOfExact(field)) {
-        String widgetValue =
-            _fieldChecker
+        String widgetValue = 
+        _fieldChecker
                 .firstAnnotationOfExact(field)
                 ?.getField('widget')
                 ?.toStringValue() ??
@@ -459,8 +461,8 @@ class ElementWidgetGenerator extends GeneratorForAnnotation<ElementWidgetGen> {
           widgetState = null;
         }
         String relation = '';
-        relation =
-            _fieldChecker
+        relation = 
+        _fieldChecker
                 .firstAnnotationOfExact(field)
                 ?.getField('relation')
                 ?.toStringValue() ??
@@ -515,7 +517,9 @@ class ElementWidgetGenerator extends GeneratorForAnnotation<ElementWidgetGen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return FormValidationScope(
+      showErrors: _showErrors,
+      child: Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
           leading: IconButton(
@@ -556,7 +560,9 @@ class ElementWidgetGenerator extends GeneratorForAnnotation<ElementWidgetGen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return FormValidationScope(
+      showErrors: _showErrors,
+      child: Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
           leading: IconButton(
@@ -606,6 +612,7 @@ class ElementWidgetGenerator extends GeneratorForAnnotation<ElementWidgetGen> {
                 key: $nestedKey,
                 fieldName: "$nestedDisplayName",
                 fieldDescription: "$nestedDescription",
+                ${(nestedWidget == 'BoolWidget' || nestedWidget == 'MapWidget' || nestedWidget.startsWith('EmbeddedObjectWidget')) ? '' : 'isRequired: ${!nestedFieldType.endsWith("?")},'}
                 editable: true,
                 ${nestedWidget == 'BoolWidget' ? "" : "placeholder: \"$nestedPlaceholder\","}''',
       );
@@ -705,8 +712,8 @@ $nestedWidgets
       String format = '';
 
       if (_fieldChecker.hasAnnotationOfExact(field)) {
-        String formatValue =
-            _fieldChecker
+        String formatValue = 
+        _fieldChecker
                 .firstAnnotationOfExact(field)
                 ?.getField('format')
                 ?.toStringValue() ??
@@ -714,8 +721,8 @@ $nestedWidgets
         if (formatValue.isNotEmpty) {
           format = formatValue;
         }
-        String fieldDisplayNameValue =
-            _fieldChecker
+        String fieldDisplayNameValue = 
+        _fieldChecker
                 .firstAnnotationOfExact(field)
                 ?.getField('fieldName')
                 ?.toStringValue() ??
@@ -723,8 +730,8 @@ $nestedWidgets
         if (fieldDisplayNameValue.isNotEmpty) {
           fieldDisplayName = fieldDisplayNameValue;
         }
-        String fieldDescriptionValue =
-            _fieldChecker
+        String fieldDescriptionValue = 
+        _fieldChecker
                 .firstAnnotationOfExact(field)
                 ?.getField('fieldDescription')
                 ?.toStringValue() ??
@@ -732,20 +739,20 @@ $nestedWidgets
         if (fieldDescriptionValue.isNotEmpty) {
           fieldDescription = fieldDescriptionValue;
         }
-        editable =
-            _fieldChecker
+        editable = 
+        _fieldChecker
                 .firstAnnotationOfExact(field)
                 ?.getField('editable')
                 ?.toBoolValue() ??
             editable;
-        uspaceMap =
-            _fieldChecker
+        uspaceMap = 
+        _fieldChecker
                 .firstAnnotationOfExact(field)
                 ?.getField('uspaceMap')
                 ?.toBoolValue() ??
             uspaceMap;
-        String placeholderValue =
-            _fieldChecker
+        String placeholderValue = 
+        _fieldChecker
                 .firstAnnotationOfExact(field)
                 ?.getField('placeholder')
                 ?.toStringValue() ??
@@ -753,13 +760,27 @@ $nestedWidgets
         if (placeholderValue.isNotEmpty) {
           placeholder = placeholderValue;
         }
-        relation =
-            _fieldChecker
+        relation = 
+        _fieldChecker
                 .firstAnnotationOfExact(field)
                 ?.getField('relation')
                 ?.toStringValue() ??
             relation;
       }
+
+      bool isFieldRequired = false;
+      final unnamedConstructor = classElement.unnamedConstructor;
+      if (unnamedConstructor != null) {
+        for (var p in unnamedConstructor.parameters) {
+          if (p.name == fieldName) {
+            isFieldRequired = p.isRequired;
+            break;
+          }
+        }
+      }
+
+      final fieldLabel =
+          isFieldRequired ? '$fieldDisplayName *' : fieldDisplayName;
 
       switch (fieldType) {
         case 'int':
@@ -777,7 +798,7 @@ $nestedWidgets
           }
           else if(format == 'textArea') {
             widget = 'TextAreaWidget';
-          }
+          } 
           else {
             widget = 'StringWidget';
           }
@@ -821,8 +842,8 @@ $nestedWidgets
           break;
       }
 
-      String widgetValue =
-          _fieldChecker
+      String widgetValue = 
+      _fieldChecker
               .firstAnnotationOfExact(field)
               ?.getField('widget')
               ?.toStringValue() ??
@@ -839,11 +860,11 @@ $nestedWidgets
           if (widget.endsWith('MultiFieldWidget')) {
             multiRelation = true;
           }
-        } else if (fieldType == 'String' || fieldType == 'String?') {
-          widget = '${relation}FieldWidget';
-        } else {
+        } else if (fieldType.startsWith('List') || fieldType.contains('List')) {
           widget = '${relation}MultiFieldWidget';
           multiRelation = true;
+        } else {
+          widget = '${relation}FieldWidget';
         }
       }
 
@@ -854,7 +875,7 @@ $nestedWidgets
       if (widget.startsWith("EmbeddedObjectWidget<")) {
         return embeddedObjectWidgetCode(
           field,
-          fieldDisplayName,
+          fieldLabel,
           fieldDescription,
           placeholder,
           editable,
@@ -865,8 +886,9 @@ $nestedWidgets
         '''
           $widget(
             key: ${fieldName}WidgetKey,
-            fieldName: "$fieldDisplayName",
+            fieldName: "$fieldLabel",
             fieldDescription: "$fieldDescription",
+            ${(widget == 'BoolWidget' || widget == 'MapWidget' || widget.startsWith('EmbeddedObjectWidget')) ? '' : 'isRequired: $isFieldRequired,'}
             editable: $editable,
             ${widget == 'BoolWidget' ? "" : "placeholder: \"$placeholder\","}
             ${relation.isNotEmpty || widgetValue.isEmpty || widgetValue == "ModelsSelectableWidget" ? '' : 'elementId: widget.element?.id,'}''',
@@ -982,6 +1004,70 @@ $nestedWidgets
           var initial${visitor.className} = widget.element;
       ''');
     }
+
+    final validationChecks = StringBuffer();
+    validationChecks.writeln('          final List<String> missingFields = [];');
+    for (var fieldName in visitor.fields.keys) {
+      var processField= false;
+      if (tabs.isNotEmpty) {
+        processField = true;
+      } else if (defaultFieldsDetail.isEmpty) {
+        processField = true;
+      } else {
+        if (defaultFieldsDetailNames.contains(fieldName)) {
+          processField = true;
+        }
+      }
+      if (processField && isUIField(fieldName)) {
+        String fieldType = visitor.fields[fieldName];
+        bool isFieldRequired = false;
+        final unnamedConstructor = classElement.unnamedConstructor;
+        if (unnamedConstructor != null) {
+          for (var p in unnamedConstructor.parameters) {
+            if (p.name == fieldName) {
+              isFieldRequired = p.isRequired;
+              break;
+            }
+          }
+        }
+        if (isFieldRequired) {
+          var field =
+              classElement.fields.firstWhere((f) => f.name == fieldName);
+          String fieldDisplayName = fieldName;
+          if (_fieldChecker.hasAnnotationOfExact(field)) {
+            String fieldDisplayNameValue = _fieldChecker
+                    .firstAnnotationOfExact(field)
+                    ?.getField('fieldName')
+                    ?.toStringValue() ??
+                '';
+            if (fieldDisplayNameValue.isNotEmpty) {
+              fieldDisplayName = fieldDisplayNameValue;
+            }
+          }
+
+          validationChecks.writeln('''
+              final currentState$fieldName = ${fieldName}WidgetKey.currentState;
+              final is${fieldName}Valid = currentState$fieldName != null
+                  ? currentState$fieldName.validate()
+                  : (widget.element?.$fieldName != null${fieldType == 'String' ? ' && widget.element!.$fieldName.toString().trim().isNotEmpty && widget.element!.$fieldName.toString() != \'null\'' : ''});
+              if (!is${fieldName}Valid) {
+                missingFields.add("$fieldDisplayName");
+              }
+            ''');
+        }
+      }
+    }
+    validationChecks.writeln('''
+          if (missingFields.isNotEmpty) {
+            setState(() {
+              _showErrors = true;
+            });
+            CustomSnackBar.show(context, "The following fields are required: \${missingFields.join(', ')}");
+            return;
+          }
+    ''');
+    buffer.writeln(validationChecks.toString());
+
     final List<String> updatedFields = [];
     for (var fieldName in visitor.fields.keys) {
       var writeCode = false;
@@ -1238,6 +1324,7 @@ $nestedWidgets
       buffer.writeln('),');
     }
 
+    buffer.writeln('),');
     buffer.writeln(');');
     buffer.writeln('}');
     buffer.writeln('}');
@@ -1246,6 +1333,7 @@ $nestedWidgets
 class ${visitor.className}FieldWidget extends StatefulWidget {
   final String fieldName;
   final String fieldDescription;
+  final bool isRequired;
   final bool editable;
   final String placeholder;
   final String? value;
@@ -1253,6 +1341,7 @@ class ${visitor.className}FieldWidget extends StatefulWidget {
   const ${visitor.className}FieldWidget({
     Key? key,
     required this.fieldName,
+    this.isRequired = false,
     required this.fieldDescription,
     required this.editable,
     required this.placeholder,
@@ -1269,11 +1358,20 @@ class ${visitor.className}FieldWidgetState extends State<${visitor.className}Fie
   late String? initialValue;
   late String currentValue;
   late List<${visitor.className}> options;
+  bool showValidationError = false;
 
   @override
   void initState() {
     super.initState();
     initializeValues();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (FormValidationScope.of(context)) {
+      validate();
+    }
   }
 
   Future<void> initializeValues() async {
@@ -1296,6 +1394,22 @@ class ${visitor.className}FieldWidgetState extends State<${visitor.className}Fie
 
   String? getUpdatedValue() {
     return isValueChanged ? currentValue : initialValue;
+  }
+
+  bool validate() {
+    if (widget.isRequired) {
+      final value = getUpdatedValue();
+      if (value == null || currentValue.trim().isEmpty || currentValue == 'null') {
+        setState(() {
+          showValidationError = true;
+        });
+        return false;
+      }
+    }
+    setState(() {
+      showValidationError = false;
+    });
+    return true;
   }
 
   var container = ProviderContainer();
@@ -1372,7 +1486,12 @@ class ${visitor.className}FieldWidgetState extends State<${visitor.className}Fie
                                               width: 1.2,
                                             ),
                                           ),
-                                          fillColor: AppColors.surface,
+                                          filled: true,
+                                          fillColor: widget.isRequired
+                                              ? (showValidationError
+                                                  ? AppColors.indigo.withOpacity(0.12)
+                                                  : AppColors.surface)
+                                              : AppColors.surface,
                                           focusColor: AppColors.surface,
                                           hoverColor: AppColors.surface
                                         ),
@@ -1402,6 +1521,7 @@ class ${visitor.className}FieldWidgetState extends State<${visitor.className}Fie
                                 isValueChanged = value.id != initialValue;
                                 currentValue = value.id!;
                                 _typeAheadController.text = '\${${DisplayField('value')}} <id: \${value.id}>';
+                                showValidationError = false;
                               });
                             },
                           ),
@@ -1456,6 +1576,7 @@ class ${visitor.className}FieldWidgetState extends State<${visitor.className}Fie
 class ${visitor.className}MultiFieldWidget extends StatefulWidget {
   final String fieldName;
   final String fieldDescription;
+  final bool isRequired;
   final bool editable;
   final String placeholder;
   final List<String>? values;
@@ -1463,6 +1584,7 @@ class ${visitor.className}MultiFieldWidget extends StatefulWidget {
   const ${visitor.className}MultiFieldWidget({
     Key? key,
     required this.fieldName,
+    this.isRequired = false,
     required this.fieldDescription,
     required this.editable,
     required this.placeholder,
@@ -1479,11 +1601,20 @@ class ${visitor.className}MultiFieldWidgetState extends State<${visitor.classNam
   late List<String> initialValues = [];
   late List<String> currentValues = [];
   late List<${visitor.className}> options = [];
+  bool showValidationError = false;
 
   @override
   void initState() {
     super.initState();
     initializeValues();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (FormValidationScope.of(context)) {
+      validate();
+    }
   }
 
   Future<void> initializeValues() async {
@@ -1515,6 +1646,22 @@ class ${visitor.className}MultiFieldWidgetState extends State<${visitor.classNam
 
   List<String>? getUpdatedValue() {
     return isValueChanged ? currentValues : initialValues;
+  }
+
+  bool validate() {
+    if (widget.isRequired) {
+      final value = getUpdatedValue();
+      if (value == null || value.where((val) => val.trim().isNotEmpty).isEmpty) {
+        setState(() {
+          showValidationError = true;
+        });
+        return false;
+      }
+    }
+    setState(() {
+      showValidationError = false;
+    });
+    return true;
   }
 
   var container = ProviderContainer();
@@ -1591,7 +1738,12 @@ class ${visitor.className}MultiFieldWidgetState extends State<${visitor.classNam
                                               width: 1.2,
                                             ),
                                           ),
-                                          fillColor: AppColors.surface,
+                                          filled: true,
+                                          fillColor: widget.isRequired
+                                              ? (showValidationError
+                                                  ? AppColors.indigo.withOpacity(0.12)
+                                                  : AppColors.surface)
+                                              : AppColors.surface,
                                           focusColor: AppColors.surface,
                                           hoverColor: AppColors.surface
                                         ),
@@ -1649,6 +1801,7 @@ class ${visitor.className}MultiFieldWidgetState extends State<${visitor.classNam
 
                               setState(() {
                                 _typeAheadController.text = concatenatedText;
+                                showValidationError = false;
                               });
                             },
                           ),

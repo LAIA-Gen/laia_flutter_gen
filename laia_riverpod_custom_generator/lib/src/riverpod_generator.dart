@@ -22,7 +22,7 @@ class RiverpodCustomGenerator extends GeneratorForAnnotation<RiverpodGenAnnotati
     var deletePath = annotation.read('deletePath').stringValue;
     var getAllPath = annotation.read('getAllPath').stringValue;
     final auth = annotation.read('auth').boolValue;
-  
+
     var className = visitor.className;
     var classNameLowercase = className.toLowerCase();
     var classNamePlural = '${classNameLowercase}s';
@@ -69,7 +69,12 @@ class RiverpodCustomGenerator extends GeneratorForAnnotation<RiverpodGenAnnotati
           body: jsonEncode(${classNameLowercase}Instance.toJson()),
         );
         if (response.statusCode != 200) {
-          CustomSnackBar.show(context, jsonDecode(response.body)['detail']);
+          final body = jsonDecode(response.body);
+          final detail = body['detail'];
+          final message = detail is List
+              ? detail.map((e) => e['loc'][1] + ": " + (e['msg'] ?? e.toString())).join('\\n')
+              : detail.toString();
+          CustomSnackBar.show(context, message);
         } else {
           CustomSnackBar.show(context, '$className created successfully');
         }
@@ -86,7 +91,12 @@ class RiverpodCustomGenerator extends GeneratorForAnnotation<RiverpodGenAnnotati
           body: jsonEncode(${classNameLowercase}Instance),
         );
         if (response.statusCode != 200) {
-          CustomSnackBar.show(context, jsonDecode(response.body)['detail']);
+          final body = jsonDecode(response.body);
+          final detail = body['detail'];
+          final message = detail is List
+              ? detail.map((e) => e['loc'][1] + ": " + (e['msg'] ?? e.toString())).join('\\n')
+              : detail.toString();
+          CustomSnackBar.show(context, message);
         } else {
           CustomSnackBar.show(context, '$className updated successfully');
         }
@@ -137,7 +147,7 @@ class RiverpodCustomGenerator extends GeneratorForAnnotation<RiverpodGenAnnotati
         );
       });
 ''');
-    
+
     if (auth) {
       buffer.writeln('''
 class Auth {

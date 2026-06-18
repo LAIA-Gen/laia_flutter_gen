@@ -34,6 +34,27 @@ class CustomSnackBar {
   }
 }
 
+class FormValidationScope extends InheritedWidget {
+  final bool showErrors;
+
+  const FormValidationScope({
+    Key? key,
+    required this.showErrors,
+    required Widget child,
+  }) : super(key: key, child: child);
+
+  static bool of(BuildContext context) {
+    final FormValidationScope? result =
+        context.dependOnInheritedWidgetOfExactType<FormValidationScope>();
+    return result?.showErrors ?? false;
+  }
+
+  @override
+  bool updateShouldNotify(FormValidationScope oldWidget) {
+    return showErrors != oldWidget.showErrors;
+  }
+}
+
 class KeepAliveWrapper extends StatefulWidget {
   final Widget child;
 
@@ -101,6 +122,7 @@ class GenericTabsWidget extends StatelessWidget {
 class IntWidget extends StatefulWidget {
   final String fieldName;
   final String fieldDescription;
+  final bool isRequired;
   final bool editable;
   final String placeholder;
   final int? value;
@@ -108,6 +130,7 @@ class IntWidget extends StatefulWidget {
   const IntWidget({
     Key? key,
     required this.fieldName,
+    this.isRequired = false,
     required this.fieldDescription,
     required this.editable,
     required this.placeholder,
@@ -122,6 +145,7 @@ class IntWidgetState extends State<IntWidget> {
   bool isValueChanged = false;
   late int? initialValue;
   late String currentValue;
+  bool showValidationError = false;
 
   @override
   void initState() {
@@ -130,8 +154,32 @@ class IntWidgetState extends State<IntWidget> {
     currentValue = initialValue.toString();
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (FormValidationScope.of(context)) {
+      validate();
+    }
+  }
+
   int? getUpdatedValue() {
     return isValueChanged ? int.tryParse(currentValue) : initialValue;
+  }
+
+  bool validate() {
+    if (widget.isRequired) {
+      final value = getUpdatedValue();
+      if (value == null || currentValue.trim().isEmpty || currentValue == 'null') {
+        setState(() {
+          showValidationError = true;
+        });
+        return false;
+      }
+    }
+    setState(() {
+      showValidationError = false;
+    });
+    return true;
   }
 
   @override
@@ -174,37 +222,39 @@ class IntWidgetState extends State<IntWidget> {
                               FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
                             ],
                             decoration: InputDecoration(
-                                hintText: widget.placeholder,
-                                contentPadding: const EdgeInsets.symmetric(
-                                    horizontal: 16, vertical: 12),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(14),
-                                  borderSide: const BorderSide(
-                                    color: AppColors.muted,
-                                  ),
+                              filled: true,
+                              hintText: widget.placeholder,
+                              contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 12),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(14),
+                                borderSide: const BorderSide(
+                                  color: AppColors.muted,
                                 ),
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(14),
-                                  borderSide: const BorderSide(
-                                    color: AppColors.muted,
-                                  ),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(14),
+                                borderSide: const BorderSide(
+                                  color: AppColors.muted,
                                 ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(14),
-                                  borderSide: const BorderSide(
-                                    color: AppColors.indigo,
-                                    width: 1.2,
-                                  ),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(14),
+                                borderSide: const BorderSide(
+                                  color: AppColors.indigo,
+                                  width: 1.2,
                                 ),
-                                fillColor: AppColors.surface,
-                                focusColor: AppColors.surface,
-                                hoverColor: AppColors.surface
+                              ),
+                              fillColor: widget.isRequired ? (showValidationError ? AppColors.indigo.withOpacity(0.12) : AppColors.surface) : AppColors.surface,
+                              focusColor: AppColors.surface,
+                              hoverColor: AppColors.surface
                             ),
                             initialValue: widget.value?.toString(),
                             onChanged: (newValue) {
                               setState(() {
                                 isValueChanged = newValue != initialValue.toString();
                                 currentValue = newValue;
+                                showValidationError = false;
                               });
                             },
                           ),
@@ -323,8 +373,12 @@ class MapWidgetState extends State<MapWidget> {
     );
   }
 
-  dynamic getUpdatedValue() {
+  Feature? getUpdatedValue() {
     return isValueChanged ? currentValue : initialValue;
+  }
+
+  bool validate() {
+    return true;
   }
 
   @override
@@ -1270,6 +1324,7 @@ class DefaultWidget extends StatefulWidget {
   final Key? key;
   final String fieldName;
   final String fieldDescription;
+  final bool isRequired;
   final bool editable;
   final String placeholder;
   final dynamic value;
@@ -1277,6 +1332,7 @@ class DefaultWidget extends StatefulWidget {
   DefaultWidget({
     this.key,
     required this.fieldName,
+    this.isRequired = false,
     required this.fieldDescription,
     required this.editable,
     required this.placeholder,
@@ -1291,6 +1347,7 @@ class DefaultWidgetState extends State<DefaultWidget> {
   bool isValueChanged = false;
   late dynamic initialValue;
   late String currentValue;
+  bool showValidationError = false;
 
   @override
   void initState() {
@@ -1299,8 +1356,32 @@ class DefaultWidgetState extends State<DefaultWidget> {
     currentValue = initialValue.toString();
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (FormValidationScope.of(context)) {
+      validate();
+    }
+  }
+
   dynamic getUpdatedValue() {
     return isValueChanged ? currentValue : initialValue;
+  }
+
+  bool validate() {
+    if (widget.isRequired) {
+      final value = getUpdatedValue();
+      if (value == null || currentValue.trim().isEmpty || currentValue == 'null') {
+        setState(() {
+          showValidationError = true;
+        });
+        return false;
+      }
+    }
+    setState(() {
+      showValidationError = false;
+    });
+    return true;
   }
 
   @override
@@ -1337,6 +1418,7 @@ class DefaultWidgetState extends State<DefaultWidget> {
                   ? Expanded(
                       child: TextFormField(
                         decoration: InputDecoration(
+                          filled: true,
                           hintText: widget.placeholder,
                           contentPadding: const EdgeInsets.symmetric(
                               horizontal: 16, vertical: 12),
@@ -1359,7 +1441,7 @@ class DefaultWidgetState extends State<DefaultWidget> {
                               width: 1.2,
                             ),
                           ),
-                          fillColor: AppColors.surface,
+                          fillColor: widget.isRequired? (showValidationError ? AppColors.indigo.withOpacity(0.12) : AppColors.surface) : AppColors.surface,
                           focusColor: AppColors.surface,
                           hoverColor: AppColors.surface
                         ),
@@ -1369,6 +1451,7 @@ class DefaultWidgetState extends State<DefaultWidget> {
                             isValueChanged =
                                 newValue != initialValue.toString();
                             currentValue = newValue;
+                            showValidationError = false;
                           });
                         },
                       ),
@@ -1391,6 +1474,7 @@ class DefaultWidgetState extends State<DefaultWidget> {
 class DoubleWidget extends StatefulWidget {
   final String fieldName;
   final String fieldDescription;
+  final bool isRequired;
   final bool editable;
   final String placeholder;
   final double? value;
@@ -1398,6 +1482,7 @@ class DoubleWidget extends StatefulWidget {
   const DoubleWidget({
     Key? key,
     required this.fieldName,
+    this.isRequired = false,
     required this.fieldDescription,
     required this.editable,
     required this.placeholder,
@@ -1412,6 +1497,7 @@ class DoubleWidgetState extends State<DoubleWidget> {
   bool isValueChanged = false;
   late double? initialValue;
   late String currentValue;
+  bool showValidationError = false;
 
   @override
   void initState() {
@@ -1420,8 +1506,32 @@ class DoubleWidgetState extends State<DoubleWidget> {
     currentValue = initialValue?.toString() ?? '';
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (FormValidationScope.of(context)) {
+      validate();
+    }
+  }
+
   double? getUpdatedValue() {
     return isValueChanged ? double.tryParse(currentValue) : initialValue;
+  }
+
+  bool validate() {
+    if (widget.isRequired) {
+      final value = getUpdatedValue();
+      if (value == null || currentValue.trim().isEmpty || currentValue == 'null') {
+        setState(() {
+          showValidationError = true;
+        });
+        return false;
+      }
+    }
+    setState(() {
+      showValidationError = false;
+    });
+    return true;
   }
 
   @override
@@ -1464,37 +1574,39 @@ class DoubleWidgetState extends State<DoubleWidget> {
                               FilteringTextInputFormatter.allow(RegExp(r'[0-9.]')),
                             ],
                             decoration: InputDecoration(
-                                hintText: widget.placeholder,
-                                contentPadding: const EdgeInsets.symmetric(
-                                    horizontal: 16, vertical: 12),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(14),
-                                  borderSide: const BorderSide(
-                                    color: AppColors.muted,
-                                  ),
+                              filled: true,
+                              hintText: widget.placeholder,
+                              contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 12),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(14),
+                                borderSide: const BorderSide(
+                                  color: AppColors.muted,
                                 ),
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(14),
-                                  borderSide: const BorderSide(
-                                    color: AppColors.muted,
-                                  ),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(14),
+                                borderSide: const BorderSide(
+                                  color: AppColors.muted,
                                 ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(14),
-                                  borderSide: const BorderSide(
-                                    color: AppColors.indigo,
-                                    width: 1.2,
-                                  ),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(14),
+                                borderSide: const BorderSide(
+                                  color: AppColors.indigo,
+                                  width: 1.2,
                                 ),
-                                fillColor: AppColors.surface,
-                                focusColor: AppColors.surface,
-                                hoverColor: AppColors.surface
+                              ),
+                              fillColor: widget.isRequired? (showValidationError ? AppColors.indigo.withOpacity(0.12) : AppColors.surface) : AppColors.surface,
+                              focusColor: AppColors.surface,
+                              hoverColor: AppColors.surface
                             ),
                             initialValue: widget.value?.toString(),
                             onChanged: (newValue) {
                               setState(() {
                                 isValueChanged = newValue != initialValue.toString();
                                 currentValue = newValue;
+                                showValidationError = false;
                               });
                             },
                           ),
@@ -1532,6 +1644,7 @@ class DoubleWidgetState extends State<DoubleWidget> {
 class StringWidget extends StatefulWidget {
   final String fieldName;
   final String fieldDescription;
+  final bool isRequired;
   final bool editable;
   final String placeholder;
   final String? value;
@@ -1540,6 +1653,7 @@ class StringWidget extends StatefulWidget {
   const StringWidget({
     Key? key,
     required this.fieldName,
+    this.isRequired = false,
     required this.fieldDescription,
     required this.editable,
     required this.placeholder,
@@ -1555,6 +1669,7 @@ class StringWidgetState extends State<StringWidget> {
   bool isValueChanged = false;
   late String? initialValue;
   late String currentValue;
+  bool showValidationError = false;
 
   @override
   void initState() {
@@ -1563,8 +1678,32 @@ class StringWidgetState extends State<StringWidget> {
     currentValue = initialValue ?? '';
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (FormValidationScope.of(context)) {
+      validate();
+    }
+  }
+
   String? getUpdatedValue() {
     return isValueChanged ? currentValue : initialValue;
+  }
+
+  bool validate() {
+    if (widget.isRequired) {
+      final value = getUpdatedValue();
+      if (value == null || currentValue.trim().isEmpty || currentValue == 'null') {
+        setState(() {
+          showValidationError = true;
+        });
+        return false;
+      }
+    }
+    setState(() {
+      showValidationError = false;
+    });
+    return true;
   }
 
   @override
@@ -1603,6 +1742,7 @@ class StringWidgetState extends State<StringWidget> {
                       ? Expanded(
                           child: TextFormField(
                             decoration: InputDecoration(
+                              filled: true,
                               hintText: widget.placeholder,
                               contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
 
@@ -1625,7 +1765,7 @@ class StringWidgetState extends State<StringWidget> {
                                   width: 1.2,
                                 ),
                               ),
-                              fillColor: AppColors.surface,
+                              fillColor: widget.isRequired? (showValidationError ? AppColors.indigo.withOpacity(0.12) : AppColors.surface) : AppColors.surface,
                               focusColor: AppColors.surface,
                               hoverColor: AppColors.surface
                             ),
@@ -1634,6 +1774,7 @@ class StringWidgetState extends State<StringWidget> {
                               setState(() {
                                 isValueChanged = newValue != initialValue;
                                 currentValue = newValue;
+                                showValidationError = false;
                               });
                             },
                           ),
@@ -1673,6 +1814,7 @@ class StringWidgetState extends State<StringWidget> {
 class TextAreaWidget extends StatefulWidget {
   final String fieldName;
   final String fieldDescription;
+  final bool isRequired;
   final bool editable;
   final String placeholder;
   final String? value;
@@ -1681,6 +1823,7 @@ class TextAreaWidget extends StatefulWidget {
   const TextAreaWidget({
     Key? key,
     required this.fieldName,
+    this.isRequired = false,
     required this.fieldDescription,
     required this.editable,
     required this.placeholder,
@@ -1696,6 +1839,7 @@ class TextAreaWidgetState extends State<TextAreaWidget> {
   bool isValueChanged = false;
   late String? initialValue;
   late String currentValue;
+  bool showValidationError = false;
 
   @override
   void initState() {
@@ -1704,8 +1848,32 @@ class TextAreaWidgetState extends State<TextAreaWidget> {
     currentValue = initialValue ?? '';
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (FormValidationScope.of(context)) {
+      validate();
+    }
+  }
+
   String? getUpdatedValue() {
     return isValueChanged ? currentValue : initialValue;
+  }
+
+  bool validate() {
+    if (widget.isRequired) {
+      final value = getUpdatedValue();
+      if (value == null || currentValue.trim().isEmpty || currentValue == 'null') {
+        setState(() {
+          showValidationError = true;
+        });
+        return false;
+      }
+    }
+    setState(() {
+      showValidationError = false;
+    });
+    return true;
   }
 
   @override
@@ -1746,6 +1914,7 @@ class TextAreaWidgetState extends State<TextAreaWidget> {
                             minLines: 3,
                             maxLines: 5,
                             decoration: InputDecoration(
+                              filled: true,
                               hintText: widget.placeholder,
                               contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
 
@@ -1768,7 +1937,7 @@ class TextAreaWidgetState extends State<TextAreaWidget> {
                                   width: 1.2,
                                 ),
                               ),
-                              fillColor: AppColors.surface,
+                              fillColor: widget.isRequired? (showValidationError ? AppColors.indigo.withOpacity(0.12) : AppColors.surface) : AppColors.surface,
                               focusColor: AppColors.surface,
                               hoverColor: AppColors.surface
                             ),
@@ -1777,6 +1946,7 @@ class TextAreaWidgetState extends State<TextAreaWidget> {
                               setState(() {
                                 isValueChanged = newValue != initialValue;
                                 currentValue = newValue;
+                                showValidationError = false;
                               });
                             },
                           ),
@@ -1810,11 +1980,12 @@ class TextAreaWidgetState extends State<TextAreaWidget> {
 
 // **************************************************************************
 // RichTextWidget
-// ************************************************************************** 
+// **************************************************************************
     buffer.writeln('''
 class RichTextWidget extends StatefulWidget{
   final String fieldName;
   final String fieldDescription;
+  final bool isRequired;
   final bool editable;
   final String placeholder;
   final String? value;
@@ -1822,6 +1993,7 @@ class RichTextWidget extends StatefulWidget{
   const RichTextWidget({
     Key? key,
     required this.fieldName,
+    this.isRequired = false,
     required this.fieldDescription,
     required this.editable,
     required this.placeholder,
@@ -1843,6 +2015,7 @@ class RichTextWidgetState extends State<RichTextWidget> {
   bool isValueChanged = false;
   late String? initialValue;
   late String? currentValue;
+  bool showValidationError = false;
 
   @override
   void initState() {
@@ -1864,6 +2037,14 @@ class RichTextWidgetState extends State<RichTextWidget> {
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (FormValidationScope.of(context)) {
+      validate();
+    }
+  }
+
+  @override
   void didUpdateWidget(covariant RichTextWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.editable != widget.editable) {
@@ -1877,11 +2058,13 @@ class RichTextWidgetState extends State<RichTextWidget> {
       setState(() {
         isValueChanged = true;
         currentValue = newJson;
+        showValidationError = false;
       });
     } else if (isValueChanged) {
       setState(() {
         isValueChanged = false;
         currentValue = initialValue;
+        showValidationError = false;
       });
     }
   }
@@ -1896,6 +2079,22 @@ class RichTextWidgetState extends State<RichTextWidget> {
 
   String? getUpdatedValue() {
     return isValueChanged ? currentValue : initialValue;
+  }
+
+  bool validate() {
+    if (widget.isRequired) {
+      final value = _controller.document.toPlainText().trim();
+      if (value.isEmpty) {
+        setState(() {
+          showValidationError = true;
+        });
+        return false;
+      }
+    }
+    setState(() {
+      showValidationError = false;
+    });
+    return true;
   }
 
   @override
@@ -1948,6 +2147,7 @@ class RichTextWidgetState extends State<RichTextWidget> {
                           decoration: BoxDecoration(
                             border: Border.all(color: AppColors.muted),
                             borderRadius: BorderRadius.circular(14),
+                            color: widget.isRequired ? (showValidationError ? AppColors.indigo.withOpacity(0.12) : null) : null,
                           ),
                           padding: const EdgeInsets.all(12),
                           child: QuillEditor.basic(
@@ -2009,6 +2209,7 @@ class RichTextWidgetState extends State<RichTextWidget> {
 class DateTimeWidget extends StatefulWidget {
   final String fieldName;
   final String fieldDescription;
+  final bool isRequired;
   final bool editable;
   final String placeholder;
   final DateTime? value;
@@ -2016,6 +2217,7 @@ class DateTimeWidget extends StatefulWidget {
   const DateTimeWidget({
     Key? key,
     required this.fieldName,
+    this.isRequired = false,
     required this.fieldDescription,
     required this.editable,
     required this.placeholder,
@@ -2030,6 +2232,7 @@ class DateTimeWidgetState extends State<DateTimeWidget> {
   bool isValueChanged = false;
   late DateTime? initialValue;
   late DateTime? currentValue;
+  bool showValidationError = false;
 
   @override
   void initState() {
@@ -2038,15 +2241,40 @@ class DateTimeWidgetState extends State<DateTimeWidget> {
     currentValue = initialValue;
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (FormValidationScope.of(context)) {
+      validate();
+    }
+  }
+
   void _updateValue(DateTime newValue) {
     setState(() {
       isValueChanged = true;
       currentValue = newValue;
+      showValidationError = false;
     });
   }
 
   DateTime? getUpdatedValue() {
     return isValueChanged ? currentValue : initialValue;
+  }
+
+  bool validate() {
+    if (widget.isRequired) {
+      final value = getUpdatedValue();
+      if (value == null) {
+        setState(() {
+          showValidationError = true;
+        });
+        return false;
+      }
+    }
+    setState(() {
+      showValidationError = false;
+    });
+    return true;
   }
 
   Future<void> _selectDateTime(BuildContext context) async {
@@ -2088,7 +2316,7 @@ class DateTimeWidgetState extends State<DateTimeWidget> {
           margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10.0),
-            color: AppColors.surface
+            color: widget.isRequired ? (showValidationError ? AppColors.indigo.withOpacity(0.12) : AppColors.surface) : AppColors.surface
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -2609,6 +2837,11 @@ class BoolWidgetState extends State<BoolWidget> {
     return isValueChanged ? currentValue : initialValue;
   }
 
+  bool validate() {
+    return true;
+  }
+  
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -2687,6 +2920,7 @@ class BoolWidgetState extends State<BoolWidget> {
 class ModelsSelectableWidget extends StatefulWidget {
   final String fieldName;
   final String fieldDescription;
+  final bool isRequired;
   final bool editable;
   final String placeholder;
   final String? value;
@@ -2695,6 +2929,7 @@ class ModelsSelectableWidget extends StatefulWidget {
   const ModelsSelectableWidget({
     Key? key,
     required this.fieldName,
+    this.isRequired = false,
     required this.fieldDescription,
     required this.editable,
     required this.placeholder,
@@ -2759,6 +2994,7 @@ class ModelsSelectableWidgetState extends State<ModelsSelectableWidget> {
                       ? Expanded(
                           child: DropdownButtonFormField<String>(
                             decoration: InputDecoration(
+                              filled: true,
                               hintText: widget.placeholder,
                             ),
                             dropdownColor: Colors.white,
@@ -2813,6 +3049,7 @@ class JsonWidget extends StatefulWidget {
   final Key? key;
   final String fieldName;
   final String fieldDescription;
+  final bool isRequired;
   final bool editable;
   final String placeholder;
   final dynamic value;
@@ -2820,6 +3057,7 @@ class JsonWidget extends StatefulWidget {
   JsonWidget({
     this.key,
     required this.fieldName,
+    this.isRequired = false,
     required this.fieldDescription,
     required this.editable,
     required this.placeholder,
@@ -2862,6 +3100,10 @@ class JsonWidgetState extends State<JsonWidget> {
     return json.decode(currentValue);
   }
 
+  bool validate() {
+    return true;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -2898,6 +3140,7 @@ class JsonWidgetState extends State<JsonWidget> {
                         minLines: 4,
                         maxLines: 10,
                         decoration: InputDecoration(
+                          filled: true,
                           hintText: widget.placeholder,
                           contentPadding: const EdgeInsets.symmetric(
                               horizontal: 16, vertical: 12),
@@ -2920,7 +3163,7 @@ class JsonWidgetState extends State<JsonWidget> {
                               width: 1.2,
                             ),
                           ),
-                          fillColor: AppColors.surface,
+                          fillColor: widget.isRequired ? ((currentValue.trim().isEmpty || currentValue == '{}' || currentValue == 'null') ? AppColors.indigo.withOpacity(0.12) : AppColors.surface) : AppColors.surface,
                           focusColor: AppColors.surface,
                           hoverColor: AppColors.surface
                         ),
@@ -2983,6 +3226,9 @@ class EmbeddedObjectWidgetState<T> extends State<EmbeddedObjectWidget<T>> {
     return widget.getValue();
   }
 
+  bool validate() {
+    return true;
+  }
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -3029,6 +3275,7 @@ class EnumDropdownWidget<T extends Enum> extends StatefulWidget {
   final Key? key;
   final String fieldName;
   final String fieldDescription;
+  final bool isRequired;
   final bool editable;
   final String placeholder;
   final T? value;
@@ -3038,6 +3285,7 @@ class EnumDropdownWidget<T extends Enum> extends StatefulWidget {
   EnumDropdownWidget({
     this.key,
     required this.fieldName,
+    this.isRequired = false,
     required this.fieldDescription,
     required this.editable,
     required this.placeholder,
@@ -3054,6 +3302,7 @@ class EnumDropdownWidgetState<T extends Enum> extends State<EnumDropdownWidget<T
   bool isValueChanged = false;
   T? initialValue;
   T? currentValue;
+  bool showValidationError = false;
 
   @override
   void initState() {
@@ -3062,12 +3311,36 @@ class EnumDropdownWidgetState<T extends Enum> extends State<EnumDropdownWidget<T
     currentValue = widget.value;
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (FormValidationScope.of(context)) {
+      validate();
+    }
+  }
+
   T? getUpdatedValue() {
     return isValueChanged ? currentValue : initialValue;
   }
 
   String _label(T value) {
     return widget.labelBuilder?.call(value) ?? value.name;
+  }
+
+  bool validate() {
+    if (widget.isRequired) {
+      final value = getUpdatedValue();
+      if (value == null) {
+        setState(() {
+          showValidationError = true;
+        });
+        return false;
+      }
+    }
+    setState(() {
+      showValidationError = false;
+    });
+    return true;
   }
 
   @override
@@ -3103,6 +3376,7 @@ class EnumDropdownWidgetState<T extends Enum> extends State<EnumDropdownWidget<T
               ? DropdownButtonFormField<T>(
                   value: currentValue,
                   decoration: InputDecoration(
+                    filled: true,
                     hintText: widget.placeholder,
                     contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                     border: OutlineInputBorder(
@@ -3117,9 +3391,9 @@ class EnumDropdownWidgetState<T extends Enum> extends State<EnumDropdownWidget<T
                       borderRadius: BorderRadius.circular(14),
                       borderSide: const BorderSide(color: AppColors.indigo, width: 1.2),
                     ),
-                    fillColor: AppColors.surface,
+                    fillColor: widget.isRequired ? (showValidationError ? AppColors.indigo.withOpacity(0.12) : AppColors.surface) : AppColors.surface,
                     focusColor: AppColors.surface,
-                    hoverColor: AppColors.surface,
+                    hoverColor: AppColors.surface
                   ),
                   items: widget.options
                       .map((option) => DropdownMenuItem<T>(
@@ -3131,6 +3405,7 @@ class EnumDropdownWidgetState<T extends Enum> extends State<EnumDropdownWidget<T
                     setState(() {
                       currentValue = value;
                       isValueChanged = value != initialValue;
+                      showValidationError = false;
                     });
                   },
                 )
@@ -3151,6 +3426,7 @@ class EnumMultiDropdownWidget<T extends Enum> extends StatefulWidget {
   final Key? key;
   final String fieldName;
   final String fieldDescription;
+  final bool isRequired;
   final bool editable;
   final String placeholder;
   final List<T>? value;
@@ -3160,6 +3436,7 @@ class EnumMultiDropdownWidget<T extends Enum> extends StatefulWidget {
   EnumMultiDropdownWidget({
     this.key,
     required this.fieldName,
+    this.isRequired = false,
     required this.fieldDescription,
     required this.editable,
     required this.placeholder,
@@ -3176,12 +3453,21 @@ class EnumMultiDropdownWidgetState<T extends Enum> extends State<EnumMultiDropdo
   bool isValueChanged = false;
   late List<T> initialValue;
   late List<T> currentValue;
+  bool showValidationError = false;
 
   @override
   void initState() {
     super.initState();
     initialValue = List<T>.from(widget.value ?? []);
     currentValue = List<T>.from(widget.value ?? []);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (FormValidationScope.of(context)) {
+      validate();
+    }
   }
 
   List<T> getUpdatedValue() {
@@ -3200,6 +3486,7 @@ class EnumMultiDropdownWidgetState<T extends Enum> extends State<EnumMultiDropdo
         currentValue = [...currentValue, option];
       }
       isValueChanged = !_listEquals(currentValue, initialValue);
+      showValidationError = false;
     });
   }
 
@@ -3214,6 +3501,22 @@ class EnumMultiDropdownWidgetState<T extends Enum> extends State<EnumMultiDropdo
   String get _displayText {
     if (currentValue.isEmpty) return widget.placeholder;
     return currentValue.map(_label).join(', ');
+  }
+
+  bool validate() {
+    if (widget.isRequired) {
+      final value = getUpdatedValue();
+      if (value == null || value.isEmpty) {
+        setState(() {
+          showValidationError = true;
+        });
+        return false;
+      }
+    }
+    setState(() {
+      showValidationError = false;
+    });
+    return true;
   }
 
   @override
@@ -3287,6 +3590,7 @@ class EnumMultiDropdownWidgetState<T extends Enum> extends State<EnumMultiDropdo
                           .toList(),
                       child: InputDecorator(
                         decoration: InputDecoration(
+                          filled: true,
                           hintText: widget.placeholder,
                           contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                           border: OutlineInputBorder(
@@ -3301,7 +3605,7 @@ class EnumMultiDropdownWidgetState<T extends Enum> extends State<EnumMultiDropdo
                             borderRadius: BorderRadius.circular(14),
                             borderSide: const BorderSide(color: AppColors.indigo, width: 1.2),
                           ),
-                          fillColor: AppColors.surface,
+                          fillColor: widget.isRequired ? (showValidationError ? AppColors.indigo.withOpacity(0.12) : AppColors.surface) : AppColors.surface,
                           focusColor: AppColors.surface,
                           hoverColor: AppColors.surface,
                           // Se fuerza el icono de flecha hacia abajo para clonar el Dropdown
@@ -3466,7 +3770,7 @@ class _AppCard extends StatelessWidget {
 
 // **************************************************************************
 // Profile Menu Button
-// **************************************************************************   
+// **************************************************************************
 
     buffer.writeln('''
 class ProfileMenuButton extends StatelessWidget {
