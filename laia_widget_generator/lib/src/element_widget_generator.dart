@@ -1463,6 +1463,14 @@ class ${visitor.className}FieldWidgetState extends State<${visitor.className}Fie
                                       child: TextField(
                                         controller: controller,
                                         focusNode: focusNode,
+                                        onChanged: (value) {
+                                          if (value.trim().isEmpty) {
+                                            setState(() {
+                                              isValueChanged = initialValue != null && initialValue!.isNotEmpty;
+                                              currentValue = '';
+                                            });
+                                          }
+                                        },
                                         decoration: InputDecoration(
                                           hintText: '',
                                           contentPadding: const EdgeInsets.symmetric(

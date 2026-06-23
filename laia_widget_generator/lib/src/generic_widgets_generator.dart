@@ -837,7 +837,7 @@ class PointView extends StatelessWidget {
           borderRadius: BorderRadius.circular(15),
           child: FlutterMap(
                 options: MapOptions(
-                  center: LatLng(adjustedCoordinates[0], adjustedCoordinates[1]),
+                  center: LatLng(adjustedCoordinates[1], adjustedCoordinates[0]),
                   zoom: 10,
                 ),
                 children: [
@@ -852,7 +852,7 @@ class PointView extends StatelessWidget {
                       Marker(
                           width: 56,
                           height: 56,
-                          point: LatLng(adjustedCoordinates[0], adjustedCoordinates[1]),
+                          point: LatLng(adjustedCoordinates[1], adjustedCoordinates[0]),
                           child: Tooltip(
                             message: formatProperties(properties),
                             child: const Icon(
@@ -904,8 +904,8 @@ class MultiPointView extends StatelessWidget {
           borderRadius: BorderRadius.circular(15),
           child: FlutterMap(
             options: MapOptions(
-              center: LatLng(adjustedRouteCoordinates[0][0],
-                  adjustedRouteCoordinates[0][1]),
+              center: LatLng(adjustedRouteCoordinates[0][1],
+                  adjustedRouteCoordinates[0][0]),
               zoom: 10,
             ),
             children: [
@@ -921,7 +921,7 @@ class MultiPointView extends StatelessWidget {
                     .map((coord) => Marker(
                         width: 56,
                         height: 56,
-                        point: LatLng(coord[0], coord[1]),
+                        point: LatLng(coord[1], coord[0]),
                         child: Tooltip(
                           message: formatProperties(properties),
                           child: const Icon(
@@ -970,7 +970,7 @@ class LineStringView extends StatelessWidget {
           borderRadius: BorderRadius.circular(15),
           child: FlutterMap(
         options: MapOptions(
-          center: LatLng(adjustedRouteCoordinates[0][0], adjustedRouteCoordinates[0][1]),
+          center: LatLng(adjustedRouteCoordinates[0][1], adjustedRouteCoordinates[0][0]),
           zoom: 10,
         ),
         children: [
@@ -984,7 +984,7 @@ class LineStringView extends StatelessWidget {
             polylines: [
               Polyline(
                 points: adjustedRouteCoordinates
-                    .map((coord) => LatLng(coord[0], coord[1]))
+                    .map((coord) => LatLng(coord[1], coord[0]))
                     .toList(),
                 strokeWidth: 4.0,
                 color: const Color.fromARGB(255, 227, 224, 164),
@@ -996,7 +996,7 @@ class LineStringView extends StatelessWidget {
                 .map((coord) => Marker(
                     width: 56,
                     height: 56,
-                    point: LatLng(coord[0], coord[1]),
+                    point: LatLng(coord[1], coord[0]),
                     child: Tooltip(
                       message: formatProperties(properties),
                       child: const Icon(
@@ -1078,7 +1078,7 @@ class MultiLineStringView extends StatelessWidget {
                 polylines:adjustedRouteCoordinates
                   .map((line) => Polyline(
                     points: line
-                            .map((coord) => LatLng(coord[0], coord[1]))
+                            .map((coord) => LatLng(coord[1], coord[0]))
                             .toList(),
                     strokeWidth: 4.0,
                     color: const Color.fromARGB(255, 227, 224, 164),
@@ -1089,7 +1089,7 @@ class MultiLineStringView extends StatelessWidget {
                   .expand((line) => line.map((coord) => Marker(
                         width: 56,
                         height: 56,
-                        point: LatLng(coord[0], coord[1]),
+                        point: LatLng(coord[1], coord[0]),
                         child: Tooltip(
                           message: formatProperties(properties),
                           child: const Icon(
@@ -1118,7 +1118,7 @@ class MultiLineStringView extends StatelessWidget {
     cx /= pointsCount;
     cy /= pointsCount;
 
-    return LatLng(cx, cy);
+    return LatLng(cy, cx);
   }
 }
 
@@ -1186,7 +1186,7 @@ class PolygonView extends StatelessWidget {
                 polygons: [
                   flutter_map.Polygon(
                     points: adjustedRouteCoordinates
-                      .expand((polygon) => polygon.map((coord) => LatLng(coord[0], coord[1])))
+                      .expand((polygon) => polygon.map((coord) => LatLng(coord[1], coord[0])))
                       .toList(),
                     color: Styles.polygonColor,
                     isFilled: true,
@@ -1209,7 +1209,7 @@ class PolygonView extends StatelessWidget {
     cx /= pointsCount;
     cy /= pointsCount;
 
-    return LatLng(cx, cy);
+    return LatLng(cy, cx);
   }
 }
 
@@ -1284,7 +1284,7 @@ class MultiPolygonView extends StatelessWidget {
                       (polygon) => flutter_map.Polygon(
                         points: polygon
                             .expand((subPolygon) =>
-                              subPolygon.map((coord) => LatLng(coord[0], coord[1])))
+                              subPolygon.map((coord) => LatLng(coord[1], coord[0])))
                           .toList(),
                         color: Styles.polygonColor,
                         isFilled: true,
@@ -1309,7 +1309,7 @@ class MultiPolygonView extends StatelessWidget {
     cx /= pointsCount;
     cy /= pointsCount;
 
-    return LatLng(cx, cy);
+    return LatLng(cy, cx);
   }
 }
         ''');
