@@ -99,13 +99,10 @@ class ElementWidgetGenerator extends GeneratorForAnnotation<ElementWidgetGen> {
         tabs.add({
           'label': label,
           'fields': fields,
+          'isRelationTab': false,
         });
       }
     }
-
-    final List<String> allTabFields = tabs.isNotEmpty
-        ? tabs.expand((t) => t['fields'] as List<dynamic>).map((e) => e.toString()).toList()
-        : [];
 
     List<String> defaultFieldsDetailNames = [];
     List<int> defaultFieldsDetailWidths = [];
@@ -117,6 +114,57 @@ class ElementWidgetGenerator extends GeneratorForAnnotation<ElementWidgetGen> {
       defaultFieldsDetailNames.add(name);
       defaultFieldsDetailWidths.add(width);
     });
+
+    final List<Map<String, dynamic>> relationTabs = [];
+    for (var field in classElement.fields) {
+      if (_fieldChecker.hasAnnotationOfExact(field)) {
+        final relation = _fieldChecker
+                .firstAnnotationOfExact(field)
+                ?.getField('relation')
+                ?.toStringValue() ??
+            '';
+        if (relation.isNotEmpty) {
+          final isListRelation = field.type.toString().startsWith('List') ||
+              field.type.toString().contains('List');
+          relationTabs.add({
+            'label': field.name[0].toUpperCase() + field.name.substring(1),
+            'relation': relation,
+            'fieldName': field.name,
+            'isList': isListRelation,
+            'isRelationTab': true,
+          });
+        }
+      }
+    }
+
+    if (tabs.isEmpty && relationTabs.isNotEmpty) {
+      List<String> detailsFields = [];
+      if (defaultFieldsDetail.isNotEmpty) {
+        detailsFields = defaultFieldsDetailNames;
+      } else {
+        detailsFields = classElement.fields
+            .map((f) => f.name)
+            .where((name) => name != 'id' && name != 'owner' && name != 'Shard')
+            .toList();
+      }
+      tabs.add({
+        'label': 'Details',
+        'fields': detailsFields,
+        'isRelationTab': false,
+      });
+    }
+
+    for (var rTab in relationTabs) {
+      tabs.add(rTab);
+    }
+
+    final List<String> allTabFields = tabs.isNotEmpty
+        ? tabs
+            .where((t) => !(t['isRelationTab'] as bool? ?? false))
+            .expand((t) => t['fields'] as List<dynamic>)
+            .map((e) => e.toString())
+            .toList()
+        : [];
 
     List<List<String>> defaultFieldsDetailRows = [];
     List<String> currentRow = [];
@@ -936,26 +984,37 @@ $nestedWidgets
 
     if (tabs.isNotEmpty) {
       for (var tab in tabs) {
-        final tabFields = tab['fields'] as List<dynamic>;
-        buffer.writeln('''
+        final isRelationTab = tab['isRelationTab'] as bool? ?? false;
+        if (isRelationTab) {
+          final relation = tab['relation'] as String;
+          buffer.writeln('''
+                    KeepAliveWrapper(
+                      child: ${relation}ListView(showAppBar: false),
+                    ),
+          ''');
+        } else {
+          final tabFields = tab['fields'] as List<dynamic>;
+          buffer.writeln('''
                     KeepAliveWrapper(
                       child: SingleChildScrollView(
                         child: Column(
                           children: [
-        ''');
-        for (var field in classElement.fields) {
-          final name = field.name;
-          if (name == 'id' || name == 'owner' || name == 'Shard') continue;
-          if (tabFields.contains(name) || tabFields.any((tf) => tf.toString().startsWith('$name.'))) {
-            buffer.writeln(fieldWidgetCode(field));
+          ''');
+          for (var field in classElement.fields) {
+            final name = field.name;
+            if (name == 'id' || name == 'owner' || name == 'Shard') continue;
+            if (tabFields.contains(name) ||
+                tabFields.any((tf) => tf.toString().startsWith('$name.'))) {
+              buffer.writeln(fieldWidgetCode(field));
+            }
           }
-        }
-        buffer.writeln('''
+          buffer.writeln('''
                           ],
                         ),
                       ),
                     ),
-        ''');
+          ''');
+        }
       }
       buffer.writeln('''
                 ],
@@ -2381,7 +2440,6 @@ class _RuleRow extends StatelessWidget {
 }
 ''');
     }
-
     return buffer.toString();
   }
 }
