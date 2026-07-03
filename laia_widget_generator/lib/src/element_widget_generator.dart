@@ -1251,9 +1251,10 @@ $nestedWidgets
             case 'Point':
             case 'Polygon':
               buffer.writeln('''
-              dynamic updated$fieldName = ${fieldName}WidgetKey.currentState?.getUpdatedValue();
-
-              updated$fieldName = ${fieldType.replaceAll("?", "")}(type: "Feature", geometry: Geometry${fieldType.replaceAll("?", "")}(coordinates:updated$fieldName.geometry.coordinates, type: updated$fieldName.geometry.type), properties: updated$fieldName.properties);
+              dynamic updated$fieldName = ${fieldName}WidgetKey.currentState == null ? widget.element?.$fieldName : ${fieldName}WidgetKey.currentState?.getUpdatedValue();
+              if (updated$fieldName != null) {
+                updated$fieldName = ${fieldType.replaceAll("?", "")}(type: "Feature", geometry: Geometry${fieldType.replaceAll("?", "")}(coordinates:updated$fieldName.geometry.coordinates, type: updated$fieldName.geometry.type), properties: updated$fieldName.properties);
+              }
     ''');
               updatedFields.add('$fieldName: updated$fieldName');
               break;
@@ -1264,9 +1265,10 @@ $nestedWidgets
             case 'Point?':
             case 'Polygon?':
               buffer.writeln('''
-              dynamic updated$fieldName = ${fieldName}WidgetKey.currentState?.getUpdatedValue();
-
-              updated$fieldName = ${fieldType.replaceAll("?", "")}(type: "Feature", geometry: Geometry${fieldType.replaceAll("?", "")}(coordinates:updated$fieldName.geometry.coordinates, type: updated$fieldName.geometry.type), properties: updated$fieldName.properties);
+              dynamic updated$fieldName = ${fieldName}WidgetKey.currentState == null ? widget.element?.$fieldName : ${fieldName}WidgetKey.currentState?.getUpdatedValue();
+              if (updated$fieldName != null) {
+                updated$fieldName = ${fieldType.replaceAll("?", "")}(type: "Feature", geometry: Geometry${fieldType.replaceAll("?", "")}(coordinates:updated$fieldName.geometry.coordinates, type: updated$fieldName.geometry.type), properties: updated$fieldName.properties);
+              }
     ''');
               updatedFields.add('$fieldName: updated$fieldName');
               break;
