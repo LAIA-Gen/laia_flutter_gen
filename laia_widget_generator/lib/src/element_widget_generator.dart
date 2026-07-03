@@ -987,9 +987,37 @@ $nestedWidgets
         final isRelationTab = tab['isRelationTab'] as bool? ?? false;
         if (isRelationTab) {
           final relation = tab['relation'] as String;
+          final fieldName = tab['fieldName'] as String;
+          final isList = tab['isList'] as bool;
+          
+          final String extraFiltersCode;
+          if (isList) {
+            extraFiltersCode = '''
+                        extraFilters: {
+                          'id': {
+                            '\\\$in': (widget.element?.$fieldName is List)
+                                ? (widget.element?.$fieldName as List)
+                                    .map<String>((e) => e is Map ? e['id']?.toString() ?? '' : e.toString())
+                                    .where((id) => id.isNotEmpty)
+                                    .toList()
+                                : <String>[]
+                          }
+                        },''';
+          } else {
+            extraFiltersCode = '''
+                        extraFilters: {
+                          'id': (widget.element?.$fieldName is Map)
+                              ? (widget.element?.$fieldName as Map)['id']?.toString() ?? ''
+                              : widget.element?.$fieldName?.toString() ?? ''
+                        },''';
+          }
+
           buffer.writeln('''
                     KeepAliveWrapper(
-                      child: ${relation}ListView(showAppBar: false),
+                      child: ${relation}ListView(
+                        showAppBar: false,
+                        $extraFiltersCode
+                      ),
                     ),
           ''');
         } else {
