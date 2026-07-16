@@ -3853,7 +3853,6 @@ class ProfileMenuButton extends StatelessWidget {
           text: 'Log out',
           trailing: const Icon(Icons.logout, size: 18, color: AppColors.muted),
           onTap: () {
-            Navigator.of(context).pop();
             onLogout();
           },
         ),
