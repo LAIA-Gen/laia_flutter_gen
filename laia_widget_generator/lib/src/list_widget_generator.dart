@@ -47,11 +47,12 @@ class ListWidgetGenerator extends GeneratorForAnnotation<ListWidgetGenAnnotation
     buffer.writeln('''
 class ${className}ListView extends ConsumerStatefulWidget {
   final Map<String, dynamic>? extraFilters;
+  final bool showAppBar;
   final Map<String, dynamic> currentFilters = {};
   late bool _initialized = false;
   late List<bool> selectedStates;
 
-  ${className}ListView({Key? key, this.extraFilters}) : super(key: key);
+  ${className}ListView({Key? key, this.extraFilters, this.showAppBar = true}) : super(key: key);
 
   @override
   _${className}ListViewState createState() => _${className}ListViewState();
@@ -133,22 +134,7 @@ class _${className}ListViewState extends ConsumerState<${className}ListView> {
       }
     }
 
-    buffer.writeln('''return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.push(
-            context,
-            PageRouteBuilder(
-              pageBuilder: (_, __, ___) => Home(),
-            ),
-          ),
-        ),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-      ),
-      body: ${classNamePlural}AsyncValue.when(
+    buffer.writeln('''final bodyWidget = ${classNamePlural}AsyncValue.when(
         loading: () => const CircularProgressIndicator(),
         error: (error, stackTrace) => Center(
           child: Text('You have no access to these records...'),
@@ -175,45 +161,47 @@ class _${className}ListViewState extends ConsumerState<${className}ListView> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                // --- Title ---
-                Center(
-                  child: Text(
-                    '$className List',
-                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                          color: AppColors.indigo,
-                          fontWeight: FontWeight.w700,
-                        ),
-                  ),
-                ),
-                const SizedBox(height: 22),
-                // --- Top actions row: left filters, right add ---
-                Row(
-                  children: [
-                    PillButton(
-                      icon: Icons.tune,
-                      text: 'Add Filters',
-                      onTap: () {
-                        _searchBarKey.currentState?.addFilterRow();
-                      },
-                      bg: AppColors.lavender,
-                    ),
-                    const Spacer(),
-                    PillButton(
-                      text: 'Add $className',
-                      trailing: Icons.add,
-                      filled: true,
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          PageRouteBuilder(
-                            pageBuilder: (_, __, ___) => ${className}Widget(isEditing: false),
+                if (widget.showAppBar) ...[
+                  // --- Title ---
+                  Center(
+                    child: Text(
+                      '$className List',
+                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                            color: AppColors.indigo,
+                            fontWeight: FontWeight.w700,
                           ),
-                        );
-                      },
                     ),
-                  ],
-                ),
-                const SizedBox(height: 22),
+                  ),
+                  const SizedBox(height: 22),
+                  // --- Top actions row: left filters, right add ---
+                  Row(
+                    children: [
+                      PillButton(
+                        icon: Icons.tune,
+                        text: 'Add Filters',
+                        onTap: () {
+                          _searchBarKey.currentState?.addFilterRow();
+                        },
+                        bg: AppColors.lavender,
+                      ),
+                      const Spacer(),
+                      PillButton(
+                        text: 'Add $className',
+                        trailing: Icons.add,
+                        filled: true,
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            PageRouteBuilder(
+                              pageBuilder: (_, __, ___) => ${className}Widget(isEditing: false),
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 22),
+                ],
 
                 CustomSearchBar(
                   key: _searchBarKey,
@@ -295,7 +283,29 @@ class _${className}ListViewState extends ConsumerState<${className}ListView> {
         ])
       );
       },
-    ));
+    );
+
+    if (!widget.showAppBar) {
+      return bodyWidget;
+    }
+
+    return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Navigator.push(
+            context,
+            PageRouteBuilder(
+              pageBuilder: (_, __, ___) => Home(),
+            ),
+          ),
+        ),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+      ),
+      body: bodyWidget,
+    );
   }
 
   void _onPageButtonPressed(int pageNumber, WidgetRef ref, ${className}PaginationState paginationState, int maxPages) {
