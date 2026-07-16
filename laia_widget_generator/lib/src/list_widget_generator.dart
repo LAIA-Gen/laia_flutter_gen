@@ -107,6 +107,7 @@ class _${className}ListViewState extends ConsumerState<${className}ListView> {
     void onFilterRemove(String fieldName, dynamic filterValue) {
       if (widget.currentFilters.containsKey(fieldName)) {
         widget.currentFilters.remove(fieldName);
+        ref.read(${classNameLowercase}PaginationProvider.notifier).setFilters(widget.currentFilters);
       }
     }''');
 
@@ -294,12 +295,23 @@ class _${className}ListViewState extends ConsumerState<${className}ListView> {
         automaticallyImplyLeading: false,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.push(
-            context,
-            PageRouteBuilder(
-              pageBuilder: (_, __, ___) => Home(),
-            ),
-          ),
+          onPressed: () {
+            final hasNoResults = ${classNamePlural}AsyncValue.maybeWhen(
+              error: (_, __) => true,
+              orElse: () => false,
+            );
+            if (fieldsFilterStates.isNotEmpty && hasNoResults) {
+              widget.currentFilters.clear();
+              ref.read(${classNameLowercase}PaginationProvider.notifier).setFilters({});
+            } else {
+              Navigator.push(
+                context,
+                PageRouteBuilder(
+                  pageBuilder: (_, __, ___) => const Home(),
+                ),
+              );
+            }
+          },
         ),
         backgroundColor: Colors.transparent,
         elevation: 0,
