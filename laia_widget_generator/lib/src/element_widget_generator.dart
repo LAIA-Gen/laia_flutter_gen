@@ -973,10 +973,18 @@ $nestedWidgets
           ),
       ''');
         } else {
-          bufferfieldWidget.writeln('''
+          if (widget == 'DateTimeWidget' && format == 'date') {
+            bufferfieldWidget.writeln('''
+	            value: $fieldAccessor,
+              showTime: false,
+          ),
+      ''');
+          } else {
+            bufferfieldWidget.writeln('''
 	            value: $fieldAccessor,
           ),
       ''');
+          }
         }
       }
       return bufferfieldWidget;
