@@ -2213,6 +2213,7 @@ class DateTimeWidget extends StatefulWidget {
   final bool editable;
   final String placeholder;
   final DateTime? value;
+  final bool showTime;
 
   const DateTimeWidget({
     Key? key,
@@ -2222,6 +2223,7 @@ class DateTimeWidget extends StatefulWidget {
     required this.editable,
     required this.placeholder,
     required this.value,
+    this.showTime = true,
   }) : super(key: key);
 
   @override
@@ -2286,18 +2288,30 @@ class DateTimeWidgetState extends State<DateTimeWidget> {
     );
 
     if (pickedDate != null) {
-      TimeOfDay? pickedTime = await showTimePicker(
-        context: context,
-        initialTime: TimeOfDay.fromDateTime(initialValue ?? DateTime.now()),
-      );
+      if (widget.showTime) {
+        TimeOfDay? pickedTime = await showTimePicker(
+          context: context,
+          initialTime: TimeOfDay.fromDateTime(initialValue ?? DateTime.now()),
+        );
 
-      if (pickedTime != null) {
+        if (pickedTime != null) {
+          DateTime pickedDateTime = DateTime(
+            pickedDate.year,
+            pickedDate.month,
+            pickedDate.day,
+            pickedTime.hour,
+            pickedTime.minute,
+          );
+
+          if (pickedDateTime != initialValue) {
+            _updateValue(pickedDateTime);
+          }
+        }
+      } else {
         DateTime pickedDateTime = DateTime(
           pickedDate.year,
           pickedDate.month,
           pickedDate.day,
-          pickedTime.hour,
-          pickedTime.minute,
         );
 
         if (pickedDateTime != initialValue) {
@@ -2344,11 +2358,19 @@ class DateTimeWidgetState extends State<DateTimeWidget> {
                           child: GestureDetector(
                             onTap: () => _selectDateTime(context),
                             child: Text(
-                              currentValue?.toString() ?? widget.placeholder,
+                              currentValue == null
+                                  ? widget.placeholder
+                                  : (widget.showTime
+                                      ? currentValue!.toString()
+                                      : "\${currentValue!.year}-\${currentValue!.month.toString().padLeft(2, '0')}-\${currentValue!.day.toString().padLeft(2, '0')}"),
                             ),
                           ),
                         )
-                      : Text(currentValue?.toString() ?? widget.placeholder),
+                      : Text(currentValue == null
+                          ? widget.placeholder
+                          : (widget.showTime
+                              ? currentValue!.toString()
+                              : "\${currentValue!.year}-\${currentValue!.month.toString().padLeft(2, '0')}-\${currentValue!.day.toString().padLeft(2, '0')}")),
                 ],
               ),
             ],
