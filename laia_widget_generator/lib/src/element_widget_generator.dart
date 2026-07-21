@@ -96,11 +96,25 @@ class ElementWidgetGenerator extends GeneratorForAnnotation<ElementWidgetGen> {
         final tab = ConstantReader(tabObj);
         final label = tab.read('label').stringValue;
         final fields = tab.read('fields').listValue.map((e) => e.toStringValue() ?? '').toList();
-        tabs.add({
-          'label': label,
-          'fields': fields,
-          'isRelationTab': false,
-        });
+        final relation = tab.read('relation').stringValue;
+        final inverseRelationField = tab.read('inverseRelationField').stringValue;
+        
+        if (relation.isNotEmpty) {
+          tabs.add({
+            'label': label,
+            'relation': relation,
+            'fieldName': '',
+            'isList': true,
+            'isRelationTab': true,
+            'inverseRelationField': inverseRelationField,
+          });
+        } else {
+          tabs.add({
+            'label': label,
+            'fields': fields,
+            'isRelationTab': false,
+          });
+        }
       }
     }
 
@@ -123,6 +137,11 @@ class ElementWidgetGenerator extends GeneratorForAnnotation<ElementWidgetGen> {
                 ?.getField('relation')
                 ?.toStringValue() ??
             '';
+        final inverseRelationField = _fieldChecker
+                .firstAnnotationOfExact(field)
+                ?.getField('inverseRelationField')
+                ?.toStringValue() ??
+            '';
         if (relation.isNotEmpty) {
           final isListRelation = field.type.toString().startsWith('List') ||
               field.type.toString().contains('List');
@@ -132,6 +151,7 @@ class ElementWidgetGenerator extends GeneratorForAnnotation<ElementWidgetGen> {
             'fieldName': field.name,
             'isList': isListRelation,
             'isRelationTab': true,
+            'inverseRelationField': inverseRelationField,
           });
         }
       }
@@ -997,9 +1017,15 @@ $nestedWidgets
           final relation = tab['relation'] as String;
           final fieldName = tab['fieldName'] as String;
           final isList = tab['isList'] as bool;
+          final inverseRelationField = tab['inverseRelationField'] as String? ?? '';
           
           final String extraFiltersCode;
-          if (isList) {
+          if (inverseRelationField.isNotEmpty) {
+            extraFiltersCode = '''
+                        extraFilters: {
+                          '$inverseRelationField': widget.element?.id ?? ''
+                        },''';
+          } else if (isList) {
             extraFiltersCode = '''
                         extraFilters: {
                           'id': {
