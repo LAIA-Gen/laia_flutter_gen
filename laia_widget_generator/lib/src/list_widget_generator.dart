@@ -143,18 +143,37 @@ class _${className}ListViewState extends ConsumerState<${className}ListView> {
         data: (${className}PaginationData data) {
           final $classNamePlural = data.items;
 
-          if (!widget._initialized) {
+          if (!widget._initialized || widget.selectedStates.length != $classNamePlural.length) {
             widget.selectedStates = List.generate($classNamePlural.length, (index) => false);
             widget._initialized = true;
           }
 
           final allSelected = $classNamePlural.isNotEmpty && widget.selectedStates.every((e) => e);
           final anySelected = widget.selectedStates.any((e) => e);
+          final selectedCount = widget.selectedStates.where((e) => e).length;
 
           void toggleAll(bool value) {
             setState(() {
               widget.selectedStates = List.generate($classNamePlural.length, (_) => value);
             });
+          }
+
+          void toggleOne(int index, bool value) {
+            setState(() {
+              widget.selectedStates[index] = value;
+            });
+          }
+
+          void bulkDelete() {
+            final selected = <$className>[];
+            for (var i = 0; i < $classNamePlural.length; i++) {
+              if (widget.selectedStates[i]) {
+                selected.add($classNamePlural[i]);
+              }
+            }
+            if (selected.isNotEmpty) {
+              _onDeleteElement(selected, ref, paginationState);
+            }
           }
 
           return Padding(
@@ -185,6 +204,15 @@ class _${className}ListViewState extends ConsumerState<${className}ListView> {
                         },
                         bg: AppColors.lavender,
                       ),
+                      const SizedBox(width: 12),
+                      if (anySelected)
+                        PillButton(
+                          icon: Icons.delete_outline,
+                          text: 'Delete \$selectedCount',
+                          onTap: bulkDelete,
+                          bg: Colors.red.shade50,
+                          fg: Colors.red.shade700,
+                        ),
                       const Spacer(),
                       PillButton(
                         text: 'Add $className',
@@ -227,7 +255,7 @@ class _${className}ListViewState extends ConsumerState<${className}ListView> {
               onFilterRemove: onFilterRemove,
             ),
             const SizedBox(height: 18),
-            _${className}HeaderRow(isWide: isWide),
+            _${className}HeaderRow(isWide: isWide, allSelected: allSelected, anySelected: anySelected, onToggleAll: toggleAll),
             Container(height: 1, color: AppColors.outline),
             const SizedBox(height: 12),
             Expanded(
@@ -237,7 +265,10 @@ class _${className}ListViewState extends ConsumerState<${className}ListView> {
                     Container(height: 1, color: AppColors.outline.withOpacity(0.5)),
                 itemBuilder: (context, index) {
                   final u = $classNamePlural[index];
+                  final isSelected = widget.selectedStates.length > index ? widget.selectedStates[index] : false;
                   return _${className}ListRow(
+                    isSelected: isSelected,
+                    onSelected: (val) => toggleOne(index, val),
                     ''');
     // Here we add the fields to the row
     if (defaultFields.isEmpty) {
@@ -557,8 +588,11 @@ final ${classNameLowercase}PaginationProvider =
 
 class _${className}HeaderRow extends StatelessWidget {
   final bool isWide;
+  final bool allSelected;
+  final bool anySelected;
+  final ValueChanged<bool> onToggleAll;
 
-  const _${className}HeaderRow({required this.isWide});
+  const _${className}HeaderRow({required this.isWide, required this.allSelected, required this.anySelected, required this.onToggleAll});
 
   @override
   Widget build(BuildContext context) {
@@ -571,6 +605,16 @@ class _${className}HeaderRow extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 14),
       child: Row(
         children: [
+          // select-all checkbox
+          SizedBox(
+            width: 48,
+            child: Checkbox(
+              value: allSelected,
+              tristate: true,
+              onChanged: (val) => onToggleAll(!(allSelected)),
+              activeColor: AppColors.indigo,
+            ),
+          ),
           // left spacer (avatar column)
           const SizedBox(width: 56),
 ''');
@@ -630,6 +674,8 @@ class _${className}HeaderRow extends StatelessWidget {
 }
 
 class _${className}ListRow extends ConsumerWidget {
+  final bool isSelected;
+  final ValueChanged<bool> onSelected;
 ''');
     // Here we add the fields to the constructor
     if (defaultFields.isEmpty) {
@@ -661,6 +707,8 @@ class _${className}ListRow extends ConsumerWidget {
   final ValueChanged<String> onMenuSelected;
 
   const _${className}ListRow({
+    required this.isSelected,
+    required this.onSelected,
 ''');
     // Here we add the fields to the constructor
     if (defaultFields.isEmpty) {
@@ -703,6 +751,14 @@ class _${className}ListRow extends ConsumerWidget {
         padding: const EdgeInsets.symmetric(vertical: 14),
         child: Row(
           children: [
+            SizedBox(
+              width: 48,
+              child: Checkbox(
+                value: isSelected,
+                onChanged: (val) => onSelected(val ?? false),
+                activeColor: AppColors.indigo,
+              ),
+            ),
             const SizedBox(width: 56),
 
 ''');    // Here we add the fields to the row
@@ -737,9 +793,38 @@ class _${className}ListRow extends ConsumerWidget {
               })()
               ''';
           } else {
-            fieldText = isEnum
-                ? '${field.name}$className?.name ?? \'\''
-                : '${field.name}$className.toString()';
+            final fieldTypeStr = field.type.toString();
+            final isDateTime = fieldTypeStr == 'DateTime' || fieldTypeStr == 'DateTime?';
+            final format = _fieldChecker.hasAnnotationOfExact(field)
+                ? _fieldChecker.firstAnnotationOfExact(field)?.getField('format')?.toStringValue() ?? ''
+                : '';
+            final access = '${field.name}$className';
+
+            if (isDateTime) {
+              if (format == 'yyyy-MM-dd' || format == 'date') {
+                fieldText = '''
+                  (() {
+                    final val = $access;
+                    if (val == null) return '';
+                    return '\${val.year}-\${val.month.toString().padLeft(2, '0')}-\${val.day.toString().padLeft(2, '0')}';
+                  })()
+                ''';
+              } else if (format == 'yyyy-MM-dd HH:mm') {
+                fieldText = '''
+                  (() {
+                    final val = $access;
+                    if (val == null) return '';
+                    return '\${val.year}-\${val.month.toString().padLeft(2, '0')}-\${val.day.toString().padLeft(2, '0')} \${val.hour.toString().padLeft(2, '0')}:\${val.minute.toString().padLeft(2, '0')}';
+                  })()
+                ''';
+              } else {
+                fieldText = '$access?.toString() ?? \'\'';
+              }
+            } else if (isEnum) {
+              fieldText = '$access?.name ?? \'\'';
+            } else {
+              fieldText = '$access.toString()';
+            }
           }
           buffer.writeln('''
             Expanded(
@@ -849,9 +934,38 @@ class _${className}ListRow extends ConsumerWidget {
                       })()
                       ''';
               } else {
-                fieldText = isEnum
-                    ? '${field.name}$className?.name ?? \'\''
-                    : '${field.name}$className.toString()';
+                final fieldTypeStr = field.type.toString();
+                final isDateTime = fieldTypeStr == 'DateTime' || fieldTypeStr == 'DateTime?';
+                final format = _fieldChecker.hasAnnotationOfExact(field)
+                    ? _fieldChecker.firstAnnotationOfExact(field)?.getField('format')?.toStringValue() ?? ''
+                    : '';
+                final access = '${field.name}$className';
+
+                if (isDateTime) {
+                  if (format == 'yyyy-MM-dd' || format == 'date') {
+                    fieldText = '''
+                      (() {
+                        final val = $access;
+                        if (val == null) return '';
+                        return '\${val.year}-\${val.month.toString().padLeft(2, '0')}-\${val.day.toString().padLeft(2, '0')}';
+                      })()
+                    ''';
+                  } else if (format == 'yyyy-MM-dd HH:mm') {
+                    fieldText = '''
+                      (() {
+                        final val = $access;
+                        if (val == null) return '';
+                        return '\${val.year}-\${val.month.toString().padLeft(2, '0')}-\${val.day.toString().padLeft(2, '0')} \${val.hour.toString().padLeft(2, '0')}:\${val.minute.toString().padLeft(2, '0')}';
+                      })()
+                    ''';
+                  } else {
+                    fieldText = '$access?.toString() ?? \'\'';
+                  }
+                } else if (isEnum) {
+                  fieldText = '$access?.name ?? \'\'';
+                } else {
+                  fieldText = '$access.toString()';
+                }
               }
             }
             cellChild = 'Text($fieldText, style: textStyle)';

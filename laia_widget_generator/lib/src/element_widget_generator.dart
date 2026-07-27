@@ -503,8 +503,8 @@ class ElementWidgetGenerator extends GeneratorForAnnotation<ElementWidgetGen> {
         default:
           if (isEnumListField(field)) {
             final innerType = fieldType.replaceAll('List<', '').replaceAll('>', '').replaceAll('?', '').trim();
-            widget = 'EnumMultiSelectWidget<$innerType>';
-            widgetState = 'EnumMultiSelectWidgetState<$innerType>';
+            widget = 'EnumMultiDropdownWidget<$innerType>';
+            widgetState = 'EnumMultiDropdownWidgetState<$innerType>';
           } else if (isEnumField(field)) {
             widget = 'EnumDropdownWidget<$normalizedFieldType>';
             widgetState = 'EnumDropdownWidgetState<$normalizedFieldType>';
@@ -899,7 +899,7 @@ $nestedWidgets
         default:
           if (isEnumListField(field)) {
             final innerType = fieldType.replaceAll('List<', '').replaceAll('>', '').replaceAll('?', '').trim();
-            widget = 'EnumMultiSelectWidget<$innerType>';
+            widget = 'EnumMultiDropdownWidget<$innerType>';
           } else if (isEnumField(field)) {
             widget = 'EnumDropdownWidget<$normalizedFieldType>';
           } else if (isEmbeddedObjectField(field)) {
@@ -1207,74 +1207,44 @@ $nestedWidgets
         if (isUIField(fieldName)) {
           switch (fieldType) {
             case 'int':
-              buffer.writeln('''
-              int? updated$fieldName = ${fieldName}WidgetKey.currentState?.getUpdatedValue();
-    ''');
-              updatedFields.add('$fieldName: updated$fieldName');
-              break;
             case 'int?':
               buffer.writeln('''
-              int? updated$fieldName = ${fieldName}WidgetKey.currentState?.getUpdatedValue();
+              int? updated$fieldName = ${fieldName}WidgetKey.currentState == null ? widget.element?.$fieldName : ${fieldName}WidgetKey.currentState?.getUpdatedValue();
     ''');
               updatedFields.add('$fieldName: updated$fieldName');
               break;
             case 'double':
-              buffer.writeln('''
-              double? updated$fieldName = ${fieldName}WidgetKey.currentState?.getUpdatedValue();
-    ''');
-              updatedFields.add('$fieldName: updated$fieldName');
-              break;
             case 'double?':
               buffer.writeln('''
-              double? updated$fieldName = ${fieldName}WidgetKey.currentState?.getUpdatedValue();
+              double? updated$fieldName = ${fieldName}WidgetKey.currentState == null ? widget.element?.$fieldName : ${fieldName}WidgetKey.currentState?.getUpdatedValue();
     ''');
               updatedFields.add('$fieldName: updated$fieldName');
               break;
             case 'String':
-              buffer.writeln('''
-              String? updated$fieldName = ${fieldName}WidgetKey.currentState?.getUpdatedValue();
-    ''');
-              updatedFields.add('$fieldName: updated$fieldName');
-              break;
             case 'String?':
               buffer.writeln('''
-              String? updated$fieldName = ${fieldName}WidgetKey.currentState?.getUpdatedValue();
+              String? updated$fieldName = ${fieldName}WidgetKey.currentState == null ? widget.element?.$fieldName : ${fieldName}WidgetKey.currentState?.getUpdatedValue();
     ''');
               updatedFields.add('$fieldName: updated$fieldName');
               break;
             case 'List<String>':
-              buffer.writeln('''
-              List<String>? updated$fieldName = ${fieldName}WidgetKey.currentState?.getUpdatedValue();
-    ''');
-              updatedFields.add('$fieldName: updated$fieldName');
-              break;
             case 'List<String>?':
               buffer.writeln('''
-              List<String>? updated$fieldName = ${fieldName}WidgetKey.currentState?.getUpdatedValue();
+              List<String>? updated$fieldName = ${fieldName}WidgetKey.currentState == null ? widget.element?.$fieldName : ${fieldName}WidgetKey.currentState?.getUpdatedValue();
     ''');
               updatedFields.add('$fieldName: updated$fieldName');
               break;
             case 'DateTime':
-              buffer.writeln('''
-              DateTime? updated$fieldName = ${fieldName}WidgetKey.currentState?.getUpdatedValue();
-    ''');
-              updatedFields.add('$fieldName: updated$fieldName');
-              break;
             case 'DateTime?':
               buffer.writeln('''
-              DateTime? updated$fieldName = ${fieldName}WidgetKey.currentState?.getUpdatedValue();
+              DateTime? updated$fieldName = ${fieldName}WidgetKey.currentState == null ? widget.element?.$fieldName : ${fieldName}WidgetKey.currentState?.getUpdatedValue();
     ''');
               updatedFields.add('$fieldName: updated$fieldName');
               break;
             case 'bool':
-              buffer.writeln('''
-              bool? updated$fieldName = ${fieldName}WidgetKey.currentState?.getUpdatedValue();
-    ''');
-              updatedFields.add('$fieldName: updated$fieldName');
-              break;
             case 'bool?':
               buffer.writeln('''
-              bool? updated$fieldName = ${fieldName}WidgetKey.currentState?.getUpdatedValue();
+              bool? updated$fieldName = ${fieldName}WidgetKey.currentState == null ? widget.element?.$fieldName : ${fieldName}WidgetKey.currentState?.getUpdatedValue();
     ''');
               updatedFields.add('$fieldName: updated$fieldName');
               break;
@@ -1309,11 +1279,11 @@ $nestedWidgets
             default:
               if (fieldType.endsWith('?')) {
                 buffer.writeln('''
-              $fieldType updated$fieldName = ${fieldName}WidgetKey.currentState?.getUpdatedValue();
+              $fieldType updated$fieldName = ${fieldName}WidgetKey.currentState == null ? widget.element?.$fieldName : ${fieldName}WidgetKey.currentState?.getUpdatedValue();
     ''');
               } else {
                 buffer.writeln('''
-              dynamic rawUpdated$fieldName = ${fieldName}WidgetKey.currentState?.getUpdatedValue();
+              dynamic rawUpdated$fieldName = ${fieldName}WidgetKey.currentState == null ? widget.element?.$fieldName : ${fieldName}WidgetKey.currentState?.getUpdatedValue();
               $fieldType updated$fieldName = rawUpdated$fieldName as $fieldType;
     ''');
               }
