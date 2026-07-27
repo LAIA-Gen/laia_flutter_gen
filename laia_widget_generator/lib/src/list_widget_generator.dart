@@ -793,9 +793,38 @@ class _${className}ListRow extends ConsumerWidget {
               })()
               ''';
           } else {
-            fieldText = isEnum
-                ? '${field.name}$className?.name ?? \'\''
-                : '${field.name}$className.toString()';
+            final fieldTypeStr = field.type.toString();
+            final isDateTime = fieldTypeStr == 'DateTime' || fieldTypeStr == 'DateTime?';
+            final format = _fieldChecker.hasAnnotationOfExact(field)
+                ? _fieldChecker.firstAnnotationOfExact(field)?.getField('format')?.toStringValue() ?? ''
+                : '';
+            final access = '${field.name}$className';
+
+            if (isDateTime) {
+              if (format == 'yyyy-MM-dd' || format == 'date') {
+                fieldText = '''
+                  (() {
+                    final val = $access;
+                    if (val == null) return '';
+                    return '\${val.year}-\${val.month.toString().padLeft(2, '0')}-\${val.day.toString().padLeft(2, '0')}';
+                  })()
+                ''';
+              } else if (format == 'yyyy-MM-dd HH:mm') {
+                fieldText = '''
+                  (() {
+                    final val = $access;
+                    if (val == null) return '';
+                    return '\${val.year}-\${val.month.toString().padLeft(2, '0')}-\${val.day.toString().padLeft(2, '0')} \${val.hour.toString().padLeft(2, '0')}:\${val.minute.toString().padLeft(2, '0')}';
+                  })()
+                ''';
+              } else {
+                fieldText = '$access?.toString() ?? \'\'';
+              }
+            } else if (isEnum) {
+              fieldText = '$access?.name ?? \'\'';
+            } else {
+              fieldText = '$access.toString()';
+            }
           }
           buffer.writeln('''
             Expanded(
@@ -905,9 +934,38 @@ class _${className}ListRow extends ConsumerWidget {
                       })()
                       ''';
               } else {
-                fieldText = isEnum
-                    ? '${field.name}$className?.name ?? \'\''
-                    : '${field.name}$className.toString()';
+                final fieldTypeStr = field.type.toString();
+                final isDateTime = fieldTypeStr == 'DateTime' || fieldTypeStr == 'DateTime?';
+                final format = _fieldChecker.hasAnnotationOfExact(field)
+                    ? _fieldChecker.firstAnnotationOfExact(field)?.getField('format')?.toStringValue() ?? ''
+                    : '';
+                final access = '${field.name}$className';
+
+                if (isDateTime) {
+                  if (format == 'yyyy-MM-dd' || format == 'date') {
+                    fieldText = '''
+                      (() {
+                        final val = $access;
+                        if (val == null) return '';
+                        return '\${val.year}-\${val.month.toString().padLeft(2, '0')}-\${val.day.toString().padLeft(2, '0')}';
+                      })()
+                    ''';
+                  } else if (format == 'yyyy-MM-dd HH:mm') {
+                    fieldText = '''
+                      (() {
+                        final val = $access;
+                        if (val == null) return '';
+                        return '\${val.year}-\${val.month.toString().padLeft(2, '0')}-\${val.day.toString().padLeft(2, '0')} \${val.hour.toString().padLeft(2, '0')}:\${val.minute.toString().padLeft(2, '0')}';
+                      })()
+                    ''';
+                  } else {
+                    fieldText = '$access?.toString() ?? \'\'';
+                  }
+                } else if (isEnum) {
+                  fieldText = '$access?.name ?? \'\'';
+                } else {
+                  fieldText = '$access.toString()';
+                }
               }
             }
             cellChild = 'Text($fieldText, style: textStyle)';
