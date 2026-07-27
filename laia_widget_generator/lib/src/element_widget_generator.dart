@@ -503,8 +503,8 @@ class ElementWidgetGenerator extends GeneratorForAnnotation<ElementWidgetGen> {
         default:
           if (isEnumListField(field)) {
             final innerType = fieldType.replaceAll('List<', '').replaceAll('>', '').replaceAll('?', '').trim();
-            widget = 'EnumMultiSelectWidget<$innerType>';
-            widgetState = 'EnumMultiSelectWidgetState<$innerType>';
+            widget = 'EnumMultiDropdownWidget<$innerType>';
+            widgetState = 'EnumMultiDropdownWidgetState<$innerType>';
           } else if (isEnumField(field)) {
             widget = 'EnumDropdownWidget<$normalizedFieldType>';
             widgetState = 'EnumDropdownWidgetState<$normalizedFieldType>';
@@ -899,7 +899,7 @@ $nestedWidgets
         default:
           if (isEnumListField(field)) {
             final innerType = fieldType.replaceAll('List<', '').replaceAll('>', '').replaceAll('?', '').trim();
-            widget = 'EnumMultiSelectWidget<$innerType>';
+            widget = 'EnumMultiDropdownWidget<$innerType>';
           } else if (isEnumField(field)) {
             widget = 'EnumDropdownWidget<$normalizedFieldType>';
           } else if (isEmbeddedObjectField(field)) {
