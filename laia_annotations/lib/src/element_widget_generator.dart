@@ -3,7 +3,8 @@ class ElementTab {
   final List<String> fields;
   final String relation;
   final String inverseRelationField;
-  const ElementTab({required this.label, this.fields = const [], this.relation = '', this.inverseRelationField = ''});
+  final Map<String, dynamic> filters;
+  const ElementTab({required this.label, this.fields = const [], this.relation = '', this.inverseRelationField = '', this.filters = const {}});
 }
 
 class ElementWidgetGen {

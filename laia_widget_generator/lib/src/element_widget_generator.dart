@@ -99,6 +99,28 @@ class ElementWidgetGenerator extends GeneratorForAnnotation<ElementWidgetGen> {
         final relation = tab.read('relation').stringValue;
         final inverseRelationField = tab.read('inverseRelationField').stringValue;
         
+        final filtersReader = tab.peek('filters');
+        final Map<String, String> filters = {};
+        if (filtersReader != null && !filtersReader.isNull && filtersReader.isMap) {
+          filtersReader.mapValue.forEach((keyObj, valObj) {
+            final keyStr = keyObj?.toStringValue();
+            if (keyStr != null && keyStr.isNotEmpty && valObj != null) {
+              final valReader = ConstantReader(valObj);
+              if (valReader.isString) {
+                filters[keyStr] = "'${valReader.stringValue}'";
+              } else if (valReader.isBool) {
+                filters[keyStr] = "${valReader.boolValue}";
+              } else if (valReader.isInt) {
+                filters[keyStr] = "${valReader.intValue}";
+              } else if (valReader.isDouble) {
+                filters[keyStr] = "${valReader.doubleValue}";
+              } else {
+                filters[keyStr] = "'${valObj.toStringValue() ?? valObj.toString()}'";
+              }
+            }
+          });
+        }
+        
         if (relation.isNotEmpty) {
           tabs.add({
             'label': label,
@@ -107,6 +129,7 @@ class ElementWidgetGenerator extends GeneratorForAnnotation<ElementWidgetGen> {
             'isList': true,
             'isRelationTab': true,
             'inverseRelationField': inverseRelationField,
+            'filters': filters,
           });
         } else {
           tabs.add({
@@ -1018,33 +1041,28 @@ $nestedWidgets
           final fieldName = tab['fieldName'] as String;
           final isList = tab['isList'] as bool;
           final inverseRelationField = tab['inverseRelationField'] as String? ?? '';
+          final filtersMap = tab['filters'] as Map<String, String>? ?? {};
           
           final String extraFiltersCode;
+          final List<String> filterEntries = [];
           if (inverseRelationField.isNotEmpty) {
-            extraFiltersCode = '''
-                        extraFilters: {
-                          '$inverseRelationField': widget.element?.id ?? ''
-                        },''';
+            for (final irf in inverseRelationField.split(',').map((s) => s.trim()).where((s) => s.isNotEmpty)) {
+              filterEntries.add("'$irf': widget.element?.id ?? ''");
+            }
           } else if (isList) {
-            extraFiltersCode = '''
-                        extraFilters: {
-                          'id': {
-                            '\\\$in': (widget.element?.$fieldName is List)
-                                ? (widget.element?.$fieldName as List)
-                                    .map<String>((e) => e is Map ? e['id']?.toString() ?? '' : e.toString())
-                                    .where((id) => id.isNotEmpty)
-                                    .toList()
-                                : <String>[]
-                          }
-                        },''';
+            filterEntries.add("'id': {'\\\$in': (widget.element?.$fieldName is List) ? (widget.element?.$fieldName as List).map<String>((e) => e is Map ? e['id']?.toString() ?? '' : e.toString()).where((id) => id.isNotEmpty).toList() : <String>[]}");
           } else {
-            extraFiltersCode = '''
-                        extraFilters: {
-                          'id': (widget.element?.$fieldName is Map)
-                              ? (widget.element?.$fieldName as Map)['id']?.toString() ?? ''
-                              : widget.element?.$fieldName?.toString() ?? ''
-                        },''';
+            filterEntries.add("'id': (widget.element?.$fieldName is Map) ? (widget.element?.$fieldName as Map)['id']?.toString() ?? '' : widget.element?.$fieldName?.toString() ?? ''");
           }
+
+          filtersMap.forEach((fk, fv) {
+            filterEntries.add("'$fk': $fv");
+          });
+
+          extraFiltersCode = '''
+                        extraFilters: {
+                          ${filterEntries.join(',\n                          ')}
+                        },''';
 
           buffer.writeln('''
                     KeepAliveWrapper(
@@ -1604,7 +1622,7 @@ class ${visitor.className}FieldWidgetState extends State<${visitor.className}Fie
                             },
                             suggestionsCallback: (String pattern) async {
                               final ${visitor.className.toLowerCase()}PaginationData = await container.read(
-                                getAll${visitor.className}Provider(container.read(${visitor.className.toLowerCase()}PaginationProvider)).future);
+                                getAll${visitor.className}Provider(container.read(${visitor.className.toLowerCase()}PaginationProvider('default'))).future);
                               final options = ${visitor.className.toLowerCase()}PaginationData.items;
                               return options
                               .where((${visitor.className.toLowerCase()}) =>
@@ -1873,9 +1891,9 @@ class ${visitor.className}MultiFieldWidgetState extends State<${visitor.classNam
                                 });
                               }
                               final inputParts = pattern.split(',').last.trim();
-                              container.read(${visitor.className.toLowerCase()}PaginationProvider.notifier).setFilters({'id': {'\\\$nin': currentValues}});
+                              container.read(${visitor.className.toLowerCase()}PaginationProvider('default').notifier).setFilters({'id': {'\\\$nin': currentValues}});
                               final ${visitor.className.toLowerCase()}PaginationData = await container
-                                .read(getAll${visitor.className}Provider(container.read(${visitor.className.toLowerCase()}PaginationProvider)).future);
+                                .read(getAll${visitor.className}Provider(container.read(${visitor.className.toLowerCase()}PaginationProvider('default'))).future);
                               final options = ${visitor.className.toLowerCase()}PaginationData.items;
                               return options
                               .where((${visitor.className.toLowerCase()}) =>
