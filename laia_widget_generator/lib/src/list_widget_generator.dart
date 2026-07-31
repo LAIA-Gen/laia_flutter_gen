@@ -814,7 +814,7 @@ class _${className}ListRow extends ConsumerWidget {
             fieldText = '''
               (() {
                 final dynamic val = ${field.name}$className;
-                if (val == null) return '';
+                if (val == null) return '-';
                 if (val is Map) return val['id']?.toString() ?? val['_id']?.toString() ?? val.toString();
                 try {
                   final id = (val as dynamic).id?.toString();
@@ -847,7 +847,7 @@ class _${className}ListRow extends ConsumerWidget {
                 fieldText = '''
                   (() {
                     final val = $access;
-                    if (val == null) return '';
+                    if (val == null) return '-';
                     return '\${val.year}-\${val.month.toString().padLeft(2, '0')}-\${val.day.toString().padLeft(2, '0')}';
                   })()
                 ''';
@@ -855,17 +855,17 @@ class _${className}ListRow extends ConsumerWidget {
                 fieldText = '''
                   (() {
                     final val = $access;
-                    if (val == null) return '';
+                    if (val == null) return '-';
                     return '\${val.year}-\${val.month.toString().padLeft(2, '0')}-\${val.day.toString().padLeft(2, '0')} \${val.hour.toString().padLeft(2, '0')}:\${val.minute.toString().padLeft(2, '0')}';
                   })()
                 ''';
               } else {
-                fieldText = '$access?.toString() ?? \'\'';
+                fieldText = '$access?.toString() ?? \'-\'';
               }
             } else if (isEnum) {
-              fieldText = '$access?.name ?? \'\'';
+              fieldText = '$access?.name ?? \'-\'';
             } else {
-              fieldText = '$access.toString()';
+              fieldText = '$access?.toString() ?? \'-\'';
             }
           }
           buffer.writeln('''
@@ -926,9 +926,9 @@ class _${className}ListRow extends ConsumerWidget {
                 }
 
                 final dynamic val = ${field.name}$className;
-                if (val == null) return const SizedBox.shrink();
+                if (val == null) return Text('-', style: textStyle);
                 final res = extractNested(val, [$pathList]);
-                if (res == null) return const SizedBox.shrink();
+                if (res == null || res.toString() == 'null' || res.toString().isEmpty) return Text('-', style: textStyle);
                 return Text(res.toString(), style: textStyle);
               })()
             ''';
@@ -936,10 +936,10 @@ class _${className}ListRow extends ConsumerWidget {
             cellChild = '''
               (() {
                 final dynamic val = ${field.name}$className;
-                if (val == null) return const SizedBox.shrink();
+                if (val == null) return Text('-', style: textStyle);
                 if (val is String) return Text(val, style: textStyle);
                 if (val is List) {
-                  if (val.isEmpty) return const SizedBox.shrink();
+                  if (val.isEmpty) return Text('-', style: textStyle);
                   if (val.first is String) return Text(val.join(', '), style: textStyle);
                 }
                 if (val is Map) {
@@ -976,16 +976,16 @@ class _${className}ListRow extends ConsumerWidget {
 
             if (isDateTime) {
               if (format == 'yyyy-MM-dd' || format == 'date') {
-                cellChild = '''Text(($access == null) ? '' : '\${$access!.year}-\${$access!.month.toString().padLeft(2, '0')}-\${$access!.day.toString().padLeft(2, '0')}', style: textStyle)''';
+                cellChild = '''Text(($access == null) ? '-' : '\${$access!.year}-\${$access!.month.toString().padLeft(2, '0')}-\${$access!.day.toString().padLeft(2, '0')}', style: textStyle)''';
               } else if (format == 'yyyy-MM-dd HH:mm') {
-                cellChild = '''Text(($access == null) ? '' : '\${$access!.year}-\${$access!.month.toString().padLeft(2, '0')}-\${$access!.day.toString().padLeft(2, '0')} \${$access!.hour.toString().padLeft(2, '0')}:\${$access!.minute.toString().padLeft(2, '0')}', style: textStyle)''';
+                cellChild = '''Text(($access == null) ? '-' : '\${$access!.year}-\${$access!.month.toString().padLeft(2, '0')}-\${$access!.day.toString().padLeft(2, '0')} \${$access!.hour.toString().padLeft(2, '0')}:\${$access!.minute.toString().padLeft(2, '0')}', style: textStyle)''';
               } else {
-                cellChild = '''Text($access?.toString() ?? '', style: textStyle)''';
+                cellChild = '''Text($access?.toString() ?? '-', style: textStyle)''';
               }
             } else if (isEnum) {
-              cellChild = '''Text($access?.name ?? '', style: textStyle)''';
+              cellChild = '''Text($access?.name ?? '-', style: textStyle)''';
             } else {
-              cellChild = '''Text($access.toString(), style: textStyle)''';
+              cellChild = '''Text($access?.toString() ?? '-', style: textStyle)''';
             }
           }
 
