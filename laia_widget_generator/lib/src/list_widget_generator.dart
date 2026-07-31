@@ -486,31 +486,69 @@ class ${className}PaginationNotifier extends StateNotifier<${className}Paginatio
 ''');
     // Compute populate based on defaultFields and relations
     Map<String, Map<String, dynamic>> populateMap = {};
+
+    void addPopulateLevel({
+      required String populateId,
+      required String fromCollection,
+      String? childField,
+    }) {
+      if (!populateMap.containsKey(populateId)) {
+        populateMap[populateId] = {
+          'from': fromCollection,
+          'fields': <String>[],
+          'allFields': childField == null,
+        };
+      }
+      if (childField != null) {
+        final list = populateMap[populateId]!['fields'] as List<String>;
+        if (!list.contains(childField)) {
+          list.add(childField);
+        }
+      } else {
+        populateMap[populateId]!['allFields'] = true;
+      }
+    }
+
     if (defaultFields.isNotEmpty) {
       for (var defaultField in defaultFields) {
         final parts = defaultField.split('.');
-        if (parts.length <= 1) continue;
         final baseFieldName = parts[0];
+
         var fieldsList = classElement.fields.where((f) => f.name == baseFieldName);
         if (fieldsList.isEmpty) continue;
         var field = fieldsList.first;
-        if (_fieldChecker.hasAnnotationOfExact(field)) {
-          String relation = _fieldChecker
-                  .firstAnnotationOfExact(field)
-                  ?.getField('relation')
-                  ?.toStringValue() ?? '';
-          if (relation.isNotEmpty) {
-            if (!populateMap.containsKey(baseFieldName)) {
-              populateMap[baseFieldName] = {
-                'from': relation,
-                'fields': <String>[],
-              };
+        if (!_fieldChecker.hasAnnotationOfExact(field)) continue;
+
+        String rootRelation = _fieldChecker
+                .firstAnnotationOfExact(field)
+                ?.getField('relation')
+                ?.toStringValue() ?? '';
+        if (rootRelation.isEmpty) continue;
+
+        if (parts.length == 1) {
+          addPopulateLevel(
+            populateId: baseFieldName,
+            fromCollection: rootRelation,
+            childField: null,
+          );
+        } else {
+          for (int i = 0; i < parts.length - 1; i++) {
+            final populateId = parts.sublist(0, i + 1).join('.');
+            String fromCol;
+            if (i == 0) {
+              fromCol = rootRelation;
+            } else {
+              final segment = parts[i];
+              fromCol = segment.endsWith('Id')
+                  ? segment.substring(0, segment.length - 2).toLowerCase()
+                  : segment.toLowerCase();
             }
-            final nestedField = parts[1];
-            final list = populateMap[baseFieldName]!['fields'] as List<String>;
-            if (!list.contains(nestedField)) {
-              list.add(nestedField);
-            }
+            final childField = parts[i + 1];
+            addPopulateLevel(
+              populateId: populateId,
+              fromCollection: fromCol,
+              childField: childField,
+            );
           }
         }
       }
@@ -526,6 +564,7 @@ class ${className}PaginationNotifier extends StateNotifier<${className}Paginatio
             populateMap[field.name] = {
               'from': relation,
               'fields': <String>[],
+              'allFields': true,
             };
           }
         }
@@ -535,7 +574,8 @@ class ${className}PaginationNotifier extends StateNotifier<${className}Paginatio
       final base = entry.key;
       final from = entry.value['from'];
       final fields = entry.value['fields'] as List<String>;
-      if (fields.isEmpty) {
+      final bool allFields = entry.value['allFields'] ?? false;
+      if (allFields || fields.isEmpty) {
         buffer.writeln("            {'id': '$base', 'from': '$from'},");
       } else {
         final fieldsStr = fields.map((f) => "'$f'").join(', ');
@@ -656,7 +696,7 @@ class _${className}HeaderRow extends StatelessWidget {
             fieldName = nameValue;
           }
           if (parts.length > 1) {
-            fieldName = "${field.name}.${parts[1]}";
+            fieldName = "${field.name}.${parts.sublist(1).join('.')}";
           }
           buffer.writeln('''
           Expanded(flex: 2, child: Text('$fieldName', style: style)),
@@ -853,122 +893,98 @@ class _${className}ListRow extends ConsumerWidget {
               '';
           final isRelation = relation.isNotEmpty;
           String cellChild = '';
-          if (parts.length > 1 && isRelation) {
-            final nestedField = parts[1];
-            cellChild =
-                '''
+
+          if (parts.length > 1) {
+            final pathList = parts.sublist(1).map((p) => "'$p'").join(', ');
+            cellChild = '''
+              (() {
+                dynamic extractNested(dynamic data, List<String> path) {
+                  dynamic current = data;
+                  for (int i = 0; i < path.length; i++) {
+                    final key = path[i];
+                    if (current == null) return null;
+                    if (current is Map) {
+                      current = current[key];
+                    } else if (current is List) {
+                      final subPath = path.sublist(i);
+                      final items = current
+                          .map((e) => extractNested(e, subPath))
+                          .where((e) => e != null && e.toString().isNotEmpty)
+                          .toList();
+                      return items.isEmpty ? null : items.join(', ');
+                    } else {
+                      try {
+                        current = (current as dynamic)[key];
+                      } catch (_) {
+                        return null;
+                      }
+                    }
+                  }
+                  return current;
+                }
+
+                final dynamic val = ${field.name}$className;
+                if (val == null) return const SizedBox.shrink();
+                final res = extractNested(val, [$pathList]);
+                if (res == null) return const SizedBox.shrink();
+                return Text(res.toString(), style: textStyle);
+              })()
+            ''';
+          } else if (isRelation) {
+            cellChild = '''
               (() {
                 final dynamic val = ${field.name}$className;
                 if (val == null) return const SizedBox.shrink();
+                if (val is String) return Text(val, style: textStyle);
                 if (val is List) {
                   if (val.isEmpty) return const SizedBox.shrink();
-                  final firstElem = val.first;
-                  if (firstElem is Map) {
-                    final titles = val.map((e) => (e as Map)['$nestedField']?.toString() ?? '').where((t) => t.isNotEmpty).join(', ');
-                    return Text(titles, style: textStyle);
-                  }
-                  return Text(val.join(', '), style: textStyle);
+                  if (val.first is String) return Text(val.join(', '), style: textStyle);
                 }
                 if (val is Map) {
-                  return Text(val['$nestedField']?.toString() ?? '', style: textStyle);
+                  final str = val['id']?.toString() ?? val['_id']?.toString() ?? val.toString();
+                  return Text(str, style: textStyle);
+                }
+                try {
+                  final id = (val as dynamic).id?.toString();
+                  if (id != null) return Text(id, style: textStyle);
+                } catch (_) {}
+                if (val is List) {
+                  final str = val.map((e) {
+                    final dynamic elem = e;
+                    if (elem is String) return elem;
+                    if (elem is Map) return elem['id']?.toString() ?? elem['_id']?.toString() ?? elem.toString();
+                    try {
+                      final id = (elem as dynamic).id?.toString();
+                      if (id != null) return id;
+                    } catch (_) {}
+                    return elem.toString();
+                  }).join(', ');
+                  return Text(str, style: textStyle);
                 }
                 return Text(val.toString(), style: textStyle);
               })()
-              ''';
+            ''';
           } else {
-            String fieldText = '';
-            if (parts.length > 1) {
-              final nestedField = parts[1];
-              fieldText =
-                  '''
-                  (() {
-                    final dynamic val = ${field.name}$className;
-                    if (val == null) return '';
-                    if (val is List) {
-                      return val.map((e) {
-                        if (e is Map) return e['$nestedField']?.toString() ?? '';
-                        try {
-                          return (e as dynamic).$nestedField?.toString() ?? '';
-                        } catch (_) {
-                          return e.toString();
-                        }
-                      }).join(', ');
-                    }
-                    if (val is Map) return val['$nestedField']?.toString() ?? '';
-                    try {
-                      return (val as dynamic).$nestedField?.toString() ?? '';
-                    } catch (_) {
-                      return val.toString();
-                    }
-                  })()
-                  ''';
-            } else {
-              if (isRelation) {
-                fieldText = '''
-                      (() {
-                        final dynamic val = ${field.name}$className;
-                        if (val == null) return '';
-                        if (val is String) return val;
-                        if (val is List) {
-                          if (val.isEmpty) return '';
-                          if (val.first is String) return val.join(', ');
-                        }
-                        if (val is Map) return val['id']?.toString() ?? val['_id']?.toString() ?? val.toString();
-                        try {
-                          final id = (val as dynamic).id?.toString();
-                          if (id != null) return id;
-                        } catch (_) {}
-                        if (val is List) {
-                          return val.map((e) {
-                            final dynamic elem = e;
-                            if (elem is String) return elem;
-                            if (elem is Map) return elem['id']?.toString() ?? elem['_id']?.toString() ?? elem.toString();
-                            try {
-                              final id = (elem as dynamic).id?.toString();
-                              if (id != null) return id;
-                            } catch (_) {}
-                            return elem.toString();
-                          }).join(', ');
-                        }
-                        return val.toString();
-                      })()
-                      ''';
-              } else {
-                final fieldTypeStr = field.type.toString();
-                final isDateTime = fieldTypeStr == 'DateTime' || fieldTypeStr == 'DateTime?';
-                final format = _fieldChecker.hasAnnotationOfExact(field)
-                    ? _fieldChecker.firstAnnotationOfExact(field)?.getField('format')?.toStringValue() ?? ''
-                    : '';
-                final access = '${field.name}$className';
+            final fieldTypeStr = field.type.toString();
+            final isDateTime = fieldTypeStr == 'DateTime' || fieldTypeStr == 'DateTime?';
+            final format = _fieldChecker.hasAnnotationOfExact(field)
+                ? _fieldChecker.firstAnnotationOfExact(field)?.getField('format')?.toStringValue() ?? ''
+                : '';
+            final access = '${field.name}$className';
 
-                if (isDateTime) {
-                  if (format == 'yyyy-MM-dd' || format == 'date') {
-                    fieldText = '''
-                      (() {
-                        final val = $access;
-                        if (val == null) return '';
-                        return '\${val.year}-\${val.month.toString().padLeft(2, '0')}-\${val.day.toString().padLeft(2, '0')}';
-                      })()
-                    ''';
-                  } else if (format == 'yyyy-MM-dd HH:mm') {
-                    fieldText = '''
-                      (() {
-                        final val = $access;
-                        if (val == null) return '';
-                        return '\${val.year}-\${val.month.toString().padLeft(2, '0')}-\${val.day.toString().padLeft(2, '0')} \${val.hour.toString().padLeft(2, '0')}:\${val.minute.toString().padLeft(2, '0')}';
-                      })()
-                    ''';
-                  } else {
-                    fieldText = '$access?.toString() ?? \'\'';
-                  }
-                } else if (isEnum) {
-                  fieldText = '$access?.name ?? \'\'';
-                } else {
-                  fieldText = '$access.toString()';
-                }
+            if (isDateTime) {
+              if (format == 'yyyy-MM-dd' || format == 'date') {
+                cellChild = '''Text(($access == null) ? '' : '\${$access!.year}-\${$access!.month.toString().padLeft(2, '0')}-\${$access!.day.toString().padLeft(2, '0')}', style: textStyle)''';
+              } else if (format == 'yyyy-MM-dd HH:mm') {
+                cellChild = '''Text(($access == null) ? '' : '\${$access!.year}-\${$access!.month.toString().padLeft(2, '0')}-\${$access!.day.toString().padLeft(2, '0')} \${$access!.hour.toString().padLeft(2, '0')}:\${$access!.minute.toString().padLeft(2, '0')}', style: textStyle)''';
+              } else {
+                cellChild = '''Text($access?.toString() ?? '', style: textStyle)''';
               }
+            } else if (isEnum) {
+              cellChild = '''Text($access?.name ?? '', style: textStyle)''';
+            } else {
+              cellChild = '''Text($access.toString(), style: textStyle)''';
             }
-            cellChild = 'Text($fieldText, style: textStyle)';
           }
 
           buffer.writeln('''
