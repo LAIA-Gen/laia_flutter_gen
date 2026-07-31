@@ -278,10 +278,11 @@ class _${className}ListViewState extends ConsumerState<${className}ListView> {
         }
       }
     } else {
+      Set<String> addedFields = {};
       for (var defaultField in defaultFields) {
-        print("defaultField: $defaultField");
-        print("classElement.fields: ${classElement.fields.map((f) => f.name).toList()}");
         final baseFieldName = defaultField.split('.')[0];
+        if (addedFields.contains(baseFieldName)) continue;
+
         var fieldsList = classElement.fields.where((f) => f.name == baseFieldName);
         if (fieldsList.isEmpty) {
           print('Default field $defaultField not found in ${classElement.name}');
@@ -290,6 +291,7 @@ class _${className}ListViewState extends ConsumerState<${className}ListView> {
         var field = fieldsList.first;
         if (_fieldChecker.hasAnnotationOfExact(field)) {
           buffer.writeln('    ${field.name}$className: u.${field.name},');
+          addedFields.add(baseFieldName);
         }
       }
     }
