@@ -60,6 +60,7 @@ class ${className}ListView extends ConsumerStatefulWidget {
 
 class _${className}ListViewState extends ConsumerState<${className}ListView> {
   final GlobalKey<CustomSearchBarState> _searchBarKey = GlobalKey<CustomSearchBarState>();
+  String get _providerKey => widget.key?.toString() ?? widget.extraFilters?.toString() ?? 'default';
 
   @override
   void initState() {
@@ -70,7 +71,7 @@ class _${className}ListViewState extends ConsumerState<${className}ListView> {
           widget.currentFilters[key] = value;
         });
       }
-      ref.read(${classNameLowercase}PaginationProvider.notifier).setFilters(widget.extraFilters ?? {});
+      ref.read(${classNameLowercase}PaginationProvider(_providerKey).notifier).setFilters(widget.extraFilters ?? {});
     });
   }
 
@@ -78,14 +79,14 @@ class _${className}ListViewState extends ConsumerState<${className}ListView> {
   Widget build(BuildContext context) {
     final isWide = MediaQuery.sizeOf(context).width >= 900;
 
-    final paginationState = ref.watch(${classNameLowercase}PaginationProvider);
+    final paginationState = ref.watch(${classNameLowercase}PaginationProvider(_providerKey));
 
     final ${classNamePlural}AsyncValue =
         ref.watch(getAll${className}Provider(paginationState));
 
-    final Map<String, int> columnSortStates = ref.watch(${classNameLowercase}PaginationProvider.notifier).getOrders();
+    final Map<String, int> columnSortStates = ref.watch(${classNameLowercase}PaginationProvider(_providerKey).notifier).getOrders();
 
-    final Map<String, dynamic> fieldsFilterStates = ref.watch(${classNameLowercase}PaginationProvider.notifier).getFilters();
+    final Map<String, dynamic> fieldsFilterStates = ref.watch(${classNameLowercase}PaginationProvider(_providerKey).notifier).getFilters();
 
     void onSort(String columnName) {
       var state = columnSortStates[columnName];
@@ -96,18 +97,18 @@ class _${className}ListViewState extends ConsumerState<${className}ListView> {
       } else if (state == -1) {
         columnSortStates.remove(columnName);
       }
-      ref.read(${classNameLowercase}PaginationProvider.notifier).setOrders(columnSortStates);
+      ref.read(${classNameLowercase}PaginationProvider(_providerKey).notifier).setOrders(columnSortStates);
     }
 
     void onFilter(String fieldName, dynamic filterValue) {
       widget.currentFilters[fieldName] = filterValue;
-      ref.read(${classNameLowercase}PaginationProvider.notifier).setFilters(widget.currentFilters);
+      ref.read(${classNameLowercase}PaginationProvider(_providerKey).notifier).setFilters(widget.currentFilters);
     }
 
     void onFilterRemove(String fieldName, dynamic filterValue) {
       if (widget.currentFilters.containsKey(fieldName)) {
         widget.currentFilters.remove(fieldName);
-        ref.read(${classNameLowercase}PaginationProvider.notifier).setFilters(widget.currentFilters);
+        ref.read(${classNameLowercase}PaginationProvider(_providerKey).notifier).setFilters(widget.currentFilters);
       }
     }''');
 
@@ -335,7 +336,7 @@ class _${className}ListViewState extends ConsumerState<${className}ListView> {
             );
             if (fieldsFilterStates.isNotEmpty && hasNoResults) {
               widget.currentFilters.clear();
-              ref.read(${classNameLowercase}PaginationProvider.notifier).setFilters({});
+              ref.read(${classNameLowercase}PaginationProvider(_providerKey).notifier).setFilters({});
             } else {
               Navigator.push(
                 context,
@@ -355,7 +356,7 @@ class _${className}ListViewState extends ConsumerState<${className}ListView> {
 
   void _onPageButtonPressed(int pageNumber, WidgetRef ref, ${className}PaginationState paginationState, int maxPages) {
     if (pageNumber <= maxPages) {
-      ref.read(${classNameLowercase}PaginationProvider.notifier).setPage(pageNumber);
+      ref.read(${classNameLowercase}PaginationProvider(_providerKey).notifier).setPage(pageNumber);
     }
   }
 
@@ -395,8 +396,8 @@ class _${className}ListViewState extends ConsumerState<${className}ListView> {
       final fieldName = field.name;
       final fieldType = field.type.toString();
       final widgetValue = _fieldChecker
-          .firstAnnotationOfExact(field)
-          ?.getField('widget')
+              .firstAnnotationOfExact(field)
+              ?.getField('widget')
           ?.toStringValue() ?? '';
       // dynamic? fields go to MultiFieldWidget if isList is true (i.e. widget ends with MultiFieldWidget).
       final isSingleString = fieldType == 'String' || fieldType == 'String?' || 
@@ -461,7 +462,7 @@ class _${className}ListViewState extends ConsumerState<${className}ListView> {
     setState(() {
       widget._initialized = false;
     });
-    ref.read(${classNameLowercase}PaginationProvider.notifier).setPage(1);
+    ref.read(${classNameLowercase}PaginationProvider(_providerKey).notifier).setPage(1);
   }
 }
 
@@ -624,8 +625,8 @@ class ${className}PaginationNotifier extends StateNotifier<${className}Paginatio
 }
 
 final ${classNameLowercase}PaginationProvider =
-    StateNotifierProvider<${className}PaginationNotifier, ${className}PaginationState>(
-  (ref) => ${className}PaginationNotifier(),
+    StateNotifierProvider.autoDispose.family<${className}PaginationNotifier, ${className}PaginationState, String>(
+  (ref, key) => ${className}PaginationNotifier(),
 );
 
 class _${className}HeaderRow extends StatelessWidget {

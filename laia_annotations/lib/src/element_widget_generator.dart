@@ -3,7 +3,8 @@ class ElementTab {
   final List<String> fields;
   final String relation;
   final String inverseRelationField;
-  const ElementTab({required this.label, this.fields = const [], this.relation = '', this.inverseRelationField = ''});
+  final Map<String, dynamic> filters;
+  const ElementTab({required this.label, this.fields = const [], this.relation = '', this.inverseRelationField = '', this.filters = const {}});
 }
 
 class ElementWidgetGen {
@@ -23,6 +24,7 @@ class Field {
   final bool uspaceMap;
   final String format;
   final String inverseRelationField;
+  final String nicename;
 
-  const Field({this.widget = '', this.fieldName = '', this.fieldDescription = '', this.editable = true, this.placeholder = '', this.relation = '', this.uspaceMap = false, this.format = '', this.inverseRelationField = ''});
+  const Field({this.widget = '', this.fieldName = '', this.fieldDescription = '', this.editable = true, this.placeholder = '', this.relation = '', this.uspaceMap = false, this.format = '', this.inverseRelationField = '', this.nicename = ''});
 }
