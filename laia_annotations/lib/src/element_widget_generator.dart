@@ -24,6 +24,7 @@ class Field {
   final bool uspaceMap;
   final String format;
   final String inverseRelationField;
+  final String nicename;
 
-  const Field({this.widget = '', this.fieldName = '', this.fieldDescription = '', this.editable = true, this.placeholder = '', this.relation = '', this.uspaceMap = false, this.format = '', this.inverseRelationField = ''});
+  const Field({this.widget = '', this.fieldName = '', this.fieldDescription = '', this.editable = true, this.placeholder = '', this.relation = '', this.uspaceMap = false, this.format = '', this.inverseRelationField = '', this.nicename = ''});
 }

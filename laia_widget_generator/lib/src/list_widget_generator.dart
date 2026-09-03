@@ -279,11 +279,12 @@ class _${className}ListViewState extends ConsumerState<${className}ListView> {
         }
       }
     } else {
+      Set<String> addedFields = {};
       for (var defaultField in defaultFields) {
-        print("defaultField: $defaultField");
-        print("classElement.fields: ${classElement.fields.map((f) => f.name).toList()}");
         final baseFieldName = defaultField.split('.')[0];
-        var fieldsList = classElement.fields.where((f) => f.name == baseFieldName);
+        if (addedFields.contains(baseFieldName)) continue;
+        var fieldsList =
+            classElement.fields.where((f) => f.name == baseFieldName);
         if (fieldsList.isEmpty) {
           print('Default field $defaultField not found in ${classElement.name}');
           continue;
@@ -291,6 +292,7 @@ class _${className}ListViewState extends ConsumerState<${className}ListView> {
         var field = fieldsList.first;
         if (_fieldChecker.hasAnnotationOfExact(field)) {
           buffer.writeln('    ${field.name}$className: u.${field.name},');
+          addedFields.add(baseFieldName);
         }
       }
     }
@@ -394,8 +396,8 @@ class _${className}ListViewState extends ConsumerState<${className}ListView> {
       final fieldName = field.name;
       final fieldType = field.type.toString();
       final widgetValue = _fieldChecker
-          .firstAnnotationOfExact(field)
-          ?.getField('widget')
+              .firstAnnotationOfExact(field)
+              ?.getField('widget')
           ?.toStringValue() ?? '';
       // dynamic? fields go to MultiFieldWidget if isList is true (i.e. widget ends with MultiFieldWidget).
       final isSingleString = fieldType == 'String' || fieldType == 'String?' || 

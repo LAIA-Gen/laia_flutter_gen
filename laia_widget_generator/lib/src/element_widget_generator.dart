@@ -98,7 +98,7 @@ class ElementWidgetGenerator extends GeneratorForAnnotation<ElementWidgetGen> {
         final fields = tab.read('fields').listValue.map((e) => e.toStringValue() ?? '').toList();
         final relation = tab.read('relation').stringValue;
         final inverseRelationField = tab.read('inverseRelationField').stringValue;
-        
+
         final filtersReader = tab.peek('filters');
         final Map<String, String> filters = {};
         if (filtersReader != null && !filtersReader.isNull && filtersReader.isMap) {
@@ -120,7 +120,7 @@ class ElementWidgetGenerator extends GeneratorForAnnotation<ElementWidgetGen> {
             }
           });
         }
-        
+
         if (relation.isNotEmpty) {
           tabs.add({
             'label': label,
@@ -165,11 +165,19 @@ class ElementWidgetGenerator extends GeneratorForAnnotation<ElementWidgetGen> {
                 ?.getField('inverseRelationField')
                 ?.toStringValue() ??
             '';
+        final nicename = _fieldChecker
+                .firstAnnotationOfExact(field)
+                ?.getField('nicename')
+                ?.toStringValue() ??
+            '';
         if (relation.isNotEmpty) {
           final isListRelation = field.type.toString().startsWith('List') ||
               field.type.toString().contains('List');
+          final tabLabel = nicename.isNotEmpty
+              ? nicename
+              : field.name[0].toUpperCase() + field.name.substring(1);
           relationTabs.add({
-            'label': field.name[0].toUpperCase() + field.name.substring(1),
+            'label': tabLabel,
             'relation': relation,
             'fieldName': field.name,
             'isList': isListRelation,
@@ -371,7 +379,7 @@ class ElementWidgetGenerator extends GeneratorForAnnotation<ElementWidgetGen> {
           }
           else if(format == 'textArea') {
             return 'TextAreaWidget';
-          }
+          } 
           else {
             return 'StringWidget';
           }
@@ -1042,7 +1050,7 @@ $nestedWidgets
           final isList = tab['isList'] as bool;
           final inverseRelationField = tab['inverseRelationField'] as String? ?? '';
           final filtersMap = tab['filters'] as Map<String, String>? ?? {};
-          
+
           final String extraFiltersCode;
           final List<String> filterEntries = [];
           if (inverseRelationField.isNotEmpty) {
