@@ -1998,16 +1998,16 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
       dynamic filter = searchRow.textEditingController.text;
 
       switch (type) {
-        case 'String':
+        case 'String' || 'String?':
           filter = {
             r'$regex': searchRow.textEditingController.text,
             r'$options': 'i'
           };
           break;
-        case 'int':
+        case 'int' || 'int?':
           filter = int.tryParse(searchRow.textEditingController.text);
           break;
-        case 'double':
+        case 'double' || 'double?':
           filter = double.tryParse(searchRow.textEditingController.text);
           break;
       }
@@ -2025,7 +2025,7 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
       String valueReturned = value.toString();
 
       switch (type) {
-        case 'String':
+        case 'String' || 'String?':
           if (value is Map<String, dynamic> &&
               value.containsKey(r'$regex') &&
               value.containsKey(r'$options')) {
@@ -2033,12 +2033,12 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
             valueReturned = regexValue?.toString() ?? '';
           }
           break;
-        case 'int':
+        case 'int' || 'int?':
           if (value == null) {
             valueReturned = '';
           }
           break;
-        case 'double':
+        case 'double' || 'double?':
           if (value == null) {
             valueReturned = '';
           }
