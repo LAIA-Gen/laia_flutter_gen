@@ -2414,6 +2414,12 @@ class CustomPagination extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (maxPages <= 0) {
+      return const Padding(
+        padding: EdgeInsets.all(8),
+        child: Center(child: Text('No results')),
+      );
+    }
     return Container(
       padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
@@ -2521,13 +2527,15 @@ class CustomSearchBarState extends State<CustomSearchBar> {
   }
 
   void _updateSearchRows() {
-    Future.delayed(Duration.zero, () {
-      setState(() {
-        searchRows = widget.filters.entries
-            .map((entry) => SearchRow(selectedField: entry.key, filterValue: _getValue(entry.key, entry.value)))
-            .toList();
-      });
-    });
+    // Both callers are lifecycle methods followed by build, so no delayed
+    // setState is needed (which could otherwise run after disposal).
+    final previousRows = searchRows;
+    searchRows = widget.filters.entries
+        .map((entry) => SearchRow(selectedField: entry.key, filterValue: _getValue(entry.key, entry.value)))
+        .toList();
+    for (final row in previousRows) {
+      row.textEditingController.dispose();
+    }
   }
 
   void addFilterRow() {
@@ -2744,7 +2752,7 @@ class CustomSearchBarState extends State<CustomSearchBar> {
 
   void _removeRow(int index) {
     setState(() {
-      searchRows.removeAt(index);
+      searchRows.removeAt(index).textEditingController.dispose();
     });
   }
   
@@ -2752,19 +2760,31 @@ class CustomSearchBarState extends State<CustomSearchBar> {
     SearchRow searchRow = searchRows[index];
 
     if (widget.fields.containsKey(searchRow.selectedField)) {
-    String? type = widget.fields[searchRow.selectedField];
+    String? type = widget.fields[searchRow.selectedField]?.replaceAll('?', '');
+    if (type != null && type.startsWith('List<') && type.endsWith('>')) {
+      type = type.substring(5, type.length - 1);
+    }
 
     dynamic filter = searchRow.textEditingController.text;
 
+    if (filter == '') {
+      widget.onFilterChanged(searchRow.selectedField!, '');
+      return;
+    }
     switch (type) {
       case 'String':
-        filter = {r'\$regex': searchRow.textEditingController.text, r'\$options': 'i'};
+        filter = {r'\$regex': RegExp.escape(searchRow.textEditingController.text), r'\$options': 'i'};
         break;
       case 'int':
         filter = int.tryParse(searchRow.textEditingController.text);
         break;
       case 'double':
+      case 'num':
         filter = double.tryParse(searchRow.textEditingController.text);
+        break;
+      case 'bool':
+        final text = searchRow.textEditingController.text.toLowerCase();
+        filter = text == 'true' ? true : text == 'false' ? false : null;
         break;
     }
 
@@ -2775,36 +2795,19 @@ class CustomSearchBarState extends State<CustomSearchBar> {
   }
 
   String _getValue(String field, dynamic value) {
-    
-    if (widget.fields.containsKey(field)) {
-      String? type = widget.fields[field];
-
-      String valueReturned = value.toString();
-
-      switch (type) {
-        case 'String':
-          if (value is Map<String, dynamic> &&
-              value.containsKey(r'\$regex') &&
-              value.containsKey(r'\$options')) {
-            dynamic regexValue = value[r'\$regex'];
-            valueReturned = regexValue?.toString() ?? '';
-          }
-          break;
-        case 'int':
-          if (value == null) {
-            valueReturned = '';
-          }
-          break;
-        case 'double':
-          if (value == null) {
-            valueReturned = '';
-          }
-          break;
-      }
-
-      return valueReturned;
+    if (value is Map && value.containsKey(r'\$regex')) {
+      return (value[r'\$regex']?.toString() ?? '').replaceAllMapped(
+          RegExp(r'\\\\([\\\\.^\$|?*+()\\[\\]{}])'), (match) => match[1]!);
     }
-    return value.toString();
+    return value?.toString() ?? '';
+  }
+
+  @override
+  void dispose() {
+    for (final row in searchRows) {
+      row.textEditingController.dispose();
+    }
+    super.dispose();
   }
 }
 
@@ -2815,7 +2818,7 @@ class SearchRow {
   final TextEditingController textEditingController = TextEditingController();
 
   SearchRow({this.selectedField, this.filterValue}) {
-    textEditingController.text = filterValue.toString();
+    textEditingController.text = filterValue?.toString() ?? '';
   }
 }
 ''');

@@ -128,7 +128,13 @@ class RiverpodCustomGenerator extends GeneratorForAnnotation<RiverpodGenAnnotati
       final getAll${className}Provider = FutureProvider.autoDispose.family<${className}PaginationData, ${className}PaginationState>((ref, state) async {
         final headers = await getHeaders();
         final fixedQuery = {
-          if (state.orders.isNotEmpty) 'orders': state.orders,
+          // A unique final key keeps ties stable across server-side pages.
+          'orders': {
+            for (final entry in state.orders.entries)
+              (entry.key == 'id' ? '_id' : entry.key): entry.value,
+            if (!state.orders.containsKey('id') && !state.orders.containsKey('_id'))
+              '_id': 1,
+          },
           if (state.filters.isNotEmpty) 'filters': Map.from(state.filters)
           ..removeWhere((key, value) => value == null || value == ''),
           if (state.populate.isNotEmpty) 'populate': state.populate,

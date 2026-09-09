@@ -17,6 +17,11 @@ dependencies:
   analyzer: ^5.13.0
 
 dev_dependencies:
+  flutter_riverpod: ^2.4.6
+  http: ^1.1.0
+  tuple: ^2.0.2
+  laia_riverpod_custom_generator:
+    path: ../laia_riverpod_custom_generator
   flutter_test:
     sdk: flutter
   flutter_lints: ^2.0.0
