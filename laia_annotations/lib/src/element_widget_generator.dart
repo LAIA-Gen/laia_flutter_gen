@@ -1,6 +1,6 @@
 class ElementTab {
   final String label;
-  final List<String> fields;
+  final List<dynamic> fields;
   final String relation;
   final String inverseRelationField;
   final Map<String, dynamic> filters;
