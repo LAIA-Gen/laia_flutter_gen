@@ -113,6 +113,33 @@ class RiverpodCustomGenerator extends GeneratorForAnnotation<RiverpodGenAnnotati
         }
       });
 
+      final getDownload${className}ImageProvider = FutureProvider.autoDispose.family<String?, String>((ref, imageId) async {
+        final headers = await getHeaders();
+        final cleanId = imageId.replaceAll(RegExp(r'^/+'), '');
+        final res = await http.get(Uri.parse('\$baseURL/download/\$cleanId'), headers: headers);
+        if (res.statusCode == 200) {
+          final data = jsonDecode(res.body);
+          return data['url']?.toString();
+        }
+        return null;
+      });
+
+      final upload${className}ImageProvider = FutureProvider.autoDispose.family<String?, Tuple2<List<int>, String>>((ref, tuple) async {
+        final headers = await getHeaders();
+        final req = http.MultipartRequest('POST', Uri.parse('\$baseURL/upload'));
+        if (headers['Authorization'] != null) {
+          req.headers['Authorization'] = headers['Authorization']!;
+        }
+        req.files.add(http.MultipartFile.fromBytes('file', tuple.item1, filename: tuple.item2));
+        final res = await http.Response.fromStream(await req.send());
+        if (res.statusCode == 200 || res.statusCode == 201) {
+          final data = jsonDecode(res.body);
+          return (data['id'] ?? data['image_url'] ?? data['path'])?.toString();
+        }
+        return null;
+      });
+
+
       class ${className}PaginationData {
         final List<$className> items;
         final int currentPage;

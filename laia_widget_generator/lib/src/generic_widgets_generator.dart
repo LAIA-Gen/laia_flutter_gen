@@ -1979,6 +1979,329 @@ class TextAreaWidgetState extends State<TextAreaWidget> {
         ''');
 
 // **************************************************************************
+// ImageUploadWidget
+// **************************************************************************
+
+    buffer.writeln('''
+class ImageUploadWidget extends StatefulWidget {
+  final String fieldName;
+  final String fieldDescription;
+  final bool isRequired;
+  final bool editable;
+  final String placeholder;
+  final String? value;
+  final List<Widget>? additionalChildren;
+  final Future<String?> Function(List<int> bytes, String filename)? onUpload;
+  final Future<String?> Function(String imageId)? onGetDownloadUrl;
+
+  const ImageUploadWidget({
+    Key? key,
+    required this.fieldName,
+    this.isRequired = false,
+    required this.fieldDescription,
+    required this.editable,
+    required this.placeholder,
+    required this.value,
+    this.additionalChildren,
+    this.onUpload,
+    this.onGetDownloadUrl,
+  }) : super(key: key);
+
+  @override
+  ImageUploadWidgetState createState() => ImageUploadWidgetState();
+}
+
+class ImageUploadWidgetState extends State<ImageUploadWidget> {
+  bool isValueChanged = false;
+  late String? initialValue;
+  late String currentValue;
+  bool showValidationError = false;
+  String? _presignedUrl;
+  bool _loading = false;
+  bool _isDragging = false;
+  void Function()? _dropZoneCleanup;
+  late final TextEditingController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    initialValue = widget.value;
+    currentValue = initialValue ?? '';
+    _controller = TextEditingController(text: currentValue);
+    if (currentValue.isNotEmpty) _loadUrl(currentValue);
+
+    if (widget.editable) {
+      _dropZoneCleanup = ImagePickerHelper.setupDropZone(
+        onDragStateChanged: (dragging) {
+          if (mounted && _isDragging != dragging) {
+            setState(() => _isDragging = dragging);
+          }
+        },
+        onFileDropped: (bytes, filename) {
+          uploadBytes(bytes, filename);
+        },
+      );
+    }
+  }
+
+  @override
+  void dispose() {
+    _dropZoneCleanup?.call();
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (FormValidationScope.of(context)) validate();
+  }
+
+  String? getUpdatedValue() => isValueChanged ? currentValue : initialValue;
+
+  bool validate() {
+    if (widget.isRequired && (getUpdatedValue() == null || currentValue.trim().isEmpty || currentValue == 'null')) {
+      setState(() => showValidationError = true);
+      return false;
+    }
+    setState(() => showValidationError = false);
+    return true;
+  }
+
+  Future<void> _loadUrl(String id) async {
+    if (id.startsWith('http')) {
+      setState(() {
+        _presignedUrl = id;
+        _controller.text = id;
+      });
+      return;
+    }
+    setState(() => _loading = true);
+    try {
+      if (widget.onGetDownloadUrl != null) {
+        final url = await widget.onGetDownloadUrl!(id);
+        if (url != null && url.isNotEmpty) {
+          setState(() {
+            _presignedUrl = url;
+            _controller.text = url;
+          });
+        }
+      }
+    } catch (_) {}
+    if (mounted) setState(() => _loading = false);
+  }
+
+  Future<void> uploadBytes(List<int> bytes, String name) async {
+    setState(() => _loading = true);
+    try {
+      String? newId;
+      if (widget.onUpload != null) {
+        newId = await widget.onUpload!(bytes, name);
+      }
+      if (newId != null && newId.isNotEmpty) {
+        setState(() {
+          currentValue = newId!;
+          isValueChanged = currentValue != (initialValue ?? '');
+          _controller.text = newId!;
+          showValidationError = false;
+        });
+        _loadUrl(newId!);
+      }
+    } catch (_) {}
+    if (mounted) setState(() => _loading = false);
+  }
+
+  void _onUrlChanged(String val) {
+    setState(() {
+      currentValue = val;
+      isValueChanged = val != (initialValue ?? '');
+      showValidationError = false;
+    });
+    if (val.trim().isNotEmpty) _loadUrl(val.trim());
+    else setState(() => _presignedUrl = null);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final hasImage = _presignedUrl != null && _presignedUrl!.isNotEmpty;
+
+    return Stack(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(16.0),
+          margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12.0),
+            color: AppColors.surface,
+            border: Border.all(
+              color: _isDragging ? AppColors.indigo : (showValidationError ? Colors.red.withOpacity(0.5) : AppColors.muted.withOpacity(0.2)),
+              width: _isDragging ? 2.0 : 1.0,
+            ),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Text("\${widget.fieldName}:", style: const TextStyle(fontWeight: FontWeight.bold)),
+                  const SizedBox(width: 8.0),
+                  Text(widget.fieldDescription, style: const TextStyle(color: Colors.grey, fontSize: 13)),
+                ],
+              ),
+              const SizedBox(height: 12.0),
+              if (_loading)
+                Container(
+                  height: 150,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: Colors.black.withOpacity(0.03),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: const Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CircularProgressIndicator(),
+                      SizedBox(height: 12),
+                      Text("Subiendo imagen...", style: TextStyle(color: Colors.grey)),
+                    ],
+                  ),
+                )
+              else if (hasImage)
+                Center(
+                  child: Stack(
+                    alignment: Alignment.topRight,
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: Image.network(
+                          _presignedUrl!,
+                          height: 200,
+                          fit: BoxFit.contain,
+                          errorBuilder: (_, __, ___) => Container(
+                            height: 150,
+                            color: Colors.grey.withOpacity(0.1),
+                            alignment: Alignment.center,
+                            child: const Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(Icons.broken_image_outlined, color: Colors.grey, size: 40),
+                                SizedBox(height: 8),
+                                Text("No se pudo cargar la imagen", style: TextStyle(color: Colors.grey)),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      if (widget.editable)
+                        Positioned(
+                          top: 8,
+                          right: 8,
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              CircleAvatar(
+                                radius: 18,
+                                backgroundColor: Colors.black54,
+                                child: IconButton(
+                                  icon: const Icon(Icons.refresh, color: Colors.white, size: 18),
+                                  tooltip: "Cambiar imagen",
+                                  onPressed: () => ImagePickerHelper.pickImage((bytes, name) => uploadBytes(bytes, name)),
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              CircleAvatar(
+                                radius: 18,
+                                backgroundColor: Colors.red.withOpacity(0.85),
+                                child: IconButton(
+                                  icon: const Icon(Icons.delete_outline, color: Colors.white, size: 18),
+                                  tooltip: "Eliminar imagen",
+                                  onPressed: () => _onUrlChanged(''),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                    ],
+                  ),
+                )
+              else
+                InkWell(
+                  onTap: widget.editable ? () => ImagePickerHelper.pickImage((bytes, name) => uploadBytes(bytes, name)) : null,
+                  borderRadius: BorderRadius.circular(10),
+                  child: Container(
+                    height: 130,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: _isDragging ? AppColors.indigo.withOpacity(0.08) : Colors.black.withOpacity(0.02),
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(
+                        color: _isDragging ? AppColors.indigo : AppColors.muted.withOpacity(0.5),
+                        width: 1.5,
+                      ),
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          _isDragging ? Icons.file_download : Icons.cloud_upload_outlined,
+                          color: _isDragging ? AppColors.indigo : Colors.grey,
+                          size: 38,
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          _isDragging ? "¡Suelta la imagen aquí!" : "Arrastra tu imagen aquí o haz clic para subirla",
+                          style: TextStyle(
+                            color: _isDragging ? AppColors.indigo : Colors.grey.shade700,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 13,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          "PNG, JPG, WEBP",
+                          style: TextStyle(color: Colors.grey.shade500, fontSize: 11),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              const SizedBox(height: 12.0),
+              TextFormField(
+                controller: _controller,
+                enabled: widget.editable,
+                decoration: InputDecoration(
+                  filled: true,
+                  hintText: widget.placeholder.isNotEmpty ? widget.placeholder : "ID o URL de la imagen",
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(color: AppColors.muted)),
+                  enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(color: AppColors.muted)),
+                  focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(color: AppColors.indigo, width: 1.2)),
+                  fillColor: widget.isRequired ? (showValidationError ? AppColors.indigo.withOpacity(0.12) : AppColors.surface) : AppColors.surface,
+                ),
+                onChanged: _onUrlChanged,
+              ),
+            ],
+          ),
+        ),
+        if (isValueChanged)
+          Positioned(
+            top: 0,
+            left: 0,
+            child: Container(
+              width: 20,
+              height: 20,
+              decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.orange),
+            ),
+          ),
+        if (widget.additionalChildren != null)
+          ...widget.additionalChildren!
+      ],
+    );
+  }
+}
+        ''');
+
+// **************************************************************************
 // RichTextWidget
 // **************************************************************************
     buffer.writeln('''

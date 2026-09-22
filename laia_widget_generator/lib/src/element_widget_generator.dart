@@ -404,6 +404,9 @@ class ElementWidgetGenerator extends GeneratorForAnnotation<ElementWidgetGen> {
           else if(format == 'textArea') {
             return 'TextAreaWidget';
           } 
+          else if(format == 'image') {
+            return 'ImageUploadWidget';
+          }
           else {
             return 'StringWidget';
           }
@@ -522,6 +525,9 @@ class ElementWidgetGenerator extends GeneratorForAnnotation<ElementWidgetGen> {
           else if(format == 'textArea') {
             widget = 'TextAreaWidget';
           } 
+          else if(format == 'image') {
+            widget = 'ImageUploadWidget';
+          }
           else {
             widget = 'StringWidget';
           }
@@ -752,6 +758,18 @@ class ElementWidgetGenerator extends GeneratorForAnnotation<ElementWidgetGen> {
                 value: $nestedAccessor,
                 options: $innerType.values,
               ),''');
+      } else if (nestedWidget == 'ImageUploadWidget') {
+        bufferNested.writeln('''
+                value: $nestedAccessor,
+                onGetDownloadUrl: (id) async {
+                  var container = ProviderContainer();
+                  return await container.read(getDownload${visitor.className}ImageProvider(id).future);
+                },
+                onUpload: (bytes, name) async {
+                  var container = ProviderContainer();
+                  return await container.read(upload${visitor.className}ImageProvider(Tuple2(bytes, name)).future);
+                },
+              ),''');
       } else {
         bufferNested.writeln('''
                 value: $nestedAccessor,
@@ -922,6 +940,9 @@ $nestedWidgets
           else if(format == 'textArea') {
             widget = 'TextAreaWidget';
           } 
+          else if(format == 'image') {
+            widget = 'ImageUploadWidget';
+          }
           else {
             widget = 'StringWidget';
           }
@@ -1045,6 +1066,19 @@ $nestedWidgets
         } else if (relation != '') {
           bufferfieldWidget.writeln('''
 	            value: ($fieldAccessor is Map) ? ($fieldAccessor as Map)['id']?.toString() : $fieldAccessor?.toString(),
+          ),
+      ''');
+        } else if (widget == 'ImageUploadWidget') {
+          bufferfieldWidget.writeln('''
+	            value: $fieldAccessor,
+	            onGetDownloadUrl: (id) async {
+	              var container = ProviderContainer();
+	              return await container.read(getDownload${visitor.className}ImageProvider(id).future);
+	            },
+	            onUpload: (bytes, name) async {
+	              var container = ProviderContainer();
+	              return await container.read(upload${visitor.className}ImageProvider(Tuple2(bytes, name)).future);
+	            },
           ),
       ''');
         } else {
