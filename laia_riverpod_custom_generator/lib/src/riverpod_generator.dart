@@ -124,13 +124,39 @@ class RiverpodCustomGenerator extends GeneratorForAnnotation<RiverpodGenAnnotati
         return null;
       });
 
-      final upload${className}ImageProvider = FutureProvider.autoDispose.family<String?, Tuple2<List<int>, String>>((ref, tuple) async {
+      final upload${className}ImageProvider = FutureProvider.autoDispose.family<String?, dynamic>((ref, tuple) async {
         final headers = await getHeaders();
-        final req = http.MultipartRequest('POST', Uri.parse('\$baseURL/upload'));
+        final folder = '${className.toLowerCase()}';
+        String? elementId;
+        List<int> bytes;
+        String filename;
+
+        if (tuple is Tuple3) {
+          bytes = tuple.item1 as List<int>;
+          filename = tuple.item2 as String;
+          elementId = tuple.item3 as String?;
+        } else if (tuple is Tuple2) {
+          bytes = tuple.item1 as List<int>;
+          filename = tuple.item2 as String;
+        } else {
+          bytes = tuple.item1;
+          filename = tuple.item2;
+        }
+
+        final queryParams = StringBuffer('folder=\$folder');
+        if (elementId != null && elementId.isNotEmpty) {
+          queryParams.write('&id=\$elementId');
+        }
+
+        final req = http.MultipartRequest('POST', Uri.parse('\$baseURL/upload?\$queryParams'));
         if (headers['Authorization'] != null) {
           req.headers['Authorization'] = headers['Authorization']!;
         }
-        req.files.add(http.MultipartFile.fromBytes('file', tuple.item1, filename: tuple.item2));
+        req.fields['folder'] = folder;
+        if (elementId != null && elementId.isNotEmpty) {
+          req.fields['id'] = elementId;
+        }
+        req.files.add(http.MultipartFile.fromBytes('file', bytes, filename: filename));
         final res = await http.Response.fromStream(await req.send());
         if (res.statusCode == 200 || res.statusCode == 201) {
           final data = jsonDecode(res.body);

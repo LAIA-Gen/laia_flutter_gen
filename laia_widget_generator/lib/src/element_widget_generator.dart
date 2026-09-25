@@ -767,7 +767,7 @@ class ElementWidgetGenerator extends GeneratorForAnnotation<ElementWidgetGen> {
                 },
                 onUpload: (bytes, name) async {
                   var container = ProviderContainer();
-                  return await container.read(upload${visitor.className}ImageProvider(Tuple2(bytes, name)).future);
+                  return await container.read(upload${visitor.className}ImageProvider(Tuple3(bytes, name, widget.element?.id)).future);
                 },
               ),''');
       } else {
@@ -1077,7 +1077,7 @@ $nestedWidgets
 	            },
 	            onUpload: (bytes, name) async {
 	              var container = ProviderContainer();
-	              return await container.read(upload${visitor.className}ImageProvider(Tuple2(bytes, name)).future);
+	              return await container.read(upload${visitor.className}ImageProvider(Tuple3(bytes, name, widget.element?.id)).future);
 	            },
           ),
       ''');
