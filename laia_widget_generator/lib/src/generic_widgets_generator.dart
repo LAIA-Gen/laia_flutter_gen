@@ -1979,10 +1979,45 @@ class TextAreaWidgetState extends State<TextAreaWidget> {
         ''');
 
 // **************************************************************************
-// ImageUploadWidget
+// ImgproxyHelper & ImageUploadWidget
 // **************************************************************************
 
     buffer.writeln('''
+class ImgproxyHelper {
+  /// Genera la URL limpia a traves de la API del backend
+  static String buildUrl({
+    required String imagePath,
+    String? apiBaseUrl,
+    int width = 0,
+    int height = 0,
+    String resize = 'fill',
+    String? gravity,
+    String format = 'webp',
+    String? roundCorners,
+  }) {
+    if (imagePath.isEmpty) return '';
+    if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
+      return imagePath;
+    }
+
+    final clean = imagePath.replaceAll(RegExp(r'^/+'), '');
+    final base = (apiBaseUrl != null && apiBaseUrl.isNotEmpty)
+        ? apiBaseUrl.replaceAll(RegExp(r'/+\$'), '')
+        : '';
+
+    final query = <String>['raw=true'];
+    if (width > 0) query.add('width=\$width');
+    if (height > 0) query.add('height=\$height');
+    if (resize.isNotEmpty && resize != 'fit') query.add('resizing_type=\$resize');
+    if (gravity != null && gravity.isNotEmpty) query.add('gravity=\$gravity');
+    if (format.isNotEmpty && format != 'original') query.add('format=\$format');
+
+    final prefix = base.isNotEmpty ? '\$base/download' : '/download';
+    final qs = query.join('&');
+    return '\$prefix/\$clean?\$qs';
+  }
+}
+
 class ImageUploadWidget extends StatefulWidget {
   final String fieldName;
   final String fieldDescription;
@@ -1992,7 +2027,7 @@ class ImageUploadWidget extends StatefulWidget {
   final String? value;
   final List<Widget>? additionalChildren;
   final Future<String?> Function(List<int> bytes, String filename)? onUpload;
-  final Future<String?> Function(String imageId)? onGetDownloadUrl;
+  final dynamic onGetDownloadUrl;
 
   const ImageUploadWidget({
     Key? key,
@@ -2068,6 +2103,23 @@ class ImageUploadWidgetState extends State<ImageUploadWidget> {
     return true;
   }
 
+  Future<String?> _fetchUrl(String id, [Map<String, dynamic>? options]) async {
+    if (widget.onGetDownloadUrl == null) return null;
+    try {
+      if (options != null && options.isNotEmpty) {
+        try {
+          return await (widget.onGetDownloadUrl as dynamic)(id, options);
+        } catch (_) {
+          return await (widget.onGetDownloadUrl as dynamic)(id);
+        }
+      } else {
+        return await (widget.onGetDownloadUrl as dynamic)(id);
+      }
+    } catch (_) {
+      return null;
+    }
+  }
+
   Future<void> _loadUrl(String id) async {
     if (id.startsWith('http')) {
       setState(() {
@@ -2078,14 +2130,12 @@ class ImageUploadWidgetState extends State<ImageUploadWidget> {
     }
     setState(() => _loading = true);
     try {
-      if (widget.onGetDownloadUrl != null) {
-        final url = await widget.onGetDownloadUrl!(id);
-        if (url != null && url.isNotEmpty) {
-          setState(() {
-            _presignedUrl = url;
-            _controller.text = url;
-          });
-        }
+      final url = await _fetchUrl(id);
+      if (url != null && url.isNotEmpty) {
+        setState(() {
+          _presignedUrl = url;
+          _controller.text = url;
+        });
       }
     } catch (_) {}
     if (mounted) setState(() => _loading = false);
@@ -2192,7 +2242,6 @@ class ImageUploadWidgetState extends State<ImageUploadWidget> {
                           ),
                         ),
                       ),
-                      if (widget.editable)
                         Positioned(
                           top: 8,
                           right: 8,
@@ -2201,23 +2250,35 @@ class ImageUploadWidgetState extends State<ImageUploadWidget> {
                             children: [
                               CircleAvatar(
                                 radius: 18,
-                                backgroundColor: Colors.black54,
+                                backgroundColor: AppColors.indigo,
                                 child: IconButton(
-                                  icon: const Icon(Icons.refresh, color: Colors.white, size: 18),
-                                  tooltip: "Cambiar imagen",
-                                  onPressed: () => ImagePickerHelper.pickImage((bytes, name) => uploadBytes(bytes, name)),
+                                  icon: const Icon(Icons.download_rounded, color: Colors.white, size: 18),
+                                  tooltip: "Descargar imagen (medidas y formas)",
+                                  onPressed: () => _showDownloadDialog(context),
                                 ),
                               ),
-                              const SizedBox(width: 8),
-                              CircleAvatar(
-                                radius: 18,
-                                backgroundColor: Colors.red.withOpacity(0.85),
-                                child: IconButton(
-                                  icon: const Icon(Icons.delete_outline, color: Colors.white, size: 18),
-                                  tooltip: "Eliminar imagen",
-                                  onPressed: () => _onUrlChanged(''),
+                              if (widget.editable) ...[
+                                const SizedBox(width: 8),
+                                CircleAvatar(
+                                  radius: 18,
+                                  backgroundColor: Colors.black54,
+                                  child: IconButton(
+                                    icon: const Icon(Icons.refresh, color: Colors.white, size: 18),
+                                    tooltip: "Cambiar imagen",
+                                    onPressed: () => ImagePickerHelper.pickImage((bytes, name) => uploadBytes(bytes, name)),
+                                  ),
                                 ),
-                              ),
+                                const SizedBox(width: 8),
+                                CircleAvatar(
+                                  radius: 18,
+                                  backgroundColor: Colors.red.withOpacity(0.85),
+                                  child: IconButton(
+                                    icon: const Icon(Icons.delete_outline, color: Colors.white, size: 18),
+                                    tooltip: "Eliminar imagen",
+                                    onPressed: () => _onUrlChanged(''),
+                                  ),
+                                ),
+                              ],
                             ],
                           ),
                         ),
@@ -2297,6 +2358,291 @@ class ImageUploadWidgetState extends State<ImageUploadWidget> {
           ...widget.additionalChildren!
       ],
     );
+  }
+
+  void _showDownloadDialog(BuildContext context) {
+    String selectedSize = 'original';
+    String selectedShape = 'fit';
+    String selectedFormat = 'original';
+    bool downloading = false;
+
+    showDialog(
+      context: context,
+      builder: (ctx) => StatefulBuilder(
+        builder: (context, setDialogState) {
+          return Dialog(
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            child: Container(
+              width: 520,
+              padding: const EdgeInsets.all(24),
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: AppColors.indigo.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: const Icon(Icons.download_rounded, color: AppColors.indigo, size: 24),
+                        ),
+                        const SizedBox(width: 12),
+                        const Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Descargar imagen",
+                                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                              ),
+                              Text(
+                                "Selecciona medidas, formas de recorte y formato",
+                                style: TextStyle(fontSize: 12, color: Colors.grey),
+                              ),
+                            ],
+                          ),
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.close, size: 20),
+                          onPressed: () => Navigator.of(ctx).pop(),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+                    const Text("Medidas / Tamaño:", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+                    const SizedBox(height: 8),
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: [
+                        _buildChoiceChip("Original", selectedSize == 'original', () {
+                          setDialogState(() => selectedSize = 'original');
+                        }),
+                        _buildChoiceChip("Miniatura (150x150)", selectedSize == '150x150', () {
+                          setDialogState(() => selectedSize = '150x150');
+                        }),
+                        _buildChoiceChip("Avatar (256x256)", selectedSize == 'avatar_256', () {
+                          setDialogState(() {
+                            selectedSize = 'avatar_256';
+                            selectedShape = 'circle';
+                            if (selectedFormat == 'original') selectedFormat = 'png';
+                          });
+                        }),
+                        _buildChoiceChip("Mediano (800x600)", selectedSize == '800x600', () {
+                          setDialogState(() => selectedSize = '800x600');
+                        }),
+                        _buildChoiceChip("Grande (1280x720)", selectedSize == '1280x720', () {
+                          setDialogState(() => selectedSize = '1280x720');
+                        }),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    const Text("Forma / Proporción de recorte:", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+                    const SizedBox(height: 8),
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: [
+                        _buildChoiceChip("Mantener proporción (Fit)", selectedShape == 'fit', () {
+                          setDialogState(() => selectedShape = 'fit');
+                        }),
+                        _buildChoiceChip("Circular / Redonda (Avatar)", selectedShape == 'circle', () {
+                          setDialogState(() {
+                            selectedShape = 'circle';
+                            if (selectedFormat == 'original') selectedFormat = 'png';
+                          });
+                        }),
+                        _buildChoiceChip("Cuadrado 1:1 (Smart Fill)", selectedShape == 'square', () {
+                          setDialogState(() => selectedShape = 'square');
+                        }),
+                        _buildChoiceChip("Panorámico 16:9", selectedShape == '16:9', () {
+                          setDialogState(() => selectedShape = '16:9');
+                        }),
+                        _buildChoiceChip("Fotografía 4:3", selectedShape == '4:3', () {
+                          setDialogState(() => selectedShape = '4:3');
+                        }),
+                        _buildChoiceChip("Vertical 9:16", selectedShape == '9:16', () {
+                          setDialogState(() => selectedShape = '9:16');
+                        }),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    const Text("Formato de salida:", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+                    const SizedBox(height: 8),
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: [
+                        _buildChoiceChip("Original", selectedFormat == 'original', () {
+                          setDialogState(() => selectedFormat = 'original');
+                        }),
+                        _buildChoiceChip("WebP (Recomendado)", selectedFormat == 'webp', () {
+                          setDialogState(() => selectedFormat = 'webp');
+                        }),
+                        _buildChoiceChip("PNG", selectedFormat == 'png', () {
+                          setDialogState(() => selectedFormat = 'png');
+                        }),
+                        _buildChoiceChip("JPEG / JPG", selectedFormat == 'jpeg', () {
+                          setDialogState(() => selectedFormat = 'jpeg');
+                        }),
+                      ],
+                    ),
+                    const SizedBox(height: 24),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        TextButton(
+                          onPressed: downloading ? null : () => Navigator.of(ctx).pop(),
+                          child: const Text("Cancelar"),
+                        ),
+                        const SizedBox(width: 8),
+                        FilledButton.icon(
+                          icon: downloading
+                              ? const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
+                              : const Icon(Icons.download_rounded, size: 18),
+                          label: Text(downloading ? "Procesando..." : "Descargar"),
+                          onPressed: downloading ? null : () async {
+                            setDialogState(() => downloading = true);
+                            await _executeDownload(
+                              selectedSize: selectedSize,
+                              selectedShape: selectedShape,
+                              selectedFormat: selectedFormat,
+                            );
+                            if (mounted) {
+                              Navigator.of(ctx).pop();
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(content: Text("Descarga iniciada")),
+                              );
+                            }
+                          },
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildChoiceChip(String label, bool isSelected, VoidCallback onSelected) {
+    return ChoiceChip(
+      label: Text(label, style: TextStyle(fontSize: 12, color: isSelected ? Colors.white : Colors.black87)),
+      selected: isSelected,
+      selectedColor: AppColors.indigo,
+      backgroundColor: Colors.grey.withOpacity(0.1),
+      onSelected: (_) => onSelected(),
+    );
+  }
+
+  Future<void> _executeDownload({
+    required String selectedSize,
+    required String selectedShape,
+    required String selectedFormat,
+  }) async {
+    final options = <String, dynamic>{};
+
+    int? w;
+    int? h;
+
+    if (selectedSize == '150x150') { w = 150; h = 150; }
+    else if (selectedSize == 'avatar_256') { w = 256; h = 256; }
+    else if (selectedSize == '800x600') { w = 800; h = 600; }
+    else if (selectedSize == '1280x720') { w = 1280; h = 720; }
+
+    if (selectedShape == 'circle') {
+      options['resizing_type'] = 'fill';
+      options['gravity'] = 'sm';
+      options['round_corners'] = 'max';
+      if (w == null && h == null) { w = 256; h = 256; }
+      else if (w != null && h == null) { h = w; }
+      else if (h != null && w == null) { w = h; }
+      if (selectedFormat == 'original') {
+        options['format'] = 'png';
+      }
+    } else if (selectedShape == 'square') {
+      options['resizing_type'] = 'fill';
+      options['gravity'] = 'sm';
+      if (w != null && h == null) h = w;
+      else if (h != null && w == null) w = h;
+      else if (w == null && h == null) { w = 500; h = 500; }
+    } else if (selectedShape == '16:9') {
+      options['resizing_type'] = 'fill';
+      options['gravity'] = 'ce';
+      if (w == null && h == null) { w = 1280; h = 720; }
+    } else if (selectedShape == '4:3') {
+      options['resizing_type'] = 'fill';
+      options['gravity'] = 'ce';
+      if (w == null && h == null) { w = 800; h = 600; }
+    } else if (selectedShape == '9:16') {
+      options['resizing_type'] = 'fill';
+      options['gravity'] = 'sm';
+      if (w == null && h == null) { w = 720; h = 1280; }
+    } else {
+      if (w != null || h != null) {
+        options['resizing_type'] = 'fit';
+      }
+    }
+
+    if (w != null && w > 0) options['width'] = w;
+    if (h != null && h > 0) options['height'] = h;
+
+    if (selectedFormat != 'original') {
+      options['format'] = selectedFormat;
+    }
+
+    String? downloadUrl;
+    final lookupId = currentValue.isNotEmpty ? currentValue : (widget.value ?? '');
+    if (widget.onGetDownloadUrl != null && lookupId.isNotEmpty) {
+      downloadUrl = await _fetchUrl(lookupId, options);
+    }
+
+    if (downloadUrl == null || downloadUrl.isEmpty) {
+      downloadUrl = ImgproxyHelper.buildUrl(
+        imagePath: lookupId,
+        width: w ?? 0,
+        height: h ?? 0,
+        resize: options['resizing_type']?.toString() ?? 'fill',
+        gravity: options['gravity']?.toString(),
+        format: (options['format']?.toString() ?? selectedFormat),
+        roundCorners: options['round_corners']?.toString(),
+      );
+    }
+
+    if (downloadUrl == null || downloadUrl.isEmpty) {
+      downloadUrl = _presignedUrl;
+    }
+
+    if (downloadUrl != null && downloadUrl.isNotEmpty) {
+      String baseName = lookupId.split('/').last.split('?').first;
+      if (baseName.isEmpty) baseName = 'imagen';
+      final dotIdx = baseName.lastIndexOf('.');
+      String nameWithoutExt = dotIdx > 0 ? baseName.substring(0, dotIdx) : baseName;
+      String ext = dotIdx > 0 ? baseName.substring(dotIdx + 1) : 'jpg';
+
+      if (selectedFormat != 'original') {
+        ext = selectedFormat;
+      }
+      String dimSuffix = '';
+      if (w != null && h != null) {
+        dimSuffix = '_\${w}x\${h}';
+      } else if (w != null) {
+        dimSuffix = '_w\$w';
+      } else if (h != null) {
+        dimSuffix = '_h\$h';
+      }
+      String shapeSuffix = selectedShape != 'fit' ? '_\$selectedShape' : '';
+      String finalFilename = '\$nameWithoutExt\$dimSuffix\$shapeSuffix.\$ext';
+
+      ImagePickerHelper.downloadFile(downloadUrl, finalFilename);
+    }
   }
 }
         ''');

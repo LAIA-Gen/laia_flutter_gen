@@ -761,9 +761,17 @@ class ElementWidgetGenerator extends GeneratorForAnnotation<ElementWidgetGen> {
       } else if (nestedWidget == 'ImageUploadWidget') {
         bufferNested.writeln('''
                 value: $nestedAccessor,
-                onGetDownloadUrl: (id) async {
+                onGetDownloadUrl: (id, [options]) async {
                   var container = ProviderContainer();
-                  return await container.read(getDownload${visitor.className}ImageProvider(id).future);
+                  String query = '';
+                  if (options != null && options is Map && options.isNotEmpty) {
+                    final params = options.entries
+                        .where((e) => e.value != null && e.value.toString().isNotEmpty)
+                        .map((e) => '\${Uri.encodeComponent(e.key.toString())}=\${Uri.encodeComponent(e.value.toString())}')
+                        .join('&');
+                    if (params.isNotEmpty) query = '?\$params';
+                  }
+                  return await container.read(getDownload${visitor.className}ImageProvider('\$id\$query').future);
                 },
                 onUpload: (bytes, name) async {
                   var container = ProviderContainer();
@@ -1071,9 +1079,17 @@ $nestedWidgets
         } else if (widget == 'ImageUploadWidget') {
           bufferfieldWidget.writeln('''
 	            value: $fieldAccessor,
-	            onGetDownloadUrl: (id) async {
+	            onGetDownloadUrl: (id, [options]) async {
 	              var container = ProviderContainer();
-	              return await container.read(getDownload${visitor.className}ImageProvider(id).future);
+	              String query = '';
+	              if (options != null && options is Map && options.isNotEmpty) {
+	                final params = options.entries
+	                    .where((e) => e.value != null && e.value.toString().isNotEmpty)
+	                    .map((e) => '\${Uri.encodeComponent(e.key.toString())}=\${Uri.encodeComponent(e.value.toString())}')
+	                    .join('&');
+	                if (params.isNotEmpty) query = '?\$params';
+	              }
+	              return await container.read(getDownload${visitor.className}ImageProvider('\$id\$query').future);
 	            },
 	            onUpload: (bytes, name) async {
 	              var container = ProviderContainer();
