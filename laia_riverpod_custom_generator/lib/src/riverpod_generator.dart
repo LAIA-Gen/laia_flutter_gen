@@ -114,14 +114,26 @@ class RiverpodCustomGenerator extends GeneratorForAnnotation<RiverpodGenAnnotati
       });
 
       final getDownload${className}ImageProvider = FutureProvider.autoDispose.family<String?, String>((ref, imageId) async {
-        final headers = await getHeaders();
         final cleanId = imageId.replaceAll(RegExp(r'^/+'), '');
-        final res = await http.get(Uri.parse('\$baseURL/download/\$cleanId'), headers: headers);
-        if (res.statusCode == 200) {
-          final data = jsonDecode(res.body);
-          return data['url']?.toString();
+        if (cleanId.isEmpty) return null;
+        if (cleanId.startsWith('http://') || cleanId.startsWith('https://')) {
+          return cleanId;
         }
-        return null;
+        final headers = await getHeaders();
+        final authHeader = headers['Authorization'] ?? '';
+        final token = authHeader.startsWith('Bearer ') ? authHeader.substring(7).trim() : authHeader;
+
+        final hasQuery = cleanId.contains('?');
+        final separator = hasQuery ? '&' : '?';
+        final queryParams = <String>[];
+        if (!cleanId.contains('raw=')) {
+          queryParams.add('raw=true');
+        }
+        if (token.isNotEmpty && !cleanId.contains('token=')) {
+          queryParams.add('token=\$token');
+        }
+        final qs = queryParams.isNotEmpty ? '\$separator\${queryParams.join('&')}' : '';
+        return '\$baseURL/download/\$cleanId\$qs';
       });
 
       final upload${className}ImageProvider = FutureProvider.autoDispose.family<String?, dynamic>((ref, tuple) async {

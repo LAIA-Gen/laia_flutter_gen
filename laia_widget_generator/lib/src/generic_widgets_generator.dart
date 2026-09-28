@@ -949,7 +949,9 @@ class LineStringView extends StatelessWidget {
   String formatProperties(dynamic properties) {
     String message = '';
     properties.forEach((key, value) {
-      message += '\$key: \$value'''r'''\n'''r'''';
+      message += '\$key: \$value'''
+        r'''\n'''
+        r'''';
     });
     return message;
   }
@@ -1984,7 +1986,7 @@ class TextAreaWidgetState extends State<TextAreaWidget> {
 
     buffer.writeln('''
 class ImgproxyHelper {
-  /// Genera la URL limpia a traves de la API del backend
+  /// Genera la URL limpia a través de la API del backend (compatible con MinIO, Imgproxy, Cloudinary y S3)
   static String buildUrl({
     required String imagePath,
     String? apiBaseUrl,
@@ -1993,7 +1995,6 @@ class ImgproxyHelper {
     String resize = 'fill',
     String? gravity,
     String format = 'webp',
-    String? roundCorners,
   }) {
     if (imagePath.isEmpty) return '';
     if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
@@ -2017,6 +2018,8 @@ class ImgproxyHelper {
     return '\$prefix/\$clean?\$qs';
   }
 }
+
+typedef StorageHelper = ImgproxyHelper;
 
 class ImageUploadWidget extends StatefulWidget {
   final String fieldName;
