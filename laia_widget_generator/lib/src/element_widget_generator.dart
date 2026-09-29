@@ -400,13 +400,16 @@ class ElementWidgetGenerator extends GeneratorForAnnotation<ElementWidgetGen> {
         case 'String?':
           if(format == 'richText') {
             return 'RichTextWidget';
-          }
+          } 
           else if(format == 'textArea') {
             return 'TextAreaWidget';
           } 
           else if(format == 'image') {
             return 'ImageUploadWidget';
           }
+          else if(format == 'file') {
+            return 'FileUploadWidget';
+          } 
           else {
             return 'StringWidget';
           }
@@ -521,13 +524,16 @@ class ElementWidgetGenerator extends GeneratorForAnnotation<ElementWidgetGen> {
         case 'String?':
           if(format == 'richText') {
             widget = 'RichTextWidget';
-          }
+          } 
           else if(format == 'textArea') {
             widget = 'TextAreaWidget';
           } 
           else if(format == 'image') {
             widget = 'ImageUploadWidget';
-          }
+          } 
+          else if(format == 'file') {
+            widget = 'FileUploadWidget';
+          } 
           else {
             widget = 'StringWidget';
           }
@@ -758,7 +764,7 @@ class ElementWidgetGenerator extends GeneratorForAnnotation<ElementWidgetGen> {
                 value: $nestedAccessor,
                 options: $innerType.values,
               ),''');
-      } else if (nestedWidget == 'ImageUploadWidget') {
+      } else if (nestedWidget == 'ImageUploadWidget' || nestedWidget == 'FileUploadWidget') {
         bufferNested.writeln('''
                 value: $nestedAccessor,
                 onGetDownloadUrl: (id, [options]) async {
@@ -944,13 +950,16 @@ $nestedWidgets
         case 'String?':
           if(format == 'richText') {
             widget = 'RichTextWidget';
-          }
+          } 
           else if(format == 'textArea') {
             widget = 'TextAreaWidget';
           } 
           else if(format == 'image') {
             widget = 'ImageUploadWidget';
-          }
+          } 
+          else if(format == 'file') {
+            widget = 'FileUploadWidget';
+          } 
           else {
             widget = 'StringWidget';
           }
@@ -1076,7 +1085,7 @@ $nestedWidgets
 	            value: ($fieldAccessor is Map) ? ($fieldAccessor as Map)['id']?.toString() : $fieldAccessor?.toString(),
           ),
       ''');
-        } else if (widget == 'ImageUploadWidget') {
+        } else if (widget == 'ImageUploadWidget' || widget == 'FileUploadWidget') {
           bufferfieldWidget.writeln('''
 	            value: $fieldAccessor,
 	            onGetDownloadUrl: (id, [options]) async {
