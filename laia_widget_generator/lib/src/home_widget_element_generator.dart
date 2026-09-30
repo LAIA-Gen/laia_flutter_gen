@@ -5,6 +5,7 @@ import 'package:laia_annotations/laia_annotations.dart';
 import 'package:build/src/builder/build_step.dart';
 import 'package:laia_widget_generator/src/model_visitor.dart';
 import 'package:source_gen/source_gen.dart';
+import 'audit_widget_source.dart';
 
 class HomeWidgetElementGenerator extends GeneratorForAnnotation<HomeWidgetElementGenAnnotation> {
   @override
@@ -16,6 +17,13 @@ class HomeWidgetElementGenerator extends GeneratorForAnnotation<HomeWidgetElemen
     final buffer = StringBuffer();
     final visitor = ModelVisitor();
     element.visitChildren(visitor);
+    if (isAuditModel(visitor.className)) {
+      return '''class ${visitor.className}HomeWidget extends StatelessWidget {
+  const ${visitor.className}HomeWidget({super.key});
+  @override
+  Widget build(BuildContext context) => const ${visitor.className}AuditMenu();
+}''';
+    }
 
     var iconPath = annotation.read('icon').stringValue;
     if (iconPath == "") {

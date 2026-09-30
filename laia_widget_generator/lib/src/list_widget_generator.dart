@@ -6,6 +6,7 @@ import 'package:laia_annotations/laia_annotations.dart';
 import 'package:build/src/builder/build_step.dart';
 import 'package:laia_widget_generator/src/model_visitor.dart';
 import 'package:source_gen/source_gen.dart';
+import 'audit_widget_source.dart';
 
 const _fieldChecker = TypeChecker.fromRuntime(Field);
 
@@ -45,6 +46,9 @@ class ListWidgetGenerator extends GeneratorForAnnotation<ListWidgetGenAnnotation
     final buffer = StringBuffer();
     final visitor = ModelVisitor();
     element.visitChildren(visitor);
+    if (isAuditModel(visitor.className)) {
+      return generateAuditWidgets(visitor.className);
+    }
     ClassElement classElement = element as ClassElement;
 
     final pageSize = annotation.read('pageSize').intValue;

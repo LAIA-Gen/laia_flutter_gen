@@ -37,3 +37,16 @@ class Plain {
   final String? value;
   Plain({this.value});
 }
+
+@ListWidgetGenAnnotation()
+@ElementWidgetGen()
+@HomeWidgetElementGenAnnotation()
+class AuditLog {}
+
+@ListWidgetGenAnnotation()
+@ElementWidgetGen()
+@HomeWidgetElementGenAnnotation()
+class LoginEvent {}
+
+@HomeWidgetGenAnnotation()
+class Home {}

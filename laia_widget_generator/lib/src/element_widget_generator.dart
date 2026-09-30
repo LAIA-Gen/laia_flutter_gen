@@ -5,6 +5,7 @@ import 'package:laia_annotations/laia_annotations.dart';
 import 'package:build/src/builder/build_step.dart';
 import 'package:laia_widget_generator/src/model_visitor.dart';
 import 'package:source_gen/source_gen.dart';
+import 'audit_widget_source.dart';
 
 const _fieldChecker = TypeChecker.fromRuntime(Field);
 
@@ -19,6 +20,13 @@ class ElementWidgetGenerator extends GeneratorForAnnotation<ElementWidgetGen> {
     final buffer = StringBuffer();
     final visitor = ModelVisitor();
     element.visitChildren(visitor);
+    if (isAuditModel(visitor.className)) {
+      return '''class ${visitor.className}Widget extends StatelessWidget {
+  const ${visitor.className}Widget({super.key});
+  @override
+  Widget build(BuildContext context) => const ${visitor.className}ListView();
+}''';
+    }
     final fieldsKeys = visitor.fields.keys.toList();
 
     String DisplayField(String varName) {

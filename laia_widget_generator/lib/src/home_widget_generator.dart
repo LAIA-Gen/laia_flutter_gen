@@ -6,6 +6,7 @@ import 'package:laia_annotations/laia_annotations.dart';
 import 'package:build/src/builder/build_step.dart';
 import 'package:laia_widget_generator/src/model_visitor.dart';
 import 'package:source_gen/source_gen.dart';
+import 'audit_widget_source.dart';
 
 class HomeWidgetGenerator extends GeneratorForAnnotation<HomeWidgetGenAnnotation> {
   @override
@@ -21,10 +22,21 @@ class HomeWidgetGenerator extends GeneratorForAnnotation<HomeWidgetGenAnnotation
     final homeTxtId = AssetId(buildStep.inputId.package, 'lib/home.txt');
     final content = await buildStep.readAsString(homeTxtId);
     final lines = content.split('\n');
+    final auditModels = lines.map((line) => line.trim().replaceAll('HomeWidget', ''))
+        .where(isAuditModel).toSet().toList();
 
     buffer.writeln("Widget dashboardWidget(BuildContext context) {");
+    if (auditModels.isNotEmpty) {
+      buffer.writeln('return Column(children: [');
+      for (final name in auditModels) {
+        buffer.writeln('const ${name}AuditMenu(),');
+      }
+      buffer.writeln('Expanded(child:');
+    } else {
+      buffer.write('return ');
+    }
     buffer.writeln('''
-  return AppCardsGrid(
+  AppCardsGrid(
     items: [
 ''');
 
@@ -39,6 +51,7 @@ for (String line in lines) {
       .replaceAll('Widget', '');
 
   final listViewName = '${base}ListView';
+  if (isAuditModel(base)) continue;
 
   buffer.writeln('''
       AppCardItem(
@@ -54,11 +67,8 @@ for (String line in lines) {
 ''');
 }
 
-buffer.writeln('''
-    ],
-  );
-}
-''');
+buffer.writeln('])');
+buffer.writeln(auditModels.isNotEmpty ? ')]);\n}' : ';\n}');
 
 
     buffer.writeln('''class DynamicLogInScreen extends StatelessWidget {
