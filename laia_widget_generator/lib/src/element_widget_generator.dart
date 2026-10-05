@@ -95,7 +95,30 @@ class ElementWidgetGenerator extends GeneratorForAnnotation<ElementWidgetGen> {
       for (final tabObj in tabsannotation.listValue) {
         final tab = ConstantReader(tabObj);
         final label = tab.read('label').stringValue;
-        final fields = tab.read('fields').listValue.map((e) => e.toStringValue() ?? '').toList();
+        final rawFields = tab.read('fields').listValue;
+        final List<List<String>> tabRows = [];
+        final List<String> flatFields = [];
+
+        for (final item in rawFields) {
+          final listVal = item.toListValue();
+          if (listVal != null) {
+            final row = listVal
+                .map((x) => x.toStringValue() ?? '')
+                .where((s) => s.isNotEmpty)
+                .toList();
+            if (row.isNotEmpty) {
+              tabRows.add(row);
+              flatFields.addAll(row);
+            }
+          } else {
+            final strVal = item.toStringValue();
+            if (strVal != null && strVal.isNotEmpty) {
+              tabRows.add([strVal]);
+              flatFields.add(strVal);
+            }
+          }
+        }
+
         final relation = tab.read('relation').stringValue;
         final inverseRelationField = tab.read('inverseRelationField').stringValue;
 
@@ -134,7 +157,8 @@ class ElementWidgetGenerator extends GeneratorForAnnotation<ElementWidgetGen> {
         } else {
           tabs.add({
             'label': label,
-            'fields': fields,
+            'fields': flatFields,
+            'rows': tabRows,
             'isRelationTab': false,
           });
         }
@@ -376,9 +400,15 @@ class ElementWidgetGenerator extends GeneratorForAnnotation<ElementWidgetGen> {
         case 'String?':
           if(format == 'richText') {
             return 'RichTextWidget';
-          }
+          } 
           else if(format == 'textArea') {
             return 'TextAreaWidget';
+          } 
+          else if(format == 'image') {
+            return 'ImageUploadWidget';
+          }
+          else if(format == 'file') {
+            return 'FileUploadWidget';
           } 
           else {
             return 'StringWidget';
@@ -494,9 +524,15 @@ class ElementWidgetGenerator extends GeneratorForAnnotation<ElementWidgetGen> {
         case 'String?':
           if(format == 'richText') {
             widget = 'RichTextWidget';
-          }
+          } 
           else if(format == 'textArea') {
             widget = 'TextAreaWidget';
+          } 
+          else if(format == 'image') {
+            widget = 'ImageUploadWidget';
+          } 
+          else if(format == 'file') {
+            widget = 'FileUploadWidget';
           } 
           else {
             widget = 'StringWidget';
@@ -728,6 +764,26 @@ class ElementWidgetGenerator extends GeneratorForAnnotation<ElementWidgetGen> {
                 value: $nestedAccessor,
                 options: $innerType.values,
               ),''');
+      } else if (nestedWidget == 'ImageUploadWidget' || nestedWidget == 'FileUploadWidget') {
+        bufferNested.writeln('''
+                value: $nestedAccessor,
+                onGetDownloadUrl: (id, [options]) async {
+                  var container = ProviderContainer();
+                  String query = '';
+                  if (options != null && options is Map && options.isNotEmpty) {
+                    final params = options.entries
+                        .where((e) => e.value != null && e.value.toString().isNotEmpty)
+                        .map((e) => '\${Uri.encodeComponent(e.key.toString())}=\${Uri.encodeComponent(e.value.toString())}')
+                        .join('&');
+                    if (params.isNotEmpty) query = '?\$params';
+                  }
+                  return await container.read(getDownload${visitor.className}ImageProvider('\$id\$query').future);
+                },
+                onUpload: (bytes, name) async {
+                  var container = ProviderContainer();
+                  return await container.read(upload${visitor.className}ImageProvider(Tuple3(bytes, name, widget.element?.id)).future);
+                },
+              ),''');
       } else {
         bufferNested.writeln('''
                 value: $nestedAccessor,
@@ -894,9 +950,15 @@ $nestedWidgets
         case 'String?':
           if(format == 'richText') {
             widget = 'RichTextWidget';
-          }
+          } 
           else if(format == 'textArea') {
             widget = 'TextAreaWidget';
+          } 
+          else if(format == 'image') {
+            widget = 'ImageUploadWidget';
+          } 
+          else if(format == 'file') {
+            widget = 'FileUploadWidget';
           } 
           else {
             widget = 'StringWidget';
@@ -1023,6 +1085,27 @@ $nestedWidgets
 	            value: ($fieldAccessor is Map) ? ($fieldAccessor as Map)['id']?.toString() : $fieldAccessor?.toString(),
           ),
       ''');
+        } else if (widget == 'ImageUploadWidget' || widget == 'FileUploadWidget') {
+          bufferfieldWidget.writeln('''
+	            value: $fieldAccessor,
+	            onGetDownloadUrl: (id, [options]) async {
+	              var container = ProviderContainer();
+	              String query = '';
+	              if (options != null && options is Map && options.isNotEmpty) {
+	                final params = options.entries
+	                    .where((e) => e.value != null && e.value.toString().isNotEmpty)
+	                    .map((e) => '\${Uri.encodeComponent(e.key.toString())}=\${Uri.encodeComponent(e.value.toString())}')
+	                    .join('&');
+	                if (params.isNotEmpty) query = '?\$params';
+	              }
+	              return await container.read(getDownload${visitor.className}ImageProvider('\$id\$query').future);
+	            },
+	            onUpload: (bytes, name) async {
+	              var container = ProviderContainer();
+	              return await container.read(upload${visitor.className}ImageProvider(Tuple3(bytes, name, widget.element?.id)).future);
+	            },
+          ),
+      ''');
         } else {
           if (widget == 'DateTimeWidget' && format == 'date') {
             bufferfieldWidget.writeln('''
@@ -1081,6 +1164,7 @@ $nestedWidgets
                     ),
           ''');
         } else {
+          final tabRows = (tab['rows'] as List<List<String>>?) ?? [];
           final tabFields = tab['fields'] as List<dynamic>;
           buffer.writeln('''
                     KeepAliveWrapper(
@@ -1088,12 +1172,41 @@ $nestedWidgets
                         child: Column(
                           children: [
           ''');
-          for (var field in classElement.fields) {
-            final name = field.name;
-            if (name == 'id' || name == 'owner' || name == 'Shard') continue;
-            if (tabFields.contains(name) ||
-                tabFields.any((tf) => tf.toString().startsWith('$name.'))) {
-              buffer.writeln(fieldWidgetCode(field));
+          if (tabRows.isNotEmpty) {
+            for (var row in tabRows) {
+              if (row.length == 1) {
+                final fieldName = row[0];
+                final matchingFields = classElement.fields.where((f) => f.name == fieldName);
+                if (matchingFields.isNotEmpty) {
+                  buffer.writeln(fieldWidgetCode(matchingFields.first));
+                }
+              } else if (row.length > 1) {
+                buffer.writeln('''
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [''');
+                for (var fieldName in row) {
+                  final matchingFields = classElement.fields.where((f) => f.name == fieldName);
+                  if (matchingFields.isNotEmpty) {
+                    buffer.writeln('''
+                                Expanded(
+                                  child: ${fieldWidgetCode(matchingFields.first)}
+                                ),''');
+                  }
+                }
+                buffer.writeln('''
+                              ],
+                            ),''');
+              }
+            }
+          } else {
+            for (var field in classElement.fields) {
+              final name = field.name;
+              if (name == 'id' || name == 'owner' || name == 'Shard') continue;
+              if (tabFields.contains(name) ||
+                  tabFields.any((tf) => tf.toString().startsWith('$name.'))) {
+                buffer.writeln(fieldWidgetCode(field));
+              }
             }
           }
           buffer.writeln('''

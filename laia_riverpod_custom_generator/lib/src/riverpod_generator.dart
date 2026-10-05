@@ -113,6 +113,71 @@ class RiverpodCustomGenerator extends GeneratorForAnnotation<RiverpodGenAnnotati
         }
       });
 
+      final getDownload${className}ImageProvider = FutureProvider.autoDispose.family<String?, String>((ref, imageId) async {
+        final cleanId = imageId.replaceAll(RegExp(r'^/+'), '');
+        if (cleanId.isEmpty) return null;
+        if (cleanId.startsWith('http://') || cleanId.startsWith('https://')) {
+          return cleanId;
+        }
+        final headers = await getHeaders();
+        final authHeader = headers['Authorization'] ?? '';
+        final token = authHeader.startsWith('Bearer ') ? authHeader.substring(7).trim() : authHeader;
+
+        final hasQuery = cleanId.contains('?');
+        final separator = hasQuery ? '&' : '?';
+        final queryParams = <String>[];
+        if (!cleanId.contains('raw=')) {
+          queryParams.add('raw=true');
+        }
+        if (token.isNotEmpty && !cleanId.contains('token=')) {
+          queryParams.add('token=\$token');
+        }
+        final qs = queryParams.isNotEmpty ? '\$separator\${queryParams.join('&')}' : '';
+        return '\$baseURL/download/\$cleanId\$qs';
+      });
+
+      final upload${className}ImageProvider = FutureProvider.autoDispose.family<String?, dynamic>((ref, tuple) async {
+        final headers = await getHeaders();
+        final folder = '${className.toLowerCase()}';
+        String? elementId;
+        List<int> bytes;
+        String filename;
+
+        if (tuple is Tuple3) {
+          bytes = tuple.item1 as List<int>;
+          filename = tuple.item2 as String;
+          elementId = tuple.item3 as String?;
+        } else if (tuple is Tuple2) {
+          bytes = tuple.item1 as List<int>;
+          filename = tuple.item2 as String;
+        } else {
+          bytes = tuple.item1;
+          filename = tuple.item2;
+        }
+
+        final queryParams = StringBuffer('folder=\$folder');
+        if (elementId != null && elementId.isNotEmpty) {
+          queryParams.write('&id=\$elementId');
+        }
+
+        final req = http.MultipartRequest('POST', Uri.parse('\$baseURL/upload?\$queryParams'));
+        if (headers['Authorization'] != null) {
+          req.headers['Authorization'] = headers['Authorization']!;
+        }
+        req.fields['folder'] = folder;
+        if (elementId != null && elementId.isNotEmpty) {
+          req.fields['id'] = elementId;
+        }
+        req.files.add(http.MultipartFile.fromBytes('file', bytes, filename: filename));
+        final res = await http.Response.fromStream(await req.send());
+        if (res.statusCode == 200 || res.statusCode == 201) {
+          final data = jsonDecode(res.body);
+          return (data['id'] ?? data['image_url'] ?? data['path'])?.toString();
+        }
+        return null;
+      });
+
+
       class ${className}PaginationData {
         final List<$className> items;
         final int currentPage;

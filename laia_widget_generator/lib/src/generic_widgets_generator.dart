@@ -949,7 +949,9 @@ class LineStringView extends StatelessWidget {
   String formatProperties(dynamic properties) {
     String message = '';
     properties.forEach((key, value) {
-      message += '\$key: \$value'''r'''\n'''r'''';
+      message += '\$key: \$value'''
+        r'''\n'''
+        r'''';
     });
     return message;
   }
@@ -1972,6 +1974,1193 @@ class TextAreaWidgetState extends State<TextAreaWidget> {
           ),
         if (widget.additionalChildren != null)
           ...widget.additionalChildren!
+      ],
+    );
+  }
+}
+        ''');
+
+// **************************************************************************
+// ImgproxyHelper & ImageUploadWidget
+// **************************************************************************
+
+    buffer.writeln('''
+class ImgproxyHelper {
+  /// Genera la URL limpia a través de la API del backend (compatible con MinIO, Imgproxy, Cloudinary y S3)
+  static String buildUrl({
+    required String imagePath,
+    String? apiBaseUrl,
+    int width = 0,
+    int height = 0,
+    String resize = 'fill',
+    String? gravity,
+    String format = 'webp',
+  }) {
+    if (imagePath.isEmpty) return '';
+    if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
+      return imagePath;
+    }
+
+    final clean = imagePath.replaceAll(RegExp(r'^/+'), '');
+    final base = (apiBaseUrl != null && apiBaseUrl.isNotEmpty)
+        ? apiBaseUrl.replaceAll(RegExp(r'/+\$'), '')
+        : '';
+
+    final query = <String>['raw=true'];
+    if (width > 0) query.add('width=\$width');
+    if (height > 0) query.add('height=\$height');
+    if (resize.isNotEmpty && resize != 'fit') query.add('resizing_type=\$resize');
+    if (gravity != null && gravity.isNotEmpty) query.add('gravity=\$gravity');
+    if (format.isNotEmpty && format != 'original') query.add('format=\$format');
+
+    final prefix = base.isNotEmpty ? '\$base/download' : '/download';
+    final qs = query.join('&');
+    return '\$prefix/\$clean?\$qs';
+  }
+}
+
+typedef StorageHelper = ImgproxyHelper;
+
+class ImageUploadWidget extends StatefulWidget {
+  final String fieldName;
+  final String fieldDescription;
+  final bool isRequired;
+  final bool editable;
+  final String placeholder;
+  final String? value;
+  final List<Widget>? additionalChildren;
+  final Future<String?> Function(List<int> bytes, String filename)? onUpload;
+  final dynamic onGetDownloadUrl;
+
+  const ImageUploadWidget({
+    Key? key,
+    required this.fieldName,
+    this.isRequired = false,
+    required this.fieldDescription,
+    required this.editable,
+    required this.placeholder,
+    required this.value,
+    this.additionalChildren,
+    this.onUpload,
+    this.onGetDownloadUrl,
+  }) : super(key: key);
+
+  @override
+  ImageUploadWidgetState createState() => ImageUploadWidgetState();
+}
+
+class ImageUploadWidgetState extends State<ImageUploadWidget> {
+  bool isValueChanged = false;
+  late String? initialValue;
+  late String currentValue;
+  bool showValidationError = false;
+  String? _presignedUrl;
+  bool _loading = false;
+  bool _isDragging = false;
+  void Function()? _dropZoneCleanup;
+  late final TextEditingController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    initialValue = widget.value;
+    currentValue = initialValue ?? '';
+    _controller = TextEditingController(text: currentValue);
+    if (currentValue.isNotEmpty) _loadUrl(currentValue);
+
+    if (widget.editable) {
+      _dropZoneCleanup = ImagePickerHelper.setupDropZone(
+        onDragStateChanged: (dragging) {
+          if (mounted && _isDragging != dragging) {
+            setState(() => _isDragging = dragging);
+          }
+        },
+        onFileDropped: (bytes, filename) {
+          uploadBytes(bytes, filename);
+        },
+      );
+    }
+  }
+
+  @override
+  void dispose() {
+    _dropZoneCleanup?.call();
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (FormValidationScope.of(context)) validate();
+  }
+
+  String? getUpdatedValue() => isValueChanged ? currentValue : initialValue;
+
+  bool validate() {
+    if (widget.isRequired && (getUpdatedValue() == null || currentValue.trim().isEmpty || currentValue == 'null')) {
+      setState(() => showValidationError = true);
+      return false;
+    }
+    setState(() => showValidationError = false);
+    return true;
+  }
+
+  Future<String?> _fetchUrl(String id, [Map<String, dynamic>? options]) async {
+    if (widget.onGetDownloadUrl == null) return null;
+    try {
+      if (options != null && options.isNotEmpty) {
+        try {
+          return await (widget.onGetDownloadUrl as dynamic)(id, options);
+        } catch (_) {
+          return await (widget.onGetDownloadUrl as dynamic)(id);
+        }
+      } else {
+        return await (widget.onGetDownloadUrl as dynamic)(id);
+      }
+    } catch (_) {
+      return null;
+    }
+  }
+
+  Future<void> _loadUrl(String id) async {
+    if (id.startsWith('http')) {
+      setState(() {
+        _presignedUrl = id;
+        _controller.text = id;
+      });
+      return;
+    }
+    setState(() => _loading = true);
+    try {
+      final url = await _fetchUrl(id);
+      if (url != null && url.isNotEmpty) {
+        setState(() {
+          _presignedUrl = url;
+          _controller.text = url;
+        });
+      }
+    } catch (_) {}
+    if (mounted) setState(() => _loading = false);
+  }
+
+  Future<void> uploadBytes(List<int> bytes, String name) async {
+    setState(() => _loading = true);
+    try {
+      String? newId;
+      if (widget.onUpload != null) {
+        newId = await widget.onUpload!(bytes, name);
+      }
+      if (newId != null && newId.isNotEmpty) {
+        setState(() {
+          currentValue = newId!;
+          isValueChanged = currentValue != (initialValue ?? '');
+          _controller.text = newId!;
+          showValidationError = false;
+        });
+        _loadUrl(newId!);
+      }
+    } catch (_) {}
+    if (mounted) setState(() => _loading = false);
+  }
+
+  void _onUrlChanged(String val) {
+    setState(() {
+      currentValue = val;
+      isValueChanged = val != (initialValue ?? '');
+      showValidationError = false;
+    });
+    if (val.trim().isNotEmpty) _loadUrl(val.trim());
+    else setState(() => _presignedUrl = null);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final hasImage = _presignedUrl != null && _presignedUrl!.isNotEmpty;
+
+    return Stack(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(16.0),
+          margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12.0),
+            color: AppColors.surface,
+            border: Border.all(
+              color: _isDragging ? AppColors.indigo : (showValidationError ? Colors.red.withOpacity(0.5) : AppColors.muted.withOpacity(0.2)),
+              width: _isDragging ? 2.0 : 1.0,
+            ),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Text("\${widget.fieldName}:", style: const TextStyle(fontWeight: FontWeight.bold)),
+                  const SizedBox(width: 8.0),
+                  Text(widget.fieldDescription, style: const TextStyle(color: Colors.grey, fontSize: 13)),
+                ],
+              ),
+              const SizedBox(height: 12.0),
+              if (_loading)
+                Container(
+                  height: 150,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: Colors.black.withOpacity(0.03),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: const Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CircularProgressIndicator(),
+                      SizedBox(height: 12),
+                      Text("Uploading image...", style: TextStyle(color: Colors.grey)),
+                    ],
+                  ),
+                )
+              else if (hasImage)
+                Center(
+                  child: Stack(
+                    alignment: Alignment.topRight,
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: Image.network(
+                          _presignedUrl!,
+                          height: 200,
+                          fit: BoxFit.contain,
+                          errorBuilder: (_, __, ___) => Container(
+                            height: 150,
+                            color: Colors.grey.withOpacity(0.1),
+                            alignment: Alignment.center,
+                            child: const Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(Icons.broken_image_outlined, color: Colors.grey, size: 40),
+                                SizedBox(height: 8),
+                                Text("Could not load image", style: TextStyle(color: Colors.grey)),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                        Positioned(
+                          top: 8,
+                          right: 8,
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              CircleAvatar(
+                                radius: 18,
+                                backgroundColor: AppColors.indigo,
+                                child: IconButton(
+                                  icon: const Icon(Icons.download_rounded, color: Colors.white, size: 18),
+                                  tooltip: "Download image (sizes & shapes)",
+                                  onPressed: () => _showDownloadDialog(context),
+                                ),
+                              ),
+                              if (widget.editable) ...[
+                                const SizedBox(width: 8),
+                                CircleAvatar(
+                                  radius: 18,
+                                  backgroundColor: Colors.black54,
+                                  child: IconButton(
+                                    icon: const Icon(Icons.refresh, color: Colors.white, size: 18),
+                                    tooltip: "Change image",
+                                    onPressed: () => ImagePickerHelper.pickImage((bytes, name) => uploadBytes(bytes, name)),
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                                CircleAvatar(
+                                  radius: 18,
+                                  backgroundColor: Colors.red.withOpacity(0.85),
+                                  child: IconButton(
+                                    icon: const Icon(Icons.delete_outline, color: Colors.white, size: 18),
+                                    tooltip: "Delete image",
+                                    onPressed: () => _onUrlChanged(''),
+                                  ),
+                                ),
+                              ],
+                            ],
+                          ),
+                        ),
+                    ],
+                  ),
+                )
+              else
+                InkWell(
+                  onTap: widget.editable ? () => ImagePickerHelper.pickImage((bytes, name) => uploadBytes(bytes, name)) : null,
+                  borderRadius: BorderRadius.circular(10),
+                  child: Container(
+                    height: 130,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: _isDragging ? AppColors.indigo.withOpacity(0.08) : Colors.black.withOpacity(0.02),
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(
+                        color: _isDragging ? AppColors.indigo : AppColors.muted.withOpacity(0.5),
+                        width: 1.5,
+                      ),
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          _isDragging ? Icons.file_download : Icons.cloud_upload_outlined,
+                          color: _isDragging ? AppColors.indigo : Colors.grey,
+                          size: 38,
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          _isDragging ? "Drop your image here!" : "Drag your image here or click to upload",
+                          style: TextStyle(
+                            color: _isDragging ? AppColors.indigo : Colors.grey.shade700,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 13,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          "PNG, JPG, WEBP",
+                          style: TextStyle(color: Colors.grey.shade500, fontSize: 11),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              const SizedBox(height: 12.0),
+              TextFormField(
+                controller: _controller,
+                enabled: widget.editable,
+                decoration: InputDecoration(
+                  filled: true,
+                  hintText: widget.placeholder.isNotEmpty ? widget.placeholder : "Image ID or URL",
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(color: AppColors.muted)),
+                  enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(color: AppColors.muted)),
+                  focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(color: AppColors.indigo, width: 1.2)),
+                  fillColor: widget.isRequired ? (showValidationError ? AppColors.indigo.withOpacity(0.12) : AppColors.surface) : AppColors.surface,
+                ),
+                onChanged: _onUrlChanged,
+              ),
+            ],
+          ),
+        ),
+        if (isValueChanged)
+          Positioned(
+            top: 0,
+            left: 0,
+            child: Container(
+              width: 20,
+              height: 20,
+              decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.orange),
+            ),
+          ),
+        if (widget.additionalChildren != null)
+          ...widget.additionalChildren!
+      ],
+    );
+  }
+
+  void _showDownloadDialog(BuildContext context) {
+    String selectedSize = 'original';
+    String selectedShape = 'fit';
+    String selectedFormat = 'original';
+    bool downloading = false;
+
+    showDialog(
+      context: context,
+      builder: (ctx) => StatefulBuilder(
+        builder: (context, setDialogState) {
+          return Dialog(
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            child: Container(
+              width: 520,
+              padding: const EdgeInsets.all(24),
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: AppColors.indigo.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: const Icon(Icons.download_rounded, color: AppColors.indigo, size: 24),
+                        ),
+                        const SizedBox(width: 12),
+                        const Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Download image",
+                                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                              ),
+                              Text(
+                                "Select size, crop shape and output format",
+                                style: TextStyle(fontSize: 12, color: Colors.grey),
+                              ),
+                            ],
+                          ),
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.close, size: 20),
+                          onPressed: () => Navigator.of(ctx).pop(),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+                    const Text("Dimensions / Size:", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+                    const SizedBox(height: 8),
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: [
+                        _buildChoiceChip("Original", selectedSize == 'original', () {
+                          setDialogState(() => selectedSize = 'original');
+                        }),
+                        _buildChoiceChip("Thumbnail (150x150)", selectedSize == '150x150', () {
+                          setDialogState(() => selectedSize = '150x150');
+                        }),
+                        _buildChoiceChip("Avatar (256x256)", selectedSize == 'avatar_256', () {
+                          setDialogState(() {
+                            selectedSize = 'avatar_256';
+                            selectedShape = 'circle';
+                            if (selectedFormat == 'original') selectedFormat = 'png';
+                          });
+                        }),
+                        _buildChoiceChip("Medium (800x600)", selectedSize == '800x600', () {
+                          setDialogState(() => selectedSize = '800x600');
+                        }),
+                        _buildChoiceChip("Large (1280x720)", selectedSize == '1280x720', () {
+                          setDialogState(() => selectedSize = '1280x720');
+                        }),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    const Text("Shape / Crop Ratio:", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+                    const SizedBox(height: 8),
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: [
+                        _buildChoiceChip("Keep aspect ratio (Fit)", selectedShape == 'fit', () {
+                          setDialogState(() => selectedShape = 'fit');
+                        }),
+                        _buildChoiceChip("Circular / Round (Avatar)", selectedShape == 'circle', () {
+                          setDialogState(() {
+                            selectedShape = 'circle';
+                            if (selectedFormat == 'original') selectedFormat = 'png';
+                          });
+                        }),
+                        _buildChoiceChip("Square 1:1 (Smart Fill)", selectedShape == 'square', () {
+                          setDialogState(() => selectedShape = 'square');
+                        }),
+                        _buildChoiceChip("Panoramic 16:9", selectedShape == '16:9', () {
+                          setDialogState(() => selectedShape = '16:9');
+                        }),
+                        _buildChoiceChip("Standard 4:3", selectedShape == '4:3', () {
+                          setDialogState(() => selectedShape = '4:3');
+                        }),
+                        _buildChoiceChip("Portrait 9:16", selectedShape == '9:16', () {
+                          setDialogState(() => selectedShape = '9:16');
+                        }),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    const Text("Output format:", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+                    const SizedBox(height: 8),
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: [
+                        _buildChoiceChip("Original", selectedFormat == 'original', () {
+                          setDialogState(() => selectedFormat = 'original');
+                        }),
+                        _buildChoiceChip("WebP (Recommended)", selectedFormat == 'webp', () {
+                          setDialogState(() => selectedFormat = 'webp');
+                        }),
+                        _buildChoiceChip("PNG", selectedFormat == 'png', () {
+                          setDialogState(() => selectedFormat = 'png');
+                        }),
+                        _buildChoiceChip("JPEG / JPG", selectedFormat == 'jpeg', () {
+                          setDialogState(() => selectedFormat = 'jpeg');
+                        }),
+                      ],
+                    ),
+                    const SizedBox(height: 24),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        TextButton(
+                          onPressed: downloading ? null : () => Navigator.of(ctx).pop(),
+                          child: const Text("Cancel"),
+                        ),
+                        const SizedBox(width: 8),
+                        FilledButton.icon(
+                          icon: downloading
+                              ? const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
+                              : const Icon(Icons.download_rounded, size: 18),
+                          label: Text(downloading ? "Processing..." : "Download"),
+                          onPressed: downloading ? null : () async {
+                            setDialogState(() => downloading = true);
+                            await _executeDownload(
+                              selectedSize: selectedSize,
+                              selectedShape: selectedShape,
+                              selectedFormat: selectedFormat,
+                            );
+                            if (mounted) {
+                              Navigator.of(ctx).pop();
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(content: Text("Download started")),
+                              );
+                            }
+                          },
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildChoiceChip(String label, bool isSelected, VoidCallback onSelected) {
+    return ChoiceChip(
+      label: Text(label, style: TextStyle(fontSize: 12, color: isSelected ? Colors.white : Colors.black87)),
+      selected: isSelected,
+      selectedColor: AppColors.indigo,
+      backgroundColor: Colors.grey.withOpacity(0.1),
+      onSelected: (_) => onSelected(),
+    );
+  }
+
+  Future<void> _executeDownload({
+    required String selectedSize,
+    required String selectedShape,
+    required String selectedFormat,
+  }) async {
+    final options = <String, dynamic>{};
+
+    int? w;
+    int? h;
+
+    if (selectedSize == '150x150') { w = 150; h = 150; }
+    else if (selectedSize == 'avatar_256') { w = 256; h = 256; }
+    else if (selectedSize == '800x600') { w = 800; h = 600; }
+    else if (selectedSize == '1280x720') { w = 1280; h = 720; }
+
+    if (selectedShape == 'circle') {
+      options['resizing_type'] = 'fill';
+      options['gravity'] = 'sm';
+      if (w == null && h == null) { w = 256; h = 256; }
+      else if (w != null && h == null) { h = w; }
+      else if (h != null && w == null) { w = h; }
+      if (selectedFormat == 'original') {
+        options['format'] = 'png';
+      }
+    } else if (selectedShape == 'square') {
+      options['resizing_type'] = 'fill';
+      options['gravity'] = 'sm';
+      if (w != null && h == null) h = w;
+      else if (h != null && w == null) w = h;
+      else if (w == null && h == null) { w = 500; h = 500; }
+    } else if (selectedShape == '16:9') {
+      options['resizing_type'] = 'fill';
+      options['gravity'] = 'ce';
+      if (w == null && h == null) { w = 1280; h = 720; }
+    } else if (selectedShape == '4:3') {
+      options['resizing_type'] = 'fill';
+      options['gravity'] = 'ce';
+      if (w == null && h == null) { w = 800; h = 600; }
+    } else if (selectedShape == '9:16') {
+      options['resizing_type'] = 'fill';
+      options['gravity'] = 'sm';
+      if (w == null && h == null) { w = 720; h = 1280; }
+    } else {
+      if (w != null || h != null) {
+        options['resizing_type'] = 'fit';
+      }
+    }
+
+    if (w != null && w > 0) options['width'] = w;
+    if (h != null && h > 0) options['height'] = h;
+
+    if (selectedFormat != 'original') {
+      options['format'] = selectedFormat;
+    }
+
+    String? downloadUrl;
+    final lookupId = currentValue.isNotEmpty ? currentValue : (widget.value ?? '');
+    if (widget.onGetDownloadUrl != null && lookupId.isNotEmpty) {
+      downloadUrl = await _fetchUrl(lookupId, options);
+    }
+
+    if (downloadUrl == null || downloadUrl.isEmpty) {
+      downloadUrl = ImgproxyHelper.buildUrl(
+        imagePath: lookupId,
+        width: w ?? 0,
+        height: h ?? 0,
+        resize: options['resizing_type']?.toString() ?? 'fill',
+        gravity: options['gravity']?.toString(),
+        format: (options['format']?.toString() ?? selectedFormat),
+      );
+    }
+
+    if (downloadUrl == null || downloadUrl.isEmpty) {
+      downloadUrl = _presignedUrl;
+    }
+
+    if (downloadUrl != null && downloadUrl.isNotEmpty) {
+      String baseName = lookupId.split('/').last.split('?').first;
+      if (baseName.isEmpty) baseName = 'image';
+      final dotIdx = baseName.lastIndexOf('.');
+      String nameWithoutExt = dotIdx > 0 ? baseName.substring(0, dotIdx) : baseName;
+      String ext = dotIdx > 0 ? baseName.substring(dotIdx + 1) : 'jpg';
+
+      if (selectedFormat != 'original') {
+        ext = selectedFormat;
+      }
+      String dimSuffix = '';
+      if (w != null && h != null) {
+        dimSuffix = '_\${w}x\${h}';
+      } else if (w != null) {
+        dimSuffix = '_w\$w';
+      } else if (h != null) {
+        dimSuffix = '_h\$h';
+      }
+      String shapeSuffix = selectedShape != 'fit' ? '_\$selectedShape' : '';
+      String finalFilename = '\$nameWithoutExt\$dimSuffix\$shapeSuffix.\$ext';
+
+      ImagePickerHelper.downloadFile(downloadUrl, finalFilename);
+    }
+  }
+}
+        ''');
+
+// **************************************************************************
+// FileUploadWidget
+// **************************************************************************
+    buffer.writeln('''
+class FileUploadWidget extends StatefulWidget {
+  final String fieldName;
+  final String fieldDescription;
+  final bool isRequired;
+  final bool editable;
+  final String placeholder;
+  final String? value;
+  final List<Widget>? additionalChildren;
+  final Future<String?> Function(List<int> bytes, String filename)? onUpload;
+  final dynamic onGetDownloadUrl;
+  final String? allowedExtensions;
+
+  const FileUploadWidget({
+    Key? key,
+    required this.fieldName,
+    this.isRequired = false,
+    required this.fieldDescription,
+    required this.editable,
+    required this.placeholder,
+    required this.value,
+    this.additionalChildren,
+    this.onUpload,
+    this.onGetDownloadUrl,
+    this.allowedExtensions,
+  }) : super(key: key);
+
+  @override
+  FileUploadWidgetState createState() => FileUploadWidgetState();
+}
+
+typedef PdfUploadWidget = FileUploadWidget;
+typedef DocumentUploadWidget = FileUploadWidget;
+
+class FileUploadWidgetState extends State<FileUploadWidget> {
+  static const Set<String> _imageExtensions = {
+    'jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp', 'svg', 'ico', 'heic', 'heif', 'avif', 'tiff'
+  };
+
+  static const String _defaultFileAccept =
+      '.pdf,.doc,.docx,.xls,.xlsx,.csv,.ppt,.pptx,.txt,.zip,.rar,.7z,.tar,.gz,.json,.xml,.yaml,.odt,.ods,.rtf';
+
+  String get _effectiveAccept {
+    if (widget.allowedExtensions != null && widget.allowedExtensions!.trim().isNotEmpty) {
+      final parts = widget.allowedExtensions!.split(',').map((e) {
+        final trimmed = e.trim();
+        return trimmed.startsWith('.') ? trimmed : '.\$trimmed';
+      });
+      return parts.join(',');
+    }
+    return _defaultFileAccept;
+  }
+
+  bool _isImageFile(String filename) {
+    final clean = filename.split('?').first.trim();
+    final dot = clean.lastIndexOf('.');
+    if (dot == -1) return false;
+    final ext = clean.substring(dot + 1).toLowerCase();
+    return _imageExtensions.contains(ext);
+  }
+
+  bool _isAllowedFile(String filename) {
+    if (_isImageFile(filename)) return false;
+    if (widget.allowedExtensions != null && widget.allowedExtensions!.trim().isNotEmpty) {
+      final clean = filename.split('?').first.trim();
+      final dot = clean.lastIndexOf('.');
+      if (dot == -1) return false;
+      final ext = clean.substring(dot + 1).toLowerCase();
+      final allowed = widget.allowedExtensions!
+          .split(',')
+          .map((e) => e.trim().toLowerCase().replaceAll('.', ''))
+          .where((e) => e.isNotEmpty)
+          .toSet();
+      return allowed.contains(ext);
+    }
+    return true;
+  }
+
+  bool isValueChanged = false;
+  late String? initialValue;
+  late String currentValue;
+  bool showValidationError = false;
+  String? _presignedUrl;
+  bool _loading = false;
+  bool _isDragging = false;
+  void Function()? _dropZoneCleanup;
+  late final TextEditingController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    initialValue = widget.value;
+    currentValue = initialValue ?? '';
+    _controller = TextEditingController(text: currentValue);
+    if (currentValue.isNotEmpty) _loadUrl(currentValue);
+
+    if (widget.editable) {
+      _dropZoneCleanup = ImagePickerHelper.setupDropZone(
+        onDragStateChanged: (dragging) {
+          if (mounted && _isDragging != dragging) {
+            setState(() => _isDragging = dragging);
+          }
+        },
+        onFileDropped: (bytes, filename) {
+          uploadBytes(bytes, filename);
+        },
+      );
+    }
+  }
+
+  @override
+  void dispose() {
+    _dropZoneCleanup?.call();
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (FormValidationScope.of(context)) validate();
+  }
+
+  String? getUpdatedValue() => isValueChanged ? currentValue : initialValue;
+
+  bool validate() {
+    if (widget.isRequired && (getUpdatedValue() == null || currentValue.trim().isEmpty || currentValue == 'null')) {
+      setState(() => showValidationError = true);
+      return false;
+    }
+    setState(() => showValidationError = false);
+    return true;
+  }
+
+  Future<String?> _fetchUrl(String id) async {
+    if (widget.onGetDownloadUrl == null) return null;
+    try {
+      return await (widget.onGetDownloadUrl as dynamic)(id);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  Future<void> _loadUrl(String id) async {
+    if (id.startsWith('http')) {
+      setState(() {
+        _presignedUrl = id;
+        _controller.text = id;
+      });
+      return;
+    }
+    setState(() => _loading = true);
+    try {
+      final url = await _fetchUrl(id);
+      if (url != null && url.isNotEmpty) {
+        setState(() {
+          _presignedUrl = url;
+          _controller.text = url;
+        });
+      }
+    } catch (_) {}
+    if (mounted) setState(() => _loading = false);
+  }
+
+  Future<void> uploadBytes(List<int> bytes, String name) async {
+    if (_isImageFile(name)) {
+      CustomSnackBar.show(
+        context,
+        "Images or photos are not allowed in this field. Only document and data files are supported.",
+      );
+      return;
+    }
+    if (!_isAllowedFile(name)) {
+      CustomSnackBar.show(
+        context,
+        "File type not allowed. Allowed extensions: \${widget.allowedExtensions}",
+      );
+      return;
+    }
+    setState(() => _loading = true);
+    try {
+      String? newId;
+      if (widget.onUpload != null) {
+        newId = await widget.onUpload!(bytes, name);
+      }
+      if (newId != null && newId.isNotEmpty) {
+        setState(() {
+          currentValue = newId!;
+          isValueChanged = true;
+          _controller.text = newId!;
+          showValidationError = false;
+        });
+        _loadUrl(newId!);
+      }
+    } catch (_) {}
+    if (mounted) setState(() => _loading = false);
+  }
+
+  void _onUrlChanged(String val) {
+    if (val.trim().isNotEmpty && _isImageFile(val.trim())) {
+      CustomSnackBar.show(
+        context,
+        "Images or photos are not allowed in this field. Only document and data files are supported.",
+      );
+      setState(() {
+        _controller.text = currentValue;
+      });
+      return;
+    }
+    setState(() {
+      currentValue = val;
+      if (_controller.text != val) {
+        _controller.text = val;
+      }
+      isValueChanged = val != (initialValue ?? '');
+      showValidationError = false;
+    });
+    if (val.trim().isNotEmpty) _loadUrl(val.trim());
+    else setState(() => _presignedUrl = null);
+  }
+
+  String get _displayFilename {
+    if (currentValue.isEmpty) return '';
+    final name = currentValue.split('/').last.split('?').first;
+    return name.isNotEmpty ? name : 'file';
+  }
+
+  String get _fileExtension {
+    final fn = _displayFilename;
+    if (fn.contains('.')) {
+      return fn.split('.').last.toUpperCase();
+    }
+    return 'FILE';
+  }
+
+  IconData _getFileIcon(String ext) {
+    switch (ext.toLowerCase()) {
+      case 'pdf':
+        return Icons.picture_as_pdf_rounded;
+      case 'doc':
+      case 'docx':
+      case 'odt':
+      case 'rtf':
+        return Icons.article_rounded;
+      case 'xls':
+      case 'xlsx':
+      case 'csv':
+        return Icons.table_chart_rounded;
+      case 'ppt':
+      case 'pptx':
+        return Icons.slideshow_rounded;
+      case 'zip':
+      case 'rar':
+      case '7z':
+      case 'tar':
+      case 'gz':
+        return Icons.folder_zip_rounded;
+      case 'mp3':
+      case 'wav':
+      case 'ogg':
+        return Icons.audio_file_rounded;
+      case 'mp4':
+      case 'mov':
+      case 'avi':
+      case 'mkv':
+        return Icons.video_file_rounded;
+      case 'txt':
+      case 'json':
+      case 'xml':
+      case 'yaml':
+        return Icons.description_rounded;
+      case 'png':
+      case 'jpg':
+      case 'jpeg':
+      case 'webp':
+      case 'gif':
+        return Icons.image_rounded;
+      default:
+        return Icons.insert_drive_file_rounded;
+    }
+  }
+
+  Color _getFileColor(String ext) {
+    switch (ext.toLowerCase()) {
+      case 'pdf':
+        return const Color(0xFFE53935);
+      case 'doc':
+      case 'docx':
+        return const Color(0xFF1E88E5);
+      case 'xls':
+      case 'xlsx':
+      case 'csv':
+        return const Color(0xFF43A047);
+      case 'ppt':
+      case 'pptx':
+        return const Color(0xFFFB8C00);
+      case 'zip':
+      case 'rar':
+      case '7z':
+        return const Color(0xFF8E24AA);
+      default:
+        return AppColors.indigo;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final hasFile = currentValue.isNotEmpty;
+    final ext = _fileExtension;
+    final fileIcon = _getFileIcon(ext);
+    final fileColor = _getFileColor(ext);
+
+    return Stack(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(16.0),
+          margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12.0),
+            color: AppColors.surface,
+            border: Border.all(
+              color: _isDragging ? AppColors.indigo : (showValidationError ? Colors.red.withOpacity(0.5) : AppColors.muted.withOpacity(0.2)),
+              width: _isDragging ? 2.0 : 1.0,
+            ),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Text("\${widget.fieldName}:", style: const TextStyle(fontWeight: FontWeight.bold)),
+                  const SizedBox(width: 8.0),
+                  Text(widget.fieldDescription, style: const TextStyle(color: Colors.grey, fontSize: 13)),
+                ],
+              ),
+              const SizedBox(height: 12.0),
+              if (_loading)
+                Container(
+                  height: 100,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: Colors.black.withOpacity(0.03),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: const Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CircularProgressIndicator(),
+                      SizedBox(height: 12),
+                      Text("Uploading file...", style: TextStyle(color: Colors.grey)),
+                    ],
+                  ),
+                )
+              else if (hasFile)
+                Container(
+                  padding: const EdgeInsets.all(14.0),
+                  decoration: BoxDecoration(
+                    color: Colors.black.withOpacity(0.02),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: AppColors.muted.withOpacity(0.25)),
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 48,
+                        height: 48,
+                        decoration: BoxDecoration(
+                          color: fileColor.withOpacity(0.12),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Icon(fileIcon, color: fileColor, size: 28),
+                      ),
+                      const SizedBox(width: 14),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              _displayFilename,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+                            ),
+                            const SizedBox(height: 4),
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                              decoration: BoxDecoration(
+                                color: fileColor.withOpacity(0.15),
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                              child: Text(
+                                ext,
+                                style: TextStyle(color: fileColor, fontSize: 10, fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      CircleAvatar(
+                        radius: 18,
+                        backgroundColor: AppColors.indigo,
+                        child: IconButton(
+                          icon: const Icon(Icons.download_rounded, color: Colors.white, size: 18),
+                          tooltip: "Download / View file",
+                          onPressed: () {
+                            final targetUrl = _presignedUrl ?? currentValue;
+                            if (targetUrl.isNotEmpty) {
+                              ImagePickerHelper.downloadFile(targetUrl, _displayFilename);
+                            }
+                          },
+                        ),
+                      ),
+                      if (widget.editable) ...[
+                        const SizedBox(width: 8),
+                        CircleAvatar(
+                          radius: 18,
+                          backgroundColor: Colors.black54,
+                          child: IconButton(
+                            icon: const Icon(Icons.refresh, color: Colors.white, size: 18),
+                            tooltip: "Change file",
+                            onPressed: () => ImagePickerHelper.pickFile((bytes, name) => uploadBytes(bytes, name), _effectiveAccept),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        CircleAvatar(
+                          radius: 18,
+                          backgroundColor: Colors.red.withOpacity(0.85),
+                          child: IconButton(
+                            icon: const Icon(Icons.delete_outline, color: Colors.white, size: 18),
+                            tooltip: "Delete file",
+                            onPressed: () => _onUrlChanged(''),
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+                )
+              else
+                InkWell(
+                  onTap: widget.editable ? () => ImagePickerHelper.pickFile((bytes, name) => uploadBytes(bytes, name), _effectiveAccept) : null,
+                  borderRadius: BorderRadius.circular(10),
+                  child: Container(
+                    height: 120,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: _isDragging ? AppColors.indigo.withOpacity(0.08) : Colors.black.withOpacity(0.02),
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(
+                        color: _isDragging ? AppColors.indigo : AppColors.muted.withOpacity(0.5),
+                        width: 1.5,
+                      ),
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          _isDragging ? Icons.file_download : Icons.upload_file_rounded,
+                          color: _isDragging ? AppColors.indigo : Colors.grey,
+                          size: 38,
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          _isDragging ? "Drop your file here!" : "Drag your file here or click to upload",
+                          style: TextStyle(
+                            color: _isDragging ? AppColors.indigo : Colors.grey.shade700,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 13,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          (widget.allowedExtensions != null && widget.allowedExtensions!.isNotEmpty) ? widget.allowedExtensions! : "PDF, DOCX, XLSX, TXT, ZIP...",
+                          style: TextStyle(color: Colors.grey.shade500, fontSize: 11),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              const SizedBox(height: 12.0),
+              TextFormField(
+                controller: _controller,
+                enabled: widget.editable,
+                decoration: InputDecoration(
+                  filled: true,
+                  hintText: widget.placeholder.isNotEmpty ? widget.placeholder : "File ID or URL",
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(color: AppColors.muted)),
+                  enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(color: AppColors.muted)),
+                  focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: const BorderSide(color: AppColors.indigo, width: 1.2)),
+                  fillColor: widget.isRequired ? (showValidationError ? AppColors.indigo.withOpacity(0.12) : AppColors.surface) : AppColors.surface,
+                ),
+                onChanged: _onUrlChanged,
+              ),
+            ],
+          ),
+        ),
+        if (isValueChanged)
+          Positioned(
+            top: 14.0,
+            right: 22.0,
+            child: Container(
+              width: 8.0,
+              height: 8.0,
+              decoration: const BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.blue,
+              ),
+            ),
+          ),
       ],
     );
   }
@@ -3656,7 +4845,8 @@ class EnumMultiDropdownWidgetState<T extends Enum> extends State<EnumMultiDropdo
 // StringListWidget (TODO)
 // **************************************************************************
 
-    buffer.writeln("Widget stringListWidget(String fieldName, List<String> value) {");
+    buffer.writeln(
+        "Widget stringListWidget(String fieldName, List<String> value) {");
     buffer.writeln("return Column(");
     buffer.writeln("  crossAxisAlignment: CrossAxisAlignment.start,");
     buffer.writeln("  children: [");
