@@ -258,6 +258,9 @@ final login${className}Provider = FutureProvider.autoDispose.family<AuthResult, 
 
   final prefs = await SharedPreferences.getInstance();
   await prefs.setString('token', token);
+  if (responseData['refresh_token'] != null) {
+    await prefs.setString('refresh_token', responseData['refresh_token']);
+  }
 
   return AuthResult(true, $classNameLowercase: $className.fromJson(responseData['user']));
 });
