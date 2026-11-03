@@ -1,12 +1,38 @@
 // ignore_for_file: implementation_imports, depend_on_referenced_packages
 
 import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/dart/element/type.dart';
 import 'package:laia_annotations/laia_annotations.dart';
 import 'package:build/src/builder/build_step.dart';
 import 'package:laia_widget_generator/src/model_visitor.dart';
 import 'package:source_gen/source_gen.dart';
 
 const _fieldChecker = TypeChecker.fromRuntime(Field);
+
+String _searchType(ClassElement model, String path) {
+  FieldElement? field;
+  ClassElement? current = model;
+  for (final part in path.split('.')) {
+    field = current?.getField(part);
+    if (field == null) return 'String';
+    DartType type = field.type;
+    if (type is InterfaceType && type.isDartCoreList) {
+      type = type.typeArguments.first;
+    }
+    final relation = _fieldChecker.firstAnnotationOfExact(field)
+        ?.getField('relation')?.toStringValue() ?? '';
+    if (relation.isNotEmpty) {
+      current = null;
+      for (final library in [model.library, ...model.library.importedLibraries]) {
+        current = library.getClass(relation);
+        if (current != null) break;
+      }
+    } else {
+      current = type.element is ClassElement ? type.element as ClassElement : null;
+    }
+  }
+  return field?.type.toString() ?? 'String';
+}
 
 class ListWidgetGenerator extends GeneratorForAnnotation<ListWidgetGenAnnotation> {
   @override
@@ -66,6 +92,7 @@ class _${className}ListViewState extends ConsumerState<${className}ListView> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
       if (widget.extraFilters != null) {
         widget.extraFilters!.forEach((key, value) {
           widget.currentFilters[key] = value;
@@ -84,28 +111,24 @@ class _${className}ListViewState extends ConsumerState<${className}ListView> {
     final ${classNamePlural}AsyncValue =
         ref.watch(getAll${className}Provider(paginationState));
 
-    final Map<String, int> columnSortStates = ref.watch(${classNameLowercase}PaginationProvider(_providerKey).notifier).getOrders();
+    final Map<String, int> columnSortStates = paginationState.orders;
 
     final Map<String, dynamic> fieldsFilterStates = ref.watch(${classNameLowercase}PaginationProvider(_providerKey).notifier).getFilters();
 
     void onSort(String columnName) {
-      var state = columnSortStates[columnName];
-      if (state == 0 || state == null) {
-        columnSortStates[columnName] = 1;
-      } else if (state == 1) {
-        columnSortStates[columnName] = -1;
-      } else if (state == -1) {
-        columnSortStates.remove(columnName);
-      }
-      ref.read(${classNameLowercase}PaginationProvider(_providerKey).notifier).setOrders(columnSortStates);
+      widget._initialized = false;
+      ref.read(${classNameLowercase}PaginationProvider(_providerKey).notifier)
+          .setOrders({columnName: columnSortStates[columnName] == 1 ? -1 : 1});
     }
 
     void onFilter(String fieldName, dynamic filterValue) {
+      widget._initialized = false;
       widget.currentFilters[fieldName] = filterValue;
       ref.read(${classNameLowercase}PaginationProvider(_providerKey).notifier).setFilters(widget.currentFilters);
     }
 
     void onFilterRemove(String fieldName, dynamic filterValue) {
+      widget._initialized = false;
       if (widget.currentFilters.containsKey(fieldName)) {
         widget.currentFilters.remove(fieldName);
         ref.read(${classNameLowercase}PaginationProvider(_providerKey).notifier).setFilters(widget.currentFilters);
@@ -236,7 +259,7 @@ class _${className}ListViewState extends ConsumerState<${className}ListView> {
                 CustomSearchBar(
                   key: _searchBarKey,
                   showAddButton: false,
-                  fields: const {''');
+                  fields: {''');
 
     bool isFirstField = true;
 
@@ -247,7 +270,18 @@ class _${className}ListViewState extends ConsumerState<${className}ListView> {
         isFirstField = false;
       }
 
-      buffer.write("'${field.name}': '${field.type.toString()}'");
+      // Search the displayed values of populated arrays, rather than their IDs.
+      final nestedFields = defaultFields
+          .where((path) => path.startsWith('${field.name}.'))
+          .toList();
+      if (nestedFields.isEmpty) {
+        buffer.write("'${field.name}': '${field.type.toString()}'");
+      } else {
+        // Preserve existing ID constraints (for example a relation tab's
+        // extraFilters), while offering displayed paths for new searches.
+        buffer.write("if (fieldsFilterStates.containsKey('${field.name}')) '${field.name}': '${field.type}', ");
+        buffer.write(nestedFields.map((path) => "'$path': '${_searchType(classElement, path)}'").join(', '));
+      }
     }
 
     buffer.writeln('''},
@@ -256,7 +290,7 @@ class _${className}ListViewState extends ConsumerState<${className}ListView> {
               onFilterRemove: onFilterRemove,
             ),
             const SizedBox(height: 18),
-            _${className}HeaderRow(isWide: isWide, allSelected: allSelected, anySelected: anySelected, onToggleAll: toggleAll),
+            _${className}HeaderRow(isWide: isWide, allSelected: allSelected, anySelected: anySelected, onToggleAll: toggleAll, orders: columnSortStates, onSort: onSort),
             Container(height: 1, color: AppColors.outline),
             const SizedBox(height: 12),
             Expanded(
@@ -355,7 +389,8 @@ class _${className}ListViewState extends ConsumerState<${className}ListView> {
   }
 
   void _onPageButtonPressed(int pageNumber, WidgetRef ref, ${className}PaginationState paginationState, int maxPages) {
-    if (pageNumber <= maxPages) {
+    if (pageNumber >= 1 && pageNumber <= maxPages) {
+      widget._initialized = false;
       ref.read(${classNameLowercase}PaginationProvider(_providerKey).notifier).setPage(pageNumber);
     }
   }
@@ -599,8 +634,8 @@ class ${className}PaginationNotifier extends StateNotifier<${className}Paginatio
 
   void setOrders(Map<String, int> newOrders) {
     state = ${className}PaginationState(
-          pagination: Tuple2(state.pagination.item1, state.pagination.item2),
-          orders: newOrders,
+          pagination: Tuple2(0, state.pagination.item2),
+          orders: Map<String, int>.unmodifiable(newOrders),
           filters: state.filters,
           populate: state.populate,
         );
@@ -608,9 +643,9 @@ class ${className}PaginationNotifier extends StateNotifier<${className}Paginatio
 
   void setFilters(Map<String, dynamic> newFilters) {
     state = ${className}PaginationState(
-      pagination: Tuple2(state.pagination.item1, state.pagination.item2),
+      pagination: Tuple2(0, state.pagination.item2),
       orders: state.orders,
-      filters: newFilters,
+      filters: Map<String, dynamic>.unmodifiable(newFilters),
       populate: state.populate,
     );
   }
@@ -634,8 +669,29 @@ class _${className}HeaderRow extends StatelessWidget {
   final bool allSelected;
   final bool anySelected;
   final ValueChanged<bool> onToggleAll;
+  final Map<String, int> orders;
+  final ValueChanged<String> onSort;
 
-  const _${className}HeaderRow({required this.isWide, required this.allSelected, required this.anySelected, required this.onToggleAll});
+  const _${className}HeaderRow({required this.isWide, required this.allSelected, required this.anySelected, required this.onToggleAll, required this.orders, required this.onSort});
+
+  Widget _sortHeader(String field, String label, TextStyle? style) {
+    final direction = orders[field];
+    return Expanded(
+      flex: 2,
+      child: TextButton(
+        onPressed: () => onSort(field),
+        style: TextButton.styleFrom(alignment: Alignment.centerLeft),
+        child: Row(children: [
+          Flexible(child: Text(label, style: style)),
+          const SizedBox(width: 4),
+          Icon(direction == null ? Icons.unfold_more :
+              direction == 1 ? Icons.arrow_upward : Icons.arrow_downward,
+              size: 16, semanticLabel: direction == null ? 'Sort' :
+                  direction == 1 ? 'Ascending' : 'Descending'),
+        ]),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -674,7 +730,7 @@ class _${className}HeaderRow extends StatelessWidget {
             fieldName = nameValue;
           }
           buffer.writeln('''
-          Expanded(flex: 2, child: Text('$fieldName', style: style)),
+          _sortHeader('${field.name}', '$fieldName', style),
           ''');
         }
       }
@@ -702,7 +758,7 @@ class _${className}HeaderRow extends StatelessWidget {
             fieldName = "${field.name}.${parts.sublist(1).join('.')}";
           }
           buffer.writeln('''
-          Expanded(flex: 2, child: Text('$fieldName', style: style)),
+          _sortHeader('$defaultField', '$fieldName', style),
           ''');
         }
       }
